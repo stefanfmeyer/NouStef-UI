@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧑‍🍳</text></svg>" />
+    <title>The Kitchen</title>
+    <script>
+      (() => {
+        const storageKey = 'hermes-workspaces-theme';
+        const serverTheme = '__HERMES_THEME_MODE__';
+        let storedTheme = null;
+
+        try {
+          storedTheme = window.localStorage.getItem(storageKey);
+        } catch {
+          storedTheme = null;
+        }
+
+        const theme =
+          storedTheme === 'light' || storedTheme === 'dark'
+            ? storedTheme
+            : serverTheme === 'light' || serverTheme === 'dark'
+              ? serverTheme
+              : 'dark';
+        const root = document.documentElement;
+        root.classList.toggle('dark', theme === 'dark');
+        root.style.colorScheme = theme;
+        root.setAttribute('data-theme-mode', theme);
+
+        try {
+          if (storedTheme !== theme) {
+            window.localStorage.setItem(storageKey, theme);
+          }
+        } catch {
+          // Ignore localStorage sync failures and keep the already-applied DOM theme.
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

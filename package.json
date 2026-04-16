@@ -1,0 +1,40 @@
+{
+  "name": "hermes-recipes",
+  "version": "0.2.0",
+  "private": true,
+  "packageManager": "pnpm@10.6.1",
+  "engines": {
+    "node": ">=22.5.0",
+    "pnpm": ">=10.0.0"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "concurrently -k -n bridge,web -c cyan,magenta \"pnpm --filter @hermes-recipes/bridge dev\" \"pnpm --filter @hermes-recipes/web dev\"",
+    "start": "pnpm --filter @hermes-recipes/bridge start -- --static-dir ../web/dist",
+    "lint": "eslint . --max-warnings=0",
+    "typecheck": "turbo run typecheck",
+    "test": "vitest run --config vitest.unit.config.ts",
+    "test:integration": "pnpm build && playwright test",
+    "test:live:home": "pnpm --filter @hermes-recipes/bridge test:live:home",
+    "security": "node scripts/security-check.mjs",
+    "ci:full": "pnpm lint && pnpm typecheck && pnpm test && pnpm test:integration && pnpm security"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.22.0",
+    "@playwright/test": "^1.52.0",
+    "@types/node": "^22.13.10",
+    "@typescript-eslint/eslint-plugin": "^8.26.1",
+    "@typescript-eslint/parser": "^8.26.1",
+    "concurrently": "^9.1.2",
+    "eslint": "^9.22.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.19",
+    "globals": "^16.0.0",
+    "jsdom": "^26.0.0",
+    "turbo": "^2.4.2",
+    "typescript": "^5.8.2",
+    "vitest": "^3.0.8"
+  }
+}

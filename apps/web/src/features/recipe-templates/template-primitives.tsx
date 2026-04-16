@@ -1,0 +1,816 @@
+import type { ReactNode } from 'react';
+import { Badge, Box, Button, Flex, HStack, Separator, SimpleGrid, Table, Text, VStack } from '@chakra-ui/react';
+import type {
+  RecipeTemplatePreviewSection,
+  TemplateAction,
+  TemplateBoardColumn,
+  TemplateCardItem,
+  TemplateChip,
+  TemplateStat
+} from './types';
+import { templateToneStyles } from './template-style-helpers';
+
+export function TemplateSurface({
+  children,
+  bg = 'var(--surface-1)',
+  padding = '4'
+}: {
+  children: ReactNode;
+  bg?: string;
+  padding?: string;
+}) {
+  return (
+    <Box rounded="10px" border="1px solid var(--border-subtle)" bg={bg} px={padding} py={padding}>
+      {children}
+    </Box>
+  );
+}
+
+export function TemplateSectionHeader({
+  title,
+  eyebrow,
+  summary,
+  rightSlot
+}: {
+  title: string;
+  eyebrow?: string;
+  summary?: string;
+  rightSlot?: ReactNode;
+}) {
+  return (
+    <Flex justify="recipe-between" align="start" gap="4">
+      <VStack align="start" gap="1" minW={0}>
+        {eyebrow ? (
+          <Text fontSize="11px" fontWeight="600" letterSpacing="0.12em" textTransform="uppercase" color="var(--text-muted)">
+            {eyebrow}
+          </Text>
+        ) : null}
+        <Text fontSize="lg" fontWeight="600" color="var(--text-primary)" lineHeight="1.1">
+          {title}
+        </Text>
+        {summary ? (
+          <Text fontSize="sm" color="var(--text-secondary)">
+            {summary}
+          </Text>
+        ) : null}
+      </VStack>
+      {rightSlot}
+    </Flex>
+  );
+}
+
+export function TemplateChipPill({ chip }: { chip: TemplateChip }) {
+  const tone = templateToneStyles(chip.tone);
+
+  return (
+    <Badge
+      rounded="999px"
+      px="2.5"
+      py="1"
+      fontSize="11px"
+      fontWeight="700"
+      border="1px solid"
+      borderColor={tone.border}
+      bg={tone.bg}
+      color={tone.color}
+      _dark={{
+        borderColor: tone.darkBorder,
+        bg: tone.darkBg,
+        color: tone.darkColor
+      }}
+    >
+      {chip.label}
+    </Badge>
+  );
+}
+
+export function TemplateActionButton({
+  action,
+  compact = false,
+  onClick,
+  href,
+  openInNewTab = true,
+  loading = false,
+  disabled = false
+}: {
+  action: TemplateAction;
+  compact?: boolean;
+  onClick?: () => void;
+  href?: string;
+  openInNewTab?: boolean;
+  loading?: boolean;
+  disabled?: boolean;
+}) {
+  const isPrimary = action.tone === 'accent';
+  const isDanger = action.tone === 'danger';
+  const button = (
+    <Button
+      size={compact ? 'xs' : 'sm'}
+      rounded="14px"
+      bg={isPrimary ? 'var(--accent)' : isDanger ? 'red.50' : 'var(--surface-2)'}
+      color={isPrimary ? 'white' : isDanger ? 'red.700' : 'var(--text-primary)'}
+      border={isPrimary ? 'none' : '1px solid var(--border-subtle)'}
+      _hover={{
+        bg: isPrimary ? 'var(--accent-strong)' : isDanger ? 'red.100' : 'rgba(148, 163, 184, 0.12)'
+      }}
+      _dark={{
+        bg: isPrimary ? 'var(--accent)' : isDanger ? 'rgba(239, 68, 68, 0.18)' : 'rgba(148, 163, 184, 0.08)',
+        color: isPrimary ? 'white' : isDanger ? 'red.100' : 'whiteAlpha.940'
+      }}
+      onClick={href ? undefined : onClick}
+      loading={loading}
+      disabled={disabled}
+    >
+      {action.label}
+    </Button>
+  );
+
+  if (!href) {
+    return button;
+  }
+
+  return (
+    <Button
+      asChild
+      size={compact ? 'xs' : 'sm'}
+      rounded="14px"
+      bg={isPrimary ? 'var(--accent)' : isDanger ? 'red.50' : 'var(--surface-2)'}
+      color={isPrimary ? 'white' : isDanger ? 'red.700' : 'var(--text-primary)'}
+      border={isPrimary ? 'none' : '1px solid var(--border-subtle)'}
+      _hover={{
+        bg: isPrimary ? 'var(--accent-strong)' : isDanger ? 'red.100' : 'rgba(148, 163, 184, 0.12)'
+      }}
+      _dark={{
+        bg: isPrimary ? 'var(--accent)' : isDanger ? 'rgba(239, 68, 68, 0.18)' : 'rgba(148, 163, 184, 0.08)',
+        color: isPrimary ? 'white' : isDanger ? 'red.100' : 'whiteAlpha.940'
+      }}
+      disabled={disabled}
+    >
+      <a href={href} target={openInNewTab ? '_blank' : undefined} rel={openInNewTab ? 'noreferrer' : undefined}>
+        {action.label}
+      </a>
+    </Button>
+  );
+}
+
+export function TemplateStatStrip({ title, items }: { title?: string; items: TemplateStat[] }) {
+  return (
+    <TemplateSurface bg="var(--surface-2)">
+      <VStack align="stretch" gap="3">
+        {title ? (
+          <Text fontSize="sm" fontWeight="500" color="var(--text-secondary)">
+            {title}
+          </Text>
+        ) : null}
+        <SimpleGrid columns={{ base: 1, md: Math.min(items.length, 3) }} gap="3">
+          {items.map((item) => {
+            const tone = templateToneStyles(item.tone);
+            return (
+              <Box
+                key={`${item.label}-${item.value}`}
+                rounded="8px"
+                border="1px solid"
+                borderColor={tone.border}
+                bg={tone.bg}
+                px="3.5"
+                py="3"
+                _dark={{
+                  borderColor: tone.darkBorder,
+                  bg: tone.darkBg
+                }}
+              >
+                <Text fontSize="xs" fontWeight="500" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0.08em">
+                  {item.label}
+                </Text>
+                <Text mt="1.5" fontSize="xl" fontWeight="700" color="var(--text-primary)">
+                  {item.value}
+                </Text>
+                {item.helper ? (
+                  <Text mt="1" fontSize="sm" color="var(--text-secondary)">
+                    {item.helper}
+                  </Text>
+                ) : null}
+              </Box>
+            );
+          })}
+        </SimpleGrid>
+      </VStack>
+    </TemplateSurface>
+  );
+}
+
+export function TemplateFilterStrip({ title, filters, sortLabel }: { title?: string; filters: TemplateChip[]; sortLabel?: string }) {
+  return (
+    <TemplateSurface bg="var(--surface-2)">
+      <VStack align="stretch" gap="3">
+        <Flex justify="recipe-between" align="center" gap="3" wrap="wrap">
+          <Text fontSize="sm" fontWeight="500" color="var(--text-secondary)">
+            {title ?? 'Filters'}
+          </Text>
+          {sortLabel ? (
+            <Text fontSize="sm" color="var(--text-muted)">
+              {sortLabel}
+            </Text>
+          ) : null}
+        </Flex>
+        <Flex gap="2" wrap="wrap">
+          {filters.map((filter) => (
+            <TemplateChipPill key={filter.label} chip={filter} />
+          ))}
+        </Flex>
+      </VStack>
+    </TemplateSurface>
+  );
+}
+
+export function TemplateActionBar({ title, actions }: { title?: string; actions: TemplateAction[] }) {
+  return (
+    <TemplateSurface>
+      <VStack align="stretch" gap="3">
+        {title ? (
+          <Text fontSize="sm" fontWeight="500" color="var(--text-secondary)">
+            {title}
+          </Text>
+        ) : null}
+        <Flex gap="2" wrap="wrap">
+          {actions.map((item) => (
+            <TemplateActionButton key={item.label} action={item} />
+          ))}
+        </Flex>
+      </VStack>
+    </TemplateSurface>
+  );
+}
+
+export function TemplateGroupedList({
+  title,
+  groups
+}: Extract<RecipeTemplatePreviewSection, { kind: 'grouped-list' }>) {
+  return (
+    <TemplateSurface>
+      <VStack align="stretch" gap="4">
+        <TemplateSectionHeader title={title} />
+        {groups.map((group, index) => {
+          const tone = templateToneStyles(group.tone);
+          return (
+            <VStack key={group.id} align="stretch" gap="2.5">
+              <HStack align="center" gap="2">
+                <Box w="2" h="2" rounded="full" bg={tone.color} _dark={{ bg: tone.darkColor }} />
+                <Text fontSize="sm" fontWeight="600" color="var(--text-primary)">
+                  {group.label}
+                </Text>
+              </HStack>
+              <VStack align="stretch" gap="2">
+                {group.items.map((item) => (
+                  <Box key={`${group.id}-${item.title}`} rounded="8px" border="1px solid var(--border-subtle)" bg="var(--surface-2)" px="3.5" py="3">
+                    <Flex justify="recipe-between" align="start" gap="3">
+                      <VStack align="start" gap="1" minW={0}>
+                        <Text fontWeight="700" color="var(--text-primary)">
+                          {item.title}
+                        </Text>
+                        {item.subtitle ? (
+                          <Text fontSize="sm" color="var(--text-secondary)">
+                            {item.subtitle}
+                          </Text>
+                        ) : null}
+                        {item.meta ? (
+                          <Text fontSize="sm" color="var(--text-muted)">
+                            {item.meta}
+                          </Text>
+                        ) : null}
+                      </VStack>
+                    </Flex>
+                    {item.chips?.length ? (
+                      <Flex mt="2.5" gap="2" wrap="wrap">
+                        {item.chips.map((chip) => (
+                          <TemplateChipPill key={`${item.title}-${chip.label}`} chip={chip} />
+                        ))}
+                      </Flex>
+                    ) : null}
+                    {item.actions?.length ? (
+                      <Flex mt="2.5" gap="2" wrap="wrap">
+                        {item.actions.map((label) => (
+                          <Button key={label} size="xs" rounded="12px" variant="ghost" bg="rgba(148, 163, 184, 0.08)">
+                            {label}
+                          </Button>
+                        ))}
+                      </Flex>
+                    ) : null}
+                  </Box>
+                ))}
+              </VStack>
+              {index < groups.length - 1 ? <Separator borderColor="var(--border-subtle)" /> : null}
+            </VStack>
+          );
+        })}
+      </VStack>
+    </TemplateSurface>
+  );
+}
+
+function TemplateCard({
+  card,
+  wide = false
+}: {
+  card: TemplateCardItem;
+  wide?: boolean;
+}) {
+  return (
+    <Box rounded="8px" border="1px solid var(--border-subtle)" bg="var(--surface-2)" overflow="hidden">
+      <Box
+        px="4"
+        py="3.5"
+        bg="linear-gradient(180deg, rgba(37, 99, 235, 0.08), rgba(37, 99, 235, 0.02))"
+        borderBottom="1px solid var(--border-subtle)"
+      >
+        <Text fontSize="11px" fontWeight="600" letterSpacing="0.12em" textTransform="uppercase" color="var(--text-muted)">
+          {card.imageLabel ?? 'Preview state'}
+        </Text>
+        <Text mt="1.5" fontWeight="600" color="var(--text-primary)">
+          {card.title}
+        </Text>
+        {card.subtitle ? (
+          <Text mt="1" fontSize="sm" color="var(--text-secondary)">
+            {card.subtitle}
+          </Text>
+        ) : null}
+      </Box>
+      <VStack align="stretch" gap="3" px="4" py="3.5">
+        {card.price ? (
+          <Text fontSize="lg" fontWeight="700" color="var(--text-primary)">
+            {card.price}
+          </Text>
+        ) : null}
+        {card.chips?.length ? (
+          <Flex gap="2" wrap="wrap">
+            {card.chips.map((chip) => (
+              <TemplateChipPill key={`${card.title}-${chip.label}`} chip={chip} />
+            ))}
+          </Flex>
+        ) : null}
+        {card.bullets?.length ? (
+          <VStack align="stretch" gap="1.5">
+            {card.bullets.map((bullet) => (
+              <HStack key={bullet} align="start" gap="2">
+                <Box mt="1.5" w="1.5" h="1.5" rounded="full" bg="var(--accent)" flexShrink={0} />
+                <Text fontSize="sm" color="var(--text-secondary)">
+                  {bullet}
+                </Text>
+              </HStack>
+            ))}
+          </VStack>
+        ) : null}
+        {card.footer ? (
+          <Text fontSize={wide ? 'sm' : 'xs'} color="var(--text-muted)">
+            {card.footer}
+          </Text>
+        ) : null}
+      </VStack>
+    </Box>
+  );
+}
+
+export function TemplateCardGrid({
+  title,
+  cards,
+  columns = 2
+}: Extract<RecipeTemplatePreviewSection, { kind: 'card-grid' }>) {
+  return (
+    <TemplateSurface>
+      <VStack align="stretch" gap="4">
+        <TemplateSectionHeader title={title} />
+        <SimpleGrid columns={{ base: 1, md: columns }} gap="3.5">
+          {cards.map((card) => (
+            <TemplateCard key={card.title} card={card} wide={columns === 1} />
+          ))}
+        </SimpleGrid>
+      </VStack>
+    </TemplateSurface>
+  );
+}
+
+export function TemplateComparisonTable({
+  title,
+  columns,
+  rows,
+  footerChips,
+  footnote
+}: Extract<RecipeTemplatePreviewSection, { kind: 'comparison-table' }>) {
+  return (
+    <TemplateSurface>
+      <VStack align="stretch" gap="4">
+        <TemplateSectionHeader title={title} />
+        <Table.ScrollArea borderWidth="1px" borderColor="var(--border-subtle)" rounded="8px">
+          <Table.Root size="sm" variant="outline">
+            <Table.Header>
+              <Table.Row>
+                <Table.ColumnHeader minW="180px">Item</Table.ColumnHeader>
+                {columns.map((column) => (
+                  <Table.ColumnHeader key={column.id} textAlign={column.align ?? 'start'}>
+                    {column.label}
+                  </Table.ColumnHeader>
+                ))}
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {rows.map((row) => (
+                <Table.Row key={row.id}>
+                  <Table.Cell>
+                    <Text fontWeight="700" color="var(--text-primary)">
+                      {row.label}
+                    </Text>
+                  </Table.Cell>
+                  {row.cells.map((cell, index) => {
+                    const tone = templateToneStyles(cell.tone);
+                    return (
+                      <Table.Cell key={`${row.id}-${columns[index]?.id ?? index}`} textAlign={columns[index]?.align ?? 'start'}>
+                        <Text fontWeight={cell.emphasis ? '800' : '600'} color={cell.tone ? tone.color : 'var(--text-primary)'} _dark={cell.tone ? { color: tone.darkColor } : undefined}>
+                          {cell.value}
+                        </Text>
+                        {cell.subvalue ? (
+                          <Text fontSize="xs" color="var(--text-muted)">
+                            {cell.subvalue}
+                          </Text>
+                        ) : null}
+                      </Table.Cell>
+                    );
+                  })}
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table.Root>
+        </Table.ScrollArea>
+        {footerChips?.length ? (
+          <Flex gap="2" wrap="wrap">
+            {footerChips.map((chip) => (
+              <TemplateChipPill key={`${title}-${chip.label}`} chip={chip} />
+            ))}
+          </Flex>
+        ) : null}
+        {footnote ? (
+          <Text fontSize="sm" color="var(--text-muted)">
+            {footnote}
+          </Text>
+        ) : null}
+      </VStack>
+    </TemplateSurface>
+  );
+}
+
+export function TemplateDetailPanel({
+  title,
+  eyebrow,
+  summary,
+  chips,
+  fields,
+  actions,
+  note,
+  noteTitle
+}: Extract<RecipeTemplatePreviewSection, { kind: 'detail-panel' }>) {
+  const primaryFields = fields.filter((field) => !field.fullWidth);
+  const fullWidthFields = fields.filter((field) => field.fullWidth);
+
+  return (
+    <TemplateSurface>
+      <VStack align="stretch" gap="4">
+        <TemplateSectionHeader title={title} eyebrow={eyebrow} summary={summary} />
+        {chips?.length ? (
+          <Flex gap="2" wrap="wrap">
+            {chips.map((chip) => (
+              <TemplateChipPill key={`${title}-${chip.label}`} chip={chip} />
+            ))}
+          </Flex>
+        ) : null}
+        <SimpleGrid columns={{ base: 1, md: 2 }} gap="3">
+          {primaryFields.map((field) => (
+            <Box key={`${field.label}-${field.value ?? field.bullets?.join('-') ?? ''}`} rounded="6px" border="1px solid var(--border-subtle)" bg="var(--surface-2)" px="3.5" py="3">
+              <Text fontSize="xs" fontWeight="500" textTransform="uppercase" letterSpacing="0.08em" color="var(--text-muted)">
+                {field.label}
+              </Text>
+              {field.value ? (
+                <Text mt="1.5" fontWeight="700" color="var(--text-primary)">
+                  {field.value}
+                </Text>
+              ) : null}
+              {field.chips?.length ? (
+                <Flex mt="2" gap="2" wrap="wrap">
+                  {field.chips.map((chip) => (
+                    <TemplateChipPill key={`${field.label}-${chip.label}`} chip={chip} />
+                  ))}
+                </Flex>
+              ) : null}
+              {field.bullets?.length ? (
+                <VStack mt="2" align="stretch" gap="1.5">
+                  {field.bullets.map((bullet) => (
+                    <HStack key={bullet} align="start" gap="2">
+                      <Box mt="1.5" w="1.5" h="1.5" rounded="full" bg="var(--accent)" flexShrink={0} />
+                      <Text fontSize="sm" color="var(--text-secondary)">
+                        {bullet}
+                      </Text>
+                    </HStack>
+                  ))}
+                </VStack>
+              ) : null}
+              {field.links?.length ? (
+                <VStack mt="2" align="stretch" gap="1.5">
+                  {field.links.map((link) => (
+                    <Text key={link.href} fontSize="sm" color="var(--text-secondary)">
+                      {link.label}:{' '}
+                      <a
+                        href={link.href}
+                        target="_blank"
+                        rel="noreferrer"
+                        style={{ color: 'var(--accent)', textDecoration: 'underline', textUnderlineOffset: '3px' }}
+                      >
+                        {link.href}
+                      </a>
+                    </Text>
+                  ))}
+                </VStack>
+              ) : null}
+            </Box>
+          ))}
+        </SimpleGrid>
+        {fullWidthFields.map((field) => (
+          <Box key={`${field.label}-${field.value ?? field.bullets?.join('-') ?? ''}`} rounded="8px" border="1px solid var(--border-subtle)" bg="var(--surface-2)" px="3.5" py="3.5">
+            <Text fontSize="xs" fontWeight="500" textTransform="uppercase" letterSpacing="0.08em" color="var(--text-muted)">
+              {field.label}
+            </Text>
+            {field.value ? (
+              <Text mt="1.5" fontSize="sm" color="var(--text-secondary)">
+                {field.value}
+              </Text>
+            ) : null}
+            {field.bullets?.length ? (
+              <VStack mt="2.5" align="stretch" gap="1.5">
+                {field.bullets.map((bullet) => (
+                  <HStack key={bullet} align="start" gap="2">
+                    <Box mt="1.5" w="1.5" h="1.5" rounded="full" bg="var(--accent)" flexShrink={0} />
+                    <Text fontSize="sm" color="var(--text-secondary)">
+                      {bullet}
+                    </Text>
+                  </HStack>
+                ))}
+              </VStack>
+            ) : null}
+            {field.links?.length ? (
+              <VStack mt="2.5" align="stretch" gap="1.5">
+                {field.links.map((link) => (
+                  <Text key={link.href} fontSize="sm" color="var(--text-secondary)">
+                    {link.label}:{' '}
+                    <a
+                      href={link.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      style={{ color: 'var(--accent)', textDecoration: 'underline', textUnderlineOffset: '3px' }}
+                    >
+                      {link.href}
+                    </a>
+                  </Text>
+                ))}
+              </VStack>
+            ) : null}
+          </Box>
+        ))}
+        {actions?.length ? (
+          <Flex gap="2" wrap="wrap">
+            {actions.map((item) => (
+              <TemplateActionButton key={item.label} action={item} />
+            ))}
+          </Flex>
+        ) : null}
+        {note ? (
+          <Box rounded="8px" border="1px dashed var(--border-subtle)" bg="rgba(148, 163, 184, 0.05)" px="3.5" py="3">
+            {noteTitle ? (
+              <Text fontSize="xs" fontWeight="500" textTransform="uppercase" letterSpacing="0.08em" color="var(--text-muted)">
+                {noteTitle}
+              </Text>
+            ) : null}
+            <Text fontSize="sm" color="var(--text-secondary)">
+              {note}
+            </Text>
+          </Box>
+        ) : null}
+      </VStack>
+    </TemplateSurface>
+  );
+}
+
+export function TemplateTimeline({
+  title,
+  items
+}: Extract<RecipeTemplatePreviewSection, { kind: 'timeline' }>) {
+  return (
+    <TemplateSurface>
+      <VStack align="stretch" gap="4">
+        <TemplateSectionHeader title={title} />
+        <VStack align="stretch" gap="3">
+          {items.map((item) => (
+            <HStack key={`${item.time}-${item.title}`} align="start" gap="3">
+              <VStack align="center" gap="0" pt="1">
+                <Box w="2.5" h="2.5" rounded="full" bg="var(--accent)" />
+                <Box w="1px" flex="1" minH="16px" bg="var(--border-subtle)" />
+              </VStack>
+              <Box flex="1" rounded="8px" border="1px solid var(--border-subtle)" bg="var(--surface-2)" px="3.5" py="3">
+                <Flex justify="recipe-between" align="center" gap="3" wrap="wrap">
+                  <Text fontWeight="700" color="var(--text-primary)">
+                    {item.title}
+                  </Text>
+                  <Text fontSize="sm" color="var(--text-muted)">
+                    {item.time}
+                  </Text>
+                </Flex>
+                {item.summary ? (
+                  <Text mt="1.5" fontSize="sm" color="var(--text-secondary)">
+                    {item.summary}
+                  </Text>
+                ) : null}
+                {item.chips?.length ? (
+                  <Flex mt="2.5" gap="2" wrap="wrap">
+                    {item.chips.map((chip) => (
+                      <TemplateChipPill key={`${item.title}-${chip.label}`} chip={chip} />
+                    ))}
+                  </Flex>
+                ) : null}
+              </Box>
+            </HStack>
+          ))}
+        </VStack>
+      </VStack>
+    </TemplateSurface>
+  );
+}
+
+export function TemplateNotesPanel({
+  title,
+  lines,
+  actions
+}: Extract<RecipeTemplatePreviewSection, { kind: 'notes' }>) {
+  return (
+    <TemplateSurface>
+      <VStack align="stretch" gap="4">
+        <TemplateSectionHeader title={title} />
+        <VStack align="stretch" gap="2">
+          {lines.map((line) => (
+            <Box key={line} rounded="6px" border="1px solid var(--border-subtle)" bg="var(--surface-2)" px="3.5" py="3">
+              <Text fontSize="sm" color="var(--text-secondary)">
+                {line}
+              </Text>
+            </Box>
+          ))}
+        </VStack>
+        {actions?.length ? (
+          <Flex gap="2" wrap="wrap">
+            {actions.map((item) => (
+              <TemplateActionButton key={item.label} action={item} compact />
+            ))}
+          </Flex>
+        ) : null}
+      </VStack>
+    </TemplateSurface>
+  );
+}
+
+export function TemplateActivityLog({
+  title,
+  entries
+}: Extract<RecipeTemplatePreviewSection, { kind: 'activity-log' }>) {
+  return (
+    <TemplateSurface>
+      <VStack align="stretch" gap="4">
+        <TemplateSectionHeader title={title} />
+        <VStack align="stretch" gap="2.5">
+          {entries.map((entry) => {
+            const tone = templateToneStyles(entry.tone);
+            return (
+              <Box key={`${entry.label}-${entry.timestamp ?? entry.detail}`} rounded="6px" border="1px solid var(--border-subtle)" bg="var(--surface-2)" px="3.5" py="3">
+                <Flex justify="recipe-between" align="center" gap="3">
+                  <Text fontWeight="700" color={entry.tone ? tone.color : 'var(--text-primary)'} _dark={entry.tone ? { color: tone.darkColor } : undefined}>
+                    {entry.label}
+                  </Text>
+                  {entry.timestamp ? (
+                    <Text fontSize="xs" color="var(--text-muted)">
+                      {entry.timestamp}
+                    </Text>
+                  ) : null}
+                </Flex>
+                <Text mt="1.5" fontSize="sm" color="var(--text-secondary)">
+                  {entry.detail}
+                </Text>
+              </Box>
+            );
+          })}
+        </VStack>
+      </VStack>
+    </TemplateSurface>
+  );
+}
+
+function TemplateBoardColumnView({ column }: { column: TemplateBoardColumn }) {
+  const tone = templateToneStyles(column.tone);
+
+  return (
+    <Box minW={{ base: '100%', md: '240px' }} maxW={{ base: '100%', md: '240px' }} rounded="8px" border="1px solid var(--border-subtle)" bg="var(--surface-2)">
+      <VStack align="stretch" gap="3" px="3.5" py="3.5">
+        <HStack justify="recipe-between" align="center">
+          <Text fontWeight="600" color="var(--text-primary)">
+            {column.label}
+          </Text>
+          <Badge rounded="999px" px="2.5" py="1" border="1px solid" borderColor={tone.border} bg={tone.bg} color={tone.color}>
+            {column.cards.length}
+          </Badge>
+        </HStack>
+        <VStack align="stretch" gap="2.5">
+          {column.cards.map((card) => (
+            <Box key={`${column.label}-${card.title}`} rounded="8px" border="1px solid var(--border-subtle)" bg="var(--surface-1)" px="3" py="3">
+              <Text fontWeight="700" color="var(--text-primary)">
+                {card.title}
+              </Text>
+              {card.subtitle ? (
+                <Text mt="1" fontSize="sm" color="var(--text-secondary)">
+                  {card.subtitle}
+                </Text>
+              ) : null}
+              {card.chips?.length ? (
+                <Flex mt="2.5" gap="2" wrap="wrap">
+                  {card.chips.map((chip) => (
+                    <TemplateChipPill key={`${card.title}-${chip.label}`} chip={chip} />
+                  ))}
+                </Flex>
+              ) : null}
+              {card.footer ? (
+                <Text mt="2.5" fontSize="xs" color="var(--text-muted)">
+                  {card.footer}
+                </Text>
+              ) : null}
+            </Box>
+          ))}
+        </VStack>
+      </VStack>
+    </Box>
+  );
+}
+
+export function TemplateKanbanBoard({
+  title,
+  columns
+}: Extract<RecipeTemplatePreviewSection, { kind: 'kanban' }>) {
+  return (
+    <TemplateSurface>
+      <VStack align="stretch" gap="4">
+        <TemplateSectionHeader title={title} />
+        <Flex gap="3.5" overflowX="auto" pb="1">
+          {columns.map((column) => (
+            <TemplateBoardColumnView key={column.label} column={column} />
+          ))}
+        </Flex>
+      </VStack>
+    </TemplateSurface>
+  );
+}
+
+export function TemplateConfirmationBlock({
+  title,
+  message,
+  confirmLabel,
+  secondaryLabel,
+  tone: inputTone
+}: Extract<RecipeTemplatePreviewSection, { kind: 'confirmation' }>) {
+  const tone = templateToneStyles(inputTone);
+
+  return (
+    <TemplateSurface bg={tone.bg}>
+      <VStack align="stretch" gap="4">
+        <Text fontSize="lg" fontWeight="600" color="var(--text-primary)">
+          {title}
+        </Text>
+        <Text fontSize="sm" color="var(--text-secondary)">
+          {message}
+        </Text>
+        <Flex gap="2" wrap="wrap">
+          <TemplateActionButton action={{ label: confirmLabel, tone: inputTone === 'danger' ? 'danger' : 'accent' }} />
+          {secondaryLabel ? <TemplateActionButton action={{ label: secondaryLabel }} /> : null}
+        </Flex>
+      </VStack>
+    </TemplateSurface>
+  );
+}
+
+export function TemplateEmptyStateBlock({
+  title,
+  detail
+}: {
+  title: string;
+  detail: string;
+}) {
+  return (
+    <TemplateSurface>
+      <VStack align="start" gap="2">
+        <Text fontSize="lg" fontWeight="600" color="var(--text-primary)">
+          {title}
+        </Text>
+        <Text color="var(--text-secondary)">{detail}</Text>
+      </VStack>
+    </TemplateSurface>
+  );
+}

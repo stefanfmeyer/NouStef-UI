@@ -1,0 +1,21 @@
+{
+  "name": "@hermes-recipes/bridge",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx src/server.ts --port 8787",
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "start": "tsx src/server.ts",
+    "start:fixture": "tsx src/server.ts --fixture",
+    "test:live:home": "tsx scripts/live-home-workspace-validation.ts"
+  },
+  "dependencies": {
+    "@hermes-recipes/protocol": "workspace:*",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.3"
+  }
+}

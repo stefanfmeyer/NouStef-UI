@@ -1,0 +1,4 @@
+
+> @hermes-recipes/ui@0.2.0 typecheck /Users/jozefbarton/dev/hermes-boots-codex/packages/ui
+> tsc --noEmit -p tsconfig.json
+

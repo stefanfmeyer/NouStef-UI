@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <linearGradient id="houseStroke" x1="64" y1="64" x2="448" y2="448" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#ff2b2b"></stop>
+      <stop offset="33%" stop-color="#1e6fff"></stop>
+      <stop offset="66%" stop-color="#19c95b"></stop>
+      <stop offset="100%" stop-color="#ffd400"></stop>
+    </linearGradient>
+  </defs>
+
+  <path d="M71 223.5L233.4 89.6c13.2-10.9 32-10.9 45.2 0L441 223.5c12.3 10.1 13.9 28.3 3.8 40.5-10.1 12.3-28.3 13.9-40.5 3.8l-12.3-10.1V416c0 22.1-17.9 40-40 40H160c-22.1 0-40-17.9-40-40V257.7l-12.3 10.1c-12.3 10.1-30.4 8.4-40.5-3.8-10.1-12.3-8.4-30.4 3.8-40.5Z" stroke="url(#houseStroke)" stroke-width="24" stroke-linejoin="round" fill="none"></path>
+
+  <text x="256" y="294" text-anchor="middle" dominant-baseline="middle" font-size="352" font-weight="700" font-family="Segoe UI Symbol, Noto Sans Symbols, Arial Unicode MS, serif" fill="url(#houseStroke)">
+    ☤
+  </text>
+</svg>

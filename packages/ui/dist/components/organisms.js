@@ -1,0 +1,13 @@
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { Button, IconButton, Surface, WindowControls } from './atoms';
+import { InlineMeta, PageHeading } from './molecules';
+import { cx } from './cx';
+export function BrowserHeader({ address, title, detail, items, activeTab, tabs, onSelectTab }) {
+    return (_jsx(Surface, { className: "p-4 md:p-5", "data-testid": "browser-header", element: "header", children: _jsxs("div", { className: "flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between", children: [_jsxs("div", { className: "flex min-w-0 flex-1 flex-col gap-4", children: [_jsxs("div", { className: "flex flex-wrap items-center gap-3", children: [_jsx(WindowControls, {}), _jsxs("div", { className: "flex min-w-0 flex-1 items-center gap-2 rounded-2xl border border-white/10 bg-[#0f1319] px-3 py-2.5", children: [_jsx(IconButton, { "aria-label": "Back", tone: "ghost", children: _jsx("span", { "aria-hidden": "true", children: "\u2190" }) }), _jsx(IconButton, { "aria-label": "Forward", tone: "ghost", children: _jsx("span", { "aria-hidden": "true", children: "\u2192" }) }), _jsx("div", { className: "min-w-0 flex-1 rounded-xl border border-white/8 bg-white/[0.03] px-3 py-2", children: _jsx("p", { className: "truncate text-sm text-slate-200", children: address }) })] })] }), _jsx(PageHeading, { eyebrow: "Agent Surface", title: title, detail: detail })] }), _jsxs("div", { className: "space-y-3 xl:max-w-[40rem] xl:text-right", children: [_jsx(InlineMeta, { items: items }), _jsx("div", { className: "flex flex-wrap gap-2 xl:justify-end", children: tabs.map((tab) => (_jsx(Button, { "aria-label": tab.label, tone: activeTab === tab.id ? 'primary' : 'secondary', onClick: () => onSelectTab(tab.id), children: tab.label }, tab.id))) })] })] }) }));
+}
+export function SidebarBlock({ eyebrow, title, detail, children, actions }) {
+    return (_jsxs(Surface, { className: "p-4", element: "section", children: [_jsxs("div", { className: "flex items-start justify-between gap-3", children: [_jsx(PageHeading, { eyebrow: eyebrow, title: title, detail: detail, className: "flex-1" }), actions] }), _jsx("div", { className: "mt-4", children: children })] }));
+}
+export function PageSection({ className, bodyClassName, eyebrow, title, detail, actions, children, ...props }) {
+    return (_jsxs(Surface, { className: cx('flex min-h-0 flex-col p-5', className), ...props, children: [_jsxs("div", { className: "flex flex-wrap items-start justify-between gap-4", children: [_jsx(PageHeading, { eyebrow: eyebrow, title: title, detail: detail, className: "flex-1" }), actions] }), _jsx("div", { className: cx('mt-5', bodyClassName), children: children })] }));
+}

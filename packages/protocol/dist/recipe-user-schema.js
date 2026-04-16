@@ -1,0 +1,38 @@
+import { z } from 'zod';
+export const RecipeSpecSchema = z.object({
+    purpose: z.string().default(''),
+    primaryUserGoal: z.string().default(''),
+    whenHermesShouldChoose: z.string().default(''),
+    goodFor: z.array(z.string()).default([]),
+    supports: z.array(z.string()).default([]),
+    supportedTabs: z.array(z.string()).default([]),
+    idealDataShape: z.array(z.string()).default([]),
+    requiredSections: z.array(z.string()).default([]),
+    optionalSections: z.array(z.string()).default([]),
+    requiredActions: z.array(z.string()).default([]),
+    optionalActions: z.array(z.string()).default([]),
+    references: z.array(z.string()).default([]),
+    smallPaneAdaptationNotes: z.array(z.string()).default([]),
+    populationInstructions: z.object({
+        summary: z.string().default(''),
+        steps: z.array(z.string()).default([]),
+        guardrails: z.array(z.string()).default([])
+    }).default({}),
+    updateRules: z.object({
+        patchPrefer: z.array(z.string()).default([]),
+        replaceTriggers: z.array(z.string()).default([]),
+        persistAcrossUpdates: z.array(z.string()).default([]),
+        stableRegions: z.array(z.string()).default([])
+    }).default({})
+});
+export const RecipeVersionEntrySchema = z.object({
+    version: z.string(),
+    summary: z.string(),
+    savedAt: z.string()
+});
+export const RecipeVersionSchema = RecipeVersionEntrySchema.extend({
+    manifest: z.record(z.unknown()),
+    runtime: z.record(z.unknown()),
+    spec: z.record(z.unknown()).nullable().default(null),
+    fixture: z.record(z.unknown()).nullable().default(null)
+});

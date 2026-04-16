@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "jsx": "react-jsx",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "baseUrl": ".",
+    "paths": {
+      "@hermes-workspaces/protocol": ["packages/protocol/src/index.ts"],
+      "@hermes-workspaces/ui": ["packages/ui/src/index.ts"],
+      "@hermes-workspaces/config/*": ["packages/config/*"]
+    }
+  }
+}
