@@ -1,18 +1,19 @@
 # The Kitchen
 
-A local-first browser frontend for [Hermes Agent](https://hermesagent.io) — streaming chat, structured recipe workspaces, provider settings, and a recipe template gallery.
+A local-first browser frontend for [Hermes Agent](https://hermes-agent.nousresearch.com/) — streaming chat, structured recipe workspaces, provider settings, and a recipe template gallery.
 
 ## Requirements
 
-- **Node.js 22.5 or later** — the bridge uses the built-in `node:sqlite` module added in v22.5. Node 23+ is recommended.
+- **Node.js 22.5 or later** — the bridge uses the built-in `node:sqlite` module added in v22.5. Node 24 LTS is recommended.
   - Check: `node --version`
   - Install via [nvm](https://github.com/nvm-sh/nvm): `nvm install 22 && nvm use 22`, or download from [nodejs.org](https://nodejs.org)
 - **pnpm 10+** — `npm install -g pnpm`
-- **Hermes Agent CLI v0.9.0+** — install from [hermesagent.io](https://hermesagent.io)
+- **Hermes Agent CLI v0.9.0+** — install from [hermes-agent.nousresearch.com](https://hermes-agent.nousresearch.com/)
+  - Quick install (Linux/macOS/WSL2): `curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash`
   - Verify: `hermes --version`
   - First-time setup: `hermes setup`
 
-> **Important:** Clone or extract this repo to a path with **no spaces**. A path like `~/Desktop/hermes boots/` causes subprocess errors. Use `~/dev/hermes-boots-codex/` or similar.
+> **Important:** Clone or extract this repo to a path with **no spaces**. A path like `~/Desktop/the kitchen/` causes subprocess errors. Use `~/dev/the-kitchen/` or similar.
 
 ## Quick start
 
@@ -58,14 +59,33 @@ Default database location:
 - Linux: `~/.local/share/Hermes Recipes Browser/hermes-recipes.db`
 - Windows: `%APPDATA%\Hermes Recipes Browser\hermes-recipes.db`
 
-## Architecture
-
 ## How it works
 
 - **Chat** — streaming responses from Hermes via SSE. Full Markdown rendering with syntax highlighting, tables, and lists.
 - **Recipes** — structured workspaces Hermes generates during chat. Select a template from the Recipe Book tab, or let Hermes generate one based on your request. Recipes are attached to sessions and persist across restarts.
 - **Settings** — configure Hermes providers with step-by-step guided setup for every supported provider, including API key links and example `hermes config set` commands.
 - All state persists in a local SQLite database. The bridge accepts connections from `localhost`/`127.0.0.1` only.
+
+## Architecture
+
+Monorepo layout:
+
+- [`apps/bridge`](apps/bridge) — local Node runtime: Hermes CLI execution, origin policy, SQLite persistence, SSE streaming.
+- [`apps/web`](apps/web) — Vite + React + Chakra browser app that talks only to the bridge over HTTP/SSE.
+- [`packages/protocol`](packages/protocol) — Zod-validated request, response, event, and entity schemas.
+- [`packages/ui`](packages/ui) — shared Chakra provider and theme helpers.
+- [`packages/config`](packages/config) — shared lint configuration.
+- [`packages/testing`](packages/testing) — cross-package test utilities.
+
+Canonical specs live under [`docs/specs`](docs/specs):
+
+- [architecture.md](docs/specs/architecture.md) — runtime surfaces, bridge API, persistence model, failure behavior.
+- [product-spec.md](docs/specs/product-spec.md) — product goals, required behavior, and data expectations.
+- [protocol.md](docs/specs/protocol.md) — shared HTTP/SSE schemas between the bridge and browser.
+- [spaces.md](docs/specs/spaces.md) — session-attached Spaces framework and build pipeline.
+- [spaces-template-library.md](docs/specs/spaces-template-library.md) — curated Spaces template gallery.
+- [hermes-ui-workspaces.md](docs/specs/hermes-ui-workspaces.md) — Hermes-to-bridge space data contract.
+- [threat-model.md](docs/specs/threat-model.md) — threats, mitigations, and reviewed-tool allowlist.
 
 ## Verification
 
@@ -75,6 +95,14 @@ pnpm typecheck
 pnpm test
 pnpm build
 ```
+
+The full path used by CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) is:
+
+```bash
+pnpm ci:full
+```
+
+which additionally runs `pnpm test:integration` (Playwright) and `pnpm security`.
 
 ## Contributing
 
