@@ -1,12 +1,15 @@
 import type { ReactNode } from 'react';
-import { Badge, Box, Button, Flex, HStack, Separator, SimpleGrid, Table, Text, VStack } from '@chakra-ui/react';
+import { useState } from 'react';
+import { Badge, Box, Button, Checkbox, Flex, HStack, Separator, SimpleGrid, Table, Text, VStack } from '@chakra-ui/react';
 import type {
   RecipeTemplatePreviewSection,
   TemplateAction,
   TemplateBoardColumn,
   TemplateCardItem,
   TemplateChip,
-  TemplateStat
+  TemplateStat,
+  TemplateTableColumn,
+  TemplateTableRow
 } from './types';
 import { templateToneStyles } from './template-style-helpers';
 
@@ -810,6 +813,284 @@ export function TemplateEmptyStateBlock({
           {title}
         </Text>
         <Text color="var(--text-secondary)">{detail}</Text>
+      </VStack>
+    </TemplateSurface>
+  );
+}
+
+export function TemplateAccordionList({
+  title,
+  items
+}: Extract<RecipeTemplatePreviewSection, { kind: 'accordion-list' }>) {
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+
+  return (
+    <TemplateSurface>
+      <VStack align="stretch" gap="0">
+        {title ? (
+          <Box pb="3">
+            <TemplateSectionHeader title={title} />
+          </Box>
+        ) : null}
+        {items.map((item, index) => {
+          const isExpanded = expandedId === item.id;
+          const tone = templateToneStyles(item.tone);
+          const recTone = templateToneStyles(item.recommendationTone);
+          return (
+            <Box key={item.id}>
+              {index > 0 ? <Separator borderColor="var(--border-subtle)" /> : null}
+              <Box
+                py="3"
+                px="1"
+                cursor="pointer"
+                onClick={() => setExpandedId(isExpanded ? null : item.id)}
+                _hover={{ bg: 'var(--surface-2)', rounded: '6px' }}
+                transition="background 0.1s"
+              >
+                <Flex justify="space-between" align="center" gap="3">
+                  <HStack gap="2" align="center" minW={0}>
+                    {item.tone ? (
+                      <Box w="2" h="2" rounded="full" bg={tone.color} _dark={{ bg: tone.darkColor }} flexShrink={0} />
+                    ) : null}
+                    <VStack align="start" gap="0.5" minW={0}>
+                      <Text fontWeight="600" color="var(--text-primary)" fontSize="sm">
+                        {item.title}
+                      </Text>
+                      {item.subtitle ? (
+                        <Text fontSize="xs" color="var(--text-secondary)" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap" maxW="100%">
+                          {item.subtitle}
+                        </Text>
+                      ) : null}
+                    </VStack>
+                  </HStack>
+                  <HStack gap="2" flexShrink={0}>
+                    {item.count ? (
+                      <Text fontSize="xs" fontWeight="600" color="var(--text-muted)">
+                        {item.count}
+                      </Text>
+                    ) : null}
+                    <Text fontSize="xs" color="var(--text-muted)">
+                      {isExpanded ? '▲' : '▼'}
+                    </Text>
+                  </HStack>
+                </Flex>
+              </Box>
+              {isExpanded ? (
+                <Box pl="4" pb="3" pt="1">
+                  <VStack align="stretch" gap="3">
+                    {item.subjects && item.subjects.length > 0 ? (
+                      <VStack align="stretch" gap="2">
+                        <Text fontSize="xs" fontWeight="600" textTransform="uppercase" letterSpacing="0.08em" color="var(--text-muted)">
+                          Sample subjects
+                        </Text>
+                        <VStack align="stretch" gap="1">
+                          {item.subjects.map((subject) => (
+                            <Text key={subject} fontSize="sm" color="var(--text-secondary)">
+                              {subject}
+                            </Text>
+                          ))}
+                        </VStack>
+                      </VStack>
+                    ) : null}
+                    {item.detailHeader ? (
+                      <VStack align="stretch" gap="1.5">
+                        <Text fontSize="xs" fontWeight="600" textTransform="uppercase" letterSpacing="0.08em" color="var(--text-muted)">
+                          {item.detailHeader}
+                        </Text>
+                        {item.detailText ? (
+                          <Text fontSize="sm" color="var(--text-secondary)">
+                            {item.detailText}
+                          </Text>
+                        ) : null}
+                        {item.evidenceBullets && item.evidenceBullets.length > 0 ? (
+                          <VStack align="stretch" gap="1.5" mt="1">
+                            <Text fontSize="xs" fontWeight="600" textTransform="uppercase" letterSpacing="0.08em" color="var(--text-muted)">
+                              Evidence
+                            </Text>
+                            <VStack align="stretch" gap="1">
+                              {item.evidenceBullets.map((bullet) => (
+                                <HStack key={bullet} align="start" gap="2">
+                                  <Box mt="1.5" w="1.5" h="1.5" rounded="full" bg="var(--accent)" flexShrink={0} />
+                                  <Text fontSize="sm" color="var(--text-secondary)">
+                                    {bullet}
+                                  </Text>
+                                </HStack>
+                              ))}
+                            </VStack>
+                          </VStack>
+                        ) : null}
+                      </VStack>
+                    ) : null}
+                    {item.recommendation ? (
+                      <Box
+                        rounded="8px"
+                        border="1px solid"
+                        borderColor={item.recommendationTone ? recTone.border : 'var(--border-subtle)'}
+                        bg={item.recommendationTone ? recTone.bg : 'var(--surface-2)'}
+                        px="3"
+                        py="2.5"
+                        _dark={{
+                          borderColor: item.recommendationTone ? recTone.darkBorder : 'var(--border-subtle)',
+                          bg: item.recommendationTone ? recTone.darkBg : 'var(--surface-2)'
+                        }}
+                      >
+                        <Text fontSize="sm" color="var(--text-secondary)">
+                          {item.recommendation}
+                        </Text>
+                      </Box>
+                    ) : null}
+                    {item.actions && item.actions.length > 0 ? (
+                      <Flex gap="2" wrap="wrap" pt="1">
+                        {item.actions.map((act) => (
+                          <TemplateActionButton key={act.label} action={act} compact />
+                        ))}
+                      </Flex>
+                    ) : null}
+                  </VStack>
+                </Box>
+              ) : null}
+            </Box>
+          );
+        })}
+      </VStack>
+    </TemplateSurface>
+  );
+}
+
+export function TemplateSelectableTable({
+  title,
+  columns,
+  rows,
+  primaryAction,
+  secondaryAction
+}: Extract<RecipeTemplatePreviewSection, { kind: 'selectable-table' }>) {
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+
+  function toggleRow(id: string) {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  }
+
+  function toggleAll() {
+    if (selectedIds.size === rows.length) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(rows.map((r) => r.id)));
+    }
+  }
+
+  const allSelected = rows.length > 0 && selectedIds.size === rows.length;
+  const someSelected = selectedIds.size > 0 && selectedIds.size < rows.length;
+
+  return (
+    <TemplateSurface>
+      <VStack align="stretch" gap="4">
+        {title ? <TemplateSectionHeader title={title} /> : null}
+        <Table.ScrollArea borderWidth="1px" borderColor="var(--border-subtle)" rounded="8px">
+          <Table.Root size="sm" variant="outline">
+            <Table.Header>
+              <Table.Row>
+                <Table.ColumnHeader w="36px" px="3">
+                  <Checkbox.Root
+                    checked={allSelected ? true : someSelected ? 'indeterminate' : false}
+                    onCheckedChange={toggleAll}
+                    size="sm"
+                  >
+                    <Checkbox.HiddenInput />
+                    <Checkbox.Control />
+                  </Checkbox.Root>
+                </Table.ColumnHeader>
+                <Table.ColumnHeader>Item</Table.ColumnHeader>
+                {columns.map((col) => (
+                  <Table.ColumnHeader key={col.id} textAlign={col.align ?? 'start'}>
+                    {col.label}
+                  </Table.ColumnHeader>
+                ))}
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {rows.map((row) => {
+                const isSelected = selectedIds.has(row.id);
+                return (
+                  <Table.Row
+                    key={row.id}
+                    bg={isSelected ? 'var(--surface-accent)' : undefined}
+                    _hover={{ bg: isSelected ? 'var(--surface-accent)' : 'var(--surface-2)' }}
+                    cursor="pointer"
+                    onClick={() => toggleRow(row.id)}
+                  >
+                    <Table.Cell px="3">
+                      <Checkbox.Root
+                        checked={isSelected}
+                        onCheckedChange={() => toggleRow(row.id)}
+                        size="sm"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <Checkbox.HiddenInput />
+                        <Checkbox.Control />
+                      </Checkbox.Root>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Text fontWeight="600" color="var(--text-primary)">
+                        {row.label}
+                      </Text>
+                    </Table.Cell>
+                    {row.cells.map((cell, idx) => {
+                      const tone = templateToneStyles(cell.tone);
+                      const col = columns[idx];
+                      if (cell.tone === 'accent') {
+                        return (
+                          <Table.Cell key={`${row.id}-${col?.id ?? idx}`} textAlign={col?.align ?? 'start'}>
+                            <Text
+                              fontSize="sm"
+                              color="var(--accent)"
+                              textDecoration="underline"
+                              textUnderlineOffset="3px"
+                            >
+                              {cell.value}
+                            </Text>
+                          </Table.Cell>
+                        );
+                      }
+                      return (
+                        <Table.Cell key={`${row.id}-${col?.id ?? idx}`} textAlign={col?.align ?? 'start'}>
+                          <Text
+                            fontWeight={cell.emphasis ? '700' : '500'}
+                            color={cell.tone ? tone.color : 'var(--text-primary)'}
+                            _dark={cell.tone ? { color: tone.darkColor } : undefined}
+                          >
+                            {cell.value}
+                          </Text>
+                          {cell.subvalue ? (
+                            <Text fontSize="xs" color="var(--text-muted)">
+                              {cell.subvalue}
+                            </Text>
+                          ) : null}
+                        </Table.Cell>
+                      );
+                    })}
+                  </Table.Row>
+                );
+              })}
+            </Table.Body>
+          </Table.Root>
+        </Table.ScrollArea>
+        <Flex gap="2" wrap="wrap">
+          <TemplateActionButton
+            action={{ label: primaryAction, tone: 'accent' }}
+            disabled={selectedIds.size === 0}
+          />
+          {secondaryAction ? (
+            <TemplateActionButton action={{ label: secondaryAction }} />
+          ) : null}
+        </Flex>
       </VStack>
     </TemplateSurface>
   );

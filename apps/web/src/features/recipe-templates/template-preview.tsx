@@ -1,6 +1,7 @@
 import { Box, Button, Flex, Text, VStack } from '@chakra-ui/react';
 import { useMemo, useState } from 'react';
 import {
+  TemplateAccordionList,
   TemplateActionBar,
   TemplateCardGrid,
   TemplateComparisonTable,
@@ -11,6 +12,7 @@ import {
   TemplateGroupedList,
   TemplateKanbanBoard,
   TemplateNotesPanel,
+  TemplateSelectableTable,
   TemplateStatStrip,
   TemplateSurface,
   TemplateTimeline,
@@ -62,6 +64,10 @@ function RecipeTemplatePreviewSectionRenderer({ section }: { section: RecipeTemp
       return <TemplateKanbanBoard {...section} />;
     case 'confirmation':
       return <TemplateConfirmationBlock {...section} />;
+    case 'accordion-list':
+      return <TemplateAccordionList {...section} />;
+    case 'selectable-table':
+      return <TemplateSelectableTable {...section} />;
     case 'split':
       return (
         <Flex

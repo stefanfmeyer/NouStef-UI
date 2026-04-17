@@ -10,7 +10,10 @@ import type {
   RecipeTemplateState
 } from '@hermes-recipes/protocol';
 import { useCallback, useMemo, useState } from 'react';
+import type { Components } from 'react-markdown';
 import type { ReactNode } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { TemplateActionButton, TemplateChipPill, TemplateSectionHeader, TemplateSurface } from '../../features/recipe-templates/template-primitives';
 import { templateToneStyles } from '../../features/recipe-templates/template-style-helpers';
 
@@ -338,6 +341,115 @@ function actionInputMeta(actionId: string) {
   }
 }
 
+function makeMarkdownComponents(dimmed: boolean): Components {
+  return {
+    p: ({ children }) => (
+      <Text
+        as="span"
+        display="block"
+        fontWeight="600"
+        fontSize="sm"
+        color={dimmed ? 'var(--text-muted)' : 'var(--text-primary)'}
+        textDecoration={dimmed ? 'line-through' : undefined}
+        opacity={dimmed ? 0.6 : 1}
+      >
+        {children}
+      </Text>
+    ),
+    strong: ({ children }) => <Text as="strong" fontWeight="800" color="inherit">{children}</Text>,
+    em: ({ children }) => <Text as="em" fontStyle="italic" color="inherit">{children}</Text>,
+    code: ({ children }) => (
+      <Box
+        as="code"
+        fontFamily="mono"
+        fontSize="0.82em"
+        bg="var(--surface-2)"
+        border="1px solid var(--border-subtle)"
+        px="1"
+        py="0.5"
+        rounded="3px"
+        color="var(--accent)"
+      >
+        {children}
+      </Box>
+    )
+  };
+}
+
+function ChecklistCodeBlock({ code, dimmed }: { code: string; dimmed: boolean }) {
+  const [copied, setCopied] = useState(false);
+
+  function handleCopy() {
+    void navigator.clipboard.writeText(code).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    });
+  }
+
+  return (
+    <Box position="relative" w="100%" mt="1.5" opacity={dimmed ? 0.5 : 1}>
+      <Box
+        as="pre"
+        rounded="8px"
+        bg="rgba(0, 0, 0, 0.06)"
+        border="1px solid var(--border-subtle)"
+        px="3.5"
+        py="3"
+        overflowX="auto"
+        _dark={{ bg: 'rgba(255,255,255,0.05)' }}
+      >
+        <Box as="code" fontFamily="mono" fontSize="sm" color="var(--text-primary)">
+          {code}
+        </Box>
+      </Box>
+      <Button
+        size="xs"
+        position="absolute"
+        top="2"
+        right="2"
+        rounded="6px"
+        bg="var(--surface-1)"
+        border="1px solid var(--border-subtle)"
+        color="var(--text-secondary)"
+        _hover={{ bg: 'var(--surface-2)' }}
+        onClick={handleCopy}
+      >
+        {copied ? 'Copied!' : 'Copy'}
+      </Button>
+    </Box>
+  );
+}
+
+function ChecklistStepDetail({ detail, dimmed }: { detail: string; dimmed: boolean }) {
+  const trimmed = detail.trimStart();
+  if (trimmed.startsWith('```')) {
+    const lines = detail.split('\n');
+    const code = lines.slice(1, trimmed.endsWith('```') ? lines.length - 1 : lines.length).join('\n');
+    return <ChecklistCodeBlock code={code} dimmed={dimmed} />;
+  }
+  return (
+    <Box opacity={dimmed ? 0.5 : 1}>
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        components={{
+          p: ({ children }) => (
+            <Text fontSize="sm" color="var(--text-secondary)" textDecoration={dimmed ? 'line-through' : undefined}>
+              {children}
+            </Text>
+          ),
+          code: ({ children }) => (
+            <Box as="code" fontFamily="mono" fontSize="0.82em" bg="var(--surface-2)" border="1px solid var(--border-subtle)" px="1" rounded="3px" color="var(--accent)">
+              {children}
+            </Box>
+          )
+        }}
+      >
+        {detail}
+      </ReactMarkdown>
+    </Box>
+  );
+}
+
 function ChecklistSectionRenderer({
   section,
   ghost,
@@ -353,30 +465,28 @@ function ChecklistSectionRenderer({
 
   return (
     <TemplateSurface>
-      <VStack align="stretch" gap="4">
-        <TemplateSectionHeader title={section.title} />
+      <VStack align="stretch" gap="3">
+        {section.title ? <TemplateSectionHeader title={section.title} /> : null}
         {ghost ? (
           renderGhostSectionBody(section)
         ) : (
           <>
             {section.prerequisites.length > 0 ? (
-              <VStack align="stretch" gap="2">
-                <Text fontSize="xs" fontWeight="500" textTransform="uppercase" letterSpacing="0.08em" color="var(--text-muted)">
+              <Box rounded="8px" border="1px solid var(--border-subtle)" bg="var(--surface-2)" px="3.5" py="3">
+                <Text fontSize="xs" fontWeight="600" textTransform="uppercase" letterSpacing="0.08em" color="var(--text-muted)" mb="2">
                   Prerequisites
                 </Text>
                 <VStack align="stretch" gap="1.5">
                   {section.prerequisites.map((prereq) => (
                     <HStack key={prereq} align="start" gap="2">
                       <Box mt="1.5" w="1.5" h="1.5" rounded="full" bg="var(--accent)" flexShrink={0} />
-                      <Text fontSize="sm" color="var(--text-secondary)">
-                        {prereq}
-                      </Text>
+                      <Text fontSize="sm" color="var(--text-secondary)">{prereq}</Text>
                     </HStack>
                   ))}
                 </VStack>
-              </VStack>
+              </Box>
             ) : null}
-            <VStack align="stretch" gap="2.5">
+            <VStack align="stretch" gap="1.5">
               {section.steps.map((step, index) => {
                 const isChecked = checkedSteps[step.id] ?? step.checked ?? false;
                 return (
@@ -385,12 +495,14 @@ function ChecklistSectionRenderer({
                     align="start"
                     gap="3"
                     rounded="8px"
-                    border="1px solid var(--border-subtle)"
-                    bg="var(--surface-2)"
+                    border="1px solid"
+                    borderColor={isChecked ? 'var(--border-subtle)' : 'var(--border-subtle)'}
+                    bg={isChecked ? 'transparent' : 'var(--surface-2)'}
                     px="3.5"
-                    py="3"
+                    py="2.5"
+                    transition="background 0.1s"
                   >
-                    <Box pt="0.5">
+                    <Box pt="1">
                       <Checkbox.Root
                         checked={isChecked}
                         onCheckedChange={(event) =>
@@ -404,29 +516,23 @@ function ChecklistSectionRenderer({
                         <Checkbox.Control />
                       </Checkbox.Root>
                     </Box>
-                    <VStack align="start" gap="0.5" minW={0}>
-                      <Text
-                        fontWeight="600"
-                        color={isChecked ? 'var(--text-muted)' : 'var(--text-primary)'}
-                        textDecoration={isChecked ? 'line-through' : undefined}
-                        opacity={isChecked ? 0.6 : 1}
-                      >
-                        <Text as="span" fontWeight="700" color={isChecked ? 'var(--text-muted)' : 'var(--accent)'} mr="2">
+                    <Box flex="1" minW={0}>
+                      <HStack align="baseline" gap="1.5" wrap="nowrap">
+                        <Text
+                          as="span"
+                          fontWeight="700"
+                          fontSize="sm"
+                          color={isChecked ? 'var(--text-muted)' : 'var(--accent)'}
+                          flexShrink={0}
+                        >
                           {index + 1}.
                         </Text>
-                        {step.label}
-                      </Text>
-                      {step.detail ? (
-                        <Text
-                          fontSize="sm"
-                          color="var(--text-secondary)"
-                          textDecoration={isChecked ? 'line-through' : undefined}
-                          opacity={isChecked ? 0.5 : 1}
-                        >
-                          {step.detail}
-                        </Text>
-                      ) : null}
-                    </VStack>
+                        <ReactMarkdown remarkPlugins={[remarkGfm]} components={makeMarkdownComponents(isChecked)}>
+                          {step.label}
+                        </ReactMarkdown>
+                      </HStack>
+                      {step.detail ? <ChecklistStepDetail detail={step.detail} dimmed={isChecked} /> : null}
+                    </Box>
                   </HStack>
                 );
               })}
@@ -1415,7 +1521,113 @@ export function RecipeTemplateRenderer({
             </VStack>
           </TemplateSurface>
         );
-      case 'split':
+      case 'split': {
+        const tid = templateState.templateId;
+        const isExpandableSplit = tid === 'security-review-board' || tid === 'inbox-triage-board';
+        if (isExpandableSplit && !ghost) {
+          const leftGroupedList = section.left.find((s) => s.kind === 'grouped-list');
+          const rightDetailPanel = section.right.find((s) => s.kind === 'detail-panel');
+          if (leftGroupedList?.kind === 'grouped-list' && rightDetailPanel?.kind === 'detail-panel') {
+            const detailPanel = rightDetailPanel;
+            return wrap(
+              <TemplateSurface key={section.slotId}>
+                <VStack align="stretch" gap="0">
+                  {leftGroupedList.title ? <Box pb="3"><TemplateSectionHeader title={leftGroupedList.title} /></Box> : null}
+                  {leftGroupedList.groups.map((group, groupIndex) => {
+                    const gTone = templateToneStyles(group.tone);
+                    return (
+                      <VStack key={group.id} align="stretch" gap="0">
+                        <HStack gap="2" py="2" px="1">
+                          <Box w="2" h="2" rounded="full" bg={gTone.color} _dark={{ bg: gTone.darkColor }} flexShrink={0} />
+                          <Text fontSize="xs" fontWeight="700" textTransform="uppercase" letterSpacing="0.1em" color="var(--text-muted)">
+                            {group.label}
+                          </Text>
+                        </HStack>
+                        <VStack align="stretch" gap="0">
+                          {group.items.map((item, itemIndex) => {
+                            const itemKey = item.id ?? item.title;
+                            const isSelected = selectedItemId === itemKey;
+                            const isToneColored = group.tone === 'danger' || group.tone === 'warning';
+                            return (
+                              <Box key={`${group.id}-${itemKey}`}>
+                                {itemIndex > 0 ? <Separator borderColor="var(--border-subtle)" /> : null}
+                                <Box
+                                  py="2.5"
+                                  px="1"
+                                  cursor="pointer"
+                                  bg={isSelected ? 'var(--surface-accent)' : 'transparent'}
+                                  rounded="6px"
+                                  onClick={() => setSelectedItemId((prev) => (prev === itemKey ? null : itemKey))}
+                                  _hover={{ bg: isSelected ? 'var(--surface-accent)' : 'var(--surface-2)' }}
+                                >
+                                  <Flex justify="space-between" align="center" gap="3">
+                                    <VStack align="start" gap="0.5" minW={0} flex="1">
+                                      <Text
+                                        fontWeight="600"
+                                        fontSize="sm"
+                                        color={isToneColored ? gTone.color : 'var(--text-primary)'}
+                                        _dark={isToneColored ? { color: gTone.darkColor } : undefined}
+                                      >
+                                        {item.title}
+                                      </Text>
+                                      {item.subtitle ? (
+                                        <Text fontSize="xs" color="var(--text-secondary)">{item.subtitle}</Text>
+                                      ) : null}
+                                    </VStack>
+                                    <Text fontSize="xs" color="var(--text-muted)" flexShrink={0}>
+                                      {isSelected ? '▲' : '▼'}
+                                    </Text>
+                                  </Flex>
+                                </Box>
+                                {isSelected ? (
+                                  <Box
+                                    pl="3"
+                                    pr="1"
+                                    pb="3"
+                                    pt="1"
+                                    rounded="8px"
+                                    bg="var(--surface-2)"
+                                    border="1px solid var(--border-subtle)"
+                                    mb="2"
+                                  >
+                                    <VStack align="stretch" gap="3">
+                                      {detailPanel.summary ? (
+                                        <Text fontSize="sm" color="var(--text-secondary)" pt="2">
+                                          {detailPanel.summary}
+                                        </Text>
+                                      ) : null}
+                                      {detailPanel.fields.map((field) => (
+                                        <Box key={`${field.label}-${field.value ?? ''}`}>
+                                          <Text fontSize="xs" fontWeight="600" textTransform="uppercase" letterSpacing="0.08em" color="var(--text-muted)" mb="1">
+                                            {field.label}
+                                          </Text>
+                                          {renderFieldBody(field, { showCopyButtons: true })}
+                                        </Box>
+                                      ))}
+                                      {detailPanel.actions.length > 0 ? (
+                                        <Box pt="1">
+                                          {renderActionRefs(detailPanel.actions, {
+                                            contextKey: `${section.slotId}:${itemKey}`,
+                                            fallbackSelectedItemIds: item.id ? [item.id] : undefined
+                                          })}
+                                        </Box>
+                                      ) : null}
+                                    </VStack>
+                                  </Box>
+                                ) : null}
+                              </Box>
+                            );
+                          })}
+                        </VStack>
+                        {groupIndex < leftGroupedList.groups.length - 1 ? <Separator borderColor="var(--border-subtle)" my="2" /> : null}
+                      </VStack>
+                    );
+                  })}
+                </VStack>
+              </TemplateSurface>
+            );
+          }
+        }
         return wrap(
           <Flex
             key={section.slotId}
@@ -1438,6 +1650,7 @@ export function RecipeTemplateRenderer({
             </Box>
           </Flex>
         );
+      }
       case 'tabs': {
         const activeTabId = activeTabsBySlot[section.slotId] ?? section.activeTabId;
         const activePane = section.panes[activeTabId] ?? [];

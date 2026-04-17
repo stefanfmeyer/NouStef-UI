@@ -1,4 +1,4 @@
 
-> @hermes-recipes/web@0.2.0 typecheck /Users/jozefbarton/dev/hermes-boots-codex/apps/web
+> @hermes-recipes/web@0.2.0 typecheck /Users/jozefbarton/dev/the-kitchen/apps/web
 > tsc --noEmit -p tsconfig.json
 

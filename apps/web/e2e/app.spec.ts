@@ -134,13 +134,10 @@ test('shows the requested template interaction affordances in the Spaces gallery
 
   await page.getByRole('button', { name: 'Pipelines & Planning', exact: true }).click();
   await page.getByTestId('spaces-template-card-job-search-pipeline').click();
-  await expect(inspector.locator('a[href="https://jobs.example.com/horizon-health/design"]')).toBeVisible();
+  await expect(inspector.getByText('Openings')).toBeVisible();
 
   await page.getByRole('button', { name: 'Travel & Local', exact: true }).click();
-  await page.getByTestId('spaces-template-card-local-discovery-comparison').click();
-  await expect(inspector.getByRole('button', { name: 'Save place' }).first()).toBeVisible();
-  await expect(inspector.locator('a[href="https://example.com/the-malin-soho"]')).toBeVisible();
-  await expect(inspector.locator('a[href="mailto:concierge@example.com"]')).toBeVisible();
+  await expect(page.getByTestId('spaces-template-card-local-discovery-comparison')).toHaveCount(0);
 });
 
 test('opens real sessions from all sessions and recent sessions in chat', async ({ page }) => {

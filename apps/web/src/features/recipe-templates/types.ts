@@ -224,6 +224,32 @@ export type RecipeTemplatePreviewSection =
       }>;
       activeTabId: string;
       panes: Record<string, RecipeTemplatePreviewSection[]>;
+    }
+  | {
+      kind: 'accordion-list';
+      title?: string;
+      items: Array<{
+        id: string;
+        title: string;
+        subtitle?: string;
+        count?: string;
+        tone?: TemplateTone;
+        subjects?: string[];
+        recommendation?: string;
+        recommendationTone?: TemplateTone;
+        detailHeader?: string;
+        detailText?: string;
+        evidenceBullets?: string[];
+        actions?: TemplateAction[];
+      }>;
+    }
+  | {
+      kind: 'selectable-table';
+      title?: string;
+      columns: TemplateTableColumn[];
+      rows: TemplateTableRow[];
+      primaryAction: string;
+      secondaryAction?: string;
     };
 
 export interface RecipeTemplatePreviewSpec {
@@ -270,6 +296,7 @@ export interface RecipeTemplateSpec {
   references: string[];
   populationInstructions: RecipeTemplatePopulationInstructions;
   updateRules: RecipeTemplateUpdateRules;
+  hiddenFromGallery?: boolean;
 }
 
 export interface RecipeTemplateDefinition extends RecipeTemplateSpec {

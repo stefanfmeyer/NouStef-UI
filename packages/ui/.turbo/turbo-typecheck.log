@@ -1,4 +1,4 @@
 
-> @hermes-recipes/ui@0.2.0 typecheck /Users/jozefbarton/dev/hermes-boots-codex/packages/ui
+> @hermes-recipes/ui@0.2.0 typecheck /Users/jozefbarton/dev/the-kitchen/packages/ui
 > tsc --noEmit -p tsconfig.json
 

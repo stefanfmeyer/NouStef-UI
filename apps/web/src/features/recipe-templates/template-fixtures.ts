@@ -5,219 +5,197 @@ const action = (label: string, tone: TemplateAction['tone'] = 'neutral', helper?
 
 export const RECIPE_TEMPLATE_FIXTURES: Record<RecipeTemplateId, RecipeTemplatePreviewSpec> = {
   'price-comparison-grid': {
-    headline: 'Compare one product family across four merchants with fast price and shipping tradeoffs.',
-    summary: 'A dense merchant-first matrix with stable row identity, compact scope tags, and direct decision actions.',
+    headline: 'Compare each item across up to four stores — every row carries a direct link.',
+    summary: 'A focused price-first grid: one row per item, up to four store columns, and a hyperlinked Link column.',
     sections: [
       {
         kind: 'hero',
         eyebrow: 'Commerce template',
-        title: '27" 4K monitor price check',
-        summary: 'Three high-signal monitor options compared across four merchants, with shipping and stock risk kept visible.',
-        chips: [chip('Merchant columns', 'accent'), chip('Sortable pricing'), chip('Alternative prompt')],
-        actions: [action('Buy best value', 'accent'), action('Save shortlist'), action('Ask Hermes for alternatives')]
+        title: '27" 4K monitor and laptop stand price check',
+        summary: 'Two items compared across four stores. Every row links straight to the listing.',
+        chips: [chip('Multiple items allowed', 'accent'), chip('Max 4 store columns'), chip('Link per row')],
+        actions: []
       },
       {
         kind: 'comparison-table',
-        title: 'Offer grid',
+        title: 'Price grid',
         columns: [
-          { id: 'amazon', label: 'Amazon' },
-          { id: 'bestbuy', label: 'Best Buy' },
-          { id: 'bh', label: 'B&H' },
-          { id: 'newegg', label: 'Newegg' }
+          { id: 'amazon', label: 'Amazon', align: 'end' },
+          { id: 'bestbuy', label: 'Best Buy', align: 'end' },
+          { id: 'bh', label: 'B&H', align: 'end' },
+          { id: 'newegg', label: 'Newegg', align: 'end' },
+          { id: 'link', label: 'Link' }
         ],
         rows: [
           {
             id: 'dell-s2722qc',
             label: 'Dell S2722QC',
             cells: [
-              { value: '$349', subvalue: 'Free ship' },
-              { value: '$359', subvalue: 'Pickup today' },
-              { value: '$329', subvalue: '2-day ship', tone: 'success', emphasis: true },
-              { value: '$341', subvalue: 'Low stock' }
+              { value: '$349' },
+              { value: '$359' },
+              { value: '$329', tone: 'success', emphasis: true },
+              { value: '$341' },
+              { value: 'Link', tone: 'accent' }
             ]
           },
           {
             id: 'lg-27up650',
             label: 'LG 27UP650',
             cells: [
-              { value: '$319', subvalue: 'Backordered', tone: 'warning' },
-              { value: '$338', subvalue: 'Free ship' },
-              { value: '$334', subvalue: 'Tax extra' },
-              { value: '$329', subvalue: '3-day ship', tone: 'success' }
+              { value: '$319', tone: 'success', emphasis: true },
+              { value: '$338' },
+              { value: '$334' },
+              { value: '$329' },
+              { value: 'Link', tone: 'accent' }
             ]
           },
           {
-            id: 'asus-pa279cv',
-            label: 'ASUS PA279CV',
+            id: 'rain-laptop-stand',
+            label: 'Rain Design mStand',
             cells: [
-              { value: '$399', subvalue: 'Prime' },
-              { value: '$389', subvalue: 'Open box nearby' },
-              { value: '$405', subvalue: 'Bundle cable' },
-              { value: '$394', subvalue: 'Free ship' }
+              { value: '$54' },
+              { value: '$59' },
+              { value: '$49', tone: 'success', emphasis: true },
+              { value: '$56' },
+              { value: 'Link', tone: 'accent' }
             ]
           }
-        ],
-        footerChips: [chip('27 inch'), chip('4K IPS'), chip('Under $420'), chip('USB-C preferred'), chip('Sorted by landed price', 'accent')],
-        footnote: 'Cell values are preview fixtures showing how merchant-specific pricing and shipping remain aligned.'
-      },
-      {
-        kind: 'notes',
-        title: 'Operator note',
-        lines: ['Keep USB-C power delivery visible.', 'Do not reshuffle row order if only one merchant price changes.']
-      },
-      {
-        kind: 'action-bar',
-        title: 'Quick actions',
-        actions: [action('Pin Dell as baseline'), action('Hide backordered offers'), action('Summarize tradeoffs')]
+        ]
       }
     ]
   },
   'shopping-shortlist': {
-    headline: 'A visual shortlist for decision-making when a dense comparison table is too heavy.',
-    summary: 'Image-forward cards keep price, highlights, and shortlist reasons visible without turning into a grid.',
+    headline: 'A tiled results grid of varied items with a photo, name, price, and direct link on every tile.',
+    summary: 'Small tiled cards built for browsing a wide variety of items rather than comparing the same item.',
     sections: [
       {
         kind: 'hero',
         eyebrow: 'Commerce template',
-        title: 'Carry-on luggage shortlist',
-        summary: 'Four well-reviewed options with concise reasons they survived the initial cut.',
-        chips: [chip('Image-first cards', 'accent'), chip('Quick shortlist notes'), chip('Compact action bar')],
-        actions: [action('Save favorite', 'accent'), action('Compare alternatives'), action('Remove weakest option')]
+        title: 'Gift ideas for a coffee lover',
+        summary: 'A mixed set of items with just photo, name, and price on each tile.',
+        chips: [chip('Small tiles', 'accent'), chip('Variety of items'), chip('Link per tile')],
+        actions: []
       },
       {
         kind: 'card-grid',
-        title: 'Shortlist',
-        columns: 2,
+        title: 'Results',
+        columns: 3,
         cards: [
           {
-            title: 'Away The Carry-On',
-            subtitle: 'Hard shell · 39L',
-            price: '$275',
-            imageLabel: 'Silver case',
-            chips: [chip('Best balance', 'success'), chip('Spinner wheels')],
-            bullets: ['Strong warranty', 'Fits most overhead bins'],
-            footer: 'Shortlist note: strong travel-day reliability.'
+            title: 'Fellow Stagg EKG Kettle',
+            imageLabel: 'Matte black kettle',
+            price: '$165',
+            footer: 'Link',
           },
           {
-            title: 'Travelpro Maxlite 5',
-            subtitle: 'Soft shell · 46L',
-            price: '$170',
-            imageLabel: 'Black roller',
-            chips: [chip('Best value', 'accent'), chip('Lightweight')],
-            bullets: ['Larger usable volume', 'Less polished styling'],
-            footer: 'Shortlist note: best budget pick.'
+            title: 'Baratza Encore Grinder',
+            imageLabel: 'Burr grinder',
+            price: '$179',
+            footer: 'Link',
           },
           {
-            title: 'Briggs & Riley Baseline',
-            subtitle: 'Soft shell · CX expansion',
-            price: '$699',
-            imageLabel: 'Navy roller',
-            chips: [chip('Premium', 'warning'), chip('Lifetime repair')],
-            bullets: ['Excellent build quality', 'Higher cost'],
-            footer: 'Shortlist note: ideal if durability matters most.'
+            title: 'Hario V60 Pour-Over Kit',
+            imageLabel: 'Ceramic dripper',
+            price: '$42',
+            footer: 'Link',
           },
           {
-            title: 'Monos Carry-On Pro',
-            subtitle: 'Hard shell · front pocket',
-            price: '$295',
-            imageLabel: 'Olive case',
-            chips: [chip('Laptop pocket'), chip('Sleek design')],
-            bullets: ['Sharp organization', 'Pocket adds bulk'],
-            footer: 'Shortlist note: best for business trips.'
+            title: 'Chemex 6-Cup Classic',
+            imageLabel: 'Glass carafe',
+            price: '$48',
+            footer: 'Link',
+          },
+          {
+            title: 'Acaia Pearl Scale',
+            imageLabel: 'Black scale',
+            price: '$175',
+            footer: 'Link',
+          },
+          {
+            title: 'Origin Espresso Sampler',
+            imageLabel: 'Bean sampler',
+            price: '$38',
+            footer: 'Link',
           }
         ]
-      },
-      {
-        kind: 'notes',
-        title: 'Shortlist notes',
-        lines: ['Need one model that fits small regional bins.', 'User prefers durable wheels over extra organizer pockets.'],
-        actions: [action('Add note')]
-      },
-      {
-        kind: 'action-bar',
-        title: 'Quick actions',
-        actions: [action('Pin top choice', 'accent'), action('Compare selected'), action('Ask Hermes for softer-shell options')]
       }
     ]
   },
   'inbox-triage-board': {
-    headline: 'Grouped sender triage tuned for bulk cleanup rather than individual thread reading.',
-    summary: 'Queue-style buckets, sender counts, and a safe detail preview make cleanup fast without hiding risk.',
+    headline: 'Expandable inbox rows: category name, vendor subtitle, count — click to reveal subjects, recommendation, and actions.',
+    summary: 'Each row expands to show sample subjects, a toned recommendation panel, and Archive / Archive & Unsubscribe / Send to Folder buttons.',
     sections: [
       {
         kind: 'hero',
         eyebrow: 'Inbox template',
-        title: 'Unread sender triage',
-        summary: 'Promotions and noisy senders grouped into cleanup lanes, with one selected sender shown in detail.',
-        chips: [chip('Bulk actions', 'accent'), chip('Grouped senders'), chip('Detail preview')],
-        actions: [action('Archive promotional lane', 'accent'), action('Create new rule'), action('Summarize selected sender')]
+        title: 'Inbox triage',
+        summary: 'Minimal rows with thin dividers. Click any row to expand.',
+        chips: [chip('Expandable rows', 'accent'), chip('Sample subjects'), chip('Hermes-backed actions')],
+        actions: []
       },
       {
-        kind: 'stats',
+        kind: 'accordion-list',
         items: [
-          { label: 'Unread senders', value: '23', helper: 'Top 6 shown' },
-          { label: 'Messages this week', value: '142', helper: 'Estimated promotional load' },
-          { label: 'Rules suggested', value: '4', helper: 'Safe automation opportunities', tone: 'success' }
-        ]
-      },
-      {
-        kind: 'split',
-        ratio: 'list-detail',
-        left: [
           {
-            kind: 'grouped-list',
-            title: 'Sender groups',
-            groups: [
-              {
-                id: 'promotions',
-                label: 'Promotions',
-                tone: 'warning',
-                items: [
-                  {
-                    title: 'Daily deals cluster',
-                    subtitle: 'Groupon, Woot, Meh',
-                    meta: '38 unread · last seen 2h ago',
-                    chips: [chip('Archive safely', 'success'), chip('Rule candidate')]
-                  },
-                  {
-                    title: 'Retail newsletters',
-                    subtitle: 'REI, Huckberry, Uniqlo',
-                    meta: '27 unread · last seen 4h ago',
-                    chips: [chip('Review first')]
-                  }
-                ]
-              },
-              {
-                id: 'updates',
-                label: 'Updates',
-                items: [
-                  {
-                    title: 'Tool notifications',
-                    subtitle: 'GitHub, Linear, Vercel',
-                    meta: '19 unread · mostly low urgency',
-                    chips: [chip('Potential digest rule')]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        right: [
-          {
-            kind: 'detail-panel',
-            title: 'Selected sender preview',
-            eyebrow: 'Daily deals cluster',
-            summary: 'Mostly promo blasts with no reply history in the last 60 days.',
-            fields: [
-              { label: 'Unread count', value: '38' },
-              { label: 'Typical subject', value: 'Morning flash sale' },
-              { label: 'Safe move', value: 'Archive and build sender rule' }
+            id: 'promotions',
+            title: 'Promotions',
+            subtitle: 'Groupon, Woot, REI, Meh',
+            count: '38 emails',
+            tone: 'warning' as const,
+            subjects: [
+              '\u{1F525} REI Flash Sale \u2014 40% off hiking gear',
+              '\u{1F4E6} Your Woot! deal of the day',
+              '\u{1F6CD}\uFE0F Groupon: deals near you this weekend',
+              'Meh \u2014 One sale. Today. $29.',
+              '\u{1F4B8} REI Member Dividend reminder'
             ],
-            actions: [action('Archive group', 'accent'), action('Create rule'), action('Open latest message')],
-            note: 'Preview state is sender-cluster oriented rather than message-thread oriented.'
+            recommendation: 'Safe to archive \u2014 no reply history and no purchases traced from these in 60 days.',
+            recommendationTone: 'success' as const,
+            actions: [action('Archive', 'accent'), action('Archive & Unsubscribe'), action('Send to Folder')]
+          },
+          {
+            id: 'newsletters',
+            title: 'Newsletters',
+            subtitle: 'Stratechery, Platformer, The Browser, Morning Brew',
+            count: '27 emails',
+            subjects: [
+              'Platformer \u2014 the OpenAI shakeup explained',
+              'Stratechery \u2014 the aggregator bear case',
+              'The Browser \u2014 5 great reads on attention',
+              'Morning Brew \u2014 quick markets recap',
+              'Platformer \u2014 how Meta is retooling ads'
+            ],
+            recommendation: 'Archive & Unsubscribe from low-engagement ones \u2014 you opened fewer than 10% of these in the last 30 days.',
+            recommendationTone: 'warning' as const,
+            actions: [action('Archive'), action('Archive & Unsubscribe', 'accent'), action('Send to Folder')]
+          },
+          {
+            id: 'updates',
+            title: 'Updates',
+            subtitle: 'GitHub, Linear, Vercel',
+            count: '19 emails',
+            subjects: [
+              '[GitHub] PR #1048 approved by jsmith',
+              'Linear: 3 issues assigned to you',
+              'Vercel deployment succeeded',
+              '[GitHub] Dependabot alert: 1 new vulnerability',
+              'Linear: Sprint review tomorrow at 10\u202fam'
+            ],
+            recommendation: 'Consider a digest rule \u2014 most of these are low-urgency and can batch to once-a-day.',
+            recommendationTone: 'neutral' as const,
+            actions: [action('Archive'), action('Archive & Unsubscribe'), action('Send to Folder', 'accent')]
+          },
+          {
+            id: 'receipts',
+            title: 'Receipts',
+            subtitle: 'Stripe, Apple, Uber, Amazon',
+            count: '12 emails',
+            recommendation: 'Send to a Receipts folder to keep your inbox clean without losing the records.',
+            recommendationTone: 'neutral' as const,
+            actions: [action('Archive'), action('Archive & Unsubscribe'), action('Send to Folder', 'accent')]
           }
         ]
-      },
+      }
     ]
   },
   'restaurant-finder': {
@@ -284,92 +262,52 @@ export const RECIPE_TEMPLATE_FIXTURES: Record<RecipeTemplateId, RecipeTemplatePr
             kind: 'detail-panel',
             title: 'Selected venue',
             eyebrow: 'Lilia',
-            summary: 'High-confidence dinner pick with strong pasta menu, known demand, and a direct reservation path.',
             fields: [
-              { label: 'Hours tonight', value: '5:00 PM to 10:30 PM' },
-              { label: 'Booking', value: 'Reservation link available' },
-              { label: 'Menu', value: 'Pasta-focused seasonal menu' }
+              { label: '\u{1F552} Hours', value: '5:00 PM \u2013 10:30 PM' },
+              { label: '\u{1F310} Website', links: [{ label: 'Link', href: 'https://lilianewyork.com' }] },
+              { label: '\u{1F4DE} Phone', value: '(718) 576-3095' },
+              { label: '\u{1F374} Cuisine', value: 'Italian' }
             ],
-            actions: [action('Open reservation', 'accent'), action('Open menu'), action('Open website')],
-            note: 'This template keeps the selected venue stable while the list updates.'
+            actions: []
           }
         ]
       }
     ]
   },
   'hotel-shortlist': {
-    headline: 'A hospitality shortlist that makes location and amenity tradeoffs feel tangible.',
-    summary: 'Property cards, quick stats, and stable notes make this a strong trip-decision workspace.',
+    headline: 'Hotel cards with price, amenities, website, and phone — no tabs or chrome.',
+    summary: 'Just cards. No header bar, no recipe tabs, no Hotels/Notes tabs, and no "Hotel shortlist" header.',
     sections: [
       {
-        kind: 'hero',
-        eyebrow: 'Travel template',
-        title: 'Lisbon hotel shortlist',
-        summary: 'Three candidate stays balanced across neighborhood fit, price, and remote-work comfort.',
-        chips: [chip('Property shortlist', 'accent'), chip('Amenities'), chip('Notes tab')],
-        actions: [action('Open booking link', 'accent'), action('Pin favorite'), action('Ask Hermes for quieter neighborhoods')]
-      },
-      {
-        kind: 'stats',
-        items: [
-          { label: 'Nightly sweet spot', value: '$212', helper: 'Current median' },
-          { label: 'Walkable districts', value: '3', helper: 'Chiado, Príncipe Real, Alfama' },
-          { label: 'Reliable wifi', value: '2 / 3', helper: 'Top picks' }
+        kind: 'card-grid',
+        title: '',
+        columns: 1,
+        cards: [
+          {
+            title: 'Memmo Pr\u00edncipe Real',
+            subtitle: 'Boutique \u00b7 Pr\u00edncipe Real',
+            price: '$248/night',
+            imageLabel: 'Warm terrace view',
+            chips: [chip('Best fit', 'success'), chip('Rooftop')],
+            bullets: ['Quiet block', 'Strong breakfast', 'Walkable to central sights', '\u{1F310} Link', '\u{1F4DE} +351 21 901 6800']
+          },
+          {
+            title: 'The Lumiares',
+            subtitle: 'Apartment hotel \u00b7 Bairro Alto',
+            price: '$226/night',
+            imageLabel: 'Suite interior',
+            chips: [chip('Work-friendly', 'accent'), chip('Kitchenette')],
+            bullets: ['Good for longer stay', 'Liveliest nightlife nearby', '\u{1F310} Link', '\u{1F4DE} +351 21 116 0200']
+          },
+          {
+            title: 'Lisboa Pessoa',
+            subtitle: 'Hotel \u00b7 Chiado',
+            price: '$189/night',
+            imageLabel: 'Classic room',
+            chips: [chip('Best value', 'accent')],
+            bullets: ['Central location', 'Slightly smaller rooms', '\u{1F310} Link', '\u{1F4DE} +351 21 140 1600']
+          }
         ]
-      },
-      {
-        kind: 'tabs',
-        title: 'Recipe tabs',
-        tabs: [
-          { id: 'hotels', label: 'Hotels' },
-          { id: 'notes', label: 'Notes' }
-        ],
-        activeTabId: 'hotels',
-        panes: {
-          hotels: [
-            {
-              kind: 'card-grid',
-              title: 'Hotel shortlist',
-              columns: 1,
-              cards: [
-                {
-                  title: 'Memmo Príncipe Real',
-                  subtitle: 'Boutique · Príncipe Real',
-                  price: '$248/night',
-                  imageLabel: 'Warm terrace view',
-                  chips: [chip('Best fit', 'success'), chip('Rooftop')],
-                  bullets: ['Quiet block', 'Strong breakfast', 'Walkable to central sights'],
-                  footer: 'Note: best overall neighborhood fit.'
-                },
-                {
-                  title: 'The Lumiares',
-                  subtitle: 'Apartment hotel · Bairro Alto',
-                  price: '$226/night',
-                  imageLabel: 'Suite interior',
-                  chips: [chip('More recipe'), chip('Kitchenette')],
-                  bullets: ['Good for longer stay', 'Liveliest nightlife nearby'],
-                  footer: 'Note: strongest work setup.'
-                },
-                {
-                  title: 'Lisboa Pessoa',
-                  subtitle: 'Hotel · Chiado',
-                  price: '$189/night',
-                  imageLabel: 'Classic room',
-                  chips: [chip('Best value', 'accent')],
-                  bullets: ['Central location', 'Slightly smaller rooms'],
-                  footer: 'Note: value pick if quiet is less critical.'
-                }
-              ]
-            }
-          ],
-          notes: [
-            {
-              kind: 'notes',
-              title: 'Trip notes',
-              lines: ['Prefer calm streets over nightlife proximity.', 'Need reliable morning workspace on checkout day.']
-            }
-          ]
-        }
       }
     ]
   },
@@ -397,8 +335,7 @@ export const RECIPE_TEMPLATE_FIXTURES: Record<RecipeTemplateId, RecipeTemplatePr
         kind: 'tabs',
         tabs: [
           { id: 'outbound', label: 'Outbound' },
-          { id: 'return', label: 'Return' },
-          { id: 'notes', label: 'Notes' }
+          { id: 'return', label: 'Return' }
         ],
         activeTabId: 'outbound',
         panes: {
@@ -458,13 +395,6 @@ export const RECIPE_TEMPLATE_FIXTURES: Record<RecipeTemplateId, RecipeTemplatePr
                 }
               ]
             }
-          ],
-          notes: [
-            {
-              kind: 'notes',
-              title: 'Traveler preferences',
-              lines: ['Avoid very early layovers.', 'Worth paying slightly more for nonstop return.']
-            }
           ]
         }
       }
@@ -486,9 +416,8 @@ export const RECIPE_TEMPLATE_FIXTURES: Record<RecipeTemplateId, RecipeTemplatePr
         kind: 'tabs',
         tabs: [
           { id: 'itinerary', label: 'Itinerary' },
-          { id: 'packing', label: 'Packing' },
-          { id: 'notes', label: 'Notes' },
-          { id: 'links', label: 'Links' }
+          { id: 'bookings', label: 'Bookings' },
+          { id: 'packing', label: 'Packing' }
         ],
         activeTabId: 'itinerary',
         panes: {
@@ -503,6 +432,22 @@ export const RECIPE_TEMPLATE_FIXTURES: Record<RecipeTemplateId, RecipeTemplatePr
               ]
             }
           ],
+          bookings: [
+            {
+              kind: 'grouped-list',
+              title: 'Bookings',
+              groups: [
+                {
+                  id: 'confirmations',
+                  label: 'Confirmations',
+                  items: [
+                    { title: 'Hotel in Le Marais', subtitle: 'Direct booking', meta: 'Confirmation #M4221' },
+                    { title: 'Mus\u00e9e d\u2019Orsay timed entry', subtitle: 'Official site', meta: 'Fri 10:00 AM' }
+                  ]
+                }
+              ]
+            }
+          ],
           packing: [
             {
               kind: 'grouped-list',
@@ -514,30 +459,6 @@ export const RECIPE_TEMPLATE_FIXTURES: Record<RecipeTemplateId, RecipeTemplatePr
                   items: [
                     { title: 'Umbrella', meta: 'Rain forecast Friday' },
                     { title: 'Museum shoes', meta: 'High walking day' }
-                  ]
-                }
-              ]
-            }
-          ],
-          notes: [
-            {
-              kind: 'notes',
-              title: 'Trip notes',
-              lines: ['Prefer morning flights for day-one exploration.', 'Pack light for metro transfers.']
-            }
-          ],
-          links: [
-            {
-              kind: 'grouped-list',
-              title: 'Saved links',
-              groups: [
-                {
-                  id: 'trip-links',
-                  label: 'Useful links',
-                  items: [
-                    { title: 'Hotel confirmation', meta: 'Direct booking' },
-                    { title: 'Museum tickets', meta: 'Official site' },
-                    { title: 'Airport transfer options', meta: 'Saved for later' }
                   ]
                 }
               ]
@@ -563,9 +484,7 @@ export const RECIPE_TEMPLATE_FIXTURES: Record<RecipeTemplateId, RecipeTemplatePr
         kind: 'tabs',
         tabs: [
           { id: 'sources', label: 'Sources' },
-          { id: 'notes', label: 'Notes' },
-          { id: 'points', label: 'Extracted points' },
-          { id: 'followups', label: 'Follow-ups' }
+          { id: 'points', label: 'Extracted points' }
         ],
         activeTabId: 'sources',
         panes: {
@@ -585,13 +504,6 @@ export const RECIPE_TEMPLATE_FIXTURES: Record<RecipeTemplateId, RecipeTemplatePr
               ]
             }
           ],
-          notes: [
-            {
-              kind: 'notes',
-              title: 'Operator notes',
-              lines: ['Need a clear split between browsing competence and task-completion robustness.', 'Benchmark results alone do not explain repair-loop design.']
-            }
-          ],
           points: [
             {
               kind: 'grouped-list',
@@ -607,167 +519,147 @@ export const RECIPE_TEMPLATE_FIXTURES: Record<RecipeTemplateId, RecipeTemplatePr
                 }
               ]
             }
-          ],
-          followups: [
-            {
-              kind: 'grouped-list',
-              title: 'Follow-up prompts',
-              groups: [
-                {
-                  id: 'next-asks',
-                  label: 'Next asks',
-                  items: [
-                    {
-                      title: 'Compare repair strategies across benchmark families',
-                      meta: 'Good next Hermes prompt',
-                      actions: ['Run follow-up']
-                    },
-                    {
-                      title: 'Extract common failure loops from recent agent benchmarks',
-                      meta: 'Directly runnable next question',
-                      actions: ['Run follow-up']
-                    }
-                  ]
-                }
-              ]
-            }
           ]
         }
       }
     ]
   },
   'security-review-board': {
-    headline: 'A severity-first review board for evidence-backed security triage.',
-    summary: 'Finding groups stay stable while evidence and remediation details remain attached to a selected issue.',
+    headline: 'Full-width expandable findings grouped by severity: Affected Surface, Evidence, Remediate now / Ignore.',
+    summary: 'Click any finding to expand. No right pane. Ignore removes it from the list; Remediate now prompts Hermes.',
     sections: [
       {
         kind: 'hero',
         eyebrow: 'Security template',
         title: 'Public webhook surface review',
-        summary: 'Findings grouped by severity with a selected issue detail panel and remediation actions.',
-        chips: [chip('Severity groups', 'accent'), chip('Evidence detail'), chip('Remediation tracking')],
-        actions: [action('Assign remediation', 'accent'), action('Open evidence'), action('Change status')]
+        summary: 'Severity-grouped findings as expandable rows. One click reveals the full context and actions.',
+        chips: [chip('Severity groups', 'accent'), chip('Expandable rows'), chip('Remediate now / Ignore')],
+        actions: []
       },
       {
         kind: 'stats',
         items: [
-          { label: 'Critical', value: '1', helper: 'Unauthenticated endpoint', tone: 'danger' },
-          { label: 'Medium', value: '3', helper: 'Needs review', tone: 'warning' },
-          { label: 'Remediation ready', value: '2', helper: 'Actionable fix path', tone: 'success' }
+          { label: 'Critical', value: '1', tone: 'danger' },
+          { label: 'Medium', value: '2', tone: 'warning' },
+          { label: 'Low', value: '1', tone: 'neutral' }
         ]
       },
       {
-        kind: 'split',
-        ratio: 'list-detail',
-        left: [
+        kind: 'accordion-list',
+        title: 'Findings by Severity',
+        items: [
           {
-            kind: 'grouped-list',
-            title: 'Findings by severity',
-            groups: [
-              {
-                id: 'critical',
-                label: 'Critical',
-                tone: 'danger',
-                items: [
-                  {
-                    title: 'Webhook signature bypass on preview endpoint',
-                    subtitle: 'Missing auth check in fallback route',
-                    meta: 'Evidence captured from replayed fixture payload',
-                    chips: [chip('Exploit path', 'danger')]
-                  }
-                ]
-              },
-              {
-                id: 'medium',
-                label: 'Medium',
-                tone: 'warning',
-                items: [
-                  { title: 'Verbose stack traces in bridge error body', meta: 'Leaks internal paths during failure.' },
-                  { title: 'Long-lived oauth state tokens', meta: 'Needs expiry audit.' }
-                ]
-              }
-            ]
-          }
-        ],
-        right: [
-          {
-            kind: 'detail-panel',
-            title: 'Selected finding',
-            eyebrow: 'Webhook signature bypass',
-            summary: 'Fallback preview path accepts unauthenticated traffic when feature flag is misconfigured.',
-            chips: [chip('Critical', 'danger'), chip('Open', 'warning')],
-            fields: [
-              { label: 'Affected surface', value: 'Preview webhook fallback route' },
-              {
-                label: 'Evidence',
-                bullets: ['Replay fixture reached the fallback route without a valid signature.', 'Header verification is skipped when the preview flag is misconfigured.']
-              }
+            id: 'webhook-bypass',
+            title: 'Webhook signature bypass on preview endpoint',
+            subtitle: 'Fallback preview path accepts unauthenticated traffic when feature flag is misconfigured.',
+            count: 'Critical',
+            tone: 'danger' as const,
+            detailHeader: 'Affected surface',
+            detailText: 'Preview webhook fallback route \u2014 /api/webhooks/preview falls through to an unauthenticated handler when the preview feature flag is enabled without a valid HMAC configuration.',
+            evidenceBullets: [
+              'Replay fixture reached the fallback route without a valid signature.',
+              'Header verification is skipped when the preview flag is misconfigured.',
+              'No audit log entry is emitted for the bypass path.'
             ],
-            actions: [action('Assign remediation', 'accent'), action('Mark investigating'), action('Open evidence')],
-            noteTitle: 'Proposed remediation',
-            note: 'Require shared-secret verification in all routes, then add an integration test that exercises the preview fallback path.'
+            actions: [action('Remediate now', 'accent'), action('Ignore', 'danger')]
+          },
+          {
+            id: 'stack-traces',
+            title: 'Verbose stack traces in bridge error body',
+            subtitle: 'Leaks internal paths and token fragments on unhandled exceptions.',
+            count: 'Medium',
+            tone: 'warning' as const,
+            detailHeader: 'Affected surface',
+            detailText: 'Bridge HTTP error handler \u2014 all 5xx responses from the bridge include a raw stack trace in the JSON body visible to authenticated callers.',
+            evidenceBullets: [
+              'Stack trace captured from a live 503 response in staging.',
+              'Trace includes absolute file paths and partial module names.'
+            ],
+            actions: [action('Remediate now', 'accent'), action('Ignore', 'danger')]
+          },
+          {
+            id: 'oauth-tokens',
+            title: 'Long-lived oauth state tokens',
+            subtitle: 'OAuth state tokens do not expire and accumulate in the session store.',
+            count: 'Medium',
+            tone: 'warning' as const,
+            detailHeader: 'Affected surface',
+            detailText: 'OAuth initiation flow \u2014 state tokens written to the session store on /auth/start have no TTL and persist indefinitely.',
+            evidenceBullets: [
+              'State tokens from 30-day-old sessions still present in store.',
+              'No cleanup job found in codebase.'
+            ],
+            actions: [action('Remediate now', 'accent'), action('Ignore', 'danger')]
+          },
+          {
+            id: 'hsts',
+            title: 'Missing HSTS header on marketing subdomain',
+            subtitle: 'Defense-in-depth issue \u2014 not exploitable without MitM position.',
+            count: 'Low',
+            tone: 'neutral' as const,
+            detailHeader: 'Affected surface',
+            detailText: 'marketing.example.com \u2014 Strict-Transport-Security header is absent from all responses.',
+            evidenceBullets: [
+              'Header not observed in curl response from marketing CDN origin.'
+            ],
+            actions: [action('Remediate now', 'accent'), action('Ignore', 'danger')]
           }
         ]
       }
     ]
   },
   'vendor-evaluation-matrix': {
-    headline: 'A weighted comparison matrix for software or service procurement decisions.',
-    summary: 'Criteria and vendor rows stay explainable, which matters more here than visual novelty.',
+    headline: 'A generic comparison matrix for frameworks, vendors, technologies, apps, or products.',
+    summary: 'Up to 5 columns including the Name / Item column, followed by a single recommendation pane.',
     sections: [
       {
         kind: 'hero',
-        eyebrow: 'Commerce template',
-        title: 'Customer support platform evaluation',
-        summary: 'Four vendors scored across weighted criteria with pricing and notes kept adjacent to the matrix.',
-        chips: [chip('Weighted criteria', 'accent'), chip('Procurement-ready'), chip('Notes tab')],
-        actions: [action('Reweight criteria', 'accent'), action('Pin frontrunner'), action('Open vendor site')]
-      },
-      {
-        kind: 'stats',
-        items: [
-          { label: 'Frontrunner', value: 'Plain', helper: 'Highest current score', tone: 'success' },
-          { label: 'Top weight', value: 'API quality', helper: '30%' },
-          { label: 'Budget ceiling', value: '$55/seat', helper: 'Target range' }
-        ]
+        eyebrow: 'Comparison template',
+        title: 'Frontend framework comparison',
+        summary: 'Four frameworks compared across four stable criteria, capped at five total columns.',
+        chips: [chip('Max 5 columns', 'accent'), chip('Recommendation pane'), chip('No top stats')],
+        actions: []
       },
       {
         kind: 'comparison-table',
-        title: 'Evaluation matrix',
+        title: '',
         columns: [
-          { id: 'api', label: 'API quality' },
-          { id: 'workflow', label: 'Workflow fit' },
-          { id: 'reporting', label: 'Reporting' },
-          { id: 'price', label: 'Price' }
+          { id: 'bundle', label: 'Bundle size' },
+          { id: 'rendering', label: 'Rendering model' },
+          { id: 'ecosystem', label: 'Ecosystem' },
+          { id: 'learning', label: 'Learning curve' }
         ],
         rows: [
           {
-            id: 'plain',
-            label: 'Plain',
-            cells: [
-              { value: '9 / 10', tone: 'success' },
-              { value: '8 / 10' },
-              { value: '7 / 10' },
-              { value: '$49 / seat', emphasis: true }
-            ]
+            id: 'react',
+            label: 'React',
+            cells: [{ value: 'Medium' }, { value: 'Client + SSR' }, { value: 'Largest', tone: 'success' }, { value: 'Moderate' }]
           },
           {
-            id: 'zendesk',
-            label: 'Zendesk',
-            cells: [{ value: '8 / 10' }, { value: '9 / 10', tone: 'success' }, { value: '9 / 10' }, { value: '$69 / seat', tone: 'warning' }]
+            id: 'solid',
+            label: 'SolidJS',
+            cells: [{ value: 'Small', tone: 'success' }, { value: 'Fine-grained reactive' }, { value: 'Growing' }, { value: 'Moderate' }]
           },
           {
-            id: 'helpscout',
-            label: 'Help Scout',
-            cells: [{ value: '7 / 10' }, { value: '8 / 10' }, { value: '7 / 10' }, { value: '$40 / seat', tone: 'success' }]
+            id: 'svelte',
+            label: 'Svelte',
+            cells: [{ value: 'Small', tone: 'success' }, { value: 'Compile-time' }, { value: 'Healthy' }, { value: 'Gentle', tone: 'success' }]
+          },
+          {
+            id: 'qwik',
+            label: 'Qwik',
+            cells: [{ value: 'Tiny (resumable)', tone: 'success' }, { value: 'Resumable SSR' }, { value: 'Early' }, { value: 'Steep', tone: 'warning' }]
           }
-        ],
-        footnote: 'Preview weights: API quality 30%, workflow fit 25%, reporting 20%, price 25%.'
+        ]
       },
       {
-        kind: 'notes',
-        title: 'Decision notes',
-        lines: ['Need low-friction API access more than enterprise reporting.', 'Seat expansion cost will matter within 12 months.']
+        kind: 'detail-panel',
+        title: 'Recommendation',
+        summary: 'For a new team prioritizing ecosystem depth and hiring, start with React. If bundle size is non-negotiable, SolidJS or Svelte are both strong and will likely feel lighter day-to-day.',
+        fields: [
+          { label: 'Top pick', value: 'React', chips: [chip('Recommended', 'success')] },
+          { label: 'Runner-up', value: 'Svelte', chips: [chip('Great DX', 'accent')] }
+        ]
       }
     ]
   },
@@ -885,70 +777,48 @@ export const RECIPE_TEMPLATE_FIXTURES: Record<RecipeTemplateId, RecipeTemplatePr
     ]
   },
   'job-search-pipeline': {
-    headline: 'A stage-based job-search board with salary and location context kept close to next steps.',
-    summary: 'This preview leans on strong stage stability so interview updates feel like patches, not rewrites.',
+    headline: 'Job listings as a selectable table with Apply to selected and Find more actions.',
+    summary: 'Position, company, estimated pay, and a direct link per row. No pipeline or kanban.',
     sections: [
       {
         kind: 'hero',
-        eyebrow: 'Pipeline template',
-        title: 'Senior product design job search',
-        summary: 'Applications grouped by interview stage with durable links, salary/location detail, and interview prep notes in a stable side panel.',
-        chips: [chip('Interview stages', 'accent'), chip('Salary highlights'), chip('Prep notes')],
-        actions: [action('Update stage', 'accent'), action('Add interview note'), action('Interview prep')]
+        eyebrow: 'Jobs template',
+        title: 'Senior product design openings',
+        summary: 'Pick the roles to apply to, or ask Hermes to find more.',
+        chips: [chip('Selectable rows', 'accent'), chip('Direct link per row'), chip('Apply to selected')],
+        actions: []
       },
       {
-        kind: 'stats',
-        items: [
-          { label: 'Active applications', value: '9', helper: '3 onsite stage' },
-          { label: 'Remote roles', value: '5', helper: '2 hybrid NYC' },
-          { label: 'Top salary band', value: '$210k', helper: 'Current high end', tone: 'success' }
-        ]
-      },
-      {
-        kind: 'kanban',
-        title: 'Application pipeline',
+        kind: 'selectable-table',
         columns: [
+          { id: 'company', label: 'Company' },
+          { id: 'pay', label: 'Estimated pay', align: 'end' as const },
+          { id: 'link', label: 'Link' }
+        ],
+        rows: [
           {
-            label: 'Applied',
-            cards: [
-              { title: 'Northlane', subtitle: 'Staff Product Designer · Remote', footer: '$180k to $195k' },
-              { title: 'Aster', subtitle: 'Senior Product Designer · NYC hybrid', footer: '$175k to $190k' }
-            ]
+            id: 'horizon-health',
+            label: 'Senior Product Designer',
+            cells: [{ value: 'Horizon Health' }, { value: '$195k \u2013 $215k', tone: 'success' as const }, { value: 'Link', tone: 'accent' as const }]
           },
           {
-            label: 'Phone screen',
-            tone: 'warning',
-            cards: [{ title: 'Beacon', subtitle: 'Product design screen booked', chips: [chip('Prep soon', 'warning')], footer: 'Tue 11:00 AM' }]
+            id: 'northlane',
+            label: 'Staff Product Designer',
+            cells: [{ value: 'Northlane' }, { value: '$180k \u2013 $195k' }, { value: 'Link', tone: 'accent' as const }]
           },
           {
-            label: 'Onsite',
-            tone: 'success',
-            cards: [{ title: 'Horizon Health', subtitle: 'Panel next Friday', chips: [chip('Top fit', 'success')], footer: '$205k target' }]
-          }
-        ]
-      },
-      {
-        kind: 'detail-panel',
-        title: 'Selected application',
-        eyebrow: 'Horizon Health',
-        summary: 'Mission fit is strong. Need sharper examples around design system adoption and care-team workflows.',
-        chips: [chip('Onsite', 'success'), chip('Remote-first')],
-        fields: [
-          { label: 'Location', value: 'Remote-first' },
-          { label: 'Posting', links: [{ label: 'Open posting', href: 'https://jobs.example.com/horizon-health/design' }] },
-          { label: 'Next step', value: 'Draft panel stories by Wednesday' },
+            id: 'aster',
+            label: 'Senior Product Designer',
+            cells: [{ value: 'Aster' }, { value: '$175k \u2013 $190k' }, { value: 'Link', tone: 'accent' as const }]
+          },
           {
-            label: 'Interview prep brief',
-            fullWidth: true,
-            bullets: [
-              'Role: lead with design system adoption and cross-functional operating model examples.',
-              'Company: connect care-team workflow empathy to product execution.',
-              'Technology: be ready for Figma systems, analytics instrumentation, and experimentation questions.',
-              'Requirements: prepare two stories that show systems thinking and measurable outcomes.'
-            ]
+            id: 'beacon',
+            label: 'Product Designer',
+            cells: [{ value: 'Beacon' }, { value: '$160k \u2013 $180k' }, { value: 'Link', tone: 'accent' as const }]
           }
         ],
-        actions: [action('Interview prep', 'accent'), action('Open company research'), action('Update stage')]
+        primaryAction: 'Apply to selected',
+        secondaryAction: 'Find more'
       }
     ]
   },
@@ -975,19 +845,30 @@ export const RECIPE_TEMPLATE_FIXTURES: Record<RecipeTemplateId, RecipeTemplatePr
         panes: {
           ideas: [
             {
-              kind: 'kanban',
-              title: 'Idea lanes',
-              columns: [
+              kind: 'grouped-list',
+              title: 'Ideas',
+              groups: [
                 {
-                  label: 'Worth exploring',
-                  cards: [
-                    { title: 'Launch diary thread', subtitle: 'Founder-led social story', chips: [chip('High voice fit', 'success')], footer: 'Note: strong founder voice, needs lighter CTA.' },
-                    { title: 'Before/after workflow carousel', subtitle: 'Product demo angle', footer: 'Note: clarify the one-screen narrative before writing.' }
+                  id: 'ideas',
+                  label: 'Ideas',
+                  items: [
+                    {
+                      title: 'Launch diary thread',
+                      subtitle: 'Founder-led social story',
+                      chips: [chip('High voice fit', 'success')],
+                      meta: 'Note: strong founder voice, needs lighter CTA.'
+                    },
+                    {
+                      title: 'Before/after workflow carousel',
+                      subtitle: 'Product demo angle',
+                      meta: 'Note: clarify the one-screen narrative before writing.'
+                    },
+                    {
+                      title: 'Customer quote montage',
+                      subtitle: 'Need permissions',
+                      meta: 'Note: permissions and proof are both incomplete.'
+                    }
                   ]
-                },
-                {
-                  label: 'Needs shaping',
-                  cards: [{ title: 'Customer quote montage', subtitle: 'Need permissions', footer: 'Note: permissions and proof are both incomplete.' }]
                 }
               ]
             },
@@ -1099,16 +980,16 @@ export const RECIPE_TEMPLATE_FIXTURES: Record<RecipeTemplateId, RecipeTemplatePr
     ]
   },
   'step-by-step-instructions': {
-    headline: 'Follow a procedure with prerequisites and numbered steps you can check off.',
-    summary: 'A checklist-style guide with prerequisites listed up front and each step checkable for progress tracking.',
+    headline: 'A compact checklist with markdown, checkable steps that strike through when done, and code blocks with copy buttons.',
+    summary: 'Use this whenever the user asks how to do something or how to troubleshoot something.',
     sections: [
       {
         kind: 'hero',
-        eyebrow: 'Procedural template',
+        eyebrow: 'How-to template',
         title: 'Deploy a Node.js app to production',
-        summary: 'Step-by-step deployment guide with prerequisites and checkable steps.',
-        chips: [chip('Prerequisites', 'accent'), chip('Numbered steps'), chip('Checkable progress')],
-        actions: [action('Add note'), action('Ask Hermes to refine')]
+        summary: 'Numbered steps. Check one off and it gets struck through. Code blocks include a copy button.',
+        chips: [chip('Markdown', 'accent'), chip('Strikethrough on check'), chip('Copy buttons on code')],
+        actions: []
       },
       {
         kind: 'grouped-list',
@@ -1119,10 +1000,9 @@ export const RECIPE_TEMPLATE_FIXTURES: Record<RecipeTemplateId, RecipeTemplatePr
             label: 'Prerequisites',
             tone: 'warning',
             items: [
-              { title: 'Node.js 18+ installed', chips: [chip('Required', 'danger')], actions: ['Verify'] },
-              { title: 'Docker CLI available', chips: [chip('Required', 'danger')], actions: ['Verify'] },
-              { title: 'Access to container registry', chips: [chip('Required', 'danger')], actions: ['Request access'] },
-              { title: 'CI pipeline green on main', chips: [chip('Recommended', 'warning')], actions: ['Check CI'] }
+              { title: 'Node.js 18+ installed', chips: [chip('Required', 'danger')] },
+              { title: 'Docker CLI available', chips: [chip('Required', 'danger')] },
+              { title: 'Access to container registry', chips: [chip('Required', 'danger')] }
             ]
           },
           {
@@ -1130,34 +1010,39 @@ export const RECIPE_TEMPLATE_FIXTURES: Record<RecipeTemplateId, RecipeTemplatePr
             label: 'Steps',
             tone: 'accent',
             items: [
-              { title: '1. Build the Docker image', subtitle: 'Run docker build -t myapp .', chips: [chip('~2 min')], actions: ['Copy command'] },
-              { title: '2. Run tests against the image', subtitle: 'Execute the test suite inside the container.', chips: [chip('~5 min')], actions: ['Copy command'] },
-              { title: '3. Push to registry', subtitle: 'Tag and push to your container registry.', chips: [chip('~1 min')], actions: ['Copy command'] },
-              { title: '4. Update the deployment manifest', subtitle: 'Set the new image tag in your k8s manifest.', chips: [chip('Manual edit')], actions: ['Open file'] },
-              { title: '5. Apply and verify', subtitle: 'Run kubectl apply and check rollout status.', chips: [chip('~3 min')], actions: ['Copy command'] },
-              { title: '6. Smoke test production', subtitle: 'Hit the health endpoint and verify key flows.', chips: [chip('Critical', 'danger')], actions: ['Open URL'] }
-            ]
-          },
-          {
-            id: 'post-deploy',
-            label: 'Post-deploy',
-            items: [
-              { title: 'Monitor error rate for 15 min', chips: [chip('Observability')], actions: ['Open dashboard'] },
-              { title: 'Notify team in Slack', chips: [chip('Communication')], actions: ['Send message'] },
-              { title: 'Update changelog', actions: ['Open changelog'] }
+              {
+                title: '1. Build the image',
+                subtitle: 'docker build -t myapp:$(git rev-parse --short HEAD) .',
+                chips: [chip('code', 'accent'), chip('copy')]
+              },
+              {
+                title: '2. Run tests against the image',
+                subtitle: 'docker run --rm myapp:$(git rev-parse --short HEAD) npm test',
+                chips: [chip('code', 'accent'), chip('copy')]
+              },
+              {
+                title: '3. Push to the registry',
+                subtitle: 'docker push ghcr.io/acme/myapp:$(git rev-parse --short HEAD)',
+                chips: [chip('code', 'accent'), chip('copy')]
+              },
+              {
+                title: '4. Update the k8s manifest',
+                subtitle: 'Bump `spec.template.spec.containers[0].image` to the new tag.',
+                chips: [chip('markdown', 'accent')]
+              },
+              {
+                title: '5. Apply and verify',
+                subtitle: 'kubectl apply -f deploy.yaml && kubectl rollout status deployment/myapp',
+                chips: [chip('code', 'accent'), chip('copy')]
+              },
+              {
+                title: '6. Smoke test',
+                subtitle: 'curl https://api.example.com/healthz',
+                chips: [chip('code', 'accent'), chip('copy'), chip('Critical', 'danger')]
+              }
             ]
           }
         ]
-      },
-      {
-        kind: 'notes',
-        title: 'Notes',
-        lines: ['Ensure CI pipeline passes before deploying.', 'Roll back immediately if health checks fail.', 'Tag the release in git after a successful deploy.']
-      },
-      {
-        kind: 'action-bar',
-        title: 'Quick actions',
-        actions: [action('Mark all complete', 'success'), action('Reset checklist'), action('Export as runbook')]
       }
     ]
   },

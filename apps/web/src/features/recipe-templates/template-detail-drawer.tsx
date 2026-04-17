@@ -449,6 +449,36 @@ function LoadingSectionSkeleton({ section }: { section: RecipeTemplatePreviewSec
           </VStack>
         </TemplateSurface>
       );
+    case 'accordion-list':
+      return (
+        <TemplateSurface>
+          <VStack align="stretch" gap="2.5">
+            {(section.items ?? []).map((item, idx) => (
+              <Flex key={item.id ?? idx} justify="space-between" align="center" gap="3">
+                <VStack align="start" gap="1" flex="1">
+                  <Skeleton height="13px" width={idx % 2 === 0 ? '60%' : '45%'} rounded="4px" />
+                  <Skeleton height="10px" width={idx % 2 === 0 ? '80%' : '65%'} rounded="4px" />
+                </VStack>
+                <Skeleton height="10px" width="40px" rounded="4px" />
+              </Flex>
+            ))}
+          </VStack>
+        </TemplateSurface>
+      );
+    case 'selectable-table':
+      return (
+        <TemplateSurface>
+          <VStack align="stretch" gap="3">
+            <Skeleton height="16px" width="30%" rounded="4px" />
+            {(section.rows ?? []).map((row, idx) => (
+              <Flex key={row.id ?? idx} gap="3" align="center">
+                <Skeleton height="14px" width="14px" rounded="3px" flexShrink={0} />
+                <Skeleton height="13px" width={idx % 2 === 0 ? '55%' : '42%'} rounded="4px" />
+              </Flex>
+            ))}
+          </VStack>
+        </TemplateSurface>
+      );
     default:
       return (
         <TemplateSurface>

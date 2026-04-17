@@ -109,9 +109,9 @@ export const WORKRECIPE_TEMPLATE_RUNTIME_REGISTRY: Record<RecipeTemplateId, Reci
   }),
   'shopping-shortlist': withDefaults({
     id: 'shopping-shortlist',
-    name: 'Shopping Shortlist',
-    useCase: 'Curate image-forward candidate items with fast shortlist decisions.',
-    selectionSignals: ['shortlist', 'top picks', 'saved items', 'shopping cards'],
+    name: 'Shopping Results',
+    useCase: 'Show a wide variety of items as small tiled cards with name, photo, and price.',
+    selectionSignals: ['shopping results', 'find me', 'browse items', 'show me options', 'gift ideas'],
     slots: [
       { id: 'shortlist', kind: 'card-grid', required: true },
       { id: 'notes', kind: 'notes' },
@@ -246,9 +246,9 @@ export const WORKRECIPE_TEMPLATE_RUNTIME_REGISTRY: Record<RecipeTemplateId, Reci
   }),
   'vendor-evaluation-matrix': withDefaults({
     id: 'vendor-evaluation-matrix',
-    name: 'Vendor Evaluation Matrix',
-    useCase: 'Compare software or services against weighted criteria and pricing.',
-    selectionSignals: ['vendor comparison', 'evaluation matrix', 'weighted criteria', 'procurement'],
+    name: 'Comparison Matrix',
+    useCase: 'Compare any set of items (frameworks, vendors, technologies, apps, products) side by side.',
+    selectionSignals: ['comparison matrix', 'compare frameworks', 'compare technologies', 'compare vendors', 'compare apps', 'versus'],
     slots: [
       { id: 'stats', kind: 'stats' },
       { id: 'matrix', kind: 'comparison-table', required: true },

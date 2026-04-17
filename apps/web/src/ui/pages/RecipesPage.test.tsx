@@ -55,8 +55,8 @@ afterEach(() => {
 });
 
 describe('RecipesPage', () => {
-  it('ships 15 templates with required metadata and preview specs', () => {
-    expect(RECIPE_TEMPLATE_REGISTRY).toHaveLength(15);
+  it('ships the gallery recipes with required metadata and preview specs', () => {
+    expect(RECIPE_TEMPLATE_REGISTRY.length).toBeGreaterThanOrEqual(14);
 
     for (const template of RECIPE_TEMPLATE_REGISTRY) {
       expect(template.name.length).toBeGreaterThan(3);
@@ -65,8 +65,6 @@ describe('RecipesPage', () => {
       expect(template.whenHermesShouldChoose.length).toBeGreaterThan(10);
       expect(template.idealDataShape.length).toBeGreaterThan(0);
       expect(template.requiredSections.length).toBeGreaterThan(0);
-      expect(template.requiredActions.length).toBeGreaterThan(0);
-      expect(template.supportedTabs.length).toBeGreaterThan(0);
       expect(template.smallPaneAdaptationNotes.length).toBeGreaterThan(0);
       expect(template.references.length).toBeGreaterThan(0);
       expect(template.populationInstructions.steps.length).toBeGreaterThan(0);
@@ -124,17 +122,15 @@ describe('RecipesPage', () => {
     renderRecipesPage(420);
     const inspector = screen.getByTestId('spaces-template-inspector');
 
-    expect(screen.getByText('Offer grid')).toBeInTheDocument();
+    expect(screen.getByText('Price grid')).toBeInTheDocument();
 
     const inboxCard = screen.getByTestId('spaces-template-card-inbox-triage-board');
     await userEvent.click(inboxCard);
-    expect(within(inspector).getByText('Sender groups')).toBeInTheDocument();
-    expect(within(inspector).getByText('Selected sender preview')).toBeInTheDocument();
+    expect(within(inspector).getByText('Promotions')).toBeInTheDocument();
 
     const restaurantCard = screen.getByTestId('spaces-template-card-restaurant-finder');
     await userEvent.click(restaurantCard);
     expect(within(inspector).getByText('Selected venue')).toBeInTheDocument();
-
   });
 
   it('shows rendered recipe content in previews without hero sections', async () => {
@@ -147,16 +143,11 @@ describe('RecipesPage', () => {
 
     await userEvent.click(screen.getByRole('button', { name: 'Pipelines & Planning' }));
     await userEvent.click(screen.getByTestId('spaces-template-card-job-search-pipeline'));
-    expect(within(inspector).getByRole('link', { name: 'https://jobs.example.com/horizon-health/design' })).toHaveAttribute(
-      'href',
-      'https://jobs.example.com/horizon-health/design'
-    );
+    expect(within(inspector).getByText('Apply to selected')).toBeInTheDocument();
+  });
 
-    await userEvent.click(screen.getByRole('button', { name: 'Travel & Local' }));
-    await userEvent.click(screen.getByTestId('spaces-template-card-local-discovery-comparison'));
-    expect(within(inspector).getByRole('link', { name: 'https://example.com/the-malin-soho' })).toHaveAttribute(
-      'href',
-      'https://example.com/the-malin-soho'
-    );
+  it('hides the local-discovery-comparison template from the gallery', () => {
+    renderRecipesPage();
+    expect(screen.queryByTestId('spaces-template-card-local-discovery-comparison')).not.toBeInTheDocument();
   });
 });

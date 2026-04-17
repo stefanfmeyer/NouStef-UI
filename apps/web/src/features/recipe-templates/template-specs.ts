@@ -5,132 +5,143 @@ export const RECIPE_TEMPLATE_SPECS: Record<RecipeTemplateId, RecipeTemplateSpec>
     id: 'price-comparison-grid',
     name: 'Price Comparison Grid',
     category: 'commerce',
-    useCase: 'Compare the same or similar products across multiple merchants before buying.',
-    purpose: 'A dense comparison surface for price, shipping, availability, and rating differences.',
-    primaryUserGoal: 'Find the best overall buying option without losing merchant-by-merchant context.',
+    useCase: 'Compare one or more items across up to four stores when price is the primary concern.',
+    purpose: 'A focused price-first comparison grid with direct item links in every row.',
+    primaryUserGoal: 'See the cheapest option across a small, stable set of stores without losing item identity.',
     whenHermesShouldChoose:
-      'Choose this when the user is comparing identical or near-identical products across two or more stores and the primary question is price or value.',
-    selectionSignals: ['compare prices', 'which store is cheapest', 'same product at different merchants', 'shipping and availability'],
-    goodFor: ['Store price checks', 'Cart optimization', 'Merchant comparison'],
-    supports: ['Sortable rows', 'Merchant columns', 'Buy links', 'Alternative prompts'],
+      'Choose this when the user is comparing one or more items across up to four stores, hotels, restaurants, or other places where price is the decisive factor.',
+    selectionSignals: ['compare prices', 'which store is cheapest', 'cheapest hotel', 'price across stores', 'price comparison'],
+    goodFor: ['Single-item store shopping', 'Hotel price checks', 'Restaurant price checks', 'Any price-first comparison'],
+    supports: ['Up to 4 store columns', 'Per-row item link', 'Sortable price columns', 'Multiple items in title'],
     preferredLayout: 'comparison-grid',
-    supportedTabs: ['Overview', 'Specs', 'Notes'],
-    idealDataShape: ['One canonical product row per item', 'Merchant offer cells', 'Price, shipping, stock, rating, and notes'],
-    requiredSections: ['Header summary', 'Comparison table', 'Quick actions'],
-    optionalSections: ['Merchant notes', 'Saved alternatives list', 'Scope tags under table'],
-    requiredActions: ['Open merchant', 'Save item', 'Remove row', 'Ask Hermes to compare alternatives'],
-    optionalActions: ['Sort by shipping', 'Hide unavailable', 'Pin preferred merchant'],
-    emptyStateBehavior: 'Show a merchant-ready placeholder with an invitation to add products or ask Hermes for comparison inputs.',
-    loadingStateBehavior: 'Hold header, stats, and table scaffolding in place while merchant rows stream in.',
-    errorStateBehavior: 'Preserve any confirmed rows and replace failed merchant cells with explicit unavailable/error markers.',
-    smallPaneAdaptationNotes: ['Collapse merchant density before truncating row identity.', 'Keep the product name and best-price column pinned first.'],
-    references: ['Google Shopping comparison tables', 'Amazon compare surfaces', 'Procurement scorecards'],
+    supportedTabs: ['Overview'],
+    idealDataShape: ['One row per item being compared', 'Up to four stable store columns', 'A direct item link per row'],
+    requiredSections: ['Comparison table'],
+    optionalSections: [],
+    requiredActions: ['Open item link'],
+    optionalActions: [],
+    emptyStateBehavior: 'Show a placeholder inviting the user to name the item(s) and stores to compare.',
+    loadingStateBehavior: 'Hold the table scaffold in place while store cells stream in.',
+    errorStateBehavior: 'Preserve any confirmed rows and mark failed cells as unavailable.',
+    smallPaneAdaptationNotes: ['Keep item name and cheapest price column pinned first.', 'Collapse the lowest-priority store column before truncating item identity.'],
+    references: ['Google Shopping comparison tables', 'Amazon compare surfaces', 'Booking price grids'],
     populationInstructions: {
-      summary: 'Populate one row per compared product and keep merchant offers normalized into predictable columns.',
+      summary: 'Populate one row per compared item across no more than four stable store columns, always including a direct link to each item.',
       steps: [
-        'Create a canonical product label for each compared item.',
-        'Group merchant offers under stable merchant columns instead of duplicating whole cards.',
-        'Prefer concise attributes that explain value differences.'
+        'Use the title to list the items being compared (it is okay to include multiple items).',
+        'Create one row per distinct item and one column per store, capped at four stores.',
+        'Include a direct link to the item or listing in every row so the user can jump straight to it.'
       ],
       guardrails: [
-        'Do not invent merchant-specific actions that are not supported.',
-        'Do not rewrite the whole table when only one offer changes.',
-        'Keep notes and saved decisions outside the merchant cells.'
+        'Never exceed four store columns including the item identity column.',
+        'Do not add operator notes, quick action bars, or advisory footers — this recipe is price-first only.',
+        'Never render a row without a direct link to the item.'
       ]
     },
     updateRules: {
-      patchPrefer: ['Append or update merchant cells in place.', 'Patch row metrics and shipping deltas without changing row order unless the user asks to sort.'],
-      replaceTriggers: ['Replace the whole table only when the compared product set changes entirely.', 'Replace the specs tab only when the product identity changes.'],
-      persistAcrossUpdates: ['Saved items', 'Pinned merchant preference', 'Manual notes', 'Sort direction'],
-      stableRegions: ['Tabs', 'Primary table columns', 'Saved notes panel']
+      patchPrefer: ['Patch store prices in place without changing row order unless the user asks to sort.'],
+      replaceTriggers: ['Replace the whole table only when the compared item set changes entirely.'],
+      persistAcrossUpdates: ['Row order', 'Selected item links', 'Sort direction'],
+      stableRegions: ['Primary table columns', 'Item-link column']
     }
   },
   'shopping-shortlist': {
     id: 'shopping-shortlist',
-    name: 'Shopping Shortlist',
+    name: 'Shopping Results',
     category: 'commerce',
-    useCase: 'Review a curated shortlist of candidate products with fast card-level decisions.',
-    purpose: 'An image-forward shortlist that balances quick scanning with concise product highlights.',
-    primaryUserGoal: 'Narrow a broad search down to a few strong candidates and keep notes on why.',
+    useCase: 'Show a wide variety of candidate items as small tiled cards with name, photo, and price.',
+    purpose: 'A tight, tile-based results surface for browsing a diverse set of items with a direct link to each.',
+    primaryUserGoal: 'Quickly scan many candidate items and jump straight to the listing that looks right.',
     whenHermesShouldChoose:
-      'Choose this when the user wants a curated shortlist rather than a dense row-and-column comparison.',
-    selectionSignals: ['shortlist items', 'best options', 'saved products', 'top picks'],
-    goodFor: ['Gift shopping', 'Home goods', 'Fashion shortlist'],
-    supports: ['Image-first cards', 'Quick notes', 'Save/remove', 'Compare alternatives'],
+      'Choose this when the user wants a loose set of shopping results across a variety of items rather than comparing a single product across stores.',
+    selectionSignals: ['shopping results', 'find me', 'browse items', 'gift ideas', 'show me options'],
+    goodFor: ['Gift ideas', 'Home goods discovery', 'Browsing a variety', 'Visual shopping scans'],
+    supports: ['Small tiled cards', 'Photo or image label', 'Item name', 'Price', 'Direct item link'],
     preferredLayout: 'image-shortlist',
-    supportedTabs: ['Shortlist', 'Notes'],
-    idealDataShape: ['One card per candidate item', 'Image label or media hint', 'Price, highlights, and shortlist note'],
-    requiredSections: ['Hero summary', 'Card grid', 'Quick actions'],
-    optionalSections: ['Notes panel', 'Filter strip', 'Saved reasons summary'],
-    requiredActions: ['Open listing', 'Save', 'Remove', 'Ask Hermes for alternatives'],
-    optionalActions: ['Filter by price band', 'Group by brand', 'Pin top choice'],
-    emptyStateBehavior: 'Show a calm saved-items empty state that asks Hermes to gather a first shortlist.',
-    loadingStateBehavior: 'Reserve card shells and preserve any saved notes while new cards arrive.',
-    errorStateBehavior: 'Keep the current shortlist visible and mark failed item refreshes inline.',
-    smallPaneAdaptationNotes: ['Collapse to one column with persistent action pills.', 'Keep price and one highlight visible above the fold.'],
-    references: ['Saved items lists', 'Curated shopping collections', 'Modern mobile commerce cards'],
+    supportedTabs: ['Results'],
+    idealDataShape: ['One tile per item', 'Item name', 'Photo or image label', 'Price', 'Direct item link'],
+    requiredSections: ['Tile grid'],
+    optionalSections: [],
+    requiredActions: ['Open item link'],
+    optionalActions: [],
+    emptyStateBehavior: 'Invite the user to ask for results with a short prompt.',
+    loadingStateBehavior: 'Reserve tile shells while new items stream in.',
+    errorStateBehavior: 'Keep existing tiles visible and mark missing photos or prices inline.',
+    smallPaneAdaptationNotes: ['Collapse to one or two columns.', 'Keep photo, name, and price visible on every tile.'],
+    references: ['Pinterest-style result grids', 'Search result tiles', 'Marketplace card feeds'],
     populationInstructions: {
-      summary: 'Fill a visually balanced card set with concise reasons each option is on the shortlist.',
+      summary: 'Fill small tiles with just the item name, a photo (or descriptive image label), and a price, each linking to the item.',
       steps: [
-        'Use one card per distinct option and lead with the most decision-relevant image or media label.',
-        'Keep bullets short and specific.',
-        'Store comparison or personal context in notes instead of overloading the card body.'
+        'Use one compact tile per item.',
+        'Include an image label or photo hint if a real image is unavailable.',
+        'Show the price directly on the tile.',
+        'Include a direct link to the item listing on every tile.'
       ],
       guardrails: [
-        'Do not turn this into a full matrix view.',
-        'Avoid duplicate items that differ only trivially.',
-        'Respect any user-authored shortlist notes across updates.'
+        'Do not add bullets, comparison tables, or operator notes — keep tiles minimal.',
+        'Do not duplicate items.',
+        'Never render a tile without a direct link to the item.'
       ]
     },
     updateRules: {
-      patchPrefer: ['Update card price, availability, and highlights in place.', 'Append shortlist notes without replacing existing notes.'],
-      replaceTriggers: ['Replace the shortlist only when the user changes the product hunt entirely.', 'Replace hero copy only when the main search intent changes.'],
-      persistAcrossUpdates: ['Pinned items', 'Shortlist notes', 'Manual removals', 'Selected card state'],
-      stableRegions: ['Shortlist tab', 'Action bar', 'Notes panel']
+      patchPrefer: ['Update tile price or image in place.', 'Append new tiles without replacing the grid.'],
+      replaceTriggers: ['Replace the grid only when the search changes entirely.'],
+      persistAcrossUpdates: ['Tile ordering', 'Saved item links'],
+      stableRegions: ['Tile grid']
     }
   },
   'inbox-triage-board': {
     id: 'inbox-triage-board',
     name: 'Inbox Triage Board',
     category: 'communication',
-    useCase: 'Group unread or noisy senders into clear buckets for inbox cleanup.',
-    purpose: 'A queue-style inbox board that favors grouped senders, counts, and bulk actions over thread-by-thread reading.',
-    primaryUserGoal: 'Reduce inbox noise quickly while keeping enough sender detail to act safely.',
+    useCase: 'Triage unread or noisy senders as a clean inbox-style list of expandable categories.',
+    purpose: 'A minimalist inbox view: one row per category with vendors and email counts, and an expandable detail with sample subjects, a recommendation, and quick actions.',
+    primaryUserGoal: 'Scan the inbox by category, decide quickly, and let Hermes act on the chosen category.',
     whenHermesShouldChoose:
       'Choose this when the user asks to triage unread email, clean up promotional senders, or batch-handle recurring inbox clutter.',
     selectionSignals: ['unread email', 'triage inbox', 'clean up senders', 'archive promotions'],
-    goodFor: ['Unread sender triage', 'Bulk email cleanup', 'Queue-style inbox review'],
-    supports: ['Grouped senders', 'Metrics', 'Bulk actions', 'Detail preview'],
+    goodFor: ['Unread sender triage', 'Bulk email cleanup', 'Inbox hygiene'],
+    supports: ['Expandable rows', 'Vendor subtitle', 'Email count', 'Sample subjects', 'Recommendation callout', 'Hermes-backed actions'],
     preferredLayout: 'triage-board',
-    supportedTabs: ['Senders', 'Rules', 'Notes'],
-    idealDataShape: ['Sender groups with message counts', 'Metrics per group', 'Representative preview for the selected sender'],
-    requiredSections: ['Stat strip', 'Grouped senders list', 'Detail preview', 'Bulk action toolbar'],
-    optionalSections: ['Suggested rule callout', 'Notes tab', 'Archive summary'],
-    requiredActions: ['Archive', 'Move', 'Create rule', 'Ask Hermes to draft a safe cleanup'],
-    optionalActions: ['Unsubscribe', 'Pin sender', 'Mark priority'],
-    emptyStateBehavior: 'Celebrate a clean inbox with a compact zero-noise state and a note about what was checked.',
-    loadingStateBehavior: 'Show sender-group skeletons and keep bulk-action recipe reserved so the layout does not jump.',
-    errorStateBehavior: 'Preserve already loaded sender groups, disable destructive bulk actions, and explain which counts may be stale.',
-    smallPaneAdaptationNotes: ['Use a stacked list-detail flow instead of side-by-side panes.', 'Keep bulk actions sticky at the bottom edge in narrow layouts.'],
-    references: ['Gmail category triage', 'Admin moderation queues', 'Email cleanup dashboards'],
+    supportedTabs: ['Inbox'],
+    idealDataShape: [
+      'One row per category (e.g. Promotions, Updates, Newsletters)',
+      'Vendor names rendered as a subtitle list',
+      'Integer email count per category',
+      'Up to 5 sample subject lines per category',
+      'A recommendation string plus tone (success/warning/danger/neutral)'
+    ],
+    requiredSections: ['Expandable category list'],
+    optionalSections: [],
+    requiredActions: ['Archive', 'Archive & Unsubscribe', 'Send to Folder'],
+    optionalActions: [],
+    emptyStateBehavior: 'Show a compact "inbox is quiet" message when nothing needs triage.',
+    loadingStateBehavior: 'Render row skeletons with dividers so the inbox layout does not jump.',
+    errorStateBehavior: 'Keep loaded rows visible, disable destructive actions, and flag stale counts.',
+    smallPaneAdaptationNotes: ['Expanded detail stacks below the row.', 'Keep action buttons full-width when collapsed into one column.'],
+    references: ['Gmail category view', 'Modern minimalist mail clients', 'Inbox zero workflows'],
     populationInstructions: {
-      summary: 'Group emails by sender or sender cluster first, then surface the metrics and the safest next actions.',
+      summary: 'Render an inbox-like list of category rows with dividers between them, each expandable to show sample subjects, a recommendation, and three action buttons.',
       steps: [
-        'Aggregate senders into meaningful triage groups with counts and last-seen context.',
-        'Select one representative sender detail pane for the preview state.',
-        'Keep actions bounded to the supported inbox operations.'
+        'Aggregate emails into meaningful categories (Promotions, Updates, Newsletters, Receipts, etc.).',
+        'For each category, render a row with the category name, vendor names as a subtitle, and the email count on the right.',
+        'Separate rows with thin divider lines instead of heavy card chrome.',
+        'When a row is expanded, show a "Sample subjects" header and up to 5 subject lines.',
+        'Below sample subjects, render a recommendation in an info panel whose style matches the advice tone (green for safe, amber for caution, red for risky, neutral otherwise).',
+        'Render three action buttons at the bottom of the expanded row: "Archive", "Archive & Unsubscribe", and "Send to Folder".'
       ],
       guardrails: [
-        'Do not dump raw individual-message lists into the primary board.',
-        'Do not remove counts or grouping stability between updates.',
-        'Never apply actions implicitly in the preview.'
+        'Never exceed 5 sample subjects per category.',
+        'Clicking any action button must prompt Hermes to perform exactly what the button says — nothing is applied silently.',
+        'When "Send to Folder" is clicked, Hermes must ask the user for the destination folder name before performing the move.',
+        'Do not replace the row model during incremental updates — patch counts in place.'
       ]
     },
     updateRules: {
-      patchPrefer: ['Patch counts, previews, and sender summaries in place.', 'Append newly detected senders to the most relevant group.'],
-      replaceTriggers: ['Replace grouping only when the triage objective changes materially, such as moving from unread senders to newsletters-only.'],
-      persistAcrossUpdates: ['Selected sender preview', 'Manual rule notes', 'Collapsed groups', 'Acknowledged sender decisions'],
-      stableRegions: ['Tabs', 'Sender grouping model', 'Bulk action toolbar']
+      patchPrefer: ['Patch counts, vendors, and subject samples in place.', 'Append newly detected categories at the bottom of the list.'],
+      replaceTriggers: ['Replace grouping only when the triage objective changes materially.'],
+      persistAcrossUpdates: ['Expanded row state', 'Recommendation tone', 'User-applied actions'],
+      stableRegions: ['Row order', 'Action buttons']
     }
   },
   'restaurant-finder': {
@@ -150,31 +161,32 @@ export const RECIPE_TEMPLATE_SPECS: Record<RecipeTemplateId, RecipeTemplateSpec>
     idealDataShape: ['Venue list with cuisine, rating, price, and hours', 'Detail panel with address and links', 'Optional shortlist notes'],
     requiredSections: ['Filter strip', 'Result list', 'Detail panel', 'Action bar'],
     optionalSections: ['Saved tab', 'Neighborhood note', 'Opening-hours highlights'],
-    requiredActions: ['Open menu', 'Open website', 'Save option', 'Ask Hermes to book'],
-    optionalActions: ['Call venue', 'Open map directions', 'Compare alternatives'],
+    requiredActions: [],
+    optionalActions: [],
     emptyStateBehavior: 'Show a local-search empty state with filters and a prompt to widen the area or cuisine.',
     loadingStateBehavior: 'Hold list and detail shells so the selected venue context stays anchored while results update.',
-    errorStateBehavior: 'Preserve any loaded venues, disable booking prompts for stale entries, and surface source limitations clearly.',
+    errorStateBehavior: 'Preserve any loaded venues and surface source limitations clearly.',
     smallPaneAdaptationNotes: ['Collapse into a vertical results-first flow with a sticky selected-venue card.', 'Keep cuisine, price, and rating visible in each row.'],
     references: ['Yelp list-detail flows', 'Google Maps local results', 'OpenTable action affordances'],
     populationInstructions: {
-      summary: 'Populate a result list that is easy to scan quickly and a selected-venue detail state that feels decision ready.',
+      summary: 'Populate a result list that is easy to scan quickly and a selected-venue detail panel with hours, website, phone, and cuisine shown as icon + value rows.',
       steps: [
         'Lead with a concise filter context such as cuisine, distance, or price band.',
         'Present the top venues as compact rows with consistent stats.',
-        'Use the detail panel for hours, links, and booking-related context.'
+        'In the selected-venue panel render four stacked icon rows in this order: clock icon + hours text, website icon + a hyperlinked "Link" to the venue website, phone icon + phone number, food icon + food genre.',
+        'Do not render a bottom action bar or any stability note on the selected-venue panel.'
       ],
       guardrails: [
         'Do not invent map tiles or arbitrary geospatial UI.',
-        'Do not hide direct website/menu actions behind nested interactions.',
+        'Keep the selected-venue panel limited to hours, website, phone, and genre rows.',
         'Avoid replacing the whole list when only one venue detail changes.'
       ]
     },
     updateRules: {
-      patchPrefer: ['Patch venue rows, hours, and detail fields in place.', 'Append shortlist notes and saved items incrementally.'],
+      patchPrefer: ['Patch venue rows, hours, and detail fields in place.'],
       replaceTriggers: ['Replace the result set when the search area or cuisine scope changes meaningfully.'],
-      persistAcrossUpdates: ['Selected venue', 'Saved venues', 'User notes', 'Active filter chips'],
-      stableRegions: ['Tabs', 'List/detail structure', 'Action bar']
+      persistAcrossUpdates: ['Selected venue', 'Active filter chips'],
+      stableRegions: ['List/detail structure', 'Selected-venue icon rows']
     }
   },
   'hotel-shortlist': {
@@ -188,37 +200,37 @@ export const RECIPE_TEMPLATE_SPECS: Record<RecipeTemplateId, RecipeTemplateSpec>
       'Choose this when the user is deciding between multiple hotels for a destination or trip window.',
     selectionSignals: ['compare hotels', 'shortlist hotels', 'where to stay', 'trip lodging options'],
     goodFor: ['Trip lodging', 'Business travel', 'Weekend getaways'],
-    supports: ['Price', 'Amenities', 'Location notes', 'Booking links'],
+    supports: ['Price', 'Amenities', 'Location notes', 'Booking links', 'Website icon', 'Phone icon'],
     preferredLayout: 'travel-compare',
-    supportedTabs: ['Hotels', 'Notes', 'Links'],
-    idealDataShape: ['Hotel cards or rows', 'Nightly price', 'Location summary', 'Amenity highlights', 'Operator notes'],
-    requiredSections: ['Header summary', 'Hotel shortlist cards', 'Stat strip', 'Notes tab'],
-    optionalSections: ['Links tab', 'Neighborhood reminders', 'Per-property tags'],
-    requiredActions: ['Open booking link', 'Save hotel', 'Remove hotel', 'Ask Hermes for better tradeoffs'],
-    optionalActions: ['Filter amenities', 'Sort by value', 'Pin favorite'],
+    supportedTabs: [],
+    idealDataShape: ['Hotel cards with nightly price, location, amenities, website link, and phone number'],
+    requiredSections: ['Hotel cards'],
+    optionalSections: [],
+    requiredActions: ['Open booking link'],
+    optionalActions: [],
     emptyStateBehavior: 'Show a destination-specific prompt to add candidate hotels or ask Hermes to generate a shortlist.',
     loadingStateBehavior: 'Keep card positions stable and show price/amenity placeholders instead of collapsing the grid.',
     errorStateBehavior: 'Preserve any confirmed hotels and annotate stale prices or missing booking sources per card.',
-    smallPaneAdaptationNotes: ['Switch to one-card-per-row and keep nightly price plus two top amenities visible.', 'Move notes into a dedicated tab on narrow screens.'],
+    smallPaneAdaptationNotes: ['Switch to one-card-per-row and keep nightly price plus two top amenities visible.'],
     references: ['Booking property lists', 'Airbnb saved-property flows', 'TripAdvisor shortlist patterns'],
     populationInstructions: {
-      summary: 'Fill a concise hotel shortlist with strong price/location/amenity tradeoff signals.',
+      summary: 'Render hotels as stacked cards only — no header bar, no recipe tabs, no Hotels/Notes tabs, and no "Hotel shortlist" section header. Each card carries price, amenities, a website icon, and a phone icon.',
       steps: [
-        'Use one distinct property card per hotel.',
-        'Highlight the most decision-relevant amenities and neighborhood context.',
-        'Keep booking actions direct and visible.'
+        'Use one distinct card per hotel.',
+        'Include a website icon with a hyperlinked "Link" and a phone icon with the phone number on every card.',
+        'Highlight the most decision-relevant amenities and neighborhood context directly on the card.'
       ],
       guardrails: [
+        'Do not render a header bar, recipe tabs, Hotels/Notes tabs, or a "Hotel shortlist" section header.',
         'Do not overload cards with full review dumps.',
-        'Do not reorder the shortlist on every small price refresh.',
-        'Preserve user notes and saved status.'
+        'Do not reorder the shortlist on every small price refresh.'
       ]
     },
     updateRules: {
-      patchPrefer: ['Patch prices, amenity notes, and links in place.', 'Append notes instead of regenerating them.'],
+      patchPrefer: ['Patch prices, amenity notes, and links in place.'],
       replaceTriggers: ['Replace the hotel set only when the destination, date range, or trip style changes materially.'],
-      persistAcrossUpdates: ['Saved hotels', 'Pinned favorite', 'Notes tab', 'Sort and filter choices'],
-      stableRegions: ['Tabs', 'Hotel shortlist ordering', 'Notes tab']
+      persistAcrossUpdates: ['Card order', 'Saved hotels', 'Booking links'],
+      stableRegions: ['Card order', 'Website/phone rows']
     }
   },
   'flight-comparison': {
@@ -232,13 +244,13 @@ export const RECIPE_TEMPLATE_SPECS: Record<RecipeTemplateId, RecipeTemplateSpec>
       'Choose this when the user is evaluating multiple flight itineraries, especially with outbound and return comparisons.',
     selectionSignals: ['compare flights', 'best itinerary', 'outbound return options', 'cheapest flight'],
     goodFor: ['Trip booking', 'Airline comparison', 'Stop-vs-price tradeoffs'],
-    supports: ['Outbound/return tabs', 'Price and stops', 'Booking link', 'Ask Hermes action'],
+    supports: ['Outbound/Return tabs', 'Price and stops', 'Booking link', 'Ask Hermes action'],
     preferredLayout: 'travel-compare',
-    supportedTabs: ['Outbound', 'Return', 'Notes'],
-    idealDataShape: ['Separate itinerary sets per leg', 'Price, airline, stops, duration, booking link', 'Optional notes'],
-    requiredSections: ['Tab rail', 'Flight comparison table', 'Stat strip', 'Primary action bar'],
-    optionalSections: ['Notes tab', 'Fare caveats', 'Preferred-airline chips'],
-    requiredActions: ['Open itinerary', 'Save itinerary', 'Ask Hermes to optimize tradeoffs'],
+    supportedTabs: ['Outbound', 'Return'],
+    idealDataShape: ['Separate itinerary sets per leg', 'Price, airline, stops, duration, booking link'],
+    requiredSections: ['Tab rail', 'Flight comparison table'],
+    optionalSections: ['Stat strip', 'Fare caveats', 'Preferred-airline chips'],
+    requiredActions: ['Open itinerary'],
     optionalActions: ['Filter by stops', 'Highlight best duration', 'Compare baggage policies'],
     emptyStateBehavior: 'Explain that no itineraries are loaded yet and invite a route/date prompt.',
     loadingStateBehavior: 'Keep tab structure visible and stream itineraries into the active leg instead of blanking the page.',
@@ -246,23 +258,23 @@ export const RECIPE_TEMPLATE_SPECS: Record<RecipeTemplateId, RecipeTemplateSpec>
     smallPaneAdaptationNotes: ['Show the active leg first with compact rows.', 'Keep price, stops, and departure time as the first scan line.'],
     references: ['Kayak results', 'Google Flights compare views', 'Airline search summaries'],
     populationInstructions: {
-      summary: 'Populate outbound and return results separately so flight decisions remain leg-aware.',
+      summary: 'Populate outbound and return results separately so flight decisions remain leg-aware. Outbound is the default selected tab and there is no Notes tab.',
       steps: [
         'Use stable itinerary rows with price, stops, duration, and carrier.',
-        'Keep outbound and return data in separate tabs or lanes.',
-        'Add concise caveats when baggage or fare restrictions matter.'
+        'Keep outbound and return data in separate tabs.',
+        'Always render Outbound as the active tab on first load.'
       ],
       guardrails: [
+        'Never render a Notes tab on this recipe.',
         'Do not merge outbound and return data into one ambiguous list.',
-        'Do not rewrite the selected leg when the inactive leg updates.',
-        'Keep booking actions tied to concrete itinerary rows.'
+        'Do not rewrite the selected leg when the inactive leg updates.'
       ]
     },
     updateRules: {
-      patchPrefer: ['Patch itinerary rows within the active leg.', 'Append notes and fare caveats without clearing prior notes.'],
+      patchPrefer: ['Patch itinerary rows within the active leg.'],
       replaceTriggers: ['Replace an entire leg only when route or date inputs change for that leg.'],
-      persistAcrossUpdates: ['Selected tab', 'Saved itinerary', 'Notes', 'User filter chips'],
-      stableRegions: ['Tab rail', 'Comparison table columns', 'Notes tab']
+      persistAcrossUpdates: ['Selected tab', 'Saved itinerary', 'User filter chips'],
+      stableRegions: ['Tab rail', 'Comparison table columns']
     }
   },
   'travel-itinerary-planner': {
@@ -276,36 +288,36 @@ export const RECIPE_TEMPLATE_SPECS: Record<RecipeTemplateId, RecipeTemplateSpec>
       'Choose this when the user needs a persistent trip workspace rather than a single search or comparison result.',
     selectionSignals: ['plan my trip', 'itinerary', 'bookings and notes', 'travel checklist'],
     goodFor: ['Multi-day trips', 'Work travel', 'Group planning'],
-    supports: ['Timeline', 'Bookings tab', 'Packing tab', 'Links tab'],
+    supports: ['Timeline', 'Bookings tab', 'Packing tab'],
     preferredLayout: 'timeline-tabs',
-    supportedTabs: ['Itinerary', 'Bookings', 'Packing', 'Links'],
-    idealDataShape: ['Dated itinerary events', 'Booking records', 'Checklist items', 'Useful links'],
-    requiredSections: ['Tab rail', 'Timeline', 'Booking summary', 'Notes or checklist'],
-    optionalSections: ['Packing tab', 'Links tab', 'Travel reminders'],
-    requiredActions: ['Open booking', 'Add note', 'Ask Hermes to refine plan'],
-    optionalActions: ['Mark checklist item', 'Reorder day plan', 'Open map link'],
-    emptyStateBehavior: 'Start with a clear trip scaffold that explains the four core tabs and invites itinerary seeding.',
+    supportedTabs: ['Itinerary', 'Bookings', 'Packing'],
+    idealDataShape: ['Dated itinerary events', 'Booking records', 'Checklist items'],
+    requiredSections: ['Tab rail', 'Timeline', 'Booking summary', 'Packing checklist'],
+    optionalSections: ['Travel reminders'],
+    requiredActions: ['Open booking', 'Ask Hermes to refine plan'],
+    optionalActions: ['Mark checklist item', 'Reorder day plan'],
+    emptyStateBehavior: 'Start with a clear trip scaffold that explains the core tabs and invites itinerary seeding.',
     loadingStateBehavior: 'Keep existing tabs and chronology visible while new itinerary segments or bookings arrive.',
     errorStateBehavior: 'Preserve the current trip state and isolate degraded data to the affected tab.',
     smallPaneAdaptationNotes: ['Prefer tab-driven navigation over multi-column layouts.', 'Keep day summary cards tight and chronologically clear.'],
     references: ['Travel planner apps', 'Itinerary managers', 'Notebook-style trip dashboards'],
     populationInstructions: {
-      summary: 'Populate stable trip tabs so later updates feel like travel-plan maintenance instead of a full rewrite.',
+      summary: 'Populate stable trip tabs (Itinerary, Bookings, Packing) so later updates feel like travel-plan maintenance instead of a full rewrite.',
       steps: [
         'Use the itinerary tab for chronological events only.',
         'Move confirmations and reservation details into bookings.',
-        'Keep links and checklist content in dedicated tabs.'
+        'Keep packing content in the packing tab.'
       ],
       guardrails: [
+        'Never render a Notes tab or a Links tab on this recipe.',
         'Do not collapse the planner into one long markdown note.',
-        'Do not replace completed checklist items when adding new ones.',
-        'Keep tabs stable for the lifetime of the trip.'
+        'Do not replace completed checklist items when adding new ones.'
       ]
     },
     updateRules: {
       patchPrefer: ['Append itinerary events, bookings, and packing items in place.', 'Patch changed reservation details without rewriting unaffected tabs.'],
       replaceTriggers: ['Replace the planner only if the trip itself changes to a different destination or date range.'],
-      persistAcrossUpdates: ['Selected tab', 'Checklist completion', 'Manual notes', 'Pinned links'],
+      persistAcrossUpdates: ['Selected tab', 'Checklist completion'],
       stableRegions: ['Tab rail', 'Timeline order', 'Bookings tab', 'Packing tab']
     }
   },
@@ -320,38 +332,36 @@ export const RECIPE_TEMPLATE_SPECS: Record<RecipeTemplateId, RecipeTemplateSpec>
       'Choose this when the user is collecting sources, claims, or references over multiple turns.',
     selectionSignals: ['research sources', 'gather notes', 'extract claims', 'follow-up questions'],
     goodFor: ['Source review', 'Competitive research', 'Reading notes'],
-    supports: ['Sources tab', 'Notes tab', 'Extracted points tab', 'Ask follow-up actions'],
+    supports: ['Sources tab', 'Extracted points tab'],
     preferredLayout: 'research-notebook',
-    supportedTabs: ['Sources', 'Notes', 'Extracted points', 'Follow-ups'],
-    idealDataShape: ['Source list', 'Extracted claims or findings', 'Operator notes', 'Follow-up prompts'],
-    requiredSections: ['Tab rail', 'Sources list', 'Notes panel', 'Extracted points'],
-    optionalSections: ['Open questions', 'Source quality chips', 'Follow-up prompt actions'],
-    requiredActions: ['Open source', 'Add note', 'Run follow-up prompt', 'Pin claim'],
+    supportedTabs: ['Sources', 'Extracted points'],
+    idealDataShape: ['Source list', 'Extracted claims or findings'],
+    requiredSections: ['Tab rail', 'Sources list', 'Extracted points'],
+    optionalSections: ['Source quality chips'],
+    requiredActions: ['Open source', 'Pin claim'],
     optionalActions: ['Mark source reviewed', 'Group by theme', 'Copy citation'],
-    emptyStateBehavior: 'Start with a notebook shell that explains how sources, notes, and extracted points will stay separate.',
-    loadingStateBehavior: 'Keep existing tabs and note state fixed while new sources or extracted points arrive.',
+    emptyStateBehavior: 'Start with a notebook shell that explains how sources and extracted points stay separate.',
+    loadingStateBehavior: 'Keep existing tabs fixed while new sources or extracted points arrive.',
     errorStateBehavior: 'Preserve already captured research material and show which extraction lane failed.',
-    smallPaneAdaptationNotes: ['Use tab-first navigation and avoid side-by-side source/notes panes on narrow widths.', 'Keep source title, publication, and one relevance line visible.'],
+    smallPaneAdaptationNotes: ['Use tab-first navigation on narrow widths.', 'Keep source title, publication, and one relevance line visible.'],
     references: ['Notion research pages', 'Obsidian note collections', 'Apple Notes source stacks'],
     populationInstructions: {
-      summary: 'Populate evidence, notes, and extracted points as separate but connected surfaces.',
+      summary: 'Populate evidence and extracted points as separate but connected surfaces.',
       steps: [
         'Add one source item per document, article, or page.',
-        'Store synthesized findings in extracted points rather than mixing them into raw source rows.',
-        'Render follow-up prompts as immediately runnable actions, not inert text.',
-        'Use follow-up actions for the next round of research prompts.'
+        'Store synthesized findings in extracted points rather than mixing them into raw source rows.'
       ],
       guardrails: [
+        'Never render a Notes tab or a Follow-ups tab on this recipe.',
         'Do not collapse all information into a single markdown wall.',
-        'Do not replace user-authored notes when sources update.',
         'Keep source identity stable across updates.'
       ]
     },
     updateRules: {
       patchPrefer: ['Append sources and extracted points.', 'Patch existing source summaries rather than replacing the whole notebook.'],
       replaceTriggers: ['Replace the notebook only when the research topic changes completely.'],
-      persistAcrossUpdates: ['Selected tab', 'Operator notes', 'Pinned claims', 'Reviewed markers'],
-      stableRegions: ['Tab rail', 'Notes tab', 'Source ordering']
+      persistAcrossUpdates: ['Selected tab', 'Pinned claims', 'Reviewed markers'],
+      stableRegions: ['Tab rail', 'Source ordering']
     }
   },
   'security-review-board': {
@@ -365,81 +375,85 @@ export const RECIPE_TEMPLATE_SPECS: Record<RecipeTemplateId, RecipeTemplateSpec>
       'Choose this when the user is reviewing threats, audits, vulnerabilities, or security-control gaps.',
     selectionSignals: ['security review', 'threat hunting', 'audit findings', 'vulnerability triage'],
     goodFor: ['Threat review', 'Audit findings', 'Remediation planning'],
-    supports: ['Severity grouping', 'Evidence detail', 'Remediation actions', 'Issue status tracking'],
+    supports: ['Full-width severity groups', 'Expandable findings', 'Affected Surface', 'Evidence bullets', 'Remediate now action', 'Ignore action'],
     preferredLayout: 'workbench',
-    supportedTabs: ['Findings', 'Remediation', 'Evidence'],
-    idealDataShape: ['Severity-grouped findings', 'Evidence items', 'Remediation actions', 'Status tracking'],
-    requiredSections: ['Severity groups', 'Structured finding detail', 'Remediation block', 'Status chips'],
-    optionalSections: ['Scope note', 'Owner field', 'Verification log'],
-    requiredActions: ['Open evidence', 'Assign remediation', 'Change status'],
-    optionalActions: ['Escalate severity', 'Ask Hermes to summarize', 'Add verification note'],
+    supportedTabs: [],
+    idealDataShape: ['Severity-grouped findings', 'Affected surface per finding', 'Evidence bullet list per finding'],
+    requiredSections: ['Findings by Severity (full width, expandable rows)'],
+    optionalSections: ['Stat strip'],
+    requiredActions: ['Remediate now', 'Ignore'],
+    optionalActions: ['Ask Hermes to summarize'],
     emptyStateBehavior: 'Show a review-ready board that explains severity grouping and evidence capture expectations.',
     loadingStateBehavior: 'Keep severity lanes visible and stream findings into the appropriate group.',
     errorStateBehavior: 'Preserve validated findings and label missing evidence or remediation data explicitly.',
-    smallPaneAdaptationNotes: ['Render severity groups as stacked sections.', 'Keep severity, title, and status visible on each card before evidence.'],
+    smallPaneAdaptationNotes: ['Render severity groups as stacked sections.', 'Keep severity and title visible on each collapsed row.'],
     references: ['Security triage dashboards', 'Audit review boards', 'Risk register layouts'],
     populationInstructions: {
-      summary: 'Populate finding cards with clear severity, status chips, evidence context, and remediation direction.',
+      summary: 'Render Findings by Severity as a single full-width section. Each finding is a collapsed row that expands to show Affected Surface, Evidence bullets, and Remediate now / Ignore buttons.',
       steps: [
-        'Group findings by severity first.',
-        'Attach a short evidence summary to each finding and reserve long detail for the evidence panel.',
-        'Track remediation state separately from the finding narrative.'
+        'Group findings by severity first (Critical, High, Medium, Low).',
+        'Make each finding an expandable row whose collapsed line shows severity color, title, and one-line summary.',
+        'When expanded, render an "Affected surface" header followed by a short text description.',
+        'Below that render an "Evidence" header with the evidence as a bulleted list.',
+        'Below evidence render two quick action buttons: "Remediate now" (primary) and "Ignore" (neutral).'
       ],
       guardrails: [
-        'Do not flatten severity into a single undifferentiated list.',
-        'Do not overwrite remediation state when evidence expands.',
-        'Keep evidence and remediation tied to stable finding ids.'
+        'Do not render a separate right-pane selected-finding panel — details live inside the expanded row.',
+        'Clicking "Ignore" must remove the finding from the list locally.',
+        'Clicking "Remediate now" must prompt Hermes to remediate and then update the recipe accordingly.',
+        'Never flatten severity into a single undifferentiated list.'
       ]
     },
     updateRules: {
-      patchPrefer: ['Patch finding severity, status, and remediation details in place.', 'Append evidence notes rather than replacing them.'],
+      patchPrefer: ['Patch finding severity, status, and remediation details in place.', 'Append evidence bullets rather than replacing them.', 'Remove a finding row when the user chose Ignore.'],
       replaceTriggers: ['Replace the whole board only when the review scope changes completely.'],
-      persistAcrossUpdates: ['Status changes', 'Owner assignments', 'Selected finding', 'Verification notes'],
-      stableRegions: ['Severity grouping', 'Remediation tab', 'Evidence panel']
+      persistAcrossUpdates: ['Expanded row state', 'Ignored findings', 'Remediation progress'],
+      stableRegions: ['Severity grouping', 'Expanded-row structure (Affected Surface → Evidence → Actions)']
     }
   },
   'vendor-evaluation-matrix': {
     id: 'vendor-evaluation-matrix',
-    name: 'Vendor Evaluation Matrix',
+    name: 'Comparison Matrix',
     category: 'commerce',
-    useCase: 'Compare vendors or software products across weighted criteria and pricing.',
-    purpose: 'A weighted decision matrix for procurement-style comparisons.',
-    primaryUserGoal: 'Make a defendable vendor choice using consistent evaluation criteria.',
+    useCase: 'Compare any set of items — frameworks, vendors, technologies, apps, products — side by side.',
+    purpose: 'A generic comparison matrix capped at five columns, followed by a single recommendation pane.',
+    primaryUserGoal: 'Compare candidates across a handful of criteria and see a clear recommendation.',
     whenHermesShouldChoose:
-      'Choose this when the user is comparing tools, vendors, or services across criteria rather than shopping individual goods.',
-    selectionSignals: ['compare vendors', 'software evaluation', 'weighted criteria', 'procurement matrix'],
-    goodFor: ['Software selection', 'Procurement review', 'Service comparison'],
-    supports: ['Weighted criteria', 'Pricing', 'Capability matrix', 'Notes'],
+      'Choose this when the user is comparing multiple candidates — coding frameworks, vendors, technologies, apps, products, services — across a few consistent criteria.',
+    selectionSignals: ['compare', 'comparison matrix', 'versus', 'which is better', 'compare frameworks', 'compare vendors', 'compare apps'],
+    goodFor: ['Framework comparison', 'Vendor comparison', 'Technology comparison', 'App comparison', 'Product comparison'],
+    supports: ['Up to 5 columns including Name / Item', 'Recommendation pane below the table'],
     preferredLayout: 'matrix',
-    supportedTabs: ['Matrix', 'Notes', 'Links'],
-    idealDataShape: ['Vendor rows', 'Criteria columns with weights', 'Pricing summaries', 'Links and notes'],
-    requiredSections: ['Criteria summary', 'Evaluation matrix', 'Decision notes', 'Action bar'],
-    optionalSections: ['Links tab', 'Shortlist badge set', 'Risk note'],
-    requiredActions: ['Open vendor site', 'Save note', 'Ask Hermes to reweight'],
-    optionalActions: ['Pin frontrunner', 'Hide vendor', 'Export criteria'],
-    emptyStateBehavior: 'Explain that the matrix needs vendors plus criteria before it becomes useful.',
-    loadingStateBehavior: 'Keep criteria headers fixed while vendor rows or scoring details load.',
-    errorStateBehavior: 'Preserve current criteria and loaded vendors; mark missing scoring areas as incomplete.',
-    smallPaneAdaptationNotes: ['Keep weighted criteria visible as compact chips above the matrix.', 'Collapse low-priority columns first.'],
-    references: ['Procurement scorecards', 'Evaluation spreadsheets', 'Decision frameworks'],
+    supportedTabs: [],
+    idealDataShape: ['A Name / Item column plus up to 4 additional comparison columns', 'One row per candidate', 'A concise recommendation below the table'],
+    requiredSections: ['Comparison matrix', 'Recommendation pane'],
+    optionalSections: [],
+    requiredActions: [],
+    optionalActions: [],
+    emptyStateBehavior: 'Explain that the matrix needs items plus criteria before it becomes useful.',
+    loadingStateBehavior: 'Keep criteria headers fixed while rows or scoring details load.',
+    errorStateBehavior: 'Preserve current criteria and loaded rows; mark missing scoring areas as incomplete.',
+    smallPaneAdaptationNotes: ['Collapse the lowest-priority column first.', 'Keep Name / Item and the first criterion column visible.'],
+    references: ['Procurement scorecards', 'Framework-comparison tables', 'Review-site feature grids'],
     populationInstructions: {
-      summary: 'Populate stable criteria columns and vendor rows so scoring remains explainable over time.',
+      summary: 'Render a single comparison matrix (max 5 columns including the Name / Item column) and a recommendation pane below it.',
       steps: [
-        'Use clear weighted criteria labels.',
-        'Normalize pricing and capability language across vendors.',
-        'Keep notes and links adjacent but not inside scoring cells.'
+        'Always include a Name / Item column as the first column.',
+        'Add at most four additional criteria columns.',
+        'Normalize language across rows so cells are scannable.',
+        'Follow the table with a single recommendation pane that states the suggested pick and why.'
       ],
       guardrails: [
-        'Do not use arbitrary unweighted columns when weights are part of the decision.',
-        'Do not reorder vendors unexpectedly once the user starts taking notes.',
-        'Keep manual weighting changes stable.'
+        'Never exceed 5 total columns including the Name / Item column.',
+        'Do not render a top summary pane with stats or badges — the only surface above the recommendation is the table itself.',
+        'Do not reorder rows unexpectedly across refreshes.'
       ]
     },
     updateRules: {
-      patchPrefer: ['Patch cell scores, vendor pricing, and notes in place.', 'Append vendor notes without rebuilding the matrix.'],
-      replaceTriggers: ['Replace the matrix only when the compared vendor set or criteria model changes materially.'],
-      persistAcrossUpdates: ['Manual weights', 'Pinned vendors', 'Notes', 'Selected vendor'],
-      stableRegions: ['Criteria columns', 'Notes tab', 'Links tab']
+      patchPrefer: ['Patch cell values and the recommendation in place.'],
+      replaceTriggers: ['Replace the matrix only when the compared item set or criteria model changes materially.'],
+      persistAcrossUpdates: ['Row order', 'Column order'],
+      stableRegions: ['Name / Item column', 'Recommendation pane position']
     }
   },
   'event-planner': {
@@ -495,39 +509,41 @@ export const RECIPE_TEMPLATE_SPECS: Record<RecipeTemplateId, RecipeTemplateSpec>
     primaryUserGoal: 'Discover and compare relevant job postings to decide which roles are worth pursuing.',
     whenHermesShouldChoose:
       'Choose this when the user is searching for job postings, comparing roles, or gathering listings across companies.',
-    selectionSignals: ['job listings', 'find jobs', 'compare roles', 'job postings', 'open positions'],
-    goodFor: ['Job discovery', 'Role comparison', 'Posting research'],
-    supports: ['Salary ranges', 'Job descriptions', 'Application links', 'Cover letter', 'Interview prep', 'Company research'],
-    preferredLayout: 'kanban',
-    supportedTabs: ['Pipeline', 'Notes', 'Research'],
-    idealDataShape: ['Stage columns', 'Application cards', 'Salary/location fields', 'Posting links', 'Interview prep notes', 'Company notes'],
-    requiredSections: ['Kanban board', 'Detail panel', 'Interview prep block', 'Next-step actions'],
-    optionalSections: ['Notes tab', 'Company research tab', 'Offer risk chips'],
-    requiredActions: ['Update stage', 'Add note', 'Interview prep', 'Open posting'],
-    optionalActions: ['Mark stale', 'Pin company', 'Open company link'],
-    emptyStateBehavior: 'Show interview stages and invite the user to add or import applications.',
-    loadingStateBehavior: 'Keep stages stable and stream cards into the board rather than reshaping it.',
-    errorStateBehavior: 'Preserve existing applications and isolate failed research or note refreshes to their tab.',
-    smallPaneAdaptationNotes: ['Convert the board into stacked stage sections with sticky next-step actions.', 'Keep company, stage, and location visible above the fold.'],
-    references: ['Applicant tracking boards', 'CRM pipeline patterns', 'Career-planning workspaces'],
+    selectionSignals: ['job listings', 'find jobs', 'job postings', 'open positions', 'apply to jobs'],
+    goodFor: ['Job discovery', 'Browsing openings', 'Applying in batch'],
+    supports: ['Job table', 'Selectable rows', 'Apply to selected', 'Find more'],
+    preferredLayout: 'matrix',
+    supportedTabs: [],
+    idealDataShape: ['One row per job listing', 'Columns: position, company, estimated pay, link', 'Every row carries a direct link to the posting'],
+    requiredSections: ['Job listings table', 'Selection action bar'],
+    optionalSections: [],
+    requiredActions: ['Apply to selected', 'Find more'],
+    optionalActions: [],
+    emptyStateBehavior: 'Show an empty state that invites the user to describe the role and seed the first batch.',
+    loadingStateBehavior: 'Keep the table scaffold in place while rows stream in.',
+    errorStateBehavior: 'Preserve existing rows and mark failed refreshes inline.',
+    smallPaneAdaptationNotes: ['Collapse the estimated-pay column before the company column.', 'Keep Position and Link visible at the smallest widths.'],
+    references: ['LinkedIn jobs tables', 'Indeed listings', 'Wellfound job feed'],
     populationInstructions: {
-      summary: 'Populate stable application stages with one card per company role pair.',
+      summary: 'Render a selectable job-listings table with four columns (Position, Company, Estimated Pay, Link). Below the table, render two buttons: "Apply to selected" and "Find more".',
       steps: [
-        'Map each application to a clear stage.',
-        'Use the detail panel for notes, salary, posting links, and interview prep context.',
-        'Keep next steps actionable and concise.'
+        'Use one row per job listing.',
+        'Put Position in the first column, Company next, Estimated Pay next, and a hyperlinked Link in the last column.',
+        'Make rows selectable via a leading checkbox.',
+        '"Apply to selected" is enabled only when at least one row is selected and prompts Hermes to apply to those jobs.',
+        '"Find more" asks Hermes to populate the table with additional job listings.'
       ],
       guardrails: [
-        'Do not rebuild stages across updates.',
-        'Do not remove user notes or prep tasks when status changes.',
-        'Keep company identity stable even if the role title changes slightly.'
+        'Never render an Application pipeline, kanban board, Notes tab, or Research tab on this recipe.',
+        'Every row must have a link column.',
+        'Do not remove selections when new rows are appended.'
       ]
     },
     updateRules: {
-      patchPrefer: ['Patch application cards in place and move only changed items between stages.', 'Append interview notes incrementally.', 'Preserve company research and prep notes while stages change.'],
-      replaceTriggers: ['Replace the board only if the user starts a completely different search context.'],
-      persistAcrossUpdates: ['Selected application', 'Manual notes', 'Pinned companies', 'Collapsed stages'],
-      stableRegions: ['Stage columns', 'Detail panel', 'Notes tab']
+      patchPrefer: ['Append new rows without replacing existing rows.', 'Patch pay ranges in place.'],
+      replaceTriggers: ['Replace the whole table only when the user redefines the job search entirely.'],
+      persistAcrossUpdates: ['Selected rows', 'Row order'],
+      stableRegions: ['Column order', 'Action bar']
     }
   },
   'content-campaign-planner': {
@@ -544,8 +560,8 @@ export const RECIPE_TEMPLATE_SPECS: Record<RecipeTemplateId, RecipeTemplateSpec>
     supports: ['Workflow tabs', 'Status chips', 'Idea notes', 'Email writing'],
     preferredLayout: 'kanban',
     supportedTabs: ['Ideas', 'Drafts', 'Schedule', 'Email'],
-    idealDataShape: ['Idea cards', 'Draft summaries', 'Scheduled items', 'Email draft context', 'Status chips', 'Idea notes'],
-    requiredSections: ['Tab rail', 'Workflow board', 'Email write panel', 'Action bar'],
+    idealDataShape: ['Idea list', 'Draft summaries', 'Scheduled items', 'Email draft context', 'Status chips'],
+    requiredSections: ['Tab rail', 'Idea list', 'Draft list', 'Schedule timeline', 'Email write panel'],
     optionalSections: ['Brief note', 'Owner chips', 'Launch reminders'],
     requiredActions: ['Flesh out idea', 'Add note', 'Write email'],
     optionalActions: ['Pin campaign', 'Duplicate draft', 'Ask Hermes for another angle'],
@@ -555,16 +571,16 @@ export const RECIPE_TEMPLATE_SPECS: Record<RecipeTemplateId, RecipeTemplateSpec>
     smallPaneAdaptationNotes: ['Use tab-first navigation and keep status chips compact.', 'Favor one-column card stacks for draft-heavy views.'],
     references: ['Editorial planners', 'Kanban content boards', 'Marketing ops dashboards'],
     populationInstructions: {
-      summary: 'Populate a stable workflow from ideas through schedule, with idea notes and launch email handled explicitly.',
+      summary: 'Populate a stable workflow from ideas through schedule, using a simple list for Ideas rather than a kanban of lanes.',
       steps: [
-        'Use one card per content item or campaign.',
+        'Use a flat list (not a kanban board) for ideas.',
         'Keep status transitions explicit.',
         'Preserve short operator notes on each idea so half-formed concepts can be expanded later.'
       ],
       guardrails: [
+        'Never render an "Idea lanes" kanban on this recipe — the Ideas tab is a simple list.',
         'Do not flatten the workflow into one generic to-do list.',
-        'Do not drop scheduled items when draft details change.',
-        'Preserve manual notes and email context.'
+        'Do not drop scheduled items when draft details change.'
       ]
     },
     updateRules: {
@@ -577,6 +593,7 @@ export const RECIPE_TEMPLATE_SPECS: Record<RecipeTemplateId, RecipeTemplateSpec>
   'local-discovery-comparison': {
     id: 'local-discovery-comparison',
     name: 'Local Discovery Comparison',
+    hiddenFromGallery: true,
     category: 'travel',
     useCase: 'Compare local services, venues, or shops beyond just restaurants and hotels.',
     purpose: 'A flexible local-search comparison workspace for place categories that still need structured evaluation.',
@@ -622,42 +639,44 @@ export const RECIPE_TEMPLATE_SPECS: Record<RecipeTemplateId, RecipeTemplateSpec>
     id: 'step-by-step-instructions',
     name: 'Step-by-Step Instructions',
     category: 'operations',
-    useCase: 'Follow a multi-step procedure with prerequisites and checkable progress.',
-    purpose: 'A checklist-style guide that shows prerequisites up front and numbered steps that can be checked off as completed.',
-    primaryUserGoal: 'Complete a procedure without missing a step or prerequisite.',
-    whenHermesShouldChoose: 'Choose this when the user is asking how to do something step by step, looking for a tutorial, or needs a procedural guide.',
-    selectionSignals: ['how to', 'step by step', 'instructions', 'tutorial', 'guide', 'walkthrough', 'procedure'],
-    goodFor: ['Setup guides', 'Deployment procedures', 'Configuration walkthroughs', 'Tutorial follow-along'],
-    supports: ['Prerequisites list', 'Numbered steps', 'Checkbox progress', 'Step details', 'Notes'],
+    useCase: 'Follow a compact procedure with stateful checkboxes, markdown, and copyable code blocks.',
+    purpose: 'A tight checklist-style guide with markdown-formatted steps, code blocks that carry a copy button, and checkboxes that strike through completed work.',
+    primaryUserGoal: 'Follow instructions or a troubleshooting guide without missing a step, copying commands in one click.',
+    whenHermesShouldChoose: 'Use this any time the user asks how to do something, requests a tutorial, or asks how to troubleshoot an issue.',
+    selectionSignals: ['how to', 'step by step', 'instructions', 'tutorial', 'guide', 'walkthrough', 'procedure', 'troubleshoot', 'fix', 'why is', 'how do I'],
+    goodFor: ['Setup guides', 'Deployment procedures', 'Troubleshooting recipes', 'Configuration walkthroughs', 'CLI recipes'],
+    supports: ['Compact layout', 'Stateful checkboxes with strikethrough', 'Markdown formatting per step', 'Code blocks with copy buttons', 'Prerequisites'],
     preferredLayout: 'checklist',
-    supportedTabs: ['Instructions', 'Notes'],
-    idealDataShape: ['Optional prerequisites as a string list', 'Ordered steps with id, label, and optional detail', 'Optional notes'],
+    supportedTabs: [],
+    idealDataShape: ['Optional prerequisites as a string list', 'Ordered steps, each with a markdown label and optional markdown detail', 'Code blocks inside step detail are rendered with a copy affordance'],
     requiredSections: ['Checklist with steps'],
-    optionalSections: ['Prerequisites', 'Notes'],
-    requiredActions: ['Add note'],
-    optionalActions: ['Share instructions'],
+    optionalSections: ['Prerequisites'],
+    requiredActions: [],
+    optionalActions: [],
     emptyStateBehavior: 'Show a placeholder inviting the user to describe the procedure they need guidance on.',
-    loadingStateBehavior: 'Show numbered step skeletons with checkbox placeholders.',
+    loadingStateBehavior: 'Show compact numbered step skeletons with checkbox placeholders.',
     errorStateBehavior: 'Keep any steps that were already populated and annotate incomplete sections.',
-    smallPaneAdaptationNotes: ['Steps stack naturally on narrow viewports.', 'Keep step numbers and checkboxes visible.'],
-    references: ['How-to guides', 'Runbooks', 'Checklists', 'Tutorial sequences'],
+    smallPaneAdaptationNotes: ['Steps stack naturally on narrow viewports.', 'Code blocks scroll horizontally rather than wrapping.'],
+    references: ['How-to guides', 'Runbooks', 'Troubleshooting docs', 'Tutorial sequences'],
     populationInstructions: {
-      summary: 'List prerequisites first, then populate ordered steps with clear labels and optional detail.',
+      summary: 'Render a compact numbered checklist. Each step supports markdown (bold, links, inline code) and optional fenced code blocks that render with a copy button. Completed steps show the label struck through.',
       steps: [
-        'Add any prerequisites as simple strings.',
-        'Add steps in order with an id, label, and optional detail.',
-        'Add notes if relevant.'
+        'List prerequisites up front as short strings.',
+        'Add steps in order with an id and a markdown-formatted label.',
+        'Use the step detail for additional explanation or a fenced code block — code blocks must render with a copy button.',
+        'Checkbox state is session-local and strikes through the label plus detail.'
       ],
       guardrails: [
+        'Keep the layout compact — no hero, no tabs, no action bar footer.',
         'Always populate at least one step.',
-        'Keep step labels concise and action-oriented.',
-        'Do not duplicate prerequisite information in step details.'
+        'Never omit a copy button on a code block.',
+        'Strike through the entire step (label and detail) when its checkbox is checked.'
       ]
     },
     updateRules: {
       patchPrefer: ['Append new steps. Update existing step labels in place.'],
       replaceTriggers: ['Replace only when the procedure changes entirely.'],
-      persistAcrossUpdates: ['Step checked state (session-local)', 'Notes'],
+      persistAcrossUpdates: ['Step checked state (session-local)'],
       stableRegions: ['Step order', 'Prerequisites']
     }
   },
