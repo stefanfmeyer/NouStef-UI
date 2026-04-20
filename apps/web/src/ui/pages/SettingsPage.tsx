@@ -835,7 +835,7 @@ export function SettingsPage({
                                       </VStack>
                                       {step.actionUrl && step.actionLabel ? (
                                         <Button asChild size="xs" variant="outline" flexShrink={0}>
-                                          <a href={step.actionUrl} target="_blank" rel="noreferrer">
+                                          <a href={step.actionUrl} target="_blank" rel="noopener noreferrer">
                                             {step.actionLabel}
                                           </a>
                                         </Button>

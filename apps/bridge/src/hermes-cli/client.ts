@@ -2500,6 +2500,12 @@ export class HermesCli {
   ) {
     const env = buildProfileEnvironment(profile);
     const sessionId = session.runtimeSessionId ?? session.id;
+    // Guard against argument injection: reject titles that would be interpreted as CLI flags.
+    // execFile does not use a shell, so no shell-injection, but Hermes CLI itself may parse
+    // an argument starting with "-" as a flag.
+    if (title.startsWith('-')) {
+      throw new Error('Session title must not start with "-".');
+    }
     const result = await this.run(['sessions', 'rename', sessionId, title], env, signal);
     if (result.exitCode !== 0) {
       throw new Error(result.stderr.trim() || `Failed to rename Hermes session ${sessionId}.`);
@@ -2650,7 +2656,7 @@ export class HermesCli {
   }
 
   private parseDumpProviders(dumpOutput: string, profileId: string, activeProvider: string, now: string): RuntimeProviderOption[] {
-    const apiKeysMatch = dumpOutput.match(/^api_keys:\n((?:  .+\n)*)/m);
+    const apiKeysMatch = dumpOutput.match(/^api_keys:\n((?: {2}.+\n)*)/m);
     const providers: RuntimeProviderOption[] = [];
 
     // Non-LLM tool/service keys to exclude
@@ -2853,7 +2859,7 @@ export class HermesCli {
     let toolUseEnforcement: string | undefined;
 
     // Parse config_overrides section from dump for max_turns, reasoning_effort, etc.
-    const overridesMatch = dumpOutput.match(/^config_overrides:\n((?:  .+\n)*)/m);
+    const overridesMatch = dumpOutput.match(/^config_overrides:\n((?: {2}.+\n)*)/m);
     if (overridesMatch?.[1]) {
       const lines = overridesMatch[1].split('\n').filter(Boolean);
       for (const line of lines) {

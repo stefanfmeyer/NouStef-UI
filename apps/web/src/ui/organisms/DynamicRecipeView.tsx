@@ -29,6 +29,7 @@ import type { ReactNode } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { RecipeDslRenderer } from './RecipeDslRenderer';
+import { safeMarkdownUrlTransform } from '../../lib/markdown-url-transform';
 import { RecipeTemplateRenderer } from './RecipeTemplateRenderer';
 
 type RecipePipeline = NonNullable<Recipe['metadata']['recipePipeline']>;
@@ -206,6 +207,7 @@ function RecipeMarkdownBlock({ content }: { content: string }) {
     <Box color="var(--text-primary)" css={markdownRendererCss}>
       <ReactMarkdown
         skipHtml
+        urlTransform={(url) => safeMarkdownUrlTransform(url) ?? ''}
         remarkPlugins={[remarkGfm]}
         components={{
           a(props) {
@@ -214,7 +216,7 @@ function RecipeMarkdownBlock({ content }: { content: string }) {
               <chakra.a
                 href={href}
                 target={href.startsWith('mailto:') ? undefined : '_blank'}
-                rel={href.startsWith('mailto:') ? undefined : 'noreferrer'}
+                rel={href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
                 color="blue.600"
                 textDecoration="underline"
                 textUnderlineOffset="3px"
@@ -251,7 +253,7 @@ function renderValue(value: RecipeCellValue | unknown, presentation: RecipeUiFie
       <chakra.a
         href={link.url}
         target={link.url.startsWith('mailto:') ? undefined : '_blank'}
-        rel={link.url.startsWith('mailto:') ? undefined : 'noreferrer'}
+        rel={link.url.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
         color="blue.600"
         fontWeight="600"
         textDecoration="underline"

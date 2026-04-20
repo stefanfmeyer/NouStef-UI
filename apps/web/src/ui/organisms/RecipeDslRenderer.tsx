@@ -29,6 +29,7 @@ import { useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { safeMarkdownUrlTransform } from '../../lib/markdown-url-transform';
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -132,6 +133,7 @@ function MarkdownBlock({ content }: { content: string }) {
     <Box color="var(--text-primary)">
       <ReactMarkdown
         skipHtml
+        urlTransform={(url) => safeMarkdownUrlTransform(url) ?? ''}
         remarkPlugins={[remarkGfm]}
         components={{
           a(props) {
@@ -140,7 +142,7 @@ function MarkdownBlock({ content }: { content: string }) {
               <chakra.a
                 href={href}
                 target={href.startsWith('mailto:') ? undefined : '_blank'}
-                rel={href.startsWith('mailto:') ? undefined : 'noreferrer'}
+                rel={href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
                 color="blue.600"
                 textDecoration="underline"
                 textUnderlineOffset="3px"
@@ -174,7 +176,7 @@ function renderValue(value: RecipeCellValue | unknown) {
       <chakra.a
         href={link.url}
         target={link.url.startsWith('mailto:') ? undefined : '_blank'}
-        rel={link.url.startsWith('mailto:') ? undefined : 'noreferrer'}
+        rel={link.url.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
         color="blue.600"
         textDecoration="underline"
         textUnderlineOffset="3px"
@@ -188,7 +190,7 @@ function renderValue(value: RecipeCellValue | unknown) {
   if (isRecord(value) && typeof value.imageUrl === 'string' && value.imageUrl.trim()) {
     return (
       <Button asChild size="xs" variant="outline" colorPalette="blue">
-        <a href={value.imageUrl} target="_blank" rel="noreferrer">
+        <a href={value.imageUrl} target="_blank" rel="noopener noreferrer">
           {getCellText(value) || 'View image'}
         </a>
       </Button>

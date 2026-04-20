@@ -6,6 +6,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { HermesAvatar } from '../atoms/HermesAvatar';
 import { TypingDots } from '../atoms/TypingDots';
+import { safeMarkdownUrlTransform } from '../../lib/markdown-url-transform';
 
 function formatMessageTime(value: string | undefined) {
   if (!value) {
@@ -221,6 +222,7 @@ const MarkdownMessage = memo(function MarkdownMessage({ children }: { children: 
     >
       <ReactMarkdown
         skipHtml
+        urlTransform={(url) => safeMarkdownUrlTransform(url) ?? ''}
         remarkPlugins={[remarkGfm]}
         components={{
           a(props) {
@@ -229,7 +231,7 @@ const MarkdownMessage = memo(function MarkdownMessage({ children }: { children: 
               <chakra.a
                 href={href}
                 target={href.startsWith('mailto:') ? undefined : '_blank'}
-                rel={href.startsWith('mailto:') ? undefined : 'noreferrer'}
+                rel={href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
                 color="blue.600"
                 fontWeight="600"
                 textDecoration="underline"
@@ -254,7 +256,7 @@ const MarkdownMessage = memo(function MarkdownMessage({ children }: { children: 
           img(props) {
             return (
               <Button asChild size="xs" variant="outline" colorPalette="blue" mt="2">
-                <a href={props.src ?? '#'} target="_blank" rel="noreferrer">
+                <a href={props.src ?? '#'} target="_blank" rel="noopener noreferrer">
                   {props.alt?.trim() || 'View image'}
                 </a>
               </Button>

@@ -21,6 +21,7 @@ import type {
 import { getRecipeContentTab, getRecipeContentViewData } from '@hermes-recipes/protocol';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { safeMarkdownUrlTransform } from '../../lib/markdown-url-transform';
 import { useMemo, useState } from 'react';
 import { DynamicRecipeView } from './DynamicRecipeView';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -496,7 +497,7 @@ function ExternalActionButton({
   variant?: 'outline' | 'subtle' | 'ghost';
 }) {
   const target = link.url.startsWith('mailto:') ? undefined : '_blank';
-  const rel = link.url.startsWith('mailto:') ? undefined : 'noreferrer';
+  const rel = link.url.startsWith('mailto:') ? undefined : 'noopener noreferrer';
 
   return (
     <Button asChild size="xs" variant={variant} colorPalette={link.kind === 'email' ? 'teal' : 'blue'}>
@@ -540,7 +541,7 @@ function TableCellView({
 
     return (
       <Button asChild size="xs" variant="ghost" colorPalette="blue">
-        <a href={href} target="_blank" rel="noreferrer">
+        <a href={href} target="_blank" rel="noopener noreferrer">
           {text || image?.alt || 'View image'}
         </a>
       </Button>
@@ -552,7 +553,7 @@ function TableCellView({
       <chakra.a
         href={link.url}
         target={link.url.startsWith('mailto:') ? undefined : '_blank'}
-        rel={link.url.startsWith('mailto:') ? undefined : 'noreferrer'}
+        rel={link.url.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
         color="blue.600"
         fontWeight="600"
         textDecoration="underline"
@@ -631,6 +632,7 @@ function MarkdownEntryView({
       >
         <ReactMarkdown
           skipHtml
+          urlTransform={(url) => safeMarkdownUrlTransform(url) ?? ''}
           remarkPlugins={[remarkGfm]}
           components={{
             a(props) {
@@ -639,7 +641,7 @@ function MarkdownEntryView({
                 <chakra.a
                   href={href}
                   target={href.startsWith('mailto:') ? undefined : '_blank'}
-                  rel={href.startsWith('mailto:') ? undefined : 'noreferrer'}
+                  rel={href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
                   color="blue.600"
                   textDecoration="underline"
                   textUnderlineOffset="3px"
@@ -653,7 +655,7 @@ function MarkdownEntryView({
               const href = props.src ?? '#';
               return (
                 <Button asChild size="xs" variant="outline" colorPalette="blue" mt="2">
-                  <a href={href} target="_blank" rel="noreferrer">
+                  <a href={href} target="_blank" rel="noopener noreferrer">
                     {props.alt?.trim() || 'View image'}
                   </a>
                 </Button>
@@ -678,7 +680,7 @@ function CardMetadataRow({ label, value, link }: { label: string; value: string;
         <chakra.a
           href={link.url}
           target={link.url.startsWith('mailto:') ? undefined : '_blank'}
-          rel={link.url.startsWith('mailto:') ? undefined : 'noreferrer'}
+          rel={link.url.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
           fontSize="sm"
           fontWeight="600"
           color="blue.600"
@@ -1163,7 +1165,7 @@ function ContentTabRenderer({
                   <chakra.a
                     href={href}
                     target={href.startsWith('mailto:') ? undefined : '_blank'}
-                    rel={href.startsWith('mailto:') ? undefined : 'noreferrer'}
+                    rel={href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
                     color="blue.600"
                     textDecoration="underline"
                     textUnderlineOffset="3px"
@@ -1177,7 +1179,7 @@ function ContentTabRenderer({
                 const href = props.src ?? '#';
                 return (
                   <Button asChild size="xs" variant="outline" colorPalette="blue" mt="2">
-                    <a href={href} target="_blank" rel="noreferrer">
+                    <a href={href} target="_blank" rel="noopener noreferrer">
                       {props.alt?.trim() || 'View image'}
                     </a>
                   </Button>

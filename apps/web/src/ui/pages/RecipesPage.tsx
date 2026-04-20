@@ -9,7 +9,7 @@ import { IngredientPreview } from '../../features/recipe-templates/ingredient-pr
 import { INGREDIENT_CATALOG, getIngredientById, type IngredientGroup } from '../../features/recipe-templates/ingredient-catalog';
 import type { RecipeTemplateGalleryCategory, RecipeTemplateId } from '../../features/recipe-templates/types';
 
-export function RecipesPage({ activeProfileId }: { activeProfileId?: string | null }) {
+export function RecipesPage({ activeProfileId: _activeProfileId }: { activeProfileId?: string | null }) {
   const [category, setCategory] = useState<RecipeTemplateGalleryCategory>('all');
   const [selectedTemplateId, setSelectedTemplateId] = useState<RecipeTemplateId>('price-comparison-grid');
   const [drawerOpen, setDrawerOpen] = useState(false);

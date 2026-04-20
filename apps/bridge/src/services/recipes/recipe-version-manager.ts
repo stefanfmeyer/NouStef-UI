@@ -1,6 +1,14 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+const VERSION_PATTERN = /^\d+\.\d+\.\d+$/;
+
+function assertValidVersion(version: string): void {
+  if (!VERSION_PATTERN.test(version)) {
+    throw new Error(`Invalid version "${version}": expected major.minor.patch (digits only).`);
+  }
+}
+
 export interface RecipeVersionFull {
   version: string;
   summary: string;
@@ -28,6 +36,7 @@ export function listVersions(folderPath: string): Array<Omit<RecipeVersionFull, 
 }
 
 export function getVersion(folderPath: string, version: string): RecipeVersionFull | null {
+  assertValidVersion(version);
   const fp = path.join(versionsDir(folderPath), `v${version}.json`);
   if (!fs.existsSync(fp)) return null;
   return JSON.parse(fs.readFileSync(fp, 'utf8')) as RecipeVersionFull;
@@ -60,6 +69,7 @@ export function saveVersion(
 }
 
 export function rollbackToVersion(folderPath: string, version: string): RecipeVersionFull | null {
+  assertValidVersion(version);
   const v = getVersion(folderPath, version);
   if (!v) return null;
   fs.writeFileSync(path.join(folderPath, 'manifest.json'), JSON.stringify(v.manifest, null, 2), 'utf8');

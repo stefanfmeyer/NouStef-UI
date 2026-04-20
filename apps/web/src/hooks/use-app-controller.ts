@@ -2127,7 +2127,10 @@ export function useAppController() {
 
             const partialTemplateState = event.partialTemplateState ?? null;
             const hasPromotedTemplate = Boolean(event.recipe.dynamic?.recipeTemplate);
-            const recipeToStore =
+            // The dynamic sub-type has optional fields upstream but is required here; the spread
+            // carries over optionality that TS then flags. Cast is safe because the runtime shape
+            // is identical — we only augment recipeTemplate.
+            const recipeToStore = (
               partialTemplateState && !hasPromotedTemplate
                 ? {
                     ...event.recipe,
@@ -2136,7 +2139,8 @@ export function useAppController() {
                       recipeTemplate: partialTemplateState
                     }
                   }
-                : event.recipe;
+                : event.recipe
+            ) as typeof event.recipe;
 
             return {
               ...currentPayload,

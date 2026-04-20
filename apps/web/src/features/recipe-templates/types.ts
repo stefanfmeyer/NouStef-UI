@@ -15,6 +15,7 @@ export type RecipeTemplateLayout =
   | 'triage-board'
   | 'rules-builder'
   | 'list-detail'
+  | 'balanced'
   | 'travel-compare'
   | 'timeline-tabs'
   | 'research-notebook'

@@ -32,6 +32,17 @@ import { createBridgeServer } from './server';
 const moduleDirectory = path.dirname(fileURLToPath(import.meta.url));
 const fixtureCliPath = path.resolve(moduleDirectory, '../test/fixtures/hermes-cli-fixture.mjs');
 
+// The bridge requires the x-hermes-bridge: 1 header on non-safe requests (CSRF guard).
+// Wrap global fetch so tests don't have to set it on every call.
+const originalFetch = globalThis.fetch;
+globalThis.fetch = ((input: Parameters<typeof originalFetch>[0], init?: Parameters<typeof originalFetch>[1]) => {
+  const mergedHeaders = {
+    'x-hermes-bridge': '1',
+    ...(init?.headers ?? {})
+  };
+  return originalFetch(input, { ...init, headers: mergedHeaders });
+}) as typeof originalFetch;
+
 async function collectStreamEvents(response: Response) {
   const reader = response.body?.getReader();
   if (!reader) {
@@ -413,7 +424,7 @@ describe.sequential('bridge server', () => {
         label: 'ANTHROPIC_API_KEY'
       })
     }).then((result) => readJson<ModelProviderResponse>(result));
-    const otherProfileProviders = await fetch(`${server.baseUrl}/api/model-providers?profileId=jbarton`).then((result) =>
+    await fetch(`${server.baseUrl}/api/model-providers?profileId=jbarton`).then((result) =>
       readJson<ModelProviderResponse>(result)
     );
     const settings = await fetch(`${server.baseUrl}/api/settings`).then((result) => readJson<SettingsResponse>(result));
@@ -1875,7 +1886,9 @@ Keep summaries short and searchable for the active profile.
     expect(errorEvent?.type).toBe('error');
     if (errorEvent?.type === 'error') {
       expect(errorEvent.error.code).toBe('INTERNAL_ERROR');
-      expect(errorEvent.error.message).toContain('Simulated stream failure after headers.');
+      // The client must get a non-empty error message; the message is intentionally
+      // generic (internals stay server-side) so we do not assert its exact text.
+      expect(errorEvent.error.message.length).toBeGreaterThan(0);
     }
     expect(health.status).toBe(200);
 

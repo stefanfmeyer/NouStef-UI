@@ -15,6 +15,7 @@ import type { Components } from 'react-markdown';
 import type { ReactNode } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { safeMarkdownUrlTransform } from '../../lib/markdown-url-transform';
 import {
   Bar,
   BarChart,
@@ -176,7 +177,7 @@ function renderFieldBody(field: RecipeTemplateField, options?: { showCopyButtons
                 <a
                   href={link.href}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                   style={{ color: 'var(--accent)', textDecoration: 'underline', textUnderlineOffset: '3px' }}
                 >
                   {link.href}
@@ -562,6 +563,7 @@ function ChecklistStepDetail({ detail, dimmed }: { detail: string; dimmed: boole
   return (
     <Box opacity={dimmed ? 0.5 : 1}>
       <ReactMarkdown
+        urlTransform={(url) => safeMarkdownUrlTransform(url) ?? ''}
         remarkPlugins={[remarkGfm]}
         components={{
           p: ({ children }) => (
@@ -659,7 +661,7 @@ function ChecklistSectionRenderer({
                         >
                           {index + 1}.
                         </Text>
-                        <ReactMarkdown remarkPlugins={[remarkGfm]} components={makeMarkdownComponents(isChecked)}>
+                        <ReactMarkdown urlTransform={(url) => safeMarkdownUrlTransform(url) ?? ''} remarkPlugins={[remarkGfm]} components={makeMarkdownComponents(isChecked)}>
                           {step.label}
                         </ReactMarkdown>
                       </HStack>
@@ -1891,6 +1893,7 @@ export function RecipeTemplateRenderer({
               {ghost ? (
                 <Box>{renderGhostSectionBody(section)}</Box>
               ) : (
+                // eslint-disable-next-line jsx-a11y/media-has-caption -- recipe audio is synthetic/TTS without captions
                 <audio controls style={{ width: '100%' }}>
                   <source src={section.src} />
                 </audio>
