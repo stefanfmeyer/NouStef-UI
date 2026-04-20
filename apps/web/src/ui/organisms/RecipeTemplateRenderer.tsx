@@ -283,7 +283,7 @@ function renderGhostSectionBody(section: RecipeTemplateSection) {
       return (
         <Flex gap="2" wrap="wrap">
           {Array.from({ length: 2 }).map((_, index) => (
-            <Box key={`ghost-action-${index}`} h="8" w={index === 0 ? '132px' : '116px'} rounded="14px" bg="rgba(148, 163, 184, 0.18)" />
+            <Box key={`ghost-action-${index}`} h="8" w={index === 0 ? '132px' : '116px'} rounded="8px" bg="rgba(148, 163, 184, 0.18)" />
           ))}
         </Flex>
       );
@@ -307,8 +307,8 @@ function renderGhostSectionBody(section: RecipeTemplateSection) {
           {ghostBar('68%')}
           {ghostBar('92%')}
           <Flex gap="2">
-            <Box h="8" w="132px" rounded="14px" bg="rgba(148, 163, 184, 0.18)" />
-            <Box h="8" w="104px" rounded="14px" bg="rgba(148, 163, 184, 0.18)" />
+            <Box h="8" w="132px" rounded="8px" bg="rgba(148, 163, 184, 0.18)" />
+            <Box h="8" w="104px" rounded="8px" bg="rgba(148, 163, 184, 0.18)" />
           </Flex>
         </VStack>
       );
@@ -473,7 +473,7 @@ function ChecklistSectionRenderer({
           <>
             {section.prerequisites.length > 0 ? (
               <Box rounded="8px" border="1px solid var(--border-subtle)" bg="var(--surface-2)" px="3.5" py="3">
-                <Text fontSize="xs" fontWeight="600" textTransform="uppercase" letterSpacing="0.08em" color="var(--text-muted)" mb="2">
+                <Text fontSize="xs" fontWeight="600" textTransform="uppercase" letterSpacing="0" color="var(--text-muted)" mb="2">
                   Prerequisites
                 </Text>
                 <VStack align="stretch" gap="1.5">
@@ -559,7 +559,7 @@ function CollapsibleNotesSection({
     <TemplateSurface>
       <VStack align="stretch" gap={open ? '4' : '0'}>
         <HStack
-          justify="recipe-between"
+          justify="space-between"
           align="center"
           cursor="pointer"
           onClick={() => setOpen((prev) => !prev)}
@@ -721,7 +721,7 @@ export function RecipeTemplateRenderer({
               <Text
                 fontSize="10px"
                 fontWeight="600"
-                letterSpacing="0.1em"
+                letterSpacing="0"
                 textTransform="uppercase"
                 color={isRepairing ? 'orange.700' : isFailed ? 'red.700' : 'blue.700'}
                 _dark={{ color: isRepairing ? 'orange.100' : isFailed ? 'red.100' : 'blue.100' }}
@@ -731,7 +731,7 @@ export function RecipeTemplateRenderer({
             </HStack>
           </Box>
         ) : null}
-        <Box rounded="12px" border="2px solid" borderColor={borderColor} bg={background} boxShadow={boxShadow} p="1">
+        <Box rounded="8px" border="2px solid" borderColor={borderColor} bg={background} boxShadow={boxShadow} p="1">
           {content}
         </Box>
         {progress.errorMessage ? (
@@ -831,7 +831,7 @@ export function RecipeTemplateRenderer({
                     }
                     placeholder={inputMeta.placeholder}
                     maxW="220px"
-                    rounded="14px"
+                    rounded="8px"
                     bg="var(--surface-2)"
                     border="1px solid var(--border-subtle)"
                   />
@@ -869,7 +869,7 @@ export function RecipeTemplateRenderer({
         return wrap(
           <TemplateSurface key={section.slotId} bg="var(--surface-1)">
             <VStack align="stretch" gap="3">
-              <Flex justify="recipe-between" align="center" gap="3" wrap="wrap">
+              <Flex justify="space-between" align="center" gap="3" wrap="wrap">
                 <Text fontSize="sm" fontWeight="500" color="var(--text-secondary)">
                   {section.title ?? 'Filters'}
                 </Text>
@@ -888,7 +888,7 @@ export function RecipeTemplateRenderer({
                     return (
                       <Badge
                         key={`${section.slotId}-${filter.label}`}
-                        rounded="999px"
+                        rounded="8px"
                         px="2.5"
                         py="1"
                         fontSize="11px"
@@ -952,7 +952,7 @@ export function RecipeTemplateRenderer({
                           bg: tone.darkBg
                         }}
                       >
-                        <Text fontSize="xs" fontWeight="500" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0.08em">
+                        <Text fontSize="xs" fontWeight="500" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0">
                           {item.label}
                         </Text>
                         <Text mt="1.5" fontSize="xl" fontWeight="700" color="var(--text-primary)">
@@ -1008,7 +1008,7 @@ export function RecipeTemplateRenderer({
                           {section.columns.map((column, colIndex) => (
                             <Table.Row key={column.id}>
                               <Table.Cell>
-                                <Text fontWeight="600" color="var(--text-muted)" fontSize="xs" textTransform="uppercase" letterSpacing="0.06em">
+                                <Text fontWeight="600" color="var(--text-muted)" fontSize="xs" textTransform="uppercase" letterSpacing="0">
                                   {column.label}
                                 </Text>
                               </Table.Cell>
@@ -1143,7 +1143,7 @@ export function RecipeTemplateRenderer({
                                 _hover={{ bg: isSelected ? 'var(--surface-accent)' : 'var(--surface-2)' }}
                                 onClick={() => setSelectedItemId((prev) => (prev === itemKey ? null : itemKey))}
                               >
-                                <Flex justify="recipe-between" align="start" gap="3">
+                                <Flex justify="space-between" align="start" gap="3">
                                   <VStack align="start" gap="1" minW={0}>
                                     <Text fontWeight="700" color="var(--text-primary)">
                                       {item.title}
@@ -1206,7 +1206,7 @@ export function RecipeTemplateRenderer({
                         bg="var(--surface-1)"
                         borderBottom="1px solid var(--border-subtle)"
                       >
-                        <Text fontSize="11px" fontWeight="600" letterSpacing="0.12em" textTransform="uppercase" color="var(--text-muted)">
+                        <Text fontSize="11px" fontWeight="600" letterSpacing="0" textTransform="uppercase" color="var(--text-muted)">
                           {card.imageLabel ?? 'Preview state'}
                         </Text>
                         <Text mt="1.5" fontWeight="600" color="var(--text-primary)">
@@ -1291,7 +1291,7 @@ export function RecipeTemplateRenderer({
                     <Flex gap="3" wrap="wrap">
                       {primaryFields.map((field) => (
                         <Box key={`${section.slotId}-${field.label}`} flex={{ base: '1 1 100%', md: '1 1 calc(50% - 12px)' }} rounded="6px" border="1px solid var(--border-subtle)" bg="var(--surface-2)" px="3.5" py="3">
-                          <Text fontSize="xs" fontWeight="500" textTransform="uppercase" letterSpacing="0.08em" color="var(--text-muted)">
+                          <Text fontSize="xs" fontWeight="500" textTransform="uppercase" letterSpacing="0" color="var(--text-muted)">
                             {field.label}
                           </Text>
                           <Box mt="1.5">{renderFieldBody(field, { showCopyButtons: true })}</Box>
@@ -1301,7 +1301,7 @@ export function RecipeTemplateRenderer({
                   ) : null}
                   {fullWidthFields.map((field) => (
                     <Box key={`${section.slotId}-${field.label}`} rounded="8px" border="1px solid var(--border-subtle)" bg="var(--surface-2)" px="3.5" py="3.5">
-                      <Text fontSize="xs" fontWeight="500" textTransform="uppercase" letterSpacing="0.08em" color="var(--text-muted)">
+                      <Text fontSize="xs" fontWeight="500" textTransform="uppercase" letterSpacing="0" color="var(--text-muted)">
                         {field.label}
                       </Text>
                       <Box mt="1.5">{renderFieldBody(field, { showCopyButtons: true })}</Box>
@@ -1311,7 +1311,7 @@ export function RecipeTemplateRenderer({
                   {section.note ? (
                     <Box rounded="8px" border="1px dashed var(--border-subtle)" bg="rgba(148, 163, 184, 0.05)" px="3.5" py="3">
                       {section.noteTitle ? (
-                        <Text fontSize="xs" fontWeight="500" textTransform="uppercase" letterSpacing="0.08em" color="var(--text-muted)">
+                        <Text fontSize="xs" fontWeight="500" textTransform="uppercase" letterSpacing="0" color="var(--text-muted)">
                           {section.noteTitle}
                         </Text>
                       ) : null}
@@ -1342,7 +1342,7 @@ export function RecipeTemplateRenderer({
                         <Box w="1px" flex="1" minH="16px" bg="var(--border-subtle)" />
                       </VStack>
                       <Box flex="1" rounded="8px" border="1px solid var(--border-subtle)" bg="var(--surface-2)" px="3.5" py="3">
-                        <Flex justify="recipe-between" align="center" gap="3" wrap="wrap">
+                        <Flex justify="space-between" align="center" gap="3" wrap="wrap">
                           <Text fontWeight="700" color="var(--text-primary)">
                             {item.title}
                           </Text>
@@ -1396,7 +1396,7 @@ export function RecipeTemplateRenderer({
                     const tone = templateToneStyles(entry.tone);
                     return (
                       <Box key={`${section.slotId}-${entry.id ?? entry.label}`} rounded="6px" border="1px solid var(--border-subtle)" bg="var(--surface-2)" px="3.5" py="3">
-                        <Flex justify="recipe-between" align="center" gap="3">
+                        <Flex justify="space-between" align="center" gap="3">
                           <Text fontWeight="700" color={entry.tone ? tone.color : 'var(--text-primary)'} _dark={entry.tone ? { color: tone.darkColor } : undefined}>
                             {entry.label}
                           </Text>
@@ -1431,7 +1431,7 @@ export function RecipeTemplateRenderer({
                     return (
                       <Box key={column.id ?? column.label} minW={{ base: '100%', md: '240px' }} maxW={{ base: '100%', md: '240px' }} rounded="8px" border="1px solid var(--border-subtle)" bg="var(--surface-2)">
                         <VStack align="stretch" gap="3" px="3.5" py="3.5">
-                          <HStack justify="recipe-between" align="center">
+                          <HStack justify="space-between" align="center">
                             <Text fontWeight="600" color="var(--text-primary)">
                               {column.label}
                             </Text>
@@ -1539,7 +1539,7 @@ export function RecipeTemplateRenderer({
                       <VStack key={group.id} align="stretch" gap="0">
                         <HStack gap="2" py="2" px="1">
                           <Box w="2" h="2" rounded="full" bg={gTone.color} _dark={{ bg: gTone.darkColor }} flexShrink={0} />
-                          <Text fontSize="xs" fontWeight="700" textTransform="uppercase" letterSpacing="0.1em" color="var(--text-muted)">
+                          <Text fontSize="xs" fontWeight="700" textTransform="uppercase" letterSpacing="0" color="var(--text-muted)">
                             {group.label}
                           </Text>
                         </HStack>
@@ -1598,7 +1598,7 @@ export function RecipeTemplateRenderer({
                                       ) : null}
                                       {detailPanel.fields.map((field) => (
                                         <Box key={`${field.label}-${field.value ?? ''}`}>
-                                          <Text fontSize="xs" fontWeight="600" textTransform="uppercase" letterSpacing="0.08em" color="var(--text-muted)" mb="1">
+                                          <Text fontSize="xs" fontWeight="600" textTransform="uppercase" letterSpacing="0" color="var(--text-muted)" mb="1">
                                             {field.label}
                                           </Text>
                                           {renderFieldBody(field, { showCopyButtons: true })}
@@ -1667,7 +1667,7 @@ export function RecipeTemplateRenderer({
                       key={tab.id}
                       type="button"
                       size="sm"
-                      rounded="full"
+                      rounded="8px"
                       border="1px solid var(--border-subtle)"
                       bg={active ? 'var(--surface-accent)' : 'var(--surface-2)'}
                       px="3.5"

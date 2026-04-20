@@ -17,8 +17,8 @@ export function App() {
   if (controller.bootstrapStatus === 'loading' && !controller.bootstrap) {
     return (
       <Center h="100dvh" bg="transparent">
-        <Box rounded="10px" border="1px solid var(--border-subtle)" bg="var(--surface-1)" px="7" py="7">
-          <Text fontWeight="700" color="var(--text-primary)">
+        <Box rounded="8px" border="1px solid var(--border-subtle)" bg="var(--surface-elevated)" px="8" py="7" boxShadow="var(--shadow-md)">
+          <Text fontWeight="750" color="var(--text-primary)">
             Connecting to the local Hermes bridge…
           </Text>
           <Text color="var(--text-secondary)">No fallback data is rendered while the real bridge loads.</Text>
@@ -34,13 +34,14 @@ export function App() {
           align="stretch"
           gap="4"
           maxW="560px"
-          rounded="10px"
+          rounded="8px"
           border="1px solid var(--border-danger)"
           bg="var(--surface-danger)"
+          boxShadow="var(--shadow-md)"
           px="8"
           py="8"
         >
-          <Text fontSize="2xl" fontWeight="600" color="var(--text-primary)">
+          <Text fontSize="2xl" fontWeight="750" color="var(--text-primary)">
             Bridge unavailable
           </Text>
           <Text color="var(--text-secondary)">
@@ -48,9 +49,9 @@ export function App() {
           </Text>
           <Button
             alignSelf="start"
-            rounded="6px"
+            rounded="8px"
             bg="var(--accent)"
-            color="white"
+            color="var(--accent-contrast)"
             _hover={{ bg: 'var(--accent-strong)' }}
             onClick={() =>
               void controller.refreshBootstrap({
@@ -316,21 +317,22 @@ function RuntimeConfigBlockedState({
         align="stretch"
         gap="4"
         maxW="640px"
-        rounded="10px"
+        rounded="8px"
         border={status === 'checking' ? '1px solid rgba(59, 130, 246, 0.28)' : '1px solid var(--border-subtle)'}
-        bg={status === 'checking' ? 'rgba(59, 130, 246, 0.08)' : 'var(--surface-1)'}
+        bg={status === 'checking' ? 'rgba(59, 130, 246, 0.08)' : 'var(--surface-elevated)'}
+        boxShadow="var(--shadow-md)"
         px="7"
         py="7"
       >
         {status === 'checking' ? (
           <HStack align="center" gap="3">
             <Spinner size="sm" color="blue.500" />
-            <Text fontSize="2xl" fontWeight="600" color="var(--text-primary)">
+            <Text fontSize="2xl" fontWeight="750" color="var(--text-primary)">
               {title}
             </Text>
           </HStack>
         ) : (
-          <Text fontSize="2xl" fontWeight="600" color="var(--text-primary)">
+          <Text fontSize="2xl" fontWeight="750" color="var(--text-primary)">
             {title}
           </Text>
         )}
@@ -341,9 +343,9 @@ function RuntimeConfigBlockedState({
         {status === 'checking' ? null : (
           <Button
             alignSelf="start"
-            rounded="6px"
+            rounded="8px"
             bg="var(--accent)"
-            color="white"
+            color="var(--accent-contrast)"
             _hover={{ bg: 'var(--accent-strong)' }}
             onClick={onOpenSettings}
           >
@@ -360,7 +362,7 @@ function pageTitle(page: string) {
     case 'sessions':
       return 'All sessions';
     case 'recipes':
-      return 'Recipes';
+      return 'Spaces';
     case 'jobs':
       return 'Jobs';
     case 'tools':

@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 import type { HermesCliModelDiscovery } from '@hermes-recipes/protocol';
 import { RECIPE_REFRESH_USER_MESSAGE } from '@hermes-recipes/protocol';
 import type { HermesCliRunner } from './client';
-import { classifyStructuredRecipeIntent, HermesCli, HermesCliStructuredActionError, resolveHermesChatTimeoutMs } from './client';
+import { classifyStructuredRecipeIntent, HermesCli, resolveHermesChatTimeoutMs } from './client';
 
 const skillsListOutput = `                                Installed Skills                                
 ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━┓

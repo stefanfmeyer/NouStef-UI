@@ -6,7 +6,7 @@ import { RecipeTemplatePreview } from '../../features/recipe-templates/template-
 import { getRecipeTemplateById, RECIPE_TEMPLATE_REGISTRY } from '../../features/recipe-templates/template-registry';
 import type { RecipeTemplateGalleryCategory, RecipeTemplateId } from '../../features/recipe-templates/types';
 
-export function RecipesPage({ activeProfileId }: { activeProfileId?: string | null }) {
+export function RecipesPage({ activeProfileId: _activeProfileId }: { activeProfileId?: string | null }) {
   const [category, setCategory] = useState<RecipeTemplateGalleryCategory>('all');
   const [selectedTemplateId, setSelectedTemplateId] = useState<RecipeTemplateId>('price-comparison-grid');
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -32,7 +32,7 @@ export function RecipesPage({ activeProfileId }: { activeProfileId?: string | nu
     <VStack align="stretch" h="100%" minH={0} gap="4">
       <Grid
         templateColumns={{ base: '1fr', xl: 'minmax(0, 1.2fr) minmax(360px, 0.95fr)' }}
-        gap="4"
+        gap="5"
         flex="1"
         minH={0}
         overflow="hidden"
@@ -52,7 +52,7 @@ export function RecipesPage({ activeProfileId }: { activeProfileId?: string | nu
         </Box>
 
         <Box minH={0} overflowY={{ base: 'visible', xl: 'auto' }} pl={{ base: '0', xl: '1' }} data-testid="spaces-template-inspector">
-          <Box rounded="8px" border="1px solid var(--border-subtle)" overflow="auto">
+          <Box rounded="8px" border="1px solid var(--border-subtle)" bg="var(--surface-elevated)" boxShadow="var(--shadow-sm)" overflow="auto">
             <RecipeTemplatePreview preview={selectedTemplate.preview} />
           </Box>
         </Box>

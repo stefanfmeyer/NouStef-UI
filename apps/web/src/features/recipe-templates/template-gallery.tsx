@@ -25,13 +25,13 @@ export function RecipeTemplateGallery({
     <VStack align="stretch" gap="3" data-testid="spaces-template-gallery">
       <TemplateSurface>
         <VStack align="stretch" gap="4">
-          <Flex justify="recipe-between" align="end" gap="4" wrap="wrap">
+          <Flex justify="space-between" align="end" gap="4" wrap="wrap">
             <VStack align="start" gap="1">
-              <Text fontSize="lg" fontWeight="600" color="var(--text-primary)">
-                Template gallery
+              <Text fontSize="lg" fontWeight="750" color="var(--text-primary)">
+                Spaces gallery
               </Text>
               <Text color="var(--text-secondary)">
-                Curated Spaces templates designed for later Hermes selection and controlled population.
+                Curated templates for structured session workspaces.
               </Text>
             </VStack>
             <Text fontSize="sm" color="var(--text-muted)">
@@ -42,7 +42,7 @@ export function RecipeTemplateGallery({
           <Flex gap="2" wrap="wrap">
             <Button
               size="sm"
-              rounded="999px"
+              rounded="8px"
               bg={allButtonStyles.bg}
               border="1px solid var(--border-subtle)"
               color={allButtonStyles.color}
@@ -59,7 +59,7 @@ export function RecipeTemplateGallery({
                 <Button
                   key={category.id}
                   size="sm"
-                  rounded="999px"
+                  rounded="8px"
                   bg={buttonStyles.bg}
                   border="1px solid var(--border-subtle)"
                   color={buttonStyles.color}
@@ -86,17 +86,17 @@ export function RecipeTemplateGallery({
               data-testid={`spaces-template-card-${template.id}`}
               cursor="pointer"
               onClick={() => onSelectTemplate(template.id)}
-              _hover={{ bg: 'var(--surface-2)', transform: 'translateY(-1px)', transition: 'all 150ms ease' }}
-              rounded="12px"
+              _hover={{ bg: 'var(--surface-2)', transform: 'translateY(-1px)', transition: 'all 150ms ease', boxShadow: 'var(--shadow-sm)' }}
+              rounded="8px"
               h="100%"
             >
               <TemplateSurface bg={selected ? 'rgba(37, 99, 235, 0.06)' : 'var(--surface-1)'} padding="3">
                 <VStack align="stretch" gap="2.5">
                   <VStack align="start" gap="1.25" minW={0}>
-                    <Text fontSize="10px" fontWeight="600" letterSpacing="0.12em" textTransform="uppercase" color="var(--text-muted)">
+                    <Text fontSize="10px" fontWeight="600" letterSpacing="0" textTransform="uppercase" color="var(--text-muted)">
                       {template.category}
                     </Text>
-                    <Text fontSize="md" fontWeight="600" color="var(--text-primary)" lineHeight="1.2">
+                    <Text fontSize="md" fontWeight="750" color="var(--text-primary)" lineHeight="1.2">
                       {template.name}
                     </Text>
                     <Text fontSize="sm" color="var(--text-secondary)" lineClamp={2}>
@@ -105,10 +105,10 @@ export function RecipeTemplateGallery({
                   </VStack>
 
                   <Flex justify="space-between" align="center" gap="2">
-                    <Text fontSize="xs" color="var(--text-muted)">by Jozef Barton</Text>
+                    <Text fontSize="xs" color="var(--text-muted)">Workspace template</Text>
                     <Button
                       size="sm"
-                      rounded="14px"
+                      rounded="8px"
                       variant="ghost"
                       fontSize="xs"
                       color="var(--text-muted)"

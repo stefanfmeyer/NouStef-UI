@@ -13,8 +13,17 @@ export function ModelSelector({
   }
 
   return (
-    <HStack gap="1.5" align="center" flexShrink={0}>
-      <Text fontSize="xs" color="var(--text-muted)">
+    <HStack
+      gap="1.5"
+      align="center"
+      flexShrink={0}
+      rounded="8px"
+      border="1px solid var(--border-subtle)"
+      bg="var(--surface-2)"
+      px="2.5"
+      py="1.5"
+    >
+      <Text fontSize="xs" fontWeight="600" color="var(--text-secondary)">
         {activeModelId}
       </Text>
     </HStack>

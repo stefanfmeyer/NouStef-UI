@@ -12203,7 +12203,6 @@ Emit one corrected TSX module now.`;
     }
 
     const removedEntryIds: string[] = [];
-    const deletedSourceEntryIds: string[] = [];
 
     if (parsedInput.action === 'delete_source') {
       // Direct outbound API calls are not permitted from action handlers.
@@ -12216,19 +12215,16 @@ Emit one corrected TSX module now.`;
       );
     }
 
-    removedEntryIds.push(...(parsedInput.action === 'remove' ? targetEntryIds : deletedSourceEntryIds));
+    removedEntryIds.push(...targetEntryIds);
 
     const nextTabs = removeRecipeContentEntries(currentRecipe, removedEntryIds);
     const updatedRecipe = this.options.database.updateRecipe(recipeId, {
       profileId: parsedInput.profileId,
       tabs: nextTabs,
-      lastUpdatedBy: parsedInput.action === 'delete_source' ? 'user' : 'user',
+      lastUpdatedBy: 'user',
       metadata: normalizeRecipeMetadata(
         {
-          changeSummary:
-            parsedInput.action === 'delete_source'
-              ? `Deleted ${removedEntryIds.length} email ${removedEntryIds.length === 1 ? 'entry' : 'entries'} from the recipe.`
-              : `Removed ${removedEntryIds.length} ${removedEntryIds.length === 1 ? 'entry' : 'entries'} from the recipe.`
+          changeSummary: `Removed ${removedEntryIds.length} ${removedEntryIds.length === 1 ? 'entry' : 'entries'} from the recipe.`
         },
         currentRecipe.metadata
       )
@@ -12244,11 +12240,8 @@ Emit one corrected TSX module now.`;
       requestId: null,
       severity: 'info',
       category: 'recipes',
-      code: parsedInput.action === 'delete_source' ? 'RECIPE_ENTRY_SOURCE_DELETED' : 'RECIPE_ENTRY_REMOVED',
-      message:
-        parsedInput.action === 'delete_source'
-          ? `Deleted ${removedEntryIds.length} email ${removedEntryIds.length === 1 ? 'entry' : 'entries'} from recipe ${currentRecipe.id}.`
-          : `Removed ${removedEntryIds.length} ${removedEntryIds.length === 1 ? 'entry' : 'entries'} from recipe ${currentRecipe.id}.`,
+      code: 'RECIPE_ENTRY_REMOVED',
+      message: `Removed ${removedEntryIds.length} ${removedEntryIds.length === 1 ? 'entry' : 'entries'} from recipe ${currentRecipe.id}.`,
       detail: currentRecipe.title,
       payload: {
         recipeId: currentRecipe.id,
@@ -12259,9 +12252,7 @@ Emit one corrected TSX module now.`;
     this.createRecipeEvent(
       updatedRecipe,
       'updated',
-      parsedInput.action === 'delete_source'
-        ? `Deleted ${removedEntryIds.length} email ${removedEntryIds.length === 1 ? 'entry' : 'entries'} from "${updatedRecipe.title}".`
-        : `Removed ${removedEntryIds.length} ${removedEntryIds.length === 1 ? 'entry' : 'entries'} from "${updatedRecipe.title}".`,
+      `Removed ${removedEntryIds.length} ${removedEntryIds.length === 1 ? 'entry' : 'entries'} from "${updatedRecipe.title}".`,
       'user',
       updatedRecipe.primarySessionId,
       {
@@ -12274,7 +12265,7 @@ Emit one corrected TSX module now.`;
       profileId: parsedInput.profileId,
       action: parsedInput.action,
       removedEntryIds,
-      deletedSourceEntryIds,
+      deletedSourceEntryIds: [],
       recipe: this.ensureRecipe(parsedInput.profileId, updatedRecipe.id),
       events: this.options.database.listRecipeEvents(parsedInput.profileId, {
         limit: 50,

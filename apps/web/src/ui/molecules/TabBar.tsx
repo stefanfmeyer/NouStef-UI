@@ -70,13 +70,14 @@ export function TabBar({
     >
       <Flex
         align="center"
-        gap="0"
+        gap="2"
         bg="transparent"
         borderBottom="1px solid var(--border-subtle)"
-        px="3"
-        minH="34px"
+        px="4"
+        py="2"
+        minH="44px"
       >
-        <HStack gap="1" flex="1" minW={0} overflow="auto" css={{ scrollbarWidth: 'none', '&::-webkit-scrollbar': { display: 'none' } }}>
+        <HStack gap="2" flex="1" minW={0} overflow="auto" css={{ scrollbarWidth: 'none', '&::-webkit-scrollbar': { display: 'none' } }}>
           {tabs.map((tab, index) => {
             const isActive = tab.sessionId === activeTabId;
             const isDragOver = dragOverIndex === index;
@@ -86,14 +87,17 @@ export function TabBar({
                 gap="0"
                 align="center"
                 px="3"
-                py="1"
+                py="1.5"
                 cursor="pointer"
-                bg={isActive ? 'var(--surface-1)' : 'transparent'}
-                rounded="6px 6px 0 0"
-                borderBottom={isActive ? '2px solid var(--accent)' : '2px solid transparent'}
+                bg={isActive ? 'var(--surface-selected)' : 'transparent'}
+                rounded="8px"
+                border="1px solid"
+                borderColor={isActive ? 'rgba(14, 116, 103, 0.22)' : 'transparent'}
+                borderBottom={isActive ? '1px solid rgba(14, 116, 103, 0.22)' : '1px solid transparent'}
                 borderLeft={isDragOver ? '2px solid var(--accent)' : '2px solid transparent'}
-                _hover={{ bg: isActive ? 'var(--surface-1)' : 'rgba(128, 128, 128, 0.08)' }}
-                transition="all 80ms ease"
+                boxShadow={isActive ? 'var(--shadow-xs)' : 'none'}
+                _hover={{ bg: isActive ? 'var(--surface-selected)' : 'var(--surface-hover)' }}
+                transition="all 140ms ease"
                 onClick={() => onSelectTab(tab.sessionId)}
                 maxW="200px"
                 minW="0"
@@ -106,7 +110,7 @@ export function TabBar({
               >
                 <Text
                   fontSize="xs"
-                  fontWeight={isActive ? '600' : '400'}
+                  fontWeight={isActive ? '700' : '500'}
                   color={isActive ? 'var(--text-primary)' : 'var(--text-muted)'}
                   lineClamp={1}
                   flex="1"
@@ -123,7 +127,7 @@ export function TabBar({
                   px="1"
                   py="0"
                   ml="1"
-                  rounded="full"
+                  rounded="8px"
                   fontSize="xs"
                   color="var(--text-muted)"
                   _hover={{ color: 'var(--text-primary)', bg: 'var(--surface-accent)' }}
@@ -145,7 +149,7 @@ export function TabBar({
             minW={0}
             px="2"
             py="1"
-            rounded="full"
+            rounded="8px"
             fontSize="sm"
             color="var(--text-muted)"
             _hover={{ color: 'var(--text-primary)', bg: 'var(--surface-accent)' }}

@@ -2508,7 +2508,7 @@ export class HermesCli {
   }
 
   private parseDumpProviders(dumpOutput: string, profileId: string, activeProvider: string, now: string): RuntimeProviderOption[] {
-    const apiKeysMatch = dumpOutput.match(/^api_keys:\n((?:  .+\n)*)/m);
+    const apiKeysMatch = dumpOutput.match(/^api_keys:\n((?: {2}.+\n)*)/m);
     const providers: RuntimeProviderOption[] = [];
 
     // Non-LLM tool/service keys to exclude
@@ -2711,7 +2711,7 @@ export class HermesCli {
     let toolUseEnforcement: string | undefined;
 
     // Parse config_overrides section from dump for max_turns, reasoning_effort, etc.
-    const overridesMatch = dumpOutput.match(/^config_overrides:\n((?:  .+\n)*)/m);
+    const overridesMatch = dumpOutput.match(/^config_overrides:\n((?: {2}.+\n)*)/m);
     if (overridesMatch?.[1]) {
       const lines = overridesMatch[1].split('\n').filter(Boolean);
       for (const line of lines) {

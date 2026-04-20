@@ -1,5 +1,4 @@
 import http from 'node:http';
-import os from 'node:os';
 import path from 'node:path';
 import type { ServerResponse } from 'node:http';
 import {

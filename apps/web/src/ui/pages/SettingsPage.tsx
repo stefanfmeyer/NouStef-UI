@@ -352,7 +352,7 @@ export function SettingsPage({
 
   if (!settings) {
     return (
-      <Box rounded="10px" border="1px solid var(--border-subtle)" bg="var(--surface-1)" px="5" py="5">
+      <Box rounded="8px" border="1px solid var(--border-subtle)" bg="var(--surface-elevated)" px="5" py="5" boxShadow="var(--shadow-sm)">
         <EmptyStateCard title="Loading settings" detail="Reading persisted bridge and browser preferences." />
       </Box>
     );
@@ -369,13 +369,13 @@ export function SettingsPage({
       variant="plain"
       lazyMount
       css={{
-        '--tabs-indicator-bg': 'var(--surface-2)',
-        '--tabs-indicator-shadow': 'none',
-        '--tabs-trigger-radius': '999px'
+        '--tabs-indicator-bg': 'var(--surface-1)',
+        '--tabs-indicator-shadow': 'var(--shadow-xs)',
+        '--tabs-trigger-radius': '8px'
       }}
     >
       <Box overflowX="auto" pb="1">
-        <Tabs.List rounded="999px" bg="var(--surface-1)" p="1" minW="max-content">
+        <Tabs.List rounded="8px" bg="var(--surface-2)" border="1px solid var(--border-subtle)" p="1" minW="max-content">
           <Tabs.Trigger value="general">General settings</Tabs.Trigger>
           <Tabs.Trigger value="model">Model / Provider</Tabs.Trigger>
           <Tabs.Trigger value="unrestricted">Unrestricted Access</Tabs.Trigger>
@@ -399,9 +399,9 @@ export function SettingsPage({
             description="Bridge-backed browser settings that persist across restarts."
             action={
               <Button
-                rounded="6px"
+                rounded="8px"
                 bg="var(--accent)"
-                color="white"
+                color="var(--accent-contrast)"
                 _hover={{ bg: 'var(--accent-strong)' }}
                 loading={saving}
                 onClick={() => {
@@ -415,7 +415,7 @@ export function SettingsPage({
             <Grid templateColumns={{ base: '1fr', md: 'repeat(2, minmax(0, 1fr))' }} gap="4">
               <Field.Root>
                 <Field.Label color="var(--text-secondary)">Theme mode</Field.Label>
-                <NativeSelect.Root size="sm" variant="subtle" bg="var(--surface-2)">
+                <NativeSelect.Root size="sm" variant="subtle" bg="var(--surface-2)" rounded="8px" border="1px solid var(--border-subtle)">
                   <NativeSelect.Field
                     value={themeMode}
                     onChange={(event) => {
@@ -434,7 +434,7 @@ export function SettingsPage({
 
               <Field.Root>
                 <Field.Label color="var(--text-secondary)">Sessions page size</Field.Label>
-                <NativeSelect.Root size="sm" variant="subtle" bg="var(--surface-2)">
+                <NativeSelect.Root size="sm" variant="subtle" bg="var(--surface-2)" rounded="8px" border="1px solid var(--border-subtle)">
                   <NativeSelect.Field value={sessionsPageSize} onChange={(event) => setSessionsPageSize(event.currentTarget.value)}>
                     <option value="25">25</option>
                     <option value="50">50</option>
@@ -446,7 +446,7 @@ export function SettingsPage({
 
               <Field.Root disabled={unrestrictedAccessEnabled}>
                 <Field.Label color="var(--text-secondary)">Restricted max turns</Field.Label>
-                <NativeSelect.Root size="sm" variant="subtle" bg="var(--surface-2)">
+                <NativeSelect.Root size="sm" variant="subtle" bg="var(--surface-2)" rounded="8px" border="1px solid var(--border-subtle)">
                   <NativeSelect.Field value={restrictedChatMaxTurns} onChange={(event) => setRestrictedChatMaxTurns(event.currentTarget.value)}>
                     <option value="4">4</option>
                     <option value="8">8</option>
@@ -543,9 +543,9 @@ export function SettingsPage({
                     Configure provider
                   </Button>
                   <Button
-                    rounded="6px"
+                    rounded="8px"
                     bg="var(--accent)"
-                    color="white"
+                    color="var(--accent-contrast)"
                     _hover={{ bg: 'var(--accent-strong)' }}
                     loading={modelProviderLoading}
                     disabled={!modelProviderResponse || selectedProvider?.disabled || selectedProviderConfigBlocked}
@@ -615,7 +615,7 @@ export function SettingsPage({
                         <NativeSelect.Indicator />
                       </NativeSelect.Root>
                     ) : (
-                      <Box rounded="14px" border="1px solid var(--border-subtle)" bg="var(--surface-2)" px="3" py="2.5">
+                      <Box rounded="8px" border="1px solid var(--border-subtle)" bg="var(--surface-2)" px="3" py="2.5">
                         <Text fontSize="sm" color="var(--text-secondary)">
                           Model discovery is unavailable for this provider right now. Manual model entry is blocked until Hermes exposes discovered model choices.
                         </Text>
@@ -737,7 +737,7 @@ export function SettingsPage({
           >
             <Drawer.Backdrop backdropFilter="auto" backdropBlur="sm" bg="blackAlpha.500" />
             <Drawer.Positioner>
-              <Drawer.Content bg="var(--surface-1)" borderLeft="1px solid var(--border-subtle)" data-testid="provider-config-drawer">
+              <Drawer.Content bg="var(--surface-elevated)" borderLeft="1px solid var(--border-subtle)" data-testid="provider-config-drawer">
                 <Drawer.Header>
                   <Drawer.Title color="var(--text-primary)">
                     {drawerProviderDetails?.displayName ?? (drawerProviderId ? 'Loading provider settings' : 'Provider settings')}
@@ -802,7 +802,7 @@ export function SettingsPage({
                               <VStack align="stretch" gap="2">
                                 {drawerProviderDetails.setupSteps.map((step) => (
                                   <Box key={step.id} rounded="6px" bg="var(--surface-1)" px="3" py="2.5">
-                                    <HStack justify="recipe-between" align="start" gap="3" wrap="wrap">
+                                    <HStack justify="space-between" align="start" gap="3" wrap="wrap">
                                       <VStack align="stretch" gap="1" minW={0}>
                                         <HStack gap="2" wrap="wrap">
                                           <Badge
@@ -872,7 +872,7 @@ export function SettingsPage({
                                       <NativeSelect.Indicator />
                                     </NativeSelect.Root>
                                   ) : field.key === 'defaultModel' ? (
-                                    <Box rounded="14px" border="1px solid var(--border-subtle)" bg="var(--surface-2)" px="3" py="2.5">
+                                    <Box rounded="8px" border="1px solid var(--border-subtle)" bg="var(--surface-2)" px="3" py="2.5">
                                       <Text fontSize="sm" color="var(--text-secondary)">
                                         Manual model entry is disabled. Refresh provider discovery and choose from the discovered model list.
                                       </Text>
@@ -941,7 +941,7 @@ export function SettingsPage({
                       {shouldShowBeginAuth ? (
                         <Button
                           bg="var(--accent)"
-                          color="white"
+                          color="var(--accent-contrast)"
                           _hover={{ bg: 'var(--accent-strong)' }}
                           loading={providerDrawerLoading}
                           disabled={!drawerProviderDetails || providerDrawerLoading}
@@ -963,7 +963,7 @@ export function SettingsPage({
                       {shouldShowConnectProvider ? (
                         <Button
                           bg="var(--accent)"
-                          color="white"
+                          color="var(--accent-contrast)"
                           _hover={{ bg: 'var(--accent-strong)' }}
                           loading={providerDrawerLoading}
                           disabled={apiKey.trim().length === 0 || providerDrawerLoading}
@@ -992,7 +992,7 @@ export function SettingsPage({
                       ) : providerConfigCanSave ? (
                         <Button
                           bg="var(--accent)"
-                          color="white"
+                          color="var(--accent-contrast)"
                           _hover={{ bg: 'var(--accent-strong)' }}
                           loading={providerDrawerLoading}
                           disabled={
@@ -1044,9 +1044,9 @@ export function SettingsPage({
             description="Use the Hermes runtime without the bridge turn limiter or reviewed restrictions."
             action={
               <Button
-                rounded="6px"
+                rounded="8px"
                 bg="var(--accent)"
-                color="white"
+                color="var(--accent-contrast)"
                 _hover={{ bg: 'var(--accent-strong)' }}
                 loading={saving}
                 onClick={() => {
@@ -1095,7 +1095,7 @@ export function SettingsPage({
           <VStack align="stretch" gap="4">
             <SectionCard title="Access audit" description="Recent local audit trail for unrestricted access state changes and usage.">
               <VStack align="stretch" gap="3">
-                <HStack justify="recipe-between" wrap="wrap" gap="3">
+                <HStack justify="space-between" wrap="wrap" gap="3">
                   <Text color="var(--text-secondary)">
                     Last enabled: {accessAudit?.unrestrictedAccessLastEnabledAt ? new Date(accessAudit.unrestrictedAccessLastEnabledAt).toLocaleString() : 'Never'}
                   </Text>
@@ -1117,7 +1117,7 @@ export function SettingsPage({
                         <VStack align="stretch" gap="2" pr="1">
                           {accessAuditEventsResponse.items.map((event) => (
                             <Box key={event.id} data-testid="access-audit-row" data-density="compact" rounded="6px" bg="var(--surface-2)" px="3.5" py="2.5">
-                              <HStack justify="recipe-between" align="start" gap="3" wrap="wrap">
+                              <HStack justify="space-between" align="start" gap="3" wrap="wrap">
                                 <VStack align="stretch" gap="1" minW={0}>
                                   <Text fontSize="sm" fontWeight="500" color="var(--text-primary)">
                                     {event.message}
@@ -1168,7 +1168,7 @@ export function SettingsPage({
                       <VStack align="stretch" gap="2" pr="1">
                         {telemetryResponse.items.map((event) => (
                           <Box key={event.id} data-testid="telemetry-row" data-density="compact" rounded="6px" bg="var(--surface-2)" px="3.5" py="2.5">
-                            <HStack justify="recipe-between" align="start" gap="3" wrap="wrap">
+                            <HStack justify="space-between" align="start" gap="3" wrap="wrap">
                               <VStack align="stretch" gap="1" minW={0}>
                                 <HStack gap="2" wrap="wrap">
                                   <Badge colorPalette={event.severity === 'error' ? 'red' : event.severity === 'warning' ? 'yellow' : 'gray'}>
@@ -1255,11 +1255,11 @@ function SectionCard({
   children: ReactNode;
 }) {
   return (
-    <Box rounded="10px" border="1px solid var(--border-subtle)" bg="var(--surface-1)" px="5" py="5" overflow="hidden">
+    <Box rounded="8px" border="1px solid var(--border-subtle)" bg="var(--surface-elevated)" px="5" py="5" overflow="hidden" boxShadow="var(--shadow-sm)">
       <VStack align="stretch" gap="4">
-        <HStack justify="recipe-between" align="start" wrap="wrap" gap="3">
+        <HStack justify="space-between" align="start" wrap="wrap" gap="3">
           <Box>
-            <Text fontWeight="600" color="var(--text-primary)">
+            <Text fontWeight="750" color="var(--text-primary)">
               {title}
             </Text>
             <Text color="var(--text-secondary)">{description}</Text>
@@ -1286,12 +1286,12 @@ function PaginationFooter({
   onPageChange: (page: number) => void;
 }) {
   return (
-    <HStack justify="recipe-between" wrap="wrap" gap="3">
+    <HStack justify="space-between" wrap="wrap" gap="3">
       <Text fontSize="sm" color="var(--text-secondary)">
         {total} {itemLabel}
       </Text>
       <HStack gap="2">
-        <Button size="xs" variant="outline" rounded="14px" disabled={page <= 1} onClick={() => onPageChange(Math.max(1, page - 1))}>
+        <Button size="xs" variant="outline" rounded="8px" disabled={page <= 1} onClick={() => onPageChange(Math.max(1, page - 1))}>
           Previous
         </Button>
         <Text fontSize="sm" color="var(--text-secondary)">
@@ -1300,7 +1300,7 @@ function PaginationFooter({
         <Button
           size="xs"
           variant="outline"
-          rounded="14px"
+          rounded="8px"
           disabled={page * pageSize >= total}
           onClick={() => onPageChange(page + 1)}
         >

@@ -437,6 +437,7 @@ describe.sequential('bridge server', () => {
     // connectProvider in v0.9.0 delegates to discovery — returns provider state
     expect(connected.config).toBeTruthy();
     expect(connected.providers.length).toBeGreaterThan(0);
+    expect(otherProfileProviders.config.profileId).toBe('jbarton');
     expect(settings.settings.unrestrictedAccessEnabled).toBe(false);
 
     await server.close();

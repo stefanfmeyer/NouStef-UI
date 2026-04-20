@@ -43,9 +43,9 @@ export function ShellLayout({
       minH="100dvh"
       h="100dvh"
       overflow="hidden"
-      bg="transparent"
-      p={{ base: '0', lg: '4' }}
-      gap="4"
+      bg="var(--app-bg)"
+      p={{ base: '0', lg: '5' }}
+      gap={{ base: '0', lg: '5' }}
     >
       {sidebar}
 
@@ -54,9 +54,11 @@ export function ShellLayout({
         flex="1"
         minW={0}
         minH={0}
-        rounded={{ base: '0', lg: '12px' }}
+        rounded={{ base: '0', lg: '8px' }}
         border={{ base: 'none', lg: '1px solid var(--border-subtle)' }}
         bg="var(--shell-bg)"
+        boxShadow={{ base: 'none', lg: 'var(--shadow-md)' }}
+        backdropFilter="blur(18px)"
         overflow="hidden"
       >
         <VStack
@@ -64,8 +66,9 @@ export function ShellLayout({
           gap={headerMode === 'compact' ? '3' : '4'}
           px={{ base: '4', lg: '6' }}
           py={{ base: '4', lg: headerMode === 'compact' ? '4' : '5' }}
+          borderBottom="1px solid var(--border-subtle)"
         >
-          <HStack justify="recipe-between" align="start" gap="4" data-testid="shell-toolbar">
+          <HStack justify="space-between" align="center" gap="4" data-testid="shell-toolbar">
             {headerMode === 'full' ? (
               <PageHeader profileName={profileName} pageName={pageTitle} detail={headerDetail} />
             ) : (
@@ -73,8 +76,8 @@ export function ShellLayout({
                 <BrandLockup compact />
               </Box>
             )}
-            <VStack align="end" gap="2">
-              <HStack gap="2">
+            <VStack align="end" gap="2" flexShrink={0}>
+              <HStack gap="2" wrap="wrap" justify="end">
                 <StatusPill label={connection.status} />
                 <ThemeToggle onPersist={onPersistTheme} />
               </HStack>
@@ -82,7 +85,7 @@ export function ShellLayout({
           </HStack>
 
           {versionMismatch ? (
-            <Alert.Root status="warning" rounded="8px" border="1px solid var(--border-warning, rgba(234, 179, 8, 0.4))" bg="var(--surface-warning, rgba(234, 179, 8, 0.08))">
+            <Alert.Root status="warning" rounded="8px" border="1px solid var(--border-warning, rgba(234, 179, 8, 0.28))" bg="var(--surface-warning)">
               <Alert.Content>
                 <Alert.Title color="var(--text-primary)">Hermes version mismatch</Alert.Title>
                 <Alert.Description color="var(--text-secondary)">
@@ -102,7 +105,7 @@ export function ShellLayout({
 
         {tabBar ?? null}
 
-        <Box flex="1" minH={0} px={{ base: '4', lg: '6' }} pt={tabBar ? '3' : '0'} pb={{ base: '4', lg: '6' }}>
+        <Box flex="1" minH={0} px={{ base: '4', lg: '6' }} pt={tabBar ? '4' : '5'} pb={{ base: '4', lg: '6' }}>
           {children}
         </Box>
       </Flex>

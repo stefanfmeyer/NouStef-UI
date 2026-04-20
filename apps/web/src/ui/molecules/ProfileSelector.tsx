@@ -12,10 +12,16 @@ export function ProfileSelector({
 }) {
   return (
     <Field.Root>
-      <Field.Label color="var(--text-secondary)" fontSize="xs" textTransform="uppercase" letterSpacing="0.12em">
+      <Field.Label color="var(--text-muted)" fontSize="xs" fontWeight="650" textTransform="uppercase" letterSpacing="0">
         Hermes profile
       </Field.Label>
-      <NativeSelect.Root size="sm" variant="subtle" bg="var(--surface-2)" rounded="14px">
+      <NativeSelect.Root
+        size="sm"
+        variant="subtle"
+        bg="var(--surface-2)"
+        rounded="8px"
+        border="1px solid var(--border-subtle)"
+      >
         <NativeSelect.Field
           value={activeProfileId ?? ''}
           onChange={(event) => onChange(event.currentTarget.value)}

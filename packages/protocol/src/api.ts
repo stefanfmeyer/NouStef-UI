@@ -24,7 +24,6 @@ import {
   RecipeSchema,
   RecipeStatusSchema,
   RecipeTabSchema,
-  RecipeTemplateStateSchema,
   RecipeUiStateSchema,
   SkillSchema,
   TelemetryEventSchema,
@@ -34,6 +33,7 @@ import {
   ToolsTabSchema,
   UiStateSchema
 } from './schemas';
+import { RecipeTemplateStateSchema } from './recipe-template-schemas';
 
 export const ApiErrorSchema = z.object({
   code: z.string().min(1),

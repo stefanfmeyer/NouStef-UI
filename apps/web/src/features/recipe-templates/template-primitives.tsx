@@ -7,15 +7,13 @@ import type {
   TemplateBoardColumn,
   TemplateCardItem,
   TemplateChip,
-  TemplateStat,
-  TemplateTableColumn,
-  TemplateTableRow
+  TemplateStat
 } from './types';
 import { templateToneStyles } from './template-style-helpers';
 
 export function TemplateSurface({
   children,
-  bg = 'var(--surface-1)',
+  bg = 'var(--surface-elevated)',
   padding = '4'
 }: {
   children: ReactNode;
@@ -23,7 +21,7 @@ export function TemplateSurface({
   padding?: string;
 }) {
   return (
-    <Box rounded="10px" border="1px solid var(--border-subtle)" bg={bg} px={padding} py={padding}>
+    <Box rounded="8px" border="1px solid var(--border-subtle)" bg={bg} px={padding} py={padding} boxShadow="var(--shadow-xs)">
       {children}
     </Box>
   );
@@ -41,10 +39,10 @@ export function TemplateSectionHeader({
   rightSlot?: ReactNode;
 }) {
   return (
-    <Flex justify="recipe-between" align="start" gap="4">
+    <Flex justify="space-between" align="start" gap="4">
       <VStack align="start" gap="1" minW={0}>
         {eyebrow ? (
-          <Text fontSize="11px" fontWeight="600" letterSpacing="0.12em" textTransform="uppercase" color="var(--text-muted)">
+          <Text fontSize="11px" fontWeight="600" letterSpacing="0" textTransform="uppercase" color="var(--text-muted)">
             {eyebrow}
           </Text>
         ) : null}
@@ -67,7 +65,7 @@ export function TemplateChipPill({ chip }: { chip: TemplateChip }) {
 
   return (
     <Badge
-      rounded="999px"
+      rounded="8px"
       px="2.5"
       py="1"
       fontSize="11px"
@@ -109,16 +107,16 @@ export function TemplateActionButton({
   const button = (
     <Button
       size={compact ? 'xs' : 'sm'}
-      rounded="14px"
+      rounded="8px"
       bg={isPrimary ? 'var(--accent)' : isDanger ? 'red.50' : 'var(--surface-2)'}
-      color={isPrimary ? 'white' : isDanger ? 'red.700' : 'var(--text-primary)'}
+      color={isPrimary ? 'var(--accent-contrast)' : isDanger ? 'red.700' : 'var(--text-primary)'}
       border={isPrimary ? 'none' : '1px solid var(--border-subtle)'}
       _hover={{
         bg: isPrimary ? 'var(--accent-strong)' : isDanger ? 'red.100' : 'rgba(148, 163, 184, 0.12)'
       }}
       _dark={{
         bg: isPrimary ? 'var(--accent)' : isDanger ? 'rgba(239, 68, 68, 0.18)' : 'rgba(148, 163, 184, 0.08)',
-        color: isPrimary ? 'white' : isDanger ? 'red.100' : 'whiteAlpha.940'
+        color: isPrimary ? 'var(--accent-contrast)' : isDanger ? 'red.100' : 'whiteAlpha.940'
       }}
       onClick={href ? undefined : onClick}
       loading={loading}
@@ -136,16 +134,16 @@ export function TemplateActionButton({
     <Button
       asChild
       size={compact ? 'xs' : 'sm'}
-      rounded="14px"
+      rounded="8px"
       bg={isPrimary ? 'var(--accent)' : isDanger ? 'red.50' : 'var(--surface-2)'}
-      color={isPrimary ? 'white' : isDanger ? 'red.700' : 'var(--text-primary)'}
+      color={isPrimary ? 'var(--accent-contrast)' : isDanger ? 'red.700' : 'var(--text-primary)'}
       border={isPrimary ? 'none' : '1px solid var(--border-subtle)'}
       _hover={{
         bg: isPrimary ? 'var(--accent-strong)' : isDanger ? 'red.100' : 'rgba(148, 163, 184, 0.12)'
       }}
       _dark={{
         bg: isPrimary ? 'var(--accent)' : isDanger ? 'rgba(239, 68, 68, 0.18)' : 'rgba(148, 163, 184, 0.08)',
-        color: isPrimary ? 'white' : isDanger ? 'red.100' : 'whiteAlpha.940'
+        color: isPrimary ? 'var(--accent-contrast)' : isDanger ? 'red.100' : 'whiteAlpha.940'
       }}
       disabled={disabled}
     >
@@ -182,7 +180,7 @@ export function TemplateStatStrip({ title, items }: { title?: string; items: Tem
                   bg: tone.darkBg
                 }}
               >
-                <Text fontSize="xs" fontWeight="500" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0.08em">
+                <Text fontSize="xs" fontWeight="500" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0">
                   {item.label}
                 </Text>
                 <Text mt="1.5" fontSize="xl" fontWeight="700" color="var(--text-primary)">
@@ -206,7 +204,7 @@ export function TemplateFilterStrip({ title, filters, sortLabel }: { title?: str
   return (
     <TemplateSurface bg="var(--surface-2)">
       <VStack align="stretch" gap="3">
-        <Flex justify="recipe-between" align="center" gap="3" wrap="wrap">
+        <Flex justify="space-between" align="center" gap="3" wrap="wrap">
           <Text fontSize="sm" fontWeight="500" color="var(--text-secondary)">
             {title ?? 'Filters'}
           </Text>
@@ -266,7 +264,7 @@ export function TemplateGroupedList({
               <VStack align="stretch" gap="2">
                 {group.items.map((item) => (
                   <Box key={`${group.id}-${item.title}`} rounded="8px" border="1px solid var(--border-subtle)" bg="var(--surface-2)" px="3.5" py="3">
-                    <Flex justify="recipe-between" align="start" gap="3">
+                    <Flex justify="space-between" align="start" gap="3">
                       <VStack align="start" gap="1" minW={0}>
                         <Text fontWeight="700" color="var(--text-primary)">
                           {item.title}
@@ -293,7 +291,7 @@ export function TemplateGroupedList({
                     {item.actions?.length ? (
                       <Flex mt="2.5" gap="2" wrap="wrap">
                         {item.actions.map((label) => (
-                          <Button key={label} size="xs" rounded="12px" variant="ghost" bg="rgba(148, 163, 184, 0.08)">
+                          <Button key={label} size="xs" rounded="8px" variant="ghost" bg="rgba(148, 163, 184, 0.08)">
                             {label}
                           </Button>
                         ))}
@@ -326,7 +324,7 @@ function TemplateCard({
         bg="linear-gradient(180deg, rgba(37, 99, 235, 0.08), rgba(37, 99, 235, 0.02))"
         borderBottom="1px solid var(--border-subtle)"
       >
-        <Text fontSize="11px" fontWeight="600" letterSpacing="0.12em" textTransform="uppercase" color="var(--text-muted)">
+        <Text fontSize="11px" fontWeight="600" letterSpacing="0" textTransform="uppercase" color="var(--text-muted)">
           {card.imageLabel ?? 'Preview state'}
         </Text>
         <Text mt="1.5" fontWeight="600" color="var(--text-primary)">
@@ -487,7 +485,7 @@ export function TemplateDetailPanel({
         <SimpleGrid columns={{ base: 1, md: 2 }} gap="3">
           {primaryFields.map((field) => (
             <Box key={`${field.label}-${field.value ?? field.bullets?.join('-') ?? ''}`} rounded="6px" border="1px solid var(--border-subtle)" bg="var(--surface-2)" px="3.5" py="3">
-              <Text fontSize="xs" fontWeight="500" textTransform="uppercase" letterSpacing="0.08em" color="var(--text-muted)">
+              <Text fontSize="xs" fontWeight="500" textTransform="uppercase" letterSpacing="0" color="var(--text-muted)">
                 {field.label}
               </Text>
               {field.value ? (
@@ -536,7 +534,7 @@ export function TemplateDetailPanel({
         </SimpleGrid>
         {fullWidthFields.map((field) => (
           <Box key={`${field.label}-${field.value ?? field.bullets?.join('-') ?? ''}`} rounded="8px" border="1px solid var(--border-subtle)" bg="var(--surface-2)" px="3.5" py="3.5">
-            <Text fontSize="xs" fontWeight="500" textTransform="uppercase" letterSpacing="0.08em" color="var(--text-muted)">
+            <Text fontSize="xs" fontWeight="500" textTransform="uppercase" letterSpacing="0" color="var(--text-muted)">
               {field.label}
             </Text>
             {field.value ? (
@@ -585,7 +583,7 @@ export function TemplateDetailPanel({
         {note ? (
           <Box rounded="8px" border="1px dashed var(--border-subtle)" bg="rgba(148, 163, 184, 0.05)" px="3.5" py="3">
             {noteTitle ? (
-              <Text fontSize="xs" fontWeight="500" textTransform="uppercase" letterSpacing="0.08em" color="var(--text-muted)">
+              <Text fontSize="xs" fontWeight="500" textTransform="uppercase" letterSpacing="0" color="var(--text-muted)">
                 {noteTitle}
               </Text>
             ) : null}
@@ -615,7 +613,7 @@ export function TemplateTimeline({
                 <Box w="1px" flex="1" minH="16px" bg="var(--border-subtle)" />
               </VStack>
               <Box flex="1" rounded="8px" border="1px solid var(--border-subtle)" bg="var(--surface-2)" px="3.5" py="3">
-                <Flex justify="recipe-between" align="center" gap="3" wrap="wrap">
+                <Flex justify="space-between" align="center" gap="3" wrap="wrap">
                   <Text fontWeight="700" color="var(--text-primary)">
                     {item.title}
                   </Text>
@@ -687,7 +685,7 @@ export function TemplateActivityLog({
             const tone = templateToneStyles(entry.tone);
             return (
               <Box key={`${entry.label}-${entry.timestamp ?? entry.detail}`} rounded="6px" border="1px solid var(--border-subtle)" bg="var(--surface-2)" px="3.5" py="3">
-                <Flex justify="recipe-between" align="center" gap="3">
+                <Flex justify="space-between" align="center" gap="3">
                   <Text fontWeight="700" color={entry.tone ? tone.color : 'var(--text-primary)'} _dark={entry.tone ? { color: tone.darkColor } : undefined}>
                     {entry.label}
                   </Text>
@@ -715,11 +713,11 @@ function TemplateBoardColumnView({ column }: { column: TemplateBoardColumn }) {
   return (
     <Box minW={{ base: '100%', md: '240px' }} maxW={{ base: '100%', md: '240px' }} rounded="8px" border="1px solid var(--border-subtle)" bg="var(--surface-2)">
       <VStack align="stretch" gap="3" px="3.5" py="3.5">
-        <HStack justify="recipe-between" align="center">
+        <HStack justify="space-between" align="center">
           <Text fontWeight="600" color="var(--text-primary)">
             {column.label}
           </Text>
-          <Badge rounded="999px" px="2.5" py="1" border="1px solid" borderColor={tone.border} bg={tone.bg} color={tone.color}>
+          <Badge rounded="8px" px="2.5" py="1" border="1px solid" borderColor={tone.border} bg={tone.bg} color={tone.color}>
             {column.cards.length}
           </Badge>
         </HStack>
@@ -880,7 +878,7 @@ export function TemplateAccordionList({
                   <VStack align="stretch" gap="3">
                     {item.subjects && item.subjects.length > 0 ? (
                       <VStack align="stretch" gap="2">
-                        <Text fontSize="xs" fontWeight="600" textTransform="uppercase" letterSpacing="0.08em" color="var(--text-muted)">
+                        <Text fontSize="xs" fontWeight="600" textTransform="uppercase" letterSpacing="0" color="var(--text-muted)">
                           Sample subjects
                         </Text>
                         <VStack align="stretch" gap="1">
@@ -894,7 +892,7 @@ export function TemplateAccordionList({
                     ) : null}
                     {item.detailHeader ? (
                       <VStack align="stretch" gap="1.5">
-                        <Text fontSize="xs" fontWeight="600" textTransform="uppercase" letterSpacing="0.08em" color="var(--text-muted)">
+                        <Text fontSize="xs" fontWeight="600" textTransform="uppercase" letterSpacing="0" color="var(--text-muted)">
                           {item.detailHeader}
                         </Text>
                         {item.detailText ? (
@@ -904,7 +902,7 @@ export function TemplateAccordionList({
                         ) : null}
                         {item.evidenceBullets && item.evidenceBullets.length > 0 ? (
                           <VStack align="stretch" gap="1.5" mt="1">
-                            <Text fontSize="xs" fontWeight="600" textTransform="uppercase" letterSpacing="0.08em" color="var(--text-muted)">
+                            <Text fontSize="xs" fontWeight="600" textTransform="uppercase" letterSpacing="0" color="var(--text-muted)">
                               Evidence
                             </Text>
                             <VStack align="stretch" gap="1">

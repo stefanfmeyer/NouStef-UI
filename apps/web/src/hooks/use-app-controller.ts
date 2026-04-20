@@ -506,6 +506,7 @@ export function useAppController() {
   const activeProfileIdRef = useRef<string | null>(null);
   const activeSessionIdRef = useRef<string | null>(null);
   const currentChatRequestIdRef = useRef<string | null>(null);
+  const streamRevisionRef = useRef(0);
 
   const activeProfileId = bootstrap?.activeProfileId ?? null;
   const activeProfile = useMemo(
@@ -880,6 +881,7 @@ export function useAppController() {
 
   const loadSession = useCallback(
     async (profileId: string, sessionId: string, options: { persistSelection?: boolean; nextPage?: AppPage } = {}) => {
+      const loadStartedAtStreamRevision = streamRevisionRef.current;
       setSessionLoading(true);
       setSessionError(null);
 
@@ -889,6 +891,9 @@ export function useAppController() {
         }
 
         const nextSessionPayload = await getSessionMessages(profileId, sessionId);
+        if (loadStartedAtStreamRevision !== streamRevisionRef.current && sessionId === activeSessionIdRef.current) {
+          return;
+        }
         setSessionPayload(nextSessionPayload);
         setChatError(null);
         hydrateRuntimeRequestState(nextSessionPayload);
@@ -2003,10 +2008,12 @@ export function useAppController() {
           const hasPromotedTemplate = Boolean(event.recipe.dynamic?.recipeTemplate);
           const recipeToStore =
             partialTemplateState && !hasPromotedTemplate
-              ? {
+                ? {
                   ...event.recipe,
                   dynamic: {
                     ...event.recipe.dynamic,
+                    renderMode: event.recipe.dynamic?.renderMode ?? 'dynamic_v1',
+                    activeBuild: event.recipe.dynamic?.activeBuild ?? null,
                     recipeTemplate: partialTemplateState
                   }
                 }
@@ -2168,6 +2175,7 @@ export function useAppController() {
       }
 
       setChatSending(true);
+      streamRevisionRef.current += 1;
       streamingSessionIdRef.current = activeSessionId;
       setChatError(null);
       setChatProgress(options.initialProgress);

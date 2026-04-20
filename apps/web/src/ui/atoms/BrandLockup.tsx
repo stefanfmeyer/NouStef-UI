@@ -11,12 +11,12 @@ export function BrandLockup({
         🧑‍🍳
       </Box>
       <VStack align="start" gap="0" minW={0}>
-        <Text fontSize={compact ? 'sm' : 'md'} fontWeight="700" letterSpacing="-0.03em" color="var(--text-primary)" lineHeight="1.05">
+        <Text fontSize={compact ? 'sm' : 'md'} fontWeight="750" letterSpacing="0" color="var(--text-primary)" lineHeight="1.15">
           The Kitchen
         </Text>
         {!compact ? (
-          <Text fontSize="xs" color="var(--text-muted)" lineHeight="1.2">
-            Let him cook
+          <Text fontSize="xs" color="var(--text-muted)" lineHeight="1.35">
+            Local Hermes workspace
           </Text>
         ) : null}
       </VStack>

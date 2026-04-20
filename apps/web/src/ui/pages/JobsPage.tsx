@@ -17,7 +17,7 @@ export function JobsPage({
 }) {
   return (
     <VStack align="stretch" h="100%" minH={0} gap="4">
-      <HStack justify="recipe-between">
+      <HStack justify="space-between" rounded="8px" border="1px solid var(--border-subtle)" bg="var(--surface-elevated)" p="4" boxShadow="var(--shadow-xs)">
         <HStack gap="2">
           {response ? <StatusPill label={response.freshness.status} /> : null}
           {response?.freshness.lastSuccessfulAt ? (
@@ -26,7 +26,7 @@ export function JobsPage({
             </Text>
           ) : null}
         </HStack>
-        <Button variant="outline" onClick={onRefresh} loading={loading}>
+        <Button variant="outline" rounded="8px" onClick={onRefresh} loading={loading}>
           Refresh
         </Button>
       </HStack>
@@ -36,7 +36,7 @@ export function JobsPage({
         <ErrorBanner title="Latest Hermes jobs error" detail={response.freshness.lastError} />
       ) : null}
 
-      <Box flex="1" minH={0} rounded="10px" border="1px solid var(--border-subtle)" bg="var(--surface-1)" p="4">
+      <Box flex="1" minH={0} rounded="8px" border="1px solid var(--border-subtle)" bg="var(--surface-elevated)" p="4" boxShadow="var(--shadow-sm)">
         {!response ? (
           <EmptyStateCard title="Loading jobs" detail="Reading Hermes cron state for the selected profile." />
         ) : response.items.length === 0 ? (
@@ -59,7 +59,7 @@ export function JobsPage({
                 {response.items.map((job) => (
                   <Table.Row key={job.id}>
                     <Table.Cell>
-                      <Text fontWeight="700" color="var(--text-primary)">
+                      <Text fontWeight="750" color="var(--text-primary)">
                         {job.label}
                       </Text>
                       <Text fontSize="sm" color="var(--text-secondary)">

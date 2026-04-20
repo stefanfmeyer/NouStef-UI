@@ -9,14 +9,20 @@ export function ThemeToggle({
 }) {
   const { themeMode, setThemeMode } = useHermesTheme();
   const togglingRef = useRef(false);
+  const label = themeMode === 'dark' ? 'Light mode' : 'Dark mode';
 
   return (
     <Button
+      aria-label={label}
+      title={label}
       variant="outline"
       borderColor="var(--border-subtle)"
-      bg="var(--surface-1)"
+      bg="var(--surface-2)"
       color="var(--text-primary)"
       size="sm"
+      rounded="8px"
+      boxShadow="var(--shadow-xs)"
+      _hover={{ bg: 'var(--surface-hover)', borderColor: 'var(--border-strong)' }}
       onClick={async () => {
         if (togglingRef.current) return;
         togglingRef.current = true;
@@ -34,7 +40,7 @@ export function ThemeToggle({
         }
       }}
     >
-      {themeMode === 'dark' ? 'Light mode' : 'Dark mode'}
+      {themeMode === 'dark' ? 'Light' : 'Dark'}
     </Button>
   );
 }

@@ -27,7 +27,7 @@ export function StatusPill({ label }: { label: string }) {
     <Badge
       colorPalette={toneByStatus[label] ?? 'gray'}
       variant="subtle"
-      rounded="full"
+      rounded="8px"
       px="2.5"
       py="1"
       textTransform="none"

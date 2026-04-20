@@ -56,7 +56,7 @@ export function ToolHistoryPage({
   const maxCount = Math.max(reviewedCount, runtimeCount);
 
   return (
-    <Box h="100%" minH={0} rounded="10px" border="1px solid var(--border-subtle)" bg="var(--surface-1)" p="4">
+    <Box h="100%" minH={0} rounded="8px" border="1px solid var(--border-subtle)" bg="var(--surface-elevated)" p="4" boxShadow="var(--shadow-sm)">
       {error ? <ErrorBanner title="Tool history failed" detail={error} /> : null}
 
       {!response || (response.items.length === 0 && response.runtimeItems.length === 0) ? (
@@ -78,12 +78,12 @@ export function ToolHistoryPage({
           flexDirection="column"
           variant="plain"
           css={{
-            '--tabs-indicator-bg': 'var(--surface-2)',
-            '--tabs-indicator-shadow': 'none',
-            '--tabs-trigger-radius': 'full'
+            '--tabs-indicator-bg': 'var(--surface-1)',
+            '--tabs-indicator-shadow': 'var(--shadow-xs)',
+            '--tabs-trigger-radius': '8px'
           }}
         >
-          <Tabs.List rounded="full" bg="var(--surface-2)" p="1" mb="3" flexShrink={0}>
+          <Tabs.List rounded="8px" bg="var(--surface-2)" border="1px solid var(--border-subtle)" p="1" mb="3" flexShrink={0}>
             <Tabs.Trigger value="runtime">Runtime activity ({runtimeCount})</Tabs.Trigger>
             <Tabs.Trigger value="reviewed">Reviewed executions ({reviewedCount})</Tabs.Trigger>
             <Tabs.Indicator />
@@ -123,7 +123,7 @@ export function ToolHistoryPage({
                             <Badge colorPalette={activityKindPalette(item.kind)}>{activityKindLabel(item.kind)}</Badge>
                           </Table.Cell>
                           <Table.Cell>
-                            <Text fontWeight="700" color="var(--text-primary)">
+                            <Text fontWeight="750" color="var(--text-primary)">
                               {item.label}
                             </Text>
                             <Text fontSize="sm" color="var(--text-secondary)">
@@ -184,7 +184,7 @@ export function ToolHistoryPage({
                             <StatusPill label={item.status} />
                           </Table.Cell>
                           <Table.Cell>
-                            <Text fontWeight="700" color="var(--text-primary)">
+                            <Text fontWeight="750" color="var(--text-primary)">
                               {item.summary}
                             </Text>
                             <Text fontSize="sm" color="var(--text-secondary)">
@@ -204,7 +204,7 @@ export function ToolHistoryPage({
           </Tabs.Content>
         </Tabs.Root>
 
-          <HStack justify="recipe-between">
+          <HStack justify="space-between">
             <Text color="var(--text-secondary)">
               {runtimeCount} runtime entries · {reviewedCount} reviewed entries
             </Text>
@@ -239,7 +239,7 @@ function ButtonLike({
       disabled={disabled}
       size="sm"
       variant="outline"
-      rounded="14px"
+      rounded="8px"
       color="var(--text-primary)"
       borderColor="var(--border-subtle)"
       opacity={disabled ? 0.5 : 1}

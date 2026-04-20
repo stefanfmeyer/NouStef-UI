@@ -8,7 +8,13 @@ export function ErrorBanner({
   detail: string;
 }) {
   return (
-    <Alert.Root status="error" rounded="8px" border="1px solid var(--border-danger)" bg="var(--surface-danger)">
+    <Alert.Root
+      status="error"
+      rounded="8px"
+      border="1px solid var(--border-danger)"
+      bg="var(--surface-danger)"
+      boxShadow="var(--shadow-xs)"
+    >
       <Alert.Content>
         <Alert.Title color="var(--text-primary)">{title}</Alert.Title>
         <Alert.Description color="var(--text-secondary)">{detail}</Alert.Description>

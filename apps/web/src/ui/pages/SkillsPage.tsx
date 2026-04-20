@@ -68,14 +68,14 @@ export function SkillsPage({
 
   return (
     <VStack align="stretch" h="100%" minH={0} gap="4">
-      <HStack justify="recipe-between" wrap="wrap" gap="3">
+      <HStack justify="space-between" wrap="wrap" gap="3" rounded="8px" border="1px solid var(--border-subtle)" bg="var(--surface-elevated)" p="4" boxShadow="var(--shadow-xs)">
         <Box>
-          <Text fontWeight="700" color="var(--text-primary)">
+          <Text fontWeight="750" color="var(--text-primary)">
             Runtime skills
           </Text>
           <Text color="var(--text-secondary)">Skills available to the active Hermes profile.</Text>
         </Box>
-        <Button variant="outline" onClick={onRefresh} loading={loading}>
+        <Button variant="outline" rounded="8px" onClick={onRefresh} loading={loading}>
           Refresh
         </Button>
       </HStack>
@@ -83,7 +83,7 @@ export function SkillsPage({
       {error ? <ErrorBanner title="Skills refresh failed" detail={error} /> : null}
       {actionError ? <ErrorBanner title="Skill update failed" detail={actionError} /> : null}
 
-      <Box flex="1" minH={0} rounded="10px" border="1px solid var(--border-subtle)" bg="var(--surface-1)" p="4">
+      <Box flex="1" minH={0} rounded="8px" border="1px solid var(--border-subtle)" bg="var(--surface-elevated)" p="4" boxShadow="var(--shadow-sm)">
         {!response ? (
           <EmptyStateCard title="Loading skills" detail="Reading the active profile skill catalog from Hermes." />
         ) : response.items.length === 0 ? (
@@ -119,7 +119,7 @@ export function SkillsPage({
                                     justifyContent="center"
                                     w="16px"
                                     h="16px"
-                                    rounded="full"
+                                    rounded="6px"
                                     border="1px solid var(--border-subtle)"
                                     color="var(--text-muted)"
                                     fontSize="10px"
@@ -148,7 +148,7 @@ export function SkillsPage({
                                 </Portal>
                               </Tooltip.Root>
                             ) : null}
-                            <Text fontWeight="700" color="var(--text-primary)">
+                            <Text fontWeight="750" color="var(--text-primary)">
                               {skill.name}
                             </Text>
                           </HStack>
@@ -175,7 +175,7 @@ export function SkillsPage({
                               size="sm"
                               minW={0}
                               px="2.5"
-                              rounded="full"
+                              rounded="8px"
                               aria-label={`Actions for ${skill.name}`}
                               color="var(--text-secondary)"
                               _hover={{ bg: 'var(--surface-2)', color: 'var(--text-primary)' }}

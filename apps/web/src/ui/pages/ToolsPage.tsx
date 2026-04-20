@@ -43,12 +43,12 @@ export function ToolsPage({
         flexDirection="column"
         variant="plain"
         css={{
-          '--tabs-indicator-bg': 'var(--surface-2)',
-          '--tabs-indicator-shadow': 'none',
-          '--tabs-trigger-radius': '999px'
+          '--tabs-indicator-bg': 'var(--surface-1)',
+          '--tabs-indicator-shadow': 'var(--shadow-xs)',
+          '--tabs-trigger-radius': '8px'
         }}
       >
-        <Tabs.List rounded="999px" bg="var(--surface-1)" p="1">
+        <Tabs.List rounded="8px" bg="var(--surface-2)" border="1px solid var(--border-subtle)" p="1" w="fit-content">
           <Tabs.Trigger value="all">All Tools</Tabs.Trigger>
           <Tabs.Trigger value="history">Tool History</Tabs.Trigger>
           <Tabs.Indicator />
@@ -56,8 +56,8 @@ export function ToolsPage({
 
         <Tabs.Content value="all" flex="1" minH={0} pt="4">
           <VStack align="stretch" h="100%" minH={0} gap="4">
-            <Box rounded="10px" border="1px solid var(--border-subtle)" bg="var(--surface-1)" px="5" py="4">
-              <Text fontWeight="600" color="var(--text-primary)">
+            <Box rounded="8px" border="1px solid var(--border-subtle)" bg="var(--surface-elevated)" px="5" py="4" boxShadow="var(--shadow-xs)">
+              <Text fontWeight="750" color="var(--text-primary)">
                 Runtime capability inventory
               </Text>
               <Text color="var(--text-secondary)">
@@ -65,7 +65,7 @@ export function ToolsPage({
               </Text>
             </Box>
 
-            <Box flex="1" minH={0} rounded="10px" border="1px solid var(--border-subtle)" bg="var(--surface-1)" p="4">
+            <Box flex="1" minH={0} rounded="8px" border="1px solid var(--border-subtle)" bg="var(--surface-elevated)" p="4" boxShadow="var(--shadow-sm)">
               {!response ? (
                 <EmptyStateCard title={loading ? 'Loading tools' : 'No tools reported'} detail="Reading Hermes and bridge tool capabilities." />
               ) : (
@@ -85,7 +85,7 @@ export function ToolsPage({
                       {response.items.map((tool) => (
                         <Table.Row key={tool.id}>
                           <Table.Cell>
-                            <Text fontWeight="700" color="var(--text-primary)">
+                            <Text fontWeight="750" color="var(--text-primary)">
                               {tool.name}
                             </Text>
                             <Text fontSize="sm" color="var(--text-secondary)">

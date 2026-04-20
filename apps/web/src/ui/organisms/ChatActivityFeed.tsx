@@ -38,14 +38,15 @@ export function ChatActivityFeed({
       minH={{ base: '240px', xl: 0 }}
       rounded="8px"
       border="1px solid var(--border-subtle)"
-      bg="var(--surface-1)"
-      px="2.5"
-      py="2.5"
+      bg="var(--surface-elevated)"
+      boxShadow="var(--shadow-sm)"
+      px="3"
+      py="3"
       data-testid="chat-activity-pane"
     >
-      <VStack align="stretch" gap="2" minH={0} h="100%">
+      <VStack align="stretch" gap="3" minH={0} h="100%">
         <Box>
-          <Text fontSize="sm" fontWeight="600" color="var(--text-primary)">
+          <Text fontSize="sm" fontWeight="750" color="var(--text-primary)">
             Runtime activity
           </Text>
           <Text fontSize="xs" color="var(--text-secondary)">
@@ -57,14 +58,14 @@ export function ChatActivityFeed({
           </Text>
         </Box>
 
-        <Box rounded="14px" border="1px solid var(--border-subtle)" bg="var(--surface-2)" px="2" py="1.5">
-          <VStack align="stretch" gap="1.25">
-            <HStack justify="recipe-between" gap="2" align="start">
+        <Box rounded="8px" border="1px solid var(--border-subtle)" bg="var(--surface-2)" px="3" py="2.5">
+          <VStack align="stretch" gap="2">
+            <HStack justify="space-between" gap="2" align="start">
               <Box minW={0}>
-                <Text fontSize="xs" fontWeight="500" color="var(--text-muted)" letterSpacing="0.12em" textTransform="uppercase">
+                <Text fontSize="xs" fontWeight="700" color="var(--text-muted)" letterSpacing="0">
                   Focused request
                 </Text>
-                <Text fontSize="sm" fontWeight="500" color="var(--text-primary)" lineClamp={2}>
+                <Text mt="0.5" fontSize="sm" fontWeight="650" color="var(--text-primary)" lineClamp={2}>
                   {requestPreview ?? (sending ? 'New Hermes request in progress' : 'No request selected')}
                 </Text>
               </Box>
@@ -84,7 +85,7 @@ export function ChatActivityFeed({
           <ScrollArea.Viewport data-testid="chat-activity-scroll">
             <VStack align="stretch" gap="1.5" pr="1">
               {activities.length === 0 ? (
-                <Box rounded="14px" bg="var(--surface-2)" px="2" py="2">
+                <Box rounded="8px" bg="var(--surface-2)" px="3" py="3" border="1px solid var(--border-subtle)">
                   <Text fontSize="xs" color="var(--text-secondary)">
                     {sending
                       ? 'No structured runtime events have arrived yet. Hermes may still be thinking or using a quieter execution path.'
