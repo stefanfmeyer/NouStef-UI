@@ -1033,10 +1033,33 @@ function extractAssistantBody(
   });
 }
 
+function extractUrlFromLabel(label: string): string | undefined {
+  const urlMatch = label.match(/https?:\/\/[^\s,)>]+/u);
+  if (urlMatch) return urlMatch[0];
+  const hostMatch = label.match(/(?:^|\s)((?:[a-z0-9-]+\.)+[a-z]{2,})(?:\/\S*)?/iu);
+  if (hostMatch?.[1] && hostMatch[1].includes('.')) return hostMatch[1];
+  return undefined;
+}
+
 function parseChatActivity(line: string, timestamp: string, requestId: string | null = null): ChatActivity | null {
   const trimmed = line.trim();
   if (!trimmed) {
     return null;
+  }
+
+  // Surface thinking blocks as ephemeral activities instead of silently discarding them.
+  if (trimmed.startsWith('[thinking]')) {
+    const thinkingText = trimmed.slice('[thinking]'.length).trim();
+    if (!thinkingText) return null;
+    const snippet = thinkingText.length > 120 ? `${thinkingText.slice(0, 120)}…` : thinkingText;
+    return {
+      kind: 'thinking',
+      state: 'updated',
+      label: snippet,
+      detail: thinkingText,
+      requestId,
+      timestamp
+    };
   }
 
   if (trimmed.includes('Initializing agent')) {
@@ -1052,15 +1075,22 @@ function parseChatActivity(line: string, timestamp: string, requestId: string | 
 
   const preparingMatch = trimmed.match(/^┊\s+(?<icon>📚|💻|📞|📖|🐍)\s+preparing\s+(?<label>.+?)…$/u);
   if (preparingMatch?.groups?.label) {
+    const prepLabel = preparingMatch.groups.label.trim();
+    const prepUrl = extractUrlFromLabel(prepLabel);
+    const isWebFetch = Boolean(prepUrl) || /\b(fetch|web_fetch|http_get|browse|visit)\b/iu.test(prepLabel);
+    const kind =
+      preparingMatch.groups.icon === '📚'
+        ? 'skill'
+        : preparingMatch.groups.icon === '💻'
+          ? 'command'
+          : isWebFetch
+            ? 'website'
+            : 'tool';
     return {
-      kind:
-        preparingMatch.groups.icon === '📚'
-          ? 'skill'
-          : preparingMatch.groups.icon === '💻'
-            ? 'command'
-            : 'tool',
+      kind,
       state: 'started',
-      label: preparingMatch.groups.label.trim(),
+      label: isWebFetch ? (prepUrl ? `Fetching ${prepUrl}` : prepLabel) : prepLabel,
+      url: prepUrl,
       requestId,
       timestamp
     };
@@ -1077,12 +1107,15 @@ function parseChatActivity(line: string, timestamp: string, requestId: string | 
         : toolActivityMatch.groups.verb === 'exec'
           ? 'execute_code'
           : rawLabel;
-
+    const failed = Boolean(toolActivityMatch.groups.exitCode && toolActivityMatch.groups.exitCode !== '0');
+    const url = extractUrlFromLabel(rawLabel);
+    const isWebFetch = Boolean(url) || /\b(fetch|web_fetch|http_get|browse|visit)\b/iu.test(toolLabel);
     return {
-      kind: 'tool',
-      state: toolActivityMatch.groups.exitCode && toolActivityMatch.groups.exitCode !== '0' ? 'failed' : 'completed',
-      label: toolLabel,
+      kind: isWebFetch ? 'website' : 'tool',
+      state: failed ? 'failed' : 'completed',
+      label: isWebFetch ? (url ? `Fetching ${url}` : toolLabel) : toolLabel,
       detail: rawLabel,
+      url,
       requestId,
       timestamp
     };
@@ -1240,6 +1273,16 @@ function progressMessageForActivity(activity: ChatActivity) {
 
   if (activity.kind === 'warning') {
     return activity.detail ?? activity.label;
+  }
+
+  if (activity.kind === 'thinking') {
+    const snippet = activity.label.length > 60 ? `${activity.label.slice(0, 60)}…` : activity.label;
+    return `Thinking: ${snippet}`;
+  }
+
+  if (activity.kind === 'website') {
+    const host = activity.url ? (() => { try { return new URL(activity.url!.startsWith('http') ? activity.url! : `https://${activity.url!}`).hostname; } catch { return activity.url; } })() : activity.label;
+    return activity.state === 'started' ? `Visiting ${host}…` : `Visited ${host}.`;
   }
 
   return null;

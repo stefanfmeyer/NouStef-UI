@@ -103,6 +103,15 @@ export function ChatPage({
   const activeSession = sessionPayload?.session ?? null;
   const attachedRecipe = sessionPayload?.attachedRecipe ?? null;
 
+  // Derive the kind of the most recent in-progress activity to drive the chat bubble icon.
+  const typingActivityKind = sending ? (() => {
+    for (let i = activities.length - 1; i >= 0; i--) {
+      const a = activities[i];
+      if (a && (a.state === 'started' || a.state === 'updated')) return a.kind;
+    }
+    return null;
+  })() : null;
+
   // Bump the animation key every time a NEW recipe attaches so the panel re-runs its entry animation.
   useEffect(() => {
     const newId = attachedRecipe?.id ?? null;
@@ -399,6 +408,7 @@ export function ChatPage({
                     assistantDraft={assistantDraft}
                     showTypingIndicator={typing}
                     typingStatusLabel={progress}
+                    typingActivityKind={typingActivityKind}
                     selectedRequestId={selectedActivityRequestId}
                     onMessageClick={handleAttachedTranscriptMessageClick}
                     emptyTitle="No messages yet"
@@ -465,6 +475,7 @@ export function ChatPage({
                 assistantDraft={assistantDraft}
                 showTypingIndicator={typing}
                 typingStatusLabel={progress}
+                typingActivityKind={typingActivityKind}
                 selectedRequestId={selectedActivityRequestId}
                 onMessageClick={handleStandaloneTranscriptMessageClick}
                 emptyTitle="No messages yet"

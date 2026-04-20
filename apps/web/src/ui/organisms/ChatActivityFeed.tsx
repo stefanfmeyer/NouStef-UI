@@ -1,20 +1,29 @@
-import { Box, Flex, HStack, ScrollArea, Spinner, Text, VStack } from '@chakra-ui/react';
+import { useMemo } from 'react';
+import { Box, Flex, HStack, ScrollArea, Text, VStack } from '@chakra-ui/react';
 import type { ChatActivity, RuntimeRequest } from '@hermes-recipes/protocol';
-import { InfoTag } from '../atoms/InfoTag';
+import { TypingDots } from '../atoms/TypingDots';
+import { StatusTicker } from '../atoms/StatusTicker';
 import { ActivityCard } from '../molecules/ActivityCard';
 
-function requestStatusPalette(status: RuntimeRequest['status'] | null) {
+function requestStatusLabel(status: RuntimeRequest['status'] | null, sending: boolean): string {
+  if (sending) return 'Running';
   switch (status) {
-    case 'running':
-      return 'gray';
-    case 'completed':
-      return 'green';
+    case 'running': return 'Running';
+    case 'completed': return 'Done';
+    case 'failed': return 'Failed';
+    case 'denied': return 'Denied';
+    case 'cancelled': return 'Cancelled';
+    default: return 'Idle';
+  }
+}
+
+function requestStatusColor(status: RuntimeRequest['status'] | null, sending: boolean): string {
+  if (sending) return 'var(--accent)';
+  switch (status) {
+    case 'completed': return '#16a34a';
     case 'failed':
-    case 'denied':
-      return 'red';
-    case 'cancelled':
-    default:
-      return 'gray';
+    case 'denied': return '#dc2626';
+    default: return 'var(--text-muted)';
   }
 }
 
@@ -31,6 +40,20 @@ export function ChatActivityFeed({
   requestPreview: string | null;
   requestStatus: RuntimeRequest['status'] | null;
 }) {
+  // Find the most recent in-progress activity for the live status strip.
+  const liveActivity = useMemo(() => {
+    for (let i = activities.length - 1; i >= 0; i--) {
+      const a = activities[i];
+      if (a && (a.state === 'started' || a.state === 'updated')) return a;
+    }
+    return null;
+  }, [activities]);
+
+  const statusText = progress ?? (sending ? 'Waiting for runtime events…' : 'Idle');
+  const statusKind = liveActivity?.kind ?? 'status';
+  const isRunning = sending || requestStatus === 'running';
+  const statusColor = requestStatusColor(requestStatus, sending);
+
   return (
     <Flex
       direction="column"
@@ -39,68 +62,81 @@ export function ChatActivityFeed({
       rounded="8px"
       border="1px solid var(--border-subtle)"
       bg="var(--surface-1)"
-      px="2.5"
-      py="2.5"
+      overflow="hidden"
       data-testid="chat-activity-pane"
     >
-      <VStack align="stretch" gap="2" minH={0} h="100%">
-        <Box>
-          <Text fontSize="sm" fontWeight="600" color="var(--text-primary)">
-            Runtime activity
-          </Text>
-          <Text fontSize="xs" color="var(--text-secondary)">
-            {requestPreview
-              ? 'Bridge, tool, skill, and CLI events for the focused request.'
-              : sending
-                ? 'The bridge is waiting for structured runtime events from Hermes.'
-                : 'Click a chat message to focus its runtime trail, or send a new request to start a fresh stream.'}
-          </Text>
-        </Box>
+      {/* Header */}
+      <Box px="3" pt="2.5" pb="0" flexShrink={0}>
+        <Text fontSize="sm" fontWeight="600" color="var(--text-primary)">
+          Runtime activity
+        </Text>
+      </Box>
 
-        <Box rounded="14px" border="1px solid var(--border-subtle)" bg="var(--surface-2)" px="2" py="1.5">
-          <VStack align="stretch" gap="1.25">
-            <HStack justify="recipe-between" gap="2" align="start">
-              <Box minW={0}>
-                <Text fontSize="xs" fontWeight="500" color="var(--text-muted)" letterSpacing="0.12em" textTransform="uppercase">
-                  Focused request
+      {/* Live status strip — collapses to a single updating line while running */}
+      <Box
+        px="3"
+        py="2"
+        borderBottom="1px solid var(--border-subtle)"
+        flexShrink={0}
+        bg="var(--surface-1)"
+      >
+        <HStack justify="space-between" gap="2" align="center" wrap="nowrap">
+          <Box minW={0} flex="1">
+            {requestPreview ? (
+              <Text fontSize="xs" color="var(--text-muted)" lineClamp={1} mb="0.5">
+                {requestPreview}
+              </Text>
+            ) : null}
+            <HStack gap="2" align="center">
+              {isRunning ? <TypingDots /> : null}
+              {isRunning ? (
+                <StatusTicker text={statusText} kind={statusKind} />
+              ) : (
+                <Text fontSize="xs" color="var(--text-secondary)">
+                  {requestPreview
+                    ? statusText
+                    : 'Click a message to focus its runtime trail.'}
                 </Text>
-                <Text fontSize="sm" fontWeight="500" color="var(--text-primary)" lineClamp={2}>
-                  {requestPreview ?? (sending ? 'New Hermes request in progress' : 'No request selected')}
+              )}
+            </HStack>
+          </Box>
+          <Text
+            fontSize="2xs"
+            fontWeight="600"
+            color={statusColor}
+            letterSpacing="0.08em"
+            textTransform="uppercase"
+            flexShrink={0}
+          >
+            {requestStatusLabel(requestStatus, sending)}
+          </Text>
+        </HStack>
+      </Box>
+
+      {/* Activity log */}
+      <ScrollArea.Root flex="1" minH={0} variant="hover">
+        <ScrollArea.Viewport data-testid="chat-activity-scroll">
+          <VStack align="stretch" gap="0" px="2" py="1.5">
+            {activities.length === 0 ? (
+              <Box px="1" py="2">
+                <Text fontSize="xs" color="var(--text-muted)">
+                  {sending
+                    ? 'No structured runtime events yet — Hermes may still be thinking.'
+                    : 'No runtime activity recorded for this request.'}
                 </Text>
               </Box>
-              <InfoTag label={requestStatus ?? 'idle'} colorPalette={requestStatusPalette(requestStatus)} />
-            </HStack>
-
-            <HStack gap="2" align="center">
-              {sending ? <Spinner size="xs" color="var(--accent)" borderWidth="2px" /> : null}
-              <Text fontSize="xs" color="var(--text-secondary)">
-                {progress ?? (sending ? 'Waiting for runtime updates…' : 'Idle')}
-              </Text>
-            </HStack>
+            ) : (
+              activities.map((activity) => (
+                <ActivityCard
+                  key={`${activity.timestamp}-${activity.kind}-${activity.label}-${activity.state}`}
+                  activity={activity}
+                />
+              ))
+            )}
           </VStack>
-        </Box>
-
-        <ScrollArea.Root flex="1" minH={0} variant="hover">
-          <ScrollArea.Viewport data-testid="chat-activity-scroll">
-            <VStack align="stretch" gap="1.5" pr="1">
-              {activities.length === 0 ? (
-                <Box rounded="14px" bg="var(--surface-2)" px="2" py="2">
-                  <Text fontSize="xs" color="var(--text-secondary)">
-                    {sending
-                      ? 'No structured runtime events have arrived yet. Hermes may still be thinking or using a quieter execution path.'
-                      : 'No runtime activity has been recorded for the focused request yet.'}
-                  </Text>
-                </Box>
-              ) : (
-                activities.map((activity) => (
-                  <ActivityCard key={`${activity.timestamp}-${activity.kind}-${activity.label}-${activity.state}`} activity={activity} />
-                ))
-              )}
-            </VStack>
-          </ScrollArea.Viewport>
-          <ScrollArea.Scrollbar />
-        </ScrollArea.Root>
-      </VStack>
+        </ScrollArea.Viewport>
+        <ScrollArea.Scrollbar />
+      </ScrollArea.Root>
     </Flex>
   );
 }

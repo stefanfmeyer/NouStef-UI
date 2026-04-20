@@ -1,11 +1,12 @@
 import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import { Box, Button, Code, HStack, ScrollArea, Text, VStack, chakra } from '@chakra-ui/react';
-import type { ChatMessage } from '@hermes-recipes/protocol';
+import type { ChatActivity, ChatMessage } from '@hermes-recipes/protocol';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { HermesAvatar } from '../atoms/HermesAvatar';
 import { TypingDots } from '../atoms/TypingDots';
+import { StatusTicker } from '../atoms/StatusTicker';
 import { safeMarkdownUrlTransform } from '../../lib/markdown-url-transform';
 
 function formatMessageTime(value: string | undefined) {
@@ -44,6 +45,7 @@ export const ChatTranscript = memo(function ChatTranscript({
   emptyDetail,
   showTypingIndicator,
   typingStatusLabel,
+  typingActivityKind,
   selectedRequestId,
   onMessageClick
 }: {
@@ -54,6 +56,7 @@ export const ChatTranscript = memo(function ChatTranscript({
   emptyDetail: string;
   showTypingIndicator: boolean;
   typingStatusLabel?: string | null;
+  typingActivityKind?: ChatActivity['kind'] | null;
   selectedRequestId: string | null;
   onMessageClick?: (message: ChatMessage) => void;
 }) {
@@ -106,6 +109,7 @@ export const ChatTranscript = memo(function ChatTranscript({
                   assistantDraft={assistantDraft}
                   selected={selectedRequestId !== null}
                   typingStatusLabel={typingStatusLabel}
+                  typingActivityKind={typingActivityKind}
                 />
               ) : null}
             </>
@@ -304,21 +308,23 @@ const TranscriptMessageRow = memo(
 const TranscriptTypingRow = memo(function TranscriptTypingRow({
   assistantDraft,
   selected,
-  typingStatusLabel
+  typingStatusLabel,
+  typingActivityKind
 }: {
   assistantDraft: string;
   selected: boolean;
   typingStatusLabel?: string | null;
+  typingActivityKind?: ChatActivity['kind'] | null;
 }) {
+  const statusText = typingStatusLabel?.trim() || 'Hermes is working…';
+  const activityKind = typingActivityKind ?? 'status';
   return (
     <TranscriptBubble messageRole="assistant_draft" selected={selected}>
       <VStack align="stretch" gap="3">
         {assistantDraft.length > 0 ? <MarkdownMessage>{assistantDraft}</MarkdownMessage> : null}
-        <HStack gap="3" align="center">
+        <HStack gap="2.5" align="center">
           <TypingDots />
-          <Text fontSize="sm" color="var(--text-secondary)">
-            {typingStatusLabel?.trim() || 'Hermes is typing…'}
-          </Text>
+          <StatusTicker text={statusText} kind={activityKind} />
         </HStack>
       </VStack>
     </TranscriptBubble>
