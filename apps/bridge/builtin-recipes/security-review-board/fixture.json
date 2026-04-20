@@ -1,0 +1,115 @@
+{
+  "kind": "recipe_template_state",
+  "schemaVersion": "recipe_template_state/v1",
+  "templateId": "security-review-board",
+  "title": "Bridge service — weekly security review",
+  "summary": "6 findings from this week's scan of the bridge service. 1 critical (JWT signing key), 2 high, 2 medium, 1 low. Critical should be patched today.",
+  "sections": [
+    {
+      "slotId": "stats",
+      "kind": "stats",
+      "title": "Severity breakdown",
+      "items": [
+        { "label": "Critical", "value": "1", "helper": "1 new", "tone": "danger" },
+        { "label": "High", "value": "2", "helper": "0 new", "tone": "warning" },
+        { "label": "Medium", "value": "2", "helper": "1 new", "tone": "accent" },
+        { "label": "Low", "value": "1", "helper": "0 new", "tone": "neutral" }
+      ]
+    },
+    {
+      "slotId": "severity-chart",
+      "kind": "pie-chart",
+      "title": "Distribution",
+      "data": [
+        { "id": "critical", "label": "Critical", "value": 1, "tone": "danger" },
+        { "id": "high", "label": "High", "value": 2, "tone": "warning" },
+        { "id": "medium", "label": "Medium", "value": 2, "tone": "accent" },
+        { "id": "low", "label": "Low", "value": 1, "tone": "neutral" }
+      ],
+      "variant": "donut",
+      "valueFormat": "number"
+    },
+    {
+      "slotId": "findings",
+      "kind": "split",
+      "title": "Findings",
+      "ratio": "list-detail",
+      "left": [
+        {
+          "slotId": "findings.list",
+          "kind": "grouped-list",
+          "title": "By severity",
+          "groups": [
+            {
+              "id": "critical",
+              "label": "Critical (1)",
+              "tone": "danger",
+              "items": [
+                { "id": "f-jwt-leak", "title": "JWT signing key committed to public repo", "subtitle": "bridge/config/secrets.json — pushed in 7a3b9c2 on Apr 18", "meta": "CVSS 9.8", "chips": [{ "label": "CRIT", "tone": "danger" }, { "label": "New", "tone": "warning" }], "actions": [] }
+              ]
+            },
+            {
+              "id": "high",
+              "label": "High (2)",
+              "tone": "warning",
+              "items": [
+                { "id": "f-sql-injection", "title": "Possible SQL injection in recipe search", "subtitle": "apps/bridge/src/routes/search.ts line 84 — unparameterized query", "meta": "CVSS 8.2", "chips": [{ "label": "HIGH", "tone": "warning" }], "actions": [] },
+                { "id": "f-axios-ssrf", "title": "axios SSRF — CVE-2024-39338", "subtitle": "axios@1.6.8 in packages/protocol (dep chain)", "meta": "CVE-2024-39338", "chips": [{ "label": "HIGH", "tone": "warning" }, { "label": "SCA", "tone": "neutral" }], "actions": [] }
+              ]
+            },
+            {
+              "id": "medium",
+              "label": "Medium (2)",
+              "tone": "accent",
+              "items": [
+                { "id": "f-cors-open", "title": "CORS policy allows any origin on /health", "subtitle": "apps/bridge/src/server.ts — Access-Control-Allow-Origin: *", "meta": "CVSS 5.3", "chips": [{ "label": "MED", "tone": "accent" }], "actions": [] },
+                { "id": "f-logging-pii", "title": "User email logged in info-level log", "subtitle": "apps/bridge/src/services/auth/session.ts line 42", "meta": "CVSS 5.1", "chips": [{ "label": "MED", "tone": "accent" }, { "label": "New", "tone": "warning" }], "actions": [] }
+              ]
+            },
+            {
+              "id": "low",
+              "label": "Low (1)",
+              "tone": "neutral",
+              "items": [
+                { "id": "f-weak-cipher", "title": "Weak cipher suite advertised in TLS handshake", "subtitle": "nginx.conf — TLS_RSA_WITH_AES_128_CBC_SHA still in list", "meta": "CVSS 3.1", "chips": [{ "label": "LOW", "tone": "neutral" }], "actions": [] }
+              ]
+            }
+          ]
+        }
+      ],
+      "right": [
+        {
+          "slotId": "findings.detail",
+          "kind": "detail-panel",
+          "title": "JWT signing key committed to public repo",
+          "eyebrow": "Critical · JWT_KEY_LEAK",
+          "summary": "A 512-bit HMAC signing key for session JWTs was committed to bridge/config/secrets.json in commit 7a3b9c2 on Apr 18 and pushed to the public main branch. Key must be rotated immediately; all existing sessions must be invalidated.",
+          "chips": [
+            { "label": "CRITICAL", "tone": "danger" },
+            { "label": "CWE-798", "tone": "neutral" },
+            { "label": "CVSS 9.8", "tone": "danger" }
+          ],
+          "fields": [
+            { "label": "CVE", "value": "N/A (internal finding)", "chips": [], "bullets": [], "links": [], "fullWidth": false },
+            { "label": "Affected component", "value": "apps/bridge/config/secrets.json", "chips": [], "bullets": [], "links": [], "fullWidth": false },
+            { "label": "Introduced in", "value": "commit 7a3b9c2 · Apr 18, 2026", "chips": [], "bullets": [], "links": [], "fullWidth": false },
+            { "label": "CVSS vector", "value": "AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H", "chips": [], "bullets": [], "links": [], "fullWidth": true },
+            { "label": "Recommendation", "value": "Rotate the JWT signing key, force session invalidation, and remove the secret from git history.", "chips": [{ "label": "Today", "tone": "danger" }], "bullets": [
+              "Generate a new 512-bit HMAC key and store in Secrets Manager",
+              "Deploy the rotated key via the config pipeline, not git",
+              "Force-expire all issued JWTs",
+              "Purge the leaked key from git history (git-filter-repo)",
+              "Rotate any downstream credentials that trusted the compromised key"
+            ], "links": [], "fullWidth": true }
+          ],
+          "actions": [],
+          "noteTitle": "Escalation",
+          "note": "Paged on-call security (Amir). Incident ticket SEC-412 created."
+        }
+      ]
+    }
+  ],
+  "transitionTargets": [],
+  "transitionHistory": [],
+  "metadata": {}
+}

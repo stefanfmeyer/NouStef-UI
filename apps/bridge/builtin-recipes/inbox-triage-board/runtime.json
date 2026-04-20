@@ -1,0 +1,35 @@
+{
+  "id": "inbox-triage-board",
+  "name": "Inbox Triage Board",
+  "useCase": "Triage unread senders and apply safe inbox cleanup actions.",
+  "enabled": true,
+  "selectionSignals": [
+    "unread email",
+    "inbox triage",
+    "sender cleanup",
+    "bulk archive",
+    "clean up my inbox",
+    "what's in my inbox",
+    "review unread",
+    "group my email by sender",
+    "help me get to inbox zero",
+    "go through my notifications"
+  ],
+  "slots": [
+    { "id": "stats", "kind": "stats", "required": true },
+    { "id": "triage-board", "kind": "split", "required": true }
+  ],
+  "allowedUpdateOps": ["set_header", "upsert_groups", "set_detail", "set_status"],
+  "actions": {
+    "append-template-note": {
+      "id": "append-template-note",
+      "label": "Add note",
+      "kind": "bridge",
+      "intent": "neutral",
+      "visibility": { "requiresSelection": "none", "whenBuildReady": true },
+      "bridge": { "handler": "append_template_note", "payload": {} },
+      "metadata": {}
+    }
+  },
+  "transitions": []
+}

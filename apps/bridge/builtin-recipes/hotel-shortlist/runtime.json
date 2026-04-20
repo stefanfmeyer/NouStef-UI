@@ -1,0 +1,54 @@
+{
+  "id": "hotel-shortlist",
+  "name": "Hotel Shortlist",
+  "useCase": "Compare likely hotels for a destination or trip window.",
+  "enabled": true,
+  "selectionSignals": [
+    "hotel shortlist",
+    "where to stay",
+    "compare hotels",
+    "lodging options",
+    "find a hotel",
+    "hotels in",
+    "book a hotel",
+    "places to stay",
+    "hotel options for my trip",
+    "recommend a hotel",
+    "best neighborhoods to stay in"
+  ],
+  "slots": [
+    { "id": "stats", "kind": "stats" },
+    { "id": "hotels", "kind": "card-grid", "required": true }
+  ],
+  "allowedUpdateOps": ["set_header", "upsert_cards", "remove_items", "append_note_lines"],
+  "actions": {
+    "get-hotel-details": {
+      "id": "get-hotel-details",
+      "label": "Get details",
+      "kind": "bridge",
+      "intent": "primary",
+      "visibility": { "requiresSelection": "single", "whenBuildReady": true },
+      "bridge": { "handler": "run_template_followup", "payload": {} },
+      "prompt": {
+        "promptTemplate": "Get booking details and current availability for the selected hotel.",
+        "includeInputs": ["selected_items"],
+        "allowedMutations": [],
+        "outboundRequestsAllowed": true,
+        "expectedOutput": "assistant_only",
+        "timeoutMs": 60000,
+        "retryable": true
+      },
+      "metadata": {}
+    },
+    "append-template-note": {
+      "id": "append-template-note",
+      "label": "Add note",
+      "kind": "bridge",
+      "intent": "neutral",
+      "visibility": { "requiresSelection": "none", "whenBuildReady": true },
+      "bridge": { "handler": "append_template_note", "payload": {} },
+      "metadata": {}
+    }
+  },
+  "transitions": []
+}

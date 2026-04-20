@@ -1,0 +1,71 @@
+{
+  "id": "flight-comparison",
+  "name": "Flight Comparison",
+  "useCase": "Compare flight options across outbound and return legs.",
+  "enabled": true,
+  "selectionSignals": [
+    "flight comparison",
+    "airline options",
+    "compare itineraries",
+    "stops and price",
+    "cheapest flight",
+    "fly from",
+    "book a flight",
+    "direct flight",
+    "flights to",
+    "flight options",
+    "round trip"
+  ],
+  "slots": [
+    { "id": "flight-tabs", "kind": "tabs", "required": true }
+  ],
+  "allowedUpdateOps": ["set_header", "set_active_tab", "upsert_table_rows", "remove_items"],
+  "actions": {
+    "get-flight-details": {
+      "id": "get-flight-details",
+      "label": "Flight details",
+      "kind": "bridge",
+      "intent": "primary",
+      "visibility": { "requiresSelection": "single", "whenBuildReady": true },
+      "bridge": { "handler": "run_template_followup", "payload": {} },
+      "prompt": {
+        "promptTemplate": "Get full details and fare rules for the selected flight itinerary.",
+        "includeInputs": ["selected_items"],
+        "allowedMutations": [],
+        "outboundRequestsAllowed": true,
+        "expectedOutput": "assistant_only",
+        "timeoutMs": 60000,
+        "retryable": true
+      },
+      "metadata": {}
+    },
+    "continue-booking": {
+      "id": "continue-booking",
+      "label": "Continue booking",
+      "kind": "bridge",
+      "intent": "primary",
+      "visibility": { "requiresSelection": "single", "whenBuildReady": true },
+      "bridge": { "handler": "run_template_followup", "payload": {} },
+      "prompt": {
+        "promptTemplate": "Continue booking the selected flight and provide the next steps.",
+        "includeInputs": ["selected_items"],
+        "allowedMutations": [],
+        "outboundRequestsAllowed": true,
+        "expectedOutput": "assistant_only",
+        "timeoutMs": 60000,
+        "retryable": true
+      },
+      "metadata": {}
+    },
+    "append-template-note": {
+      "id": "append-template-note",
+      "label": "Add note",
+      "kind": "bridge",
+      "intent": "neutral",
+      "visibility": { "requiresSelection": "none", "whenBuildReady": true },
+      "bridge": { "handler": "append_template_note", "payload": {} },
+      "metadata": {}
+    }
+  },
+  "transitions": []
+}

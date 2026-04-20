@@ -1,0 +1,197 @@
+{
+  "kind": "recipe_template_state",
+  "schemaVersion": "recipe_template_state/v1",
+  "templateId": "price-comparison-grid",
+  "title": "Sony WH-1000XM5 \u2014 price comparison",
+  "summary": "Comparing the Sony WH-1000XM5 across 5 major US retailers. Prices checked 3 minutes ago; Amazon currently has the best price.",
+  "sections": [
+    {
+      "slotId": "offer-grid",
+      "kind": "comparison-table",
+      "title": "Merchant comparison",
+      "columns": [
+        {
+          "id": "price",
+          "label": "Price",
+          "align": "end"
+        },
+        {
+          "id": "stock",
+          "label": "Stock",
+          "align": "start"
+        },
+        {
+          "id": "shipping",
+          "label": "Shipping",
+          "align": "start"
+        }
+      ],
+      "rows": [
+        {
+          "id": "amazon",
+          "label": "Amazon",
+          "leadingImage": {
+            "src": null,
+            "query": "Amazon logo",
+            "alt": "Amazon",
+            "borderRadius": "sm",
+            "border": "subtle",
+            "aspect": "square",
+            "fit": "contain"
+          },
+          "cells": [
+            {
+              "value": "$328",
+              "emphasis": true,
+              "tone": "success"
+            },
+            {
+              "value": "In stock",
+              "emphasis": false,
+              "tone": "success"
+            },
+            {
+              "value": "Free",
+              "subvalue": "Prime 2-day",
+              "emphasis": false
+            }
+          ],
+          "actions": []
+        },
+        {
+          "id": "bestbuy",
+          "label": "Best Buy",
+          "leadingImage": {
+            "src": null,
+            "query": "Best Buy logo",
+            "alt": "Best Buy",
+            "borderRadius": "sm",
+            "border": "subtle",
+            "aspect": "square",
+            "fit": "contain"
+          },
+          "cells": [
+            {
+              "value": "$349",
+              "emphasis": false
+            },
+            {
+              "value": "In stock",
+              "emphasis": false,
+              "tone": "success"
+            },
+            {
+              "value": "Free",
+              "subvalue": "Store pickup",
+              "emphasis": false
+            }
+          ],
+          "actions": []
+        },
+        {
+          "id": "target",
+          "label": "Target",
+          "leadingImage": {
+            "src": null,
+            "query": "Target logo",
+            "alt": "Target",
+            "borderRadius": "sm",
+            "border": "subtle",
+            "aspect": "square",
+            "fit": "contain"
+          },
+          "cells": [
+            {
+              "value": "$349.99",
+              "emphasis": false
+            },
+            {
+              "value": "Limited",
+              "emphasis": false,
+              "tone": "warning"
+            },
+            {
+              "value": "$5.99",
+              "emphasis": false
+            }
+          ],
+          "actions": []
+        },
+        {
+          "id": "bhphoto",
+          "label": "B&H Photo",
+          "leadingImage": {
+            "src": null,
+            "query": "B&H Photo Video logo",
+            "alt": "B&H Photo",
+            "borderRadius": "sm",
+            "border": "subtle",
+            "aspect": "square",
+            "fit": "contain"
+          },
+          "cells": [
+            {
+              "value": "$349",
+              "emphasis": false
+            },
+            {
+              "value": "In stock",
+              "emphasis": false,
+              "tone": "success"
+            },
+            {
+              "value": "Free",
+              "subvalue": "3-5 days",
+              "emphasis": false
+            }
+          ],
+          "actions": []
+        },
+        {
+          "id": "sony",
+          "label": "Sony Direct",
+          "leadingImage": {
+            "src": null,
+            "query": "Sony logo",
+            "alt": "Sony",
+            "borderRadius": "sm",
+            "border": "subtle",
+            "aspect": "square",
+            "fit": "contain"
+          },
+          "cells": [
+            {
+              "value": "$399",
+              "emphasis": false
+            },
+            {
+              "value": "In stock",
+              "emphasis": false,
+              "tone": "success"
+            },
+            {
+              "value": "Free",
+              "subvalue": "2-day",
+              "emphasis": false
+            }
+          ],
+          "actions": []
+        }
+      ],
+      "footerChips": [
+        {
+          "label": "Prices verified 3 min ago",
+          "tone": "neutral"
+        },
+        {
+          "label": "US retailers",
+          "tone": "neutral"
+        }
+      ],
+      "footnote": "Amazon's price reflects a non-coupon everyday discount. Best Buy price-matches Amazon if asked at checkout."
+    }
+  ],
+  "transitionTargets": [],
+  "transitionHistory": [],
+  "metadata": {}
+}

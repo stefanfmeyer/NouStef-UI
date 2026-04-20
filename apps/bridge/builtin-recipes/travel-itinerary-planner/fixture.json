@@ -1,0 +1,398 @@
+{
+  "kind": "recipe_template_state",
+  "schemaVersion": "recipe_template_state/v1",
+  "templateId": "travel-itinerary-planner",
+  "title": "Tokyo \u2014 4 days, late April",
+  "summary": "First-time Tokyo trip, Apr 24 \u2013 Apr 28. Days paced gently with breathing room; cherry blossoms should still be hanging on in Shinjuku Gyoen.",
+  "sections": [
+    {
+      "slotId": "trip-tabs",
+      "kind": "tabs",
+      "title": "Trip",
+      "tabs": [
+        {
+          "id": "itinerary",
+          "label": "Itinerary",
+          "badge": "12"
+        },
+        {
+          "id": "bookings",
+          "label": "Bookings",
+          "badge": "4"
+        },
+        {
+          "id": "packing",
+          "label": "Packing",
+          "badge": "15"
+        }
+      ],
+      "activeTabId": "itinerary",
+      "panes": {
+        "itinerary": [
+          {
+            "slotId": "trip-tabs.itinerary.timeline",
+            "kind": "timeline",
+            "title": "Day-by-day",
+            "items": [
+              {
+                "id": "d1-arrive",
+                "title": "Arrive Haneda + check-in",
+                "time": "Thu Apr 24 \u00b7 3:40 PM",
+                "summary": "Land at HND, Keikyu line to Shinjuku hotel, drop bags.",
+                "chips": [
+                  {
+                    "label": "Day 1",
+                    "tone": "accent"
+                  }
+                ],
+                "actions": []
+              },
+              {
+                "id": "d1-dinner",
+                "title": "Omoide Yokocho yakitori crawl",
+                "time": "Thu Apr 24 \u00b7 7:30 PM",
+                "summary": "Short walk from hotel; 3-4 stall hop.",
+                "chips": [
+                  {
+                    "label": "Dinner",
+                    "tone": "neutral"
+                  }
+                ],
+                "actions": []
+              },
+              {
+                "id": "d2-breakfast",
+                "title": "Shinjuku Gyoen morning walk + konbini breakfast",
+                "time": "Fri Apr 25 \u00b7 8:00 AM",
+                "summary": "Cherry blossoms should still be holding; gates open 9am but exercise path accessible earlier.",
+                "chips": [
+                  {
+                    "label": "Day 2",
+                    "tone": "accent"
+                  }
+                ],
+                "actions": []
+              },
+              {
+                "id": "d2-tsukiji",
+                "title": "Tsukiji Outer Market",
+                "time": "Fri Apr 25 \u00b7 11:00 AM",
+                "summary": "Tamago, uni, knife shops.",
+                "chips": [],
+                "actions": []
+              },
+              {
+                "id": "d2-teamlab",
+                "title": "teamLab Planets",
+                "time": "Fri Apr 25 \u00b7 3:00 PM",
+                "summary": "Timed entry \u2014 booked for 3pm.",
+                "chips": [
+                  {
+                    "label": "Booked",
+                    "tone": "success"
+                  }
+                ],
+                "actions": []
+              },
+              {
+                "id": "d3-harajuku",
+                "title": "Harajuku + Meiji Jingu",
+                "time": "Sat Apr 26 \u00b7 9:30 AM",
+                "summary": "Shrine first before crowds, then Takeshita-dori.",
+                "chips": [
+                  {
+                    "label": "Day 3",
+                    "tone": "accent"
+                  }
+                ],
+                "actions": []
+              },
+              {
+                "id": "d3-shibuya",
+                "title": "Shibuya Sky sunset slot",
+                "time": "Sat Apr 26 \u00b7 5:30 PM",
+                "summary": "Sunset view of Tokyo skyline; arrive 20min early.",
+                "chips": [
+                  {
+                    "label": "Booked",
+                    "tone": "success"
+                  }
+                ],
+                "actions": []
+              },
+              {
+                "id": "d3-dinner",
+                "title": "Dinner: Narisawa",
+                "time": "Sat Apr 26 \u00b7 8:00 PM",
+                "summary": "Innovative satoyama tasting menu \u2014 2 Michelin.",
+                "chips": [
+                  {
+                    "label": "Reservation",
+                    "tone": "success"
+                  }
+                ],
+                "actions": []
+              },
+              {
+                "id": "d4-dayhike",
+                "title": "Day trip: Kamakura",
+                "time": "Sun Apr 27 \u00b7 8:00 AM",
+                "summary": "Daibutsu, bamboo forest, beach walk. JR Yokosuka line from Tokyo Station.",
+                "chips": [
+                  {
+                    "label": "Day 4",
+                    "tone": "accent"
+                  }
+                ],
+                "actions": []
+              },
+              {
+                "id": "d4-return",
+                "title": "Return to Tokyo + rest",
+                "time": "Sun Apr 27 \u00b7 6:00 PM",
+                "summary": "Relax at hotel, easy ramen dinner.",
+                "chips": [],
+                "actions": []
+              },
+              {
+                "id": "d5-breakfast",
+                "title": "Last breakfast + pack",
+                "time": "Mon Apr 28 \u00b7 9:00 AM",
+                "summary": "Cafe Kitsune in Aoyama.",
+                "chips": [
+                  {
+                    "label": "Day 5",
+                    "tone": "accent"
+                  }
+                ],
+                "actions": []
+              },
+              {
+                "id": "d5-depart",
+                "title": "Depart Haneda",
+                "time": "Mon Apr 28 \u00b7 2:20 PM",
+                "summary": "Keikyu line from Shinagawa, arrive airport 11:30am.",
+                "chips": [
+                  {
+                    "label": "Flight",
+                    "tone": "warning"
+                  }
+                ],
+                "actions": []
+              }
+            ]
+          }
+        ],
+        "bookings": [
+          {
+            "slotId": "trip-tabs.bookings.cards",
+            "kind": "card-grid",
+            "title": "Reservations",
+            "columns": 2,
+            "cards": [
+              {
+                "id": "b-flight-out",
+                "title": "ANA 107 \u2014 SFO \u2192 HND",
+                "subtitle": "Wed Apr 23, 1:00 AM \u00b7 10h 50m",
+                "price": "Confirmed",
+                "image": {
+                  "src": null,
+                  "query": "ANA All Nippon Airways 787 aircraft",
+                  "alt": "ANA 787",
+                  "borderRadius": "md",
+                  "border": "none",
+                  "aspect": "video",
+                  "fit": "cover"
+                },
+                "chips": [
+                  {
+                    "label": "Economy",
+                    "tone": "neutral"
+                  }
+                ],
+                "bullets": [
+                  "Seat 31K window",
+                  "Vegetarian meal requested"
+                ],
+                "actions": []
+              },
+              {
+                "id": "b-hotel",
+                "title": "Shibuya Stream Excel Hotel Tokyu",
+                "subtitle": "Apr 24 \u2013 Apr 28 \u00b7 4 nights",
+                "price": "\u00a5152,400",
+                "image": {
+                  "src": null,
+                  "query": "Shibuya Stream Excel Hotel Tokyu Tokyo",
+                  "alt": "Shibuya Stream Excel Hotel",
+                  "borderRadius": "md",
+                  "border": "none",
+                  "aspect": "video",
+                  "fit": "cover"
+                },
+                "chips": [
+                  {
+                    "label": "Paid",
+                    "tone": "success"
+                  }
+                ],
+                "bullets": [
+                  "King non-smoking",
+                  "Direct station access"
+                ],
+                "actions": []
+              },
+              {
+                "id": "b-teamlab",
+                "title": "teamLab Planets \u2014 timed entry",
+                "subtitle": "Fri Apr 25 \u00b7 3:00 PM slot",
+                "price": "\u00a53,800 x 2",
+                "image": {
+                  "src": null,
+                  "query": "teamLab Planets Tokyo art exhibit",
+                  "alt": "teamLab Planets",
+                  "borderRadius": "md",
+                  "border": "none",
+                  "aspect": "video",
+                  "fit": "cover"
+                },
+                "chips": [
+                  {
+                    "label": "Booked",
+                    "tone": "success"
+                  }
+                ],
+                "bullets": [
+                  "Bring shorts/knee socks \u2014 water rooms",
+                  "Allow 2 hours"
+                ],
+                "actions": []
+              },
+              {
+                "id": "b-flight-return",
+                "title": "ANA 108 \u2014 HND \u2192 SFO",
+                "subtitle": "Mon Apr 28, 2:20 PM \u00b7 9h 45m",
+                "price": "Confirmed",
+                "image": {
+                  "src": null,
+                  "query": "ANA All Nippon Airways 787 aircraft",
+                  "alt": "ANA 787",
+                  "borderRadius": "md",
+                  "border": "none",
+                  "aspect": "video",
+                  "fit": "cover"
+                },
+                "chips": [
+                  {
+                    "label": "Economy",
+                    "tone": "neutral"
+                  }
+                ],
+                "bullets": [
+                  "Seat 42A aisle"
+                ],
+                "actions": []
+              }
+            ]
+          }
+        ],
+        "packing": [
+          {
+            "slotId": "trip-tabs.packing.checklist",
+            "kind": "checklist",
+            "title": "Packing",
+            "prerequisites": [
+              "Passport expires >6 months out",
+              "ESTA / eligible visa-free entry confirmed"
+            ],
+            "steps": [
+              {
+                "id": "p-passport",
+                "label": "Passport + 2 copies",
+                "checked": true
+              },
+              {
+                "id": "p-yen",
+                "label": "\u00a520,000 cash for small vendors",
+                "checked": true
+              },
+              {
+                "id": "p-suica",
+                "label": "Welcome Suica or Pasmo card",
+                "checked": false
+              },
+              {
+                "id": "p-jacket",
+                "label": "Light rain jacket",
+                "detail": "April in Tokyo averages 15\u00b0C with afternoon showers",
+                "checked": false
+              },
+              {
+                "id": "p-layers",
+                "label": "Layered tops (5)",
+                "checked": false
+              },
+              {
+                "id": "p-pants",
+                "label": "2 pairs pants + 1 nicer for Narisawa",
+                "checked": false
+              },
+              {
+                "id": "p-walking",
+                "label": "Broken-in walking shoes",
+                "checked": false
+              },
+              {
+                "id": "p-adapter",
+                "label": "Type A/B plug adapter",
+                "detail": "Japan uses Type A; same as US but 100V",
+                "checked": false
+              },
+              {
+                "id": "p-umbrella",
+                "label": "Compact umbrella",
+                "checked": false
+              },
+              {
+                "id": "p-charger",
+                "label": "Phone charger + power bank",
+                "checked": false
+              },
+              {
+                "id": "p-meds",
+                "label": "Personal meds + allergy",
+                "detail": "Bring copies of prescriptions",
+                "checked": false
+              },
+              {
+                "id": "p-knee-socks",
+                "label": "Knee socks for teamLab",
+                "checked": false
+              },
+              {
+                "id": "p-small-towel",
+                "label": "Small hand towel",
+                "detail": "Public bathrooms often don't have dryers or towels",
+                "checked": false
+              },
+              {
+                "id": "p-pocket-wifi",
+                "label": "Confirm pocket wifi pickup at HND",
+                "checked": false
+              },
+              {
+                "id": "p-insurance",
+                "label": "Travel insurance policy number",
+                "checked": false
+              }
+            ],
+            "actions": []
+          }
+        ]
+      }
+    }
+  ],
+  "transitionTargets": [],
+  "transitionHistory": [],
+  "metadata": {}
+}

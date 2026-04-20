@@ -1,0 +1,62 @@
+{
+  "id": "event-planner",
+  "name": "Event Planner",
+  "useCase": "Plan an event across venues, guests, checklist, itinerary, notes, and links.",
+  "enabled": true,
+  "selectionSignals": [
+    "event planner",
+    "venue and guests",
+    "event checklist",
+    "plan an event",
+    "birthday party",
+    "plan a dinner",
+    "plan a wedding",
+    "party planning",
+    "plan an offsite",
+    "guest list",
+    "event itinerary"
+  ],
+  "slots": [
+    { "id": "event-tabs", "kind": "tabs", "required": true }
+  ],
+  "allowedUpdateOps": ["set_header", "set_active_tab", "upsert_cards", "upsert_groups", "upsert_timeline_items", "append_note_lines", "remove_items"],
+  "actions": {
+    "add-event-guest": {
+      "id": "add-event-guest",
+      "label": "Add guest",
+      "kind": "bridge",
+      "intent": "primary",
+      "visibility": { "requiresSelection": "none", "whenBuildReady": true },
+      "bridge": { "handler": "add_event_guest", "payload": {} },
+      "metadata": {}
+    },
+    "toggle-template-checklist": {
+      "id": "toggle-template-checklist",
+      "label": "Toggle checklist item",
+      "kind": "bridge",
+      "intent": "neutral",
+      "visibility": { "requiresSelection": "single", "whenBuildReady": true },
+      "bridge": { "handler": "toggle_template_checklist", "payload": {} },
+      "metadata": {}
+    },
+    "append-template-note": {
+      "id": "append-template-note",
+      "label": "Add note",
+      "kind": "bridge",
+      "intent": "neutral",
+      "visibility": { "requiresSelection": "none", "whenBuildReady": true },
+      "bridge": { "handler": "append_template_note", "payload": {} },
+      "metadata": {}
+    },
+    "switch-template": {
+      "id": "switch-template",
+      "label": "Switch template",
+      "kind": "bridge",
+      "intent": "neutral",
+      "visibility": { "requiresSelection": "single", "whenBuildReady": true },
+      "bridge": { "handler": "switch_template", "payload": {} },
+      "metadata": {}
+    }
+  },
+  "transitions": []
+}

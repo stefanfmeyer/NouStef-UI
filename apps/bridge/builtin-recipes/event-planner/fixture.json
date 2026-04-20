@@ -1,0 +1,422 @@
+{
+  "kind": "recipe_template_state",
+  "schemaVersion": "recipe_template_state/v1",
+  "templateId": "event-planner",
+  "title": "Dana's 40th birthday dinner \u00b7 30 guests \u00b7 Sat May 24",
+  "summary": "Private-room dinner for 30 in the Mission. 3 venue candidates shortlisted. 22 RSVPs in so far; final count needed by May 10.",
+  "sections": [
+    {
+      "slotId": "event-tabs",
+      "kind": "tabs",
+      "title": "Event",
+      "tabs": [
+        {
+          "id": "venue",
+          "label": "Venue",
+          "badge": "3"
+        },
+        {
+          "id": "guests",
+          "label": "Guests",
+          "badge": "30"
+        },
+        {
+          "id": "checklist",
+          "label": "Checklist",
+          "badge": "12"
+        },
+        {
+          "id": "itinerary",
+          "label": "Itinerary"
+        }
+      ],
+      "activeTabId": "venue",
+      "panes": {
+        "venue": [
+          {
+            "slotId": "event-tabs.venue.cards",
+            "kind": "card-grid",
+            "title": "Venue options",
+            "columns": 2,
+            "cards": [
+              {
+                "id": "v-foreign-cinema",
+                "title": "Foreign Cinema \u2014 private back room",
+                "subtitle": "Mission \u00b7 private dining \u00b7 $$-$$$",
+                "price": "$3,200 food min",
+                "image": {
+                  "src": null,
+                  "query": "Foreign Cinema San Francisco courtyard",
+                  "alt": "Foreign Cinema courtyard",
+                  "borderRadius": "md",
+                  "border": "none",
+                  "aspect": "video",
+                  "fit": "cover"
+                },
+                "chips": [
+                  {
+                    "label": "Top pick",
+                    "tone": "success"
+                  },
+                  {
+                    "label": "Capacity 32",
+                    "tone": "neutral"
+                  }
+                ],
+                "bullets": [
+                  "Outdoor courtyard with projection screen",
+                  "Californian menu, strong vegetarian options",
+                  "May 24 still available as of Apr 16"
+                ],
+                "actions": []
+              },
+              {
+                "id": "v-trick-dog",
+                "title": "Trick Dog \u2014 loft",
+                "subtitle": "Mission \u00b7 cocktail bar \u00b7 $$$",
+                "price": "$2,800 bev min",
+                "image": {
+                  "src": null,
+                  "query": "Trick Dog bar San Francisco loft",
+                  "alt": "Trick Dog loft",
+                  "borderRadius": "md",
+                  "border": "none",
+                  "aspect": "video",
+                  "fit": "cover"
+                },
+                "chips": [
+                  {
+                    "label": "Cocktail-forward",
+                    "tone": "accent"
+                  }
+                ],
+                "bullets": [
+                  "Separate loft space",
+                  "Bar food menu, not a sit-down dinner",
+                  "Capacity 35 standing, 20 seated"
+                ],
+                "actions": []
+              },
+              {
+                "id": "v-beretta",
+                "title": "Beretta \u2014 mezzanine",
+                "subtitle": "Mission \u00b7 Italian \u00b7 $$",
+                "price": "$1,800 food min",
+                "image": {
+                  "src": null,
+                  "query": "Beretta restaurant Mission San Francisco",
+                  "alt": "Beretta",
+                  "borderRadius": "md",
+                  "border": "none",
+                  "aspect": "video",
+                  "fit": "cover"
+                },
+                "chips": [
+                  {
+                    "label": "Budget",
+                    "tone": "success"
+                  },
+                  {
+                    "label": "Capacity 30",
+                    "tone": "neutral"
+                  }
+                ],
+                "bullets": [
+                  "Neighborhood favorite, lively vibe",
+                  "Family-style menu options",
+                  "Shared space \u2014 some crowd noise"
+                ],
+                "actions": []
+              }
+            ]
+          }
+        ],
+        "guests": [
+          {
+            "slotId": "event-tabs.guests.list",
+            "kind": "grouped-list",
+            "title": "Guest list",
+            "groups": [
+              {
+                "id": "yes",
+                "label": "Yes (22)",
+                "tone": "success",
+                "items": [
+                  {
+                    "id": "g-dana",
+                    "title": "Dana Park",
+                    "subtitle": "Host",
+                    "meta": "no restrictions",
+                    "chips": [
+                      {
+                        "label": "VIP",
+                        "tone": "accent"
+                      }
+                    ],
+                    "actions": []
+                  },
+                  {
+                    "id": "g-amir",
+                    "title": "Amir Singh",
+                    "subtitle": "+1 (Priya)",
+                    "meta": "vegetarian",
+                    "chips": [],
+                    "actions": []
+                  },
+                  {
+                    "id": "g-sophia",
+                    "title": "Sophia Reyes",
+                    "subtitle": "+1",
+                    "meta": "no restrictions",
+                    "chips": [],
+                    "actions": []
+                  },
+                  {
+                    "id": "g-jordan",
+                    "title": "Jordan Lee",
+                    "subtitle": "Solo",
+                    "meta": "gluten-free",
+                    "chips": [
+                      {
+                        "label": "GF",
+                        "tone": "warning"
+                      }
+                    ],
+                    "actions": []
+                  },
+                  {
+                    "id": "g-whitney",
+                    "title": "Whitney Brooks",
+                    "subtitle": "+1 (Marcus)",
+                    "meta": "no restrictions",
+                    "chips": [],
+                    "actions": []
+                  },
+                  {
+                    "id": "g-chen",
+                    "title": "Chen Wu",
+                    "subtitle": "Solo",
+                    "meta": "no restrictions",
+                    "chips": [],
+                    "actions": []
+                  }
+                ]
+              },
+              {
+                "id": "pending",
+                "label": "Pending (6)",
+                "tone": "warning",
+                "items": [
+                  {
+                    "id": "g-kim",
+                    "title": "Kim Alvarez",
+                    "subtitle": "Solo (traveling)",
+                    "meta": null,
+                    "chips": [
+                      {
+                        "label": "Ping Apr 22",
+                        "tone": "warning"
+                      }
+                    ],
+                    "actions": []
+                  },
+                  {
+                    "id": "g-sam",
+                    "title": "Sam Hollis",
+                    "subtitle": "+1",
+                    "meta": null,
+                    "chips": [],
+                    "actions": []
+                  },
+                  {
+                    "id": "g-rachel",
+                    "title": "Rachel Moon",
+                    "subtitle": "Solo",
+                    "meta": null,
+                    "chips": [],
+                    "actions": []
+                  }
+                ]
+              },
+              {
+                "id": "no",
+                "label": "No (2)",
+                "tone": "neutral",
+                "items": [
+                  {
+                    "id": "g-mia",
+                    "title": "Mia Franklin",
+                    "subtitle": "out of town",
+                    "meta": null,
+                    "chips": [],
+                    "actions": []
+                  },
+                  {
+                    "id": "g-tom",
+                    "title": "Tom Yao",
+                    "subtitle": "family obligation",
+                    "meta": null,
+                    "chips": [],
+                    "actions": []
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "checklist": [
+          {
+            "slotId": "event-tabs.checklist.checklist",
+            "kind": "checklist",
+            "title": "Prep tasks",
+            "prerequisites": [
+              "Venue booked and deposit paid",
+              "Guest list finalized"
+            ],
+            "steps": [
+              {
+                "id": "c-venue-deposit",
+                "label": "Pay venue deposit",
+                "checked": true
+              },
+              {
+                "id": "c-send-invites",
+                "label": "Send formal invite with menu",
+                "detail": "email + Paperless Post",
+                "checked": true
+              },
+              {
+                "id": "c-cake-order",
+                "label": "Order cake",
+                "detail": "Mission Pie \u2014 30-person tiramisu",
+                "checked": true
+              },
+              {
+                "id": "c-menu-confirm",
+                "label": "Confirm menu with chef",
+                "checked": false
+              },
+              {
+                "id": "c-music",
+                "label": "Build playlist (2hr)",
+                "checked": false
+              },
+              {
+                "id": "c-speeches",
+                "label": "Coordinate with 3 speakers",
+                "detail": "Amir, Sophia, Kim",
+                "checked": false
+              },
+              {
+                "id": "c-gift-collect",
+                "label": "Collect group gift contributions",
+                "checked": false
+              },
+              {
+                "id": "c-gift-pickup",
+                "label": "Pick up group gift",
+                "checked": false
+              },
+              {
+                "id": "c-final-headcount",
+                "label": "Lock final headcount (due May 10)",
+                "checked": false
+              },
+              {
+                "id": "c-name-cards",
+                "label": "Print table name cards",
+                "checked": false
+              },
+              {
+                "id": "c-photos",
+                "label": "Ask Chen to take photos",
+                "checked": false
+              },
+              {
+                "id": "c-day-of-runbook",
+                "label": "Send day-of runbook to Amir (co-host)",
+                "checked": false
+              }
+            ],
+            "actions": []
+          }
+        ],
+        "itinerary": [
+          {
+            "slotId": "event-tabs.itinerary.timeline",
+            "kind": "timeline",
+            "title": "Day-of",
+            "items": [
+              {
+                "id": "i-setup",
+                "title": "Arrive + setup (Amir + Sophia)",
+                "time": "Sat May 24 \u00b7 5:30 PM",
+                "summary": "Name cards, check AV, hand off cake.",
+                "chips": [
+                  {
+                    "label": "Pre-event",
+                    "tone": "neutral"
+                  }
+                ],
+                "actions": []
+              },
+              {
+                "id": "i-welcome",
+                "title": "Guests arrive \u00b7 welcome drinks",
+                "time": "Sat May 24 \u00b7 7:00 PM",
+                "summary": "Champagne and mocktails in the courtyard.",
+                "chips": [],
+                "actions": []
+              },
+              {
+                "id": "i-seated",
+                "title": "Seated dinner",
+                "time": "Sat May 24 \u00b7 7:45 PM",
+                "summary": "Family-style service.",
+                "chips": [],
+                "actions": []
+              },
+              {
+                "id": "i-toasts",
+                "title": "Toasts",
+                "time": "Sat May 24 \u00b7 9:00 PM",
+                "summary": "Amir, Sophia, Kim \u2014 3 min each.",
+                "chips": [
+                  {
+                    "label": "Speakers",
+                    "tone": "accent"
+                  }
+                ],
+                "actions": []
+              },
+              {
+                "id": "i-cake",
+                "title": "Cake + group gift",
+                "time": "Sat May 24 \u00b7 9:30 PM",
+                "summary": "Tiramisu + framed photo collage.",
+                "chips": [],
+                "actions": []
+              },
+              {
+                "id": "i-after",
+                "title": "Late hang (bar downstairs)",
+                "time": "Sat May 24 \u00b7 10:30 PM",
+                "summary": "Optional \u2014 courtyard closes at 10.",
+                "chips": [
+                  {
+                    "label": "Optional",
+                    "tone": "neutral"
+                  }
+                ],
+                "actions": []
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "transitionTargets": [],
+  "transitionHistory": [],
+  "metadata": {}
+}

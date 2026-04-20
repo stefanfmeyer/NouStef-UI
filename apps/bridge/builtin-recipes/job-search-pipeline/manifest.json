@@ -1,0 +1,11 @@
+{
+  "id": "job-search-pipeline",
+  "version": "1.0.0",
+  "name": "Job Listings",
+  "category": "general",
+  "description": "Find and compare job postings with a kanban pipeline, detail panel, and application trends chart.",
+  "author": "Hermes",
+  "source": "builtin",
+  "enabled": true,
+  "protocolVersion": "1.0.0"
+}

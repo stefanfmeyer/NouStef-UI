@@ -1,0 +1,11 @@
+{
+  "id": "research-notebook",
+  "version": "1.0.0",
+  "name": "Research Notebook",
+  "category": "research",
+  "description": "Gather sources, extracted key points, follow-ups, and free-form notes in a tabbed research layout.",
+  "author": "Hermes",
+  "source": "builtin",
+  "enabled": true,
+  "protocolVersion": "1.0.0"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "event-planner",
+  "version": "1.0.0",
+  "name": "Event Planner",
+  "category": "operations",
+  "description": "Plan an event across venues, guests, checklist, itinerary, and notes in a tabbed layout.",
+  "author": "Hermes",
+  "source": "builtin",
+  "enabled": true,
+  "protocolVersion": "1.0.0"
+}

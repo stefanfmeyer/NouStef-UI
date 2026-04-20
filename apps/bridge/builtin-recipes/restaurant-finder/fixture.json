@@ -1,0 +1,95 @@
+{
+  "kind": "recipe_template_state",
+  "schemaVersion": "recipe_template_state/v1",
+  "templateId": "restaurant-finder",
+  "title": "Dinner in San Francisco — Friday 7pm",
+  "summary": "6 dinner options for 2 in SF, Friday 7pm. Weighted toward the Mission and Hayes Valley; a couple of special-occasion picks included.",
+  "sections": [
+    {
+      "slotId": "filters",
+      "kind": "filter-strip",
+      "title": "Filters",
+      "filters": [
+        { "label": "Tonight · 7:00 PM", "tone": "accent" },
+        { "label": "Party of 2", "tone": "neutral" },
+        { "label": "San Francisco", "tone": "neutral" },
+        { "label": "Any cuisine", "tone": "neutral" },
+        { "label": "$$-$$$", "tone": "neutral" }
+      ],
+      "sortLabel": "Sorted by neighborhood"
+    },
+    {
+      "slotId": "results",
+      "kind": "split",
+      "title": "Results",
+      "ratio": "list-detail",
+      "left": [
+        {
+          "slotId": "results.list",
+          "kind": "grouped-list",
+          "title": "By neighborhood",
+          "groups": [
+            {
+              "id": "mission",
+              "label": "Mission",
+              "tone": "neutral",
+              "items": [
+                { "id": "lolo", "title": "Lolo", "subtitle": "Cal-Mex · $$ · lively", "meta": "4.6", "chips": [{ "label": "Walk-in friendly", "tone": "success" }], "actions": [] },
+                { "id": "californios", "title": "Californios", "subtitle": "Tasting menu · $$$$ · special occasion", "meta": "4.9", "chips": [{ "label": "Book ahead", "tone": "warning" }], "actions": [] },
+                { "id": "al-carajo", "title": "Al Carajo", "subtitle": "Spanish tapas · $$ · casual", "meta": "4.5", "chips": [], "actions": [] }
+              ]
+            },
+            {
+              "id": "hayes",
+              "label": "Hayes Valley",
+              "tone": "success",
+              "items": [
+                { "id": "rt-rotisserie", "title": "RT Rotisserie", "subtitle": "Rotisserie · $ · fast casual", "meta": "4.4", "chips": [{ "label": "Quick", "tone": "neutral" }], "actions": [] },
+                { "id": "rich-table", "title": "Rich Table", "subtitle": "New American · $$$ · neighborhood classic", "meta": "4.7", "chips": [{ "label": "Top pick", "tone": "success" }], "actions": [] }
+              ]
+            },
+            {
+              "id": "fidi",
+              "label": "Financial District",
+              "tone": "neutral",
+              "items": [
+                { "id": "kusakabe", "title": "Kusakabe", "subtitle": "Omakase · $$$$", "meta": "4.8", "chips": [{ "label": "Reservation only", "tone": "warning" }], "actions": [] }
+              ]
+            }
+          ]
+        }
+      ],
+      "right": [
+        {
+          "slotId": "results.detail",
+          "kind": "detail-panel",
+          "title": "Rich Table",
+          "eyebrow": "Hayes Valley · New American",
+          "summary": "Seasonal California menu from a husband-and-wife chef team. Sardine chips and porcini doughnuts are the signatures.",
+          "chips": [
+            { "label": "$$$", "tone": "neutral" },
+            { "label": "Top pick", "tone": "success" },
+            { "label": "Book ahead", "tone": "warning" }
+          ],
+          "fields": [
+            { "label": "Hours tonight", "value": "5:30 PM – 10:00 PM", "chips": [], "bullets": [], "links": [], "fullWidth": false },
+            { "label": "Address", "value": "199 Gough St, San Francisco, CA 94102", "chips": [], "bullets": [], "links": [], "fullWidth": true },
+            { "label": "Cuisine", "value": "New American · seasonal", "chips": [], "bullets": ["Sardine chip", "Porcini doughnut", "House-made pasta"], "links": [], "fullWidth": true },
+            { "label": "Booking", "value": "Resy — 7pm requires a walk-in list, 8:30pm has availability", "chips": [{ "label": "Walk-in possible", "tone": "warning" }], "bullets": [], "links": [], "fullWidth": true }
+          ],
+          "actions": [],
+          "note": "Bar seating is first-come; arrive by 6:30pm for a reasonable wait."
+        },
+        {
+          "slotId": "results.detail.photo",
+          "kind": "image",
+          "title": "Rich Table interior",
+          "image": { "src": null, "query": "Rich Table restaurant San Francisco interior", "alt": "Rich Table dining room", "borderRadius": "md", "border": "none", "aspect": "video", "fit": "cover" }
+        }
+      ]
+    }
+  ],
+  "transitionTargets": [],
+  "transitionHistory": [],
+  "metadata": {}
+}

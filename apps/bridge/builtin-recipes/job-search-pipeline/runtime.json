@@ -1,0 +1,63 @@
+{
+  "id": "job-search-pipeline",
+  "name": "Job Listings",
+  "useCase": "Find and compare job postings with salary ranges, descriptions, and application links.",
+  "enabled": true,
+  "selectionSignals": [
+    "job listings",
+    "job postings",
+    "job search",
+    "career opportunities",
+    "open positions",
+    "looking for a job",
+    "find me a job",
+    "job board",
+    "apply for jobs",
+    "job pipeline",
+    "interviewing for"
+  ],
+  "slots": [
+    { "id": "stats", "kind": "stats" },
+    { "id": "pipeline", "kind": "split", "required": true }
+  ],
+  "allowedUpdateOps": ["set_header", "upsert_board_cards", "move_board_card", "set_detail", "append_note_lines"],
+  "actions": {
+    "move-job-stage": {
+      "id": "move-job-stage",
+      "label": "Update stage",
+      "kind": "bridge",
+      "intent": "primary",
+      "visibility": { "requiresSelection": "single", "whenBuildReady": true },
+      "bridge": { "handler": "move_template_card_stage", "payload": {} },
+      "metadata": {}
+    },
+    "run-interview-prep": {
+      "id": "run-interview-prep",
+      "label": "Interview prep",
+      "kind": "bridge",
+      "intent": "primary",
+      "visibility": { "requiresSelection": "single", "whenBuildReady": true },
+      "bridge": { "handler": "generate_interview_prep", "payload": {} },
+      "prompt": {
+        "promptTemplate": "Prepare targeted interview questions, key talking points, and research notes for the selected job posting.",
+        "includeInputs": ["selected_items", "original_prompt"],
+        "allowedMutations": [],
+        "outboundRequestsAllowed": true,
+        "expectedOutput": "assistant_only",
+        "timeoutMs": 90000,
+        "retryable": true
+      },
+      "metadata": {}
+    },
+    "append-template-note": {
+      "id": "append-template-note",
+      "label": "Add note",
+      "kind": "bridge",
+      "intent": "neutral",
+      "visibility": { "requiresSelection": "none", "whenBuildReady": true },
+      "bridge": { "handler": "append_template_note", "payload": {} },
+      "metadata": {}
+    }
+  },
+  "transitions": []
+}

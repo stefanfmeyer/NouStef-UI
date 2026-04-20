@@ -1,0 +1,11 @@
+{
+  "id": "shopping-shortlist",
+  "version": "1.0.0",
+  "name": "Shopping Results",
+  "category": "commerce",
+  "description": "Show a wide variety of products as tiled cards with photo, name, price, and key attributes.",
+  "author": "Hermes",
+  "source": "builtin",
+  "enabled": true,
+  "protocolVersion": "1.0.0"
+}

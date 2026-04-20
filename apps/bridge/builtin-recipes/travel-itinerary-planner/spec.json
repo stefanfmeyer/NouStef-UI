@@ -1,0 +1,57 @@
+{
+  "purpose": "Give the user a single place to organize an entire trip: day-by-day itinerary, bookings, packing list, and notes.",
+  "primaryUserGoal": "Plan and reference an upcoming trip without bouncing between apps.",
+  "whenHermesShouldChoose": "User asks to plan a trip, build a day-by-day itinerary, pack for a destination, or consolidate bookings for an upcoming trip.",
+  "goodFor": [
+    "Multi-day trip planning",
+    "Consolidating hotel/flight/activity bookings",
+    "Packing lists tailored to climate and activities"
+  ],
+  "supports": [
+    "Tabs: Itinerary (timeline), Bookings (card-grid with images), Packing (checklist), Notes",
+    "Per-day timeline items with time and chips",
+    "Booking cards with hotel/flight images"
+  ],
+  "supportedTabs": ["Itinerary", "Bookings", "Packing", "Notes"],
+  "idealDataShape": [
+    "Destination + date range",
+    "Day-by-day timeline of activities with times",
+    "Bookings: flights, hotels, activities each with an image query",
+    "Packing checklist: 10-25 items",
+    "Free-form notes"
+  ],
+  "requiredSections": ["tabs"],
+  "optionalSections": [],
+  "requiredActions": [],
+  "optionalActions": ["get-trip-details", "append-template-note"],
+  "populationInstructions": {
+    "summary": "Create a tabs section with 4 panes (Itinerary, Bookings, Packing, Notes). Itinerary uses timeline items per activity; Bookings uses a card-grid with image.query for hotel/flight; Packing uses checklist; Notes uses notes.",
+    "steps": [
+      "Parse destination, dates, purpose (leisure, business, family).",
+      "Build the Itinerary tab as timeline items — one per activity, labeled with day + time.",
+      "Build the Bookings tab as a card-grid with one card per reservation (flight, hotel, tours). Use image.query for photos.",
+      "Build the Packing tab as a checklist — 10-25 items tailored to climate and activities, no prerequisites needed.",
+      "Build the Notes tab for phrases, emergency numbers, visa reminders.",
+      "Set activeTabId to 'itinerary' initially."
+    ],
+    "guardrails": [
+      "Don't pack more than one timeline item per hour unless asked.",
+      "Never invent booking confirmation numbers.",
+      "Tailor packing to the actual destination climate, not generic lists."
+    ]
+  },
+  "updateRules": {
+    "patchPrefer": [
+      "Use upsert_timeline_items as activities are added or times change",
+      "Use upsert_cards to add newly-made bookings",
+      "Use set_active_tab when user switches focus",
+      "Use append_note_lines for saved links and reminders"
+    ],
+    "replaceTriggers": [
+      "User changes destination or dates",
+      "User wants to start fresh"
+    ],
+    "persistAcrossUpdates": ["Packing checklist", "Notes"],
+    "stableRegions": ["header"]
+  }
+}

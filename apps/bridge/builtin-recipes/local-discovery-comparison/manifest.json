@@ -1,0 +1,11 @@
+{
+  "id": "local-discovery-comparison",
+  "version": "1.0.0",
+  "name": "Local Discovery Comparison",
+  "category": "travel",
+  "description": "Compare nearby providers, venues, or local services with neighborhood groups and per-option detail.",
+  "author": "Hermes",
+  "source": "builtin",
+  "enabled": true,
+  "protocolVersion": "1.0.0"
+}

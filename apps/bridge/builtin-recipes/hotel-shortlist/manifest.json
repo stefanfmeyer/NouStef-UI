@@ -1,0 +1,11 @@
+{
+  "id": "hotel-shortlist",
+  "version": "1.0.0",
+  "name": "Hotel Shortlist",
+  "category": "travel",
+  "description": "Compare likely hotels for a destination and trip window with stats and a photo-forward card grid.",
+  "author": "Hermes",
+  "source": "builtin",
+  "enabled": true,
+  "protocolVersion": "1.0.0"
+}

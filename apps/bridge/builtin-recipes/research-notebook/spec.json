@@ -1,0 +1,55 @@
+{
+  "purpose": "Give the user a structured notebook for researching a topic — sources, extracted claims, follow-up questions, and free-form notes.",
+  "primaryUserGoal": "Build up an understanding of a topic with traceable sources and a running list of open questions.",
+  "whenHermesShouldChoose": "User asks to research a topic, explain why/how something works, or dig into a question that will plausibly need multiple sources.",
+  "goodFor": [
+    "Topic research ('why is the sky blue')",
+    "Literature reviews",
+    "Consolidating scattered reading into one view"
+  ],
+  "supports": [
+    "Tabs: Sources, Key points, Follow-ups, Notes",
+    "Grouped lists by source type or theme",
+    "Free-form notes per topic"
+  ],
+  "supportedTabs": ["Sources", "Key points", "Follow-ups", "Notes"],
+  "idealDataShape": [
+    "The research question",
+    "3-8 sources grouped by type (academic, web, video, book)",
+    "Extracted key points grouped thematically",
+    "Open questions to investigate next"
+  ],
+  "requiredSections": ["tabs"],
+  "optionalSections": [],
+  "requiredActions": [],
+  "optionalActions": ["run-followup", "append-template-note"],
+  "populationInstructions": {
+    "summary": "Create 4 tabs: Sources (grouped-list by source type), Key points (grouped-list by theme), Follow-ups (grouped-list by priority or theme), Notes. Keep per-item subtitles short and accurate.",
+    "steps": [
+      "State the research question clearly in the title/summary.",
+      "Sources tab: group by type (Academic papers, Web articles, Books, Videos) and show 3-8 sources total.",
+      "Key points tab: group claims by theme. Each item has a short title and a 1-sentence subtitle citing the source.",
+      "Follow-ups tab: group open questions (e.g., by urgency or sub-topic). Keep each question specific.",
+      "Notes tab: free-form for user's own observations.",
+      "Set activeTabId to 'sources' initially."
+    ],
+    "guardrails": [
+      "Every claim in Key points must cite which source it came from.",
+      "Don't fabricate paper titles or authors.",
+      "Keep follow-up questions answerable — avoid vague 'learn more'."
+    ]
+  },
+  "updateRules": {
+    "patchPrefer": [
+      "Use upsert_groups to add a new source or claim as research progresses",
+      "Use append_note_lines to capture a quick observation",
+      "Use set_active_tab when user switches focus"
+    ],
+    "replaceTriggers": [
+      "User changes the research question",
+      "User asks to start over"
+    ],
+    "persistAcrossUpdates": ["Notes", "user-added follow-up questions"],
+    "stableRegions": ["header"]
+  }
+}

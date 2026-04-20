@@ -1,0 +1,55 @@
+{
+  "purpose": "Help the user pick a restaurant fast, with neighborhood context, key chips (price, cuisine, vibe), and quick booking detail.",
+  "primaryUserGoal": "Decide where to eat tonight (or for a specific occasion) and see what's worth booking.",
+  "whenHermesShouldChoose": "User asks for restaurant recommendations, dinner options, where to eat, or a shortlist of places in a neighborhood.",
+  "goodFor": [
+    "Tonight's dinner in a specific city or neighborhood",
+    "Restaurant shortlists for a visiting friend",
+    "Comparing 4-8 dining options by price/vibe"
+  ],
+  "supports": [
+    "Filter chips for party size, time, cuisine, price",
+    "Grouped list of restaurants by neighborhood",
+    "Detail panel with hours, address, price chips, cuisine tags",
+    "Photo per restaurant (image.query)"
+  ],
+  "supportedTabs": ["Overview"],
+  "idealDataShape": [
+    "Filter context (date, time, party size, cuisine)",
+    "Neighborhood groups with 2-4 restaurants each",
+    "Per-restaurant details: hours, address, price, cuisine, booking availability"
+  ],
+  "requiredSections": ["filter-strip", "split"],
+  "optionalSections": [],
+  "requiredActions": [],
+  "optionalActions": ["append-template-note"],
+  "populationInstructions": {
+    "summary": "Start with filter chips (date/time/party size/cuisine/price). Group 5-7 restaurants by neighborhood on the left. Populate a detail-panel on the right for the initially selected restaurant with hours, address, cuisine, price tier, and a photo query.",
+    "steps": [
+      "Parse the user's implicit filters: city, neighborhood, cuisine, budget, time.",
+      "Emit filter chips so the user can see and refine them.",
+      "Group 5-7 restaurants by neighborhood; tone-code top picks with success.",
+      "Populate the detail-panel for the first restaurant with hours, price, address, and a photo image.query.",
+      "Keep per-item subtitle short (cuisine + price tier); put the full description in the detail panel.",
+      "Include an image.query for the detail-panel restaurant photo (e.g. '<restaurant name> interior')."
+    ],
+    "guardrails": [
+      "Don't make up hours or addresses — if unknown, say 'check website'.",
+      "Don't claim booking availability unless verified.",
+      "Keep to one cuisine-dense neighborhood per group."
+    ]
+  },
+  "updateRules": {
+    "patchPrefer": [
+      "Use set_filter_chips when the user refines cuisine/time/price",
+      "Use upsert_groups to add or swap restaurants in a neighborhood",
+      "Use set_detail when the user picks a different restaurant"
+    ],
+    "replaceTriggers": [
+      "User changes city entirely",
+      "User switches from dinner to a different meal context"
+    ],
+    "persistAcrossUpdates": ["filter chips selected by the user", "notes"],
+    "stableRegions": ["header"]
+  }
+}

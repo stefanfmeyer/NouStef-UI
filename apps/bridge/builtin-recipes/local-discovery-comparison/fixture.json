@@ -1,0 +1,87 @@
+{
+  "kind": "recipe_template_state",
+  "schemaVersion": "recipe_template_state/v1",
+  "templateId": "local-discovery-comparison",
+  "title": "Dog groomers near me — SF",
+  "summary": "5 dog groomers across the Mission and Noe Valley. Top pick is Wag Hotels for reliability; SFDog & Cat is the budget favorite.",
+  "sections": [
+    {
+      "slotId": "filters",
+      "kind": "filter-strip",
+      "title": "Filters",
+      "filters": [
+        { "label": "Dog groomers", "tone": "accent" },
+        { "label": "Within 2 miles", "tone": "neutral" },
+        { "label": "$-$$", "tone": "neutral" },
+        { "label": "Open Saturdays", "tone": "neutral" }
+      ],
+      "sortLabel": "Sorted by rating"
+    },
+    {
+      "slotId": "results",
+      "kind": "split",
+      "title": "Results",
+      "ratio": "list-detail",
+      "left": [
+        {
+          "slotId": "results.list",
+          "kind": "grouped-list",
+          "title": "By neighborhood",
+          "groups": [
+            {
+              "id": "mission",
+              "label": "Mission",
+              "tone": "success",
+              "items": [
+                { "id": "g-wag", "title": "Wag Hotels SF", "subtitle": "Full-service · $$ · 0.7 mi", "meta": "4.6", "chips": [{ "label": "Top pick", "tone": "success" }, { "label": "Open Sat", "tone": "accent" }], "actions": [] },
+                { "id": "g-pet-camp", "title": "Pet Camp Grooming", "subtitle": "Full-service · $$ · 1.1 mi", "meta": "4.5", "chips": [{ "label": "Open Sat", "tone": "accent" }], "actions": [] },
+                { "id": "g-sf-dog-cat", "title": "SFDog & Cat Grooming", "subtitle": "Walk-in friendly · $ · 1.3 mi", "meta": "4.4", "chips": [{ "label": "Budget", "tone": "success" }], "actions": [] }
+              ]
+            },
+            {
+              "id": "noe",
+              "label": "Noe Valley",
+              "tone": "neutral",
+              "items": [
+                { "id": "g-barkle-and-lulu", "title": "Barkle & Lulu", "subtitle": "Boutique · $$$ · 1.8 mi", "meta": "4.8", "chips": [{ "label": "Premium", "tone": "accent" }, { "label": "Book ahead", "tone": "warning" }], "actions": [] },
+                { "id": "g-little-paws", "title": "Little Paws Grooming", "subtitle": "Small-dog specialty · $$ · 2.0 mi", "meta": "4.7", "chips": [{ "label": "Small dogs", "tone": "neutral" }], "actions": [] }
+              ]
+            }
+          ]
+        }
+      ],
+      "right": [
+        {
+          "slotId": "results.detail",
+          "kind": "detail-panel",
+          "title": "Wag Hotels SF",
+          "eyebrow": "Mission · Full-service grooming + daycare",
+          "summary": "Large full-service groomer with bath, cut, nail, and add-on packages. Also runs a daycare, so booking can be tight on Fridays — weekdays before 11am are easiest.",
+          "chips": [
+            { "label": "Top pick", "tone": "success" },
+            { "label": "$$", "tone": "neutral" },
+            { "label": "0.7 mi", "tone": "neutral" },
+            { "label": "4.6 · 480 reviews", "tone": "accent" }
+          ],
+          "fields": [
+            { "label": "Hours", "value": "Mon-Fri 7am-7pm · Sat-Sun 8am-5pm", "chips": [{ "label": "Open today", "tone": "success" }], "bullets": [], "links": [], "fullWidth": true },
+            { "label": "Address", "value": "25 14th St, San Francisco, CA 94103", "chips": [], "bullets": [], "links": [], "fullWidth": true },
+            { "label": "Contact", "value": "(415) 701-5275 · wag-hotels.com", "chips": [], "bullets": [], "links": [], "fullWidth": true },
+            { "label": "Pricing", "value": "Bath from $55, full groom $75-$115 depending on size and coat", "chips": [{ "label": "Package discounts", "tone": "accent" }], "bullets": ["Small: $75", "Medium: $95", "Large / double-coated: $115"], "links": [], "fullWidth": true }
+          ],
+          "actions": [],
+          "note": "Tell them your dog's coat type when booking — cuts pricing surprises."
+        },
+        {
+          "slotId": "results.detail.photo",
+          "kind": "image",
+          "title": "Wag Hotels SF storefront",
+          "image": { "src": null, "query": "Wag Hotels San Francisco dog grooming storefront", "alt": "Wag Hotels San Francisco storefront", "borderRadius": "md", "border": "none", "aspect": "video", "fit": "cover" }
+        }
+      ]
+    }
+  ],
+  "transitionTargets": ["event-planner"],
+  "transitionHistory": [],
+  "metadata": {}
+}

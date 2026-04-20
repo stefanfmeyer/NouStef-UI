@@ -1,0 +1,281 @@
+{
+  "kind": "recipe_template_state",
+  "schemaVersion": "recipe_template_state/v1",
+  "templateId": "research-notebook",
+  "title": "Why is the sky blue?",
+  "summary": "Rayleigh scattering is the short answer, but the intuition gets richer when you account for why violet isn't dominant and why sunsets are red. 5 sources, 8 claims extracted.",
+  "sections": [
+    {
+      "slotId": "research-tabs",
+      "kind": "tabs",
+      "title": "Research",
+      "tabs": [
+        {
+          "id": "sources",
+          "label": "Sources",
+          "badge": "5"
+        },
+        {
+          "id": "keypoints",
+          "label": "Key points",
+          "badge": "8"
+        },
+        {
+          "id": "followups",
+          "label": "Follow-ups",
+          "badge": "4"
+        }
+      ],
+      "activeTabId": "sources",
+      "panes": {
+        "sources": [
+          {
+            "slotId": "research-tabs.sources.list",
+            "kind": "grouped-list",
+            "title": "By source type",
+            "groups": [
+              {
+                "id": "academic",
+                "label": "Academic",
+                "tone": "accent",
+                "items": [
+                  {
+                    "id": "s-rayleigh-1871",
+                    "title": "Rayleigh, 'On the light from the sky, its polarization and colour' (1871)",
+                    "subtitle": "Original Rayleigh scattering paper \u2014 Philosophical Magazine",
+                    "meta": "primary",
+                    "chips": [
+                      {
+                        "label": "Primary",
+                        "tone": "success"
+                      }
+                    ],
+                    "actions": []
+                  },
+                  {
+                    "id": "s-bohren",
+                    "title": "Bohren & Clothiaux, 'Fundamentals of Atmospheric Radiation' (2006)",
+                    "subtitle": "Chapter 2 covers molecular scattering intuition",
+                    "meta": "textbook",
+                    "chips": [],
+                    "actions": []
+                  }
+                ]
+              },
+              {
+                "id": "web",
+                "label": "Web articles",
+                "tone": "neutral",
+                "items": [
+                  {
+                    "id": "s-math-ucr",
+                    "title": "UCR Math: 'Why is the sky blue?'",
+                    "subtitle": "John Baez's physics FAQ \u2014 careful treatment of the violet question",
+                    "meta": "FAQ",
+                    "chips": [
+                      {
+                        "label": "Cited often",
+                        "tone": "success"
+                      }
+                    ],
+                    "actions": []
+                  },
+                  {
+                    "id": "s-nasa-spaceplace",
+                    "title": "NASA Space Place: 'Blue sky'",
+                    "subtitle": "Kid-friendly but accurate on the scattering mechanism",
+                    "meta": "explainer",
+                    "chips": [],
+                    "actions": []
+                  }
+                ]
+              },
+              {
+                "id": "video",
+                "label": "Video",
+                "tone": "neutral",
+                "items": [
+                  {
+                    "id": "s-minute-physics",
+                    "title": "MinutePhysics: 'Why is the sky blue?' (YouTube)",
+                    "subtitle": "4min animated explainer; sources in description",
+                    "meta": "video",
+                    "chips": [],
+                    "actions": []
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "keypoints": [
+          {
+            "slotId": "research-tabs.keypoints.list",
+            "kind": "grouped-list",
+            "title": "Extracted claims",
+            "groups": [
+              {
+                "id": "mechanism",
+                "label": "Scattering mechanism",
+                "tone": "accent",
+                "items": [
+                  {
+                    "id": "k-scattering",
+                    "title": "Shorter wavelengths scatter more",
+                    "subtitle": "Rayleigh: scattering intensity \u221d 1/\u03bb\u2074 \u2014 Rayleigh 1871",
+                    "meta": "Rayleigh 1871",
+                    "chips": [
+                      {
+                        "label": "Core",
+                        "tone": "success"
+                      }
+                    ],
+                    "actions": []
+                  },
+                  {
+                    "id": "k-molecules",
+                    "title": "Air molecules (N\u2082, O\u2082) do the scattering",
+                    "subtitle": "Individual molecules, not dust \u2014 Bohren & Clothiaux",
+                    "meta": "Bohren 2006",
+                    "chips": [],
+                    "actions": []
+                  },
+                  {
+                    "id": "k-elastic",
+                    "title": "Rayleigh scattering is elastic",
+                    "subtitle": "Photon changes direction, not energy \u2014 UCR Math",
+                    "meta": "UCR Math",
+                    "chips": [],
+                    "actions": []
+                  }
+                ]
+              },
+              {
+                "id": "perception",
+                "label": "Why blue and not violet",
+                "tone": "accent",
+                "items": [
+                  {
+                    "id": "k-sun-spectrum",
+                    "title": "Sun emits less violet than blue",
+                    "subtitle": "Solar blackbody peaks in green; violet amplitude is lower \u2014 UCR Math",
+                    "meta": "UCR Math",
+                    "chips": [],
+                    "actions": []
+                  },
+                  {
+                    "id": "k-eye-cones",
+                    "title": "Human cones respond more to blue than violet",
+                    "subtitle": "S-cone peak near 420nm but weak relative to M-cones \u2014 UCR Math",
+                    "meta": "UCR Math",
+                    "chips": [
+                      {
+                        "label": "Subtle",
+                        "tone": "warning"
+                      }
+                    ],
+                    "actions": []
+                  },
+                  {
+                    "id": "k-mixing",
+                    "title": "We perceive scattered violet + blue + green as blue",
+                    "subtitle": "Color perception integrates the scattered spectrum \u2014 Bohren",
+                    "meta": "Bohren 2006",
+                    "chips": [],
+                    "actions": []
+                  }
+                ]
+              },
+              {
+                "id": "sunset",
+                "label": "Sunsets",
+                "tone": "neutral",
+                "items": [
+                  {
+                    "id": "k-long-path",
+                    "title": "Sunset light traverses more atmosphere",
+                    "subtitle": "Blue fully scattered out before reaching the eye \u2014 NASA Space Place",
+                    "meta": "NASA",
+                    "chips": [],
+                    "actions": []
+                  },
+                  {
+                    "id": "k-red-remains",
+                    "title": "Remaining red/orange reaches the observer",
+                    "subtitle": "Longer wavelengths survive the path \u2014 NASA Space Place",
+                    "meta": "NASA",
+                    "chips": [],
+                    "actions": []
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "followups": [
+          {
+            "slotId": "research-tabs.followups.list",
+            "kind": "grouped-list",
+            "title": "Open questions",
+            "groups": [
+              {
+                "id": "high",
+                "label": "High priority",
+                "tone": "warning",
+                "items": [
+                  {
+                    "id": "f-mars",
+                    "title": "Why is the Martian sky reddish during day and blue at sunset?",
+                    "subtitle": "Opposite of Earth; dust dominates vs. molecular scattering",
+                    "meta": "compare planets",
+                    "chips": [
+                      {
+                        "label": "Physics",
+                        "tone": "accent"
+                      }
+                    ],
+                    "actions": []
+                  },
+                  {
+                    "id": "f-polarization",
+                    "title": "How polarized is the blue sky?",
+                    "subtitle": "Max near 90\u00b0 from the sun; used by bees for navigation",
+                    "meta": "optics",
+                    "chips": [],
+                    "actions": []
+                  }
+                ]
+              },
+              {
+                "id": "side",
+                "label": "Side questions",
+                "tone": "neutral",
+                "items": [
+                  {
+                    "id": "f-mie",
+                    "title": "When does Mie scattering take over from Rayleigh?",
+                    "subtitle": "Clouds (droplets much larger than \u03bb) \u2014 transitions to Mie regime",
+                    "meta": "follow-up",
+                    "chips": [],
+                    "actions": []
+                  },
+                  {
+                    "id": "f-nightsky",
+                    "title": "Why is the night sky dark (Olbers' paradox)?",
+                    "subtitle": "Adjacent puzzle; finite age of universe + redshift",
+                    "meta": "adjacent",
+                    "chips": [],
+                    "actions": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "transitionTargets": [],
+  "transitionHistory": [],
+  "metadata": {}
+}

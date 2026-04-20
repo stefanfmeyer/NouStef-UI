@@ -1,0 +1,55 @@
+{
+  "purpose": "Help the user work through a large unread inbox sender-by-sender, surfacing volume stats and the most useful action per sender group.",
+  "primaryUserGoal": "Process unread email in bulk by focusing on one sender group at a time.",
+  "whenHermesShouldChoose": "User asks to triage or clean up their inbox, wants to review unread, or asks to group/process email by sender.",
+  "goodFor": [
+    "Working through a backlog of unread email",
+    "Bulk-archiving newsletters and marketing",
+    "Extracting action items from a busy inbox"
+  ],
+  "supports": [
+    "Top-of-view stats (unread count, action items, sender count)",
+    "Grouped list of senders on the left",
+    "Detail panel on the right for the selected sender",
+    "Bulk archive / mark read actions per group"
+  ],
+  "supportedTabs": ["Overview"],
+  "idealDataShape": [
+    "Aggregate counts across the inbox",
+    "Sender groups with per-sender thread counts and one-line subjects",
+    "Per-sender detail with subjects, timestamps, and suggested next action"
+  ],
+  "requiredSections": ["stats", "split"],
+  "optionalSections": [],
+  "requiredActions": [],
+  "optionalActions": ["append-template-note"],
+  "populationInstructions": {
+    "summary": "Populate stats with headline counts, then a split with a grouped sender list on the left and a detail-panel for the currently-selected sender on the right. Group senders by type (work, notifications, marketing, newsletters) with tone-coded group headers.",
+    "steps": [
+      "Compute top-level stats: total unread, action items needed, number of distinct senders, and the oldest unread age.",
+      "Group senders into 3-5 buckets by type (Work, GitHub / tool notifications, Newsletters, Marketing, Personal).",
+      "Tone-code groups: danger for action items, warning for work, neutral for the rest.",
+      "Pick one sender as the initial selection and populate the detail-panel with subject lines and the suggested action.",
+      "In the detail-panel, include fields for thread count, last received time, and whether auto-archive is safe.",
+      "Avoid PII in the summary — use sender names only, not message bodies."
+    ],
+    "guardrails": [
+      "Never include the full body of a message — only subject lines.",
+      "Don't invent sender volumes — derive them from real inbox counts.",
+      "Don't mark a newsletter group as 'action items'."
+    ]
+  },
+  "updateRules": {
+    "patchPrefer": [
+      "Use upsert_groups to refresh individual sender groups after an action",
+      "Use set_detail to switch the right-hand panel when the user picks a different sender",
+      "Use set_status when a bulk archive completes"
+    ],
+    "replaceTriggers": [
+      "User asks for a fresh inbox scan",
+      "User changes the time window significantly"
+    ],
+    "persistAcrossUpdates": ["header", "stats labels"],
+    "stableRegions": ["header"]
+  }
+}

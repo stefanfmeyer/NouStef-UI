@@ -1,0 +1,25 @@
+{
+  "id": "shopping-shortlist",
+  "name": "Shopping Results",
+  "useCase": "Show a wide variety of items as small tiled cards with name, photo, and price.",
+  "enabled": true,
+  "selectionSignals": [
+    "shopping results",
+    "find me",
+    "browse items",
+    "show me options",
+    "gift ideas",
+    "need to buy",
+    "looking for",
+    "recommend me",
+    "product ideas",
+    "under $",
+    "best for"
+  ],
+  "slots": [
+    { "id": "shortlist", "kind": "card-grid", "required": true }
+  ],
+  "allowedUpdateOps": ["set_header", "upsert_cards", "remove_items"],
+  "actions": {},
+  "transitions": []
+}

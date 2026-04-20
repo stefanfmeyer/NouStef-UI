@@ -8,6 +8,30 @@ export const RecipeTemplateSelectionHintsSchema = z
     suggestedTransitionFrom: RecipeTemplateIdSchema.optional()
 })
     .strict();
+// Mutation intent — detected when a user asks to change how a rendered recipe looks or is structured.
+export const RecipeMutationKindSchema = z.enum([
+    'change_layout', // "show as kanban", "redo as cards", "switch to a comparison"
+    'change_visual', // "more pictures", "add logos", "make it more visual"
+    'add_content', // "add a stats section", "include a timeline"
+    'remove_content', // "drop the notes", "remove the checklist"
+    'refine_existing', // "only show top 3", "tighten the table"
+    'switch_recipe' // "use a different recipe for this"
+]);
+export const RecipeMutationIntentSchema = z
+    .object({
+    kind: RecipeMutationKindSchema,
+    wantsImages: z.boolean().default(false),
+    wantsCards: z.boolean().default(false),
+    wantsCharts: z.boolean().default(false),
+    wantsTable: z.boolean().default(false),
+    wantsKanban: z.boolean().default(false),
+    wantsTimeline: z.boolean().default(false),
+    wantsFewerItems: z.boolean().default(false),
+    wantsMoreItems: z.boolean().default(false),
+    targetTemplateHint: z.string().optional(),
+    mutationSummary: z.string().min(1)
+})
+    .strict();
 export const RecipeTemplateSelectionModeSchema = z.enum(['fill', 'update', 'switch']);
 export const RecipeTemplateSelectionSchema = z
     .object({
@@ -115,6 +139,7 @@ const PriceComparisonGridDataSchema = z
     eyebrow: OptionalTextSchema,
     heroChips: z.array(RecipeTemplateChipSchema).default([]),
     scopeTags: z.array(RecipeTemplateChipSchema).default([]),
+    stats: z.array(RecipeTemplateStatSchema).default([]),
     columns: z.array(RecipeTemplateTableColumnSchema).min(1),
     rows: z.array(RecipeTemplateAuthoringTableRowSchema).default([]),
     noteLines: z.array(z.string().min(1)).default([])
@@ -124,6 +149,7 @@ const ShoppingShortlistDataSchema = z
     .object({
     eyebrow: OptionalTextSchema,
     heroChips: z.array(RecipeTemplateChipSchema).default([]),
+    stats: z.array(RecipeTemplateStatSchema).default([]),
     cards: z.array(RecipeTemplateAuthoringCardItemSchema).default([]),
     noteLines: z.array(z.string().min(1)).default([])
 })
@@ -142,6 +168,7 @@ const ListDetailResultsDataSchema = z
     .object({
     eyebrow: OptionalTextSchema,
     heroChips: z.array(RecipeTemplateChipSchema).default([]),
+    stats: z.array(RecipeTemplateStatSchema).default([]),
     filters: z.array(RecipeTemplateChipSchema).default([]),
     sortLabel: OptionalTextSchema,
     groups: z.array(RecipeTemplateAuthoringGroupSchema).default([]),
@@ -172,6 +199,7 @@ const FlightComparisonDataSchema = z
     .object({
     eyebrow: OptionalTextSchema,
     heroChips: z.array(RecipeTemplateChipSchema).default([]),
+    stats: z.array(RecipeTemplateStatSchema).default([]),
     activeTabId: OptionalTextSchema,
     legs: z.array(FlightComparisonLegSchema).min(1)
 })
@@ -180,6 +208,7 @@ const TravelItineraryPlannerDataSchema = z
     .object({
     eyebrow: OptionalTextSchema,
     heroChips: z.array(RecipeTemplateChipSchema).default([]),
+    stats: z.array(RecipeTemplateStatSchema).default([]),
     activeTabId: OptionalTextSchema,
     itineraryItems: z.array(RecipeTemplateAuthoringTimelineItemSchema).default([]),
     bookingCards: z.array(RecipeTemplateAuthoringCardItemSchema).default([]),
@@ -192,6 +221,7 @@ const ResearchNotebookDataSchema = z
     .object({
     eyebrow: OptionalTextSchema,
     heroChips: z.array(RecipeTemplateChipSchema).default([]),
+    stats: z.array(RecipeTemplateStatSchema).default([]),
     activeTabId: OptionalTextSchema,
     sources: z.array(RecipeTemplateAuthoringGroupSchema).default([]),
     noteLines: z.array(z.string().min(1)).default([]),
@@ -226,6 +256,7 @@ const EventPlannerDataSchema = z
     .object({
     eyebrow: OptionalTextSchema,
     heroChips: z.array(RecipeTemplateChipSchema).default([]),
+    stats: z.array(RecipeTemplateStatSchema).default([]),
     activeTabId: OptionalTextSchema,
     venueCards: z.array(RecipeTemplateAuthoringCardItemSchema).default([]),
     guestGroups: z.array(RecipeTemplateAuthoringGroupSchema).default([]),
@@ -247,6 +278,7 @@ const ContentCampaignPlannerDataSchema = z
     .object({
     eyebrow: OptionalTextSchema,
     heroChips: z.array(RecipeTemplateChipSchema).default([]),
+    stats: z.array(RecipeTemplateStatSchema).default([]),
     activeTabId: OptionalTextSchema,
     ideaCards: z.array(RecipeTemplateAuthoringCardItemSchema).default([]),
     draftLines: z.array(z.string().min(1)).default([]),
@@ -258,6 +290,7 @@ const StepByStepInstructionsDataSchema = z
     .object({
     eyebrow: OptionalTextSchema,
     heroChips: z.array(RecipeTemplateChipSchema).default([]),
+    stats: z.array(RecipeTemplateStatSchema).default([]),
     prerequisites: z.array(z.string().min(1)).default([]),
     steps: z
         .array(z

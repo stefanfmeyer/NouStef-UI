@@ -11,7 +11,7 @@ export function PageHeader({
   detail?: string;
 }) {
   return (
-    <Box minW={0} data-testid="page-header">
+    <Box flex="1" minW={0} data-testid="page-header">
       <BrandLockup compact />
     </Box>
   );

@@ -1,0 +1,54 @@
+{
+  "purpose": "Show the user where to buy the same item for the best price, with enough merchant context to decide at a glance.",
+  "primaryUserGoal": "Pick the best merchant for a specific item based on price, stock, and shipping.",
+  "whenHermesShouldChoose": "User asks to compare prices, find the cheapest store, or is evaluating where to buy a specific named product.",
+  "goodFor": [
+    "Comparing a named product across 3-8 merchants",
+    "Confirming best current price on a watched item",
+    "Spotting availability differences across stores"
+  ],
+  "supports": [
+    "Merchant logos (leadingImage on each row)",
+    "Price / stock / shipping columns with tone",
+    "Scope chips (in-stock filter, country, etc.)",
+    "Operator notes"
+  ],
+  "supportedTabs": ["Overview"],
+  "idealDataShape": [
+    "One row per merchant",
+    "Merchant name, price, stock state, shipping summary",
+    "Optional merchant logo URL"
+  ],
+  "requiredSections": ["comparison-table"],
+  "optionalSections": ["notes"],
+  "requiredActions": [],
+  "optionalActions": ["append-template-note"],
+  "populationInstructions": {
+    "summary": "Populate one row per merchant selling the target product. Use the leadingImage field for merchant logos (query by merchant name). Mark the cheapest current option with tone='success' and emphasis=true.",
+    "steps": [
+      "Identify the specific product (name, model number, size if relevant).",
+      "List merchants that carry it (3-8 is ideal).",
+      "For each merchant, capture: price, in-stock state, shipping cost/speed.",
+      "Mark the best current price with tone='success' and emphasis=true.",
+      "Flag stock warnings with tone='warning'.",
+      "Include a merchant logo image descriptor (query: '<merchant> logo') for leadingImage."
+    ],
+    "guardrails": [
+      "Never make up prices — only include verified data.",
+      "Always note the timestamp or freshness of the price data in a chip or note.",
+      "Don't include a merchant if it's out of stock unless asked to show all options."
+    ]
+  },
+  "updateRules": {
+    "patchPrefer": [
+      "Use upsert_table_rows to refresh individual merchant rows",
+      "Use set_scope_tags to toggle filters like 'in-stock only'"
+    ],
+    "replaceTriggers": [
+      "User asks to compare a different product",
+      "User asks to start over"
+    ],
+    "persistAcrossUpdates": ["column headers", "operator notes"],
+    "stableRegions": ["header"]
+  }
+}

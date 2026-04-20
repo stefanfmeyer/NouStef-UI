@@ -1,0 +1,11 @@
+{
+  "id": "travel-itinerary-planner",
+  "version": "1.0.0",
+  "name": "Travel Itinerary Planner",
+  "category": "travel",
+  "description": "Organize a trip across itinerary, bookings, packing, and notes in a tabbed layout.",
+  "author": "Hermes",
+  "source": "builtin",
+  "enabled": true,
+  "protocolVersion": "1.0.0"
+}

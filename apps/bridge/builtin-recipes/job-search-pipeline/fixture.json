@@ -1,0 +1,124 @@
+{
+  "kind": "recipe_template_state",
+  "schemaVersion": "recipe_template_state/v1",
+  "templateId": "job-search-pipeline",
+  "title": "Senior SWE job search — Apr 2026",
+  "summary": "9 roles across the pipeline. 3 actively interviewing, 1 offer in hand (Vercel), 4 applied and awaiting reply. Application velocity picked up in the last two weeks.",
+  "sections": [
+    {
+      "slotId": "stats",
+      "kind": "stats",
+      "title": "Pipeline",
+      "items": [
+        { "label": "Applied", "value": "4", "helper": "awaiting reply" },
+        { "label": "Interviewing", "value": "3", "helper": "across 3 companies", "tone": "accent" },
+        { "label": "Offer", "value": "1", "helper": "Vercel — decide by Apr 26", "tone": "success" },
+        { "label": "Rejected", "value": "2", "helper": "20% rejection rate" }
+      ]
+    },
+    {
+      "slotId": "applications-chart",
+      "kind": "bar-chart",
+      "title": "Applications by week",
+      "xKey": "week",
+      "series": [
+        { "id": "applications", "label": "Applications", "tone": "accent" }
+      ],
+      "data": [
+        { "week": "Wk 12", "applications": 1 },
+        { "week": "Wk 13", "applications": 2 },
+        { "week": "Wk 14", "applications": 0 },
+        { "week": "Wk 15", "applications": 3 },
+        { "week": "Wk 16", "applications": 3 }
+      ],
+      "orientation": "vertical",
+      "stacked": false,
+      "valueFormat": "number"
+    },
+    {
+      "slotId": "pipeline",
+      "kind": "split",
+      "title": "Pipeline",
+      "ratio": "list-detail",
+      "left": [
+        {
+          "slotId": "pipeline.kanban",
+          "kind": "kanban",
+          "title": "Stages",
+          "columns": [
+            {
+              "id": "applied",
+              "label": "Applied (4)",
+              "tone": "neutral",
+              "cards": [
+                { "id": "j-linear", "title": "Senior Product Engineer", "subtitle": "Linear", "chips": [{ "label": "$200-240k", "tone": "neutral" }, { "label": "Remote", "tone": "accent" }], "footer": "Applied Apr 17", "actions": [] },
+                { "id": "j-vanta", "title": "Senior Full-Stack Engineer", "subtitle": "Vanta", "chips": [{ "label": "$195-225k", "tone": "neutral" }, { "label": "SF / remote", "tone": "accent" }], "footer": "Applied Apr 16", "actions": [] },
+                { "id": "j-ramp", "title": "Senior Platform Engineer", "subtitle": "Ramp", "chips": [{ "label": "$210-250k", "tone": "neutral" }, { "label": "NYC", "tone": "neutral" }], "footer": "Applied Apr 15", "actions": [] },
+                { "id": "j-retool", "title": "Senior Product Engineer", "subtitle": "Retool", "chips": [{ "label": "$215-240k", "tone": "neutral" }, { "label": "SF hybrid", "tone": "neutral" }], "footer": "Applied Apr 14", "actions": [] }
+              ]
+            },
+            {
+              "id": "interviewing",
+              "label": "Interviewing (3)",
+              "tone": "accent",
+              "cards": [
+                { "id": "j-stripe", "title": "Senior Software Engineer", "subtitle": "Stripe · Payments team", "chips": [{ "label": "$230-280k", "tone": "success" }, { "label": "SF", "tone": "neutral" }], "footer": "Onsite scheduled Apr 22", "actions": [] },
+                { "id": "j-anthropic", "title": "Senior Full-Stack Engineer", "subtitle": "Anthropic · Claude Product", "chips": [{ "label": "$260-320k", "tone": "success" }, { "label": "SF / remote", "tone": "accent" }], "footer": "System design Apr 21", "actions": [] },
+                { "id": "j-airbnb", "title": "Senior Software Engineer", "subtitle": "Airbnb · Trust", "chips": [{ "label": "$220-260k", "tone": "neutral" }, { "label": "SF", "tone": "neutral" }], "footer": "Behavioral Apr 20", "actions": [] }
+              ]
+            },
+            {
+              "id": "offer",
+              "label": "Offer (1)",
+              "tone": "success",
+              "cards": [
+                { "id": "j-vercel", "title": "Senior Product Engineer", "subtitle": "Vercel · DX team", "chips": [{ "label": "$245k + equity", "tone": "success" }, { "label": "Remote", "tone": "accent" }], "footer": "Decide by Apr 26", "actions": [] }
+              ]
+            },
+            {
+              "id": "rejected",
+              "label": "Rejected (2)",
+              "tone": "neutral",
+              "cards": [
+                { "id": "j-figma", "title": "Senior Product Engineer", "subtitle": "Figma · Design systems", "chips": [{ "label": "$235-275k", "tone": "neutral" }], "footer": "Rejected after screen", "actions": [] },
+                { "id": "j-datadog", "title": "Senior Engineer, Platform", "subtitle": "Datadog", "chips": [{ "label": "$210-260k", "tone": "neutral" }], "footer": "Role closed", "actions": [] }
+              ]
+            }
+          ]
+        }
+      ],
+      "right": [
+        {
+          "slotId": "pipeline.detail",
+          "kind": "detail-panel",
+          "title": "Vercel · Senior Product Engineer",
+          "eyebrow": "Offer · DX team",
+          "summary": "Working on the Vercel dashboard experience. Ship-focused product team inside the DX org. Small team (~8 engineers), weekly releases, strong design partnership.",
+          "chips": [
+            { "label": "$245k base", "tone": "success" },
+            { "label": "Equity grant", "tone": "accent" },
+            { "label": "Remote", "tone": "accent" },
+            { "label": "Offer", "tone": "success" }
+          ],
+          "fields": [
+            { "label": "Company", "value": "Vercel (Series E, ~600 people)", "chips": [], "bullets": [], "links": [], "fullWidth": false },
+            { "label": "Role", "value": "Senior Product Engineer · DX team", "chips": [], "bullets": [], "links": [], "fullWidth": false },
+            { "label": "Base + OTE", "value": "$245k base + 0.05% equity (4yr vest, 1yr cliff)", "chips": [{ "label": "Competitive", "tone": "success" }], "bullets": [], "links": [], "fullWidth": true },
+            { "label": "Requirements", "value": null, "chips": [], "bullets": [
+              "7+ years shipping production web apps",
+              "Strong React / Next.js",
+              "Comfort with design hand-off and iterating on UX",
+              "Track record of owning features end-to-end"
+            ], "links": [], "fullWidth": true },
+            { "label": "Deadline", "value": "Apr 26 — they'll extend to Apr 29 if needed", "chips": [{ "label": "Soon", "tone": "warning" }], "bullets": [], "links": [], "fullWidth": true }
+          ],
+          "actions": [],
+          "note": "Recruiter contact: Jules Hernandez. Negotiation angle: Anthropic onsite Apr 22 gives timing leverage."
+        }
+      ]
+    }
+  ],
+  "transitionTargets": [],
+  "transitionHistory": [],
+  "metadata": {}
+}
