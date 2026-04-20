@@ -70,17 +70,17 @@ export const RECIPE_TEMPLATE_SPECS: Record<RecipeTemplateId, RecipeTemplateSpec>
     smallPaneAdaptationNotes: ['Collapse to one or two columns.', 'Keep photo, name, and price visible on every tile.'],
     references: ['Pinterest-style result grids', 'Search result tiles', 'Marketplace card feeds'],
     populationInstructions: {
-      summary: 'Fill small tiles with just the item name, a photo (or descriptive image label), and a price, each linking to the item.',
+      summary: 'Fill small tiles with just the item name, a photo (or descriptive image label), and a price, each with a button linking to the item listing.',
       steps: [
         'Use one compact tile per item.',
         'Include an image label or photo hint if a real image is unavailable.',
         'Show the price directly on the tile.',
-        'Include a direct link to the item listing on every tile.'
+        'Add a link action to every card\'s actions array — use label "View on Amazon" (or the appropriate retailer) and set href to the item URL. This produces the button that appears on the tile.'
       ],
       guardrails: [
         'Do not add bullets, comparison tables, or operator notes — keep tiles minimal.',
         'Do not duplicate items.',
-        'Never render a tile without a direct link to the item.'
+        'Every card MUST have at least one entry in its actions array. A tile with an empty actions array will render no button — this is a bug.'
       ]
     },
     updateRules: {
@@ -154,29 +154,33 @@ export const RECIPE_TEMPLATE_SPECS: Record<RecipeTemplateId, RecipeTemplateSpec>
     whenHermesShouldChoose:
       'Choose this when the user is looking for nearby dining options, cuisine comparisons, or restaurant suggestions in an area.',
     selectionSignals: ['restaurants nearby', 'find dinner', 'best places to eat', 'compare restaurants'],
-    goodFor: ['Nearby dining', 'Date-night options', 'Cuisine filtering'],
+    goodFor: ['Nearby dining', 'Date-night options', 'Cuisine discovery'],
     supports: ['List/detail view', 'Hours', 'Menu links', 'Book prompt'],
-    preferredLayout: 'list-detail',
+    preferredLayout: 'balanced',
     supportedTabs: ['Results', 'Saved', 'Notes'],
     idealDataShape: ['Venue list with cuisine, rating, price, and hours', 'Detail panel with address and links', 'Optional shortlist notes'],
-    requiredSections: ['Filter strip', 'Result list', 'Detail panel', 'Action bar'],
+    requiredSections: ['Result list', 'Detail panel'],
     optionalSections: ['Saved tab', 'Neighborhood note', 'Opening-hours highlights'],
     requiredActions: [],
     optionalActions: [],
-    emptyStateBehavior: 'Show a local-search empty state with filters and a prompt to widen the area or cuisine.',
+    emptyStateBehavior: 'Show a local-search empty state with a prompt to widen the area or cuisine.',
     loadingStateBehavior: 'Hold list and detail shells so the selected venue context stays anchored while results update.',
     errorStateBehavior: 'Preserve any loaded venues and surface source limitations clearly.',
     smallPaneAdaptationNotes: ['Collapse into a vertical results-first flow with a sticky selected-venue card.', 'Keep cuisine, price, and rating visible in each row.'],
     references: ['Yelp list-detail flows', 'Google Maps local results', 'OpenTable action affordances'],
     populationInstructions: {
-      summary: 'Populate a result list that is easy to scan quickly and a selected-venue detail panel with hours, website, phone, and cuisine shown as icon + value rows.',
+      summary: 'Wrap all content inside a tabs section. The Results tab holds a balanced split (ratio: "balanced") with the venue list on the left and the detail panel on the right. Saved and Notes tabs hold their respective content.',
       steps: [
-        'Lead with a concise filter context such as cuisine, distance, or price band.',
-        'Present the top venues as compact rows with consistent stats.',
-        'In the selected-venue panel render four stacked icon rows in this order: clock icon + hours text, website icon + a hyperlinked "Link" to the venue website, phone icon + phone number, food icon + food genre.',
+        'Use a single top-level "tabs" section with tabs: Results, Saved, Notes. Set activeTabId to the Results tab id.',
+        'Place the entire split section (ratio: "balanced") inside the Results tab pane — do NOT place it at the top level outside tabs.',
+        'Present the top venues as compact rows in a grouped-list on the left side of the split.',
+        'On the right side, use a detail-panel with the selected venue fields stacked as plain label + value rows: Hours, Website (as a link), Phone, Cuisine — no filter strip.',
+        'Do not add a filter-strip section anywhere — omit filters entirely.',
         'Do not render a bottom action bar or any stability note on the selected-venue panel.'
       ],
       guardrails: [
+        'All content must be nested inside tab panes — never place sections at the top level outside the tabs section.',
+        'Do not add a filter-strip section.',
         'Do not invent map tiles or arbitrary geospatial UI.',
         'Keep the selected-venue panel limited to hours, website, phone, and genre rows.',
         'Avoid replacing the whole list when only one venue detail changes.'
@@ -185,8 +189,8 @@ export const RECIPE_TEMPLATE_SPECS: Record<RecipeTemplateId, RecipeTemplateSpec>
     updateRules: {
       patchPrefer: ['Patch venue rows, hours, and detail fields in place.'],
       replaceTriggers: ['Replace the result set when the search area or cuisine scope changes meaningfully.'],
-      persistAcrossUpdates: ['Selected venue', 'Active filter chips'],
-      stableRegions: ['List/detail structure', 'Selected-venue icon rows']
+      persistAcrossUpdates: ['Selected venue', 'Active tab'],
+      stableRegions: ['Tabs structure', 'List/detail structure', 'Selected-venue icon rows']
     }
   },
   'hotel-shortlist': {

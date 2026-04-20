@@ -97,9 +97,20 @@ export function ChatPage({
   const [spaceChatCollapsed, setRecipeChatCollapsed] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
   const [actionError, setActionError] = useState<string | null>(null);
+  const [recipePanelAnimKey, setRecipePanelAnimKey] = useState(0);
+  const prevRecipeIdRef = useRef<string | null>(null);
   const runtimeButtonRef = useRef<HTMLButtonElement | null>(null);
   const activeSession = sessionPayload?.session ?? null;
   const attachedRecipe = sessionPayload?.attachedRecipe ?? null;
+
+  // Bump the animation key every time a NEW recipe attaches so the panel re-runs its entry animation.
+  useEffect(() => {
+    const newId = attachedRecipe?.id ?? null;
+    if (newId && newId !== prevRecipeIdRef.current) {
+      setRecipePanelAnimKey((k) => k + 1);
+    }
+    prevRecipeIdRef.current = newId;
+  }, [attachedRecipe?.id]);
   const handleStandaloneTranscriptMessageClick = useCallback(
     (message: ChatMessage) => {
       onFocusActivityRequest(message.requestId);
@@ -227,6 +238,17 @@ export function ChatPage({
 
       {attachedRecipe ? (
         <>
+          <style>{`
+            @keyframes recipePanelEnter {
+              0%   { opacity: 0; transform: translateX(28px) scale(0.97); }
+              60%  { opacity: 1; }
+              100% { opacity: 1; transform: translateX(0) scale(1); }
+            }
+            @keyframes chatPaneCompress {
+              from { opacity: 0.7; }
+              to   { opacity: 1; }
+            }
+          `}</style>
           <Grid
             flex="1"
             minH={0}
@@ -236,9 +258,18 @@ export function ChatPage({
                 ? { base: 'minmax(0, 1fr) 92px', xl: 'minmax(0, 1fr) 92px' }
                 : { base: '1fr', xl: 'minmax(0, 1fr) 400px' }
             }
+            css={{ transition: 'grid-template-columns 480ms cubic-bezier(0.4, 0, 0.2, 1)' }}
             data-testid="combined-session-recipe-layout"
           >
-            <Box minH={0} minW={0} overflow="hidden">
+            <Box
+              minH={0}
+              minW={0}
+              overflow="hidden"
+              key={recipePanelAnimKey}
+              style={{
+                animation: 'recipePanelEnter 480ms cubic-bezier(0.4, 0, 0.2, 1) both'
+              }}
+            >
               <SessionRecipePanel
                 recipe={attachedRecipe}
                 onRename={() => {

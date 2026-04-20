@@ -120,6 +120,8 @@ const MarkdownMessage = memo(function MarkdownMessage({ children }: { children: 
   return (
     <Box
       color="var(--text-primary)"
+      overflowX="hidden"
+      wordBreak="break-word"
       css={{
         '& h1, & h2, & h3': {
           fontWeight: 600,
@@ -138,7 +140,7 @@ const MarkdownMessage = memo(function MarkdownMessage({ children }: { children: 
           fontSize: '0.98rem'
         },
         '& p': {
-          fontSize: '0.93rem',
+          fontSize: '0.875rem',
           lineHeight: 1.72
         },
         '& p + p': {
@@ -369,19 +371,23 @@ function TranscriptBubble({
   }
 
   return (
-    <Box display="flex" justifyContent={alignment}>
+    <Box display="flex" justifyContent={alignment} overflow="hidden">
       <HStack
         align="end"
         gap="3"
         justify={isUser ? 'flex-end' : 'flex-start'}
         flexDirection={isUser ? 'row-reverse' : 'row'}
         maxW="min(820px, 100%)"
+        minW={0}
+        overflow="hidden"
       >
         {isAssistant ? <HermesAvatar size="sm" /> : null}
         {clickable ? (
           <ClickableBubble
             type="button"
             maxW="min(760px, 100%)"
+            minW={0}
+            overflow="hidden"
             rounded="12px"
             border={`1px solid ${activeBorder}`}
             bg={bubbleTone.bg}
@@ -433,6 +439,8 @@ function TranscriptBubble({
         ) : (
           <Box
             maxW="min(760px, 100%)"
+            minW={0}
+            overflow="hidden"
             rounded="12px"
             border={`1px solid ${activeBorder}`}
             bg={bubbleTone.bg}

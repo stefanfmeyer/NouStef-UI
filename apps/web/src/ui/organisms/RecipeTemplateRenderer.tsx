@@ -1445,23 +1445,23 @@ export function RecipeTemplateRenderer({
                     </Flex>
                   ) : null}
                   {primaryFields.length > 0 ? (
-                    <Flex gap="3" wrap="wrap">
+                    <VStack align="stretch" gap="3">
                       {primaryFields.map((field) => (
-                        <Box key={`${section.slotId}-${field.label}`} flex={{ base: '1 1 100%', md: '1 1 calc(50% - 12px)' }} rounded="6px" border="1px solid var(--border-subtle)" bg="var(--surface-2)" px="3.5" py="3">
+                        <Box key={`${section.slotId}-${field.label}`}>
                           <Text fontSize="xs" fontWeight="500" textTransform="uppercase" letterSpacing="0.08em" color="var(--text-muted)">
                             {field.label}
                           </Text>
-                          <Box mt="1.5">{renderFieldBody(field, { showCopyButtons: true })}</Box>
+                          <Box mt="1">{renderFieldBody(field, { showCopyButtons: true })}</Box>
                         </Box>
                       ))}
-                    </Flex>
+                    </VStack>
                   ) : null}
                   {fullWidthFields.map((field) => (
-                    <Box key={`${section.slotId}-${field.label}`} rounded="8px" border="1px solid var(--border-subtle)" bg="var(--surface-2)" px="3.5" py="3.5">
+                    <Box key={`${section.slotId}-${field.label}`}>
                       <Text fontSize="xs" fontWeight="500" textTransform="uppercase" letterSpacing="0.08em" color="var(--text-muted)">
                         {field.label}
                       </Text>
-                      <Box mt="1.5">{renderFieldBody(field, { showCopyButtons: true })}</Box>
+                      <Box mt="1">{renderFieldBody(field, { showCopyButtons: true })}</Box>
                     </Box>
                   ))}
                   {section.actions.length > 0 ? renderActionRefs(section.actions, { contextKey: section.slotId }) : null}
@@ -2023,16 +2023,36 @@ export function RecipeTemplateRenderer({
     }
   }
 
+  const sectionFadeStyle = `
+    @keyframes sectionFadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  `;
+
   return (
-    <VStack align="stretch" gap="4" data-testid="recipe-template-renderer">
-      {actionError ? (
-        <Box rounded="8px" border="1px solid" borderColor="red.200" bg="red.50" px="3.5" py="3" _dark={{ bg: 'rgba(239, 68, 68, 0.12)', borderColor: 'rgba(248, 113, 113, 0.24)' }}>
-          <Text fontSize="sm" color="red.700" _dark={{ color: 'red.100' }}>
-            {actionError}
-          </Text>
-        </Box>
-      ) : null}
-      {templateState.sections.map((section) => renderSection(section))}
-    </VStack>
+    <>
+      <style>{sectionFadeStyle}</style>
+      <VStack align="stretch" gap="4" data-testid="recipe-template-renderer">
+        {actionError ? (
+          <Box rounded="8px" border="1px solid" borderColor="red.200" bg="red.50" px="3.5" py="3" _dark={{ bg: 'rgba(239, 68, 68, 0.12)', borderColor: 'rgba(248, 113, 113, 0.24)' }}>
+            <Text fontSize="sm" color="red.700" _dark={{ color: 'red.100' }}>
+              {actionError}
+            </Text>
+          </Box>
+        ) : null}
+        {templateState.sections.map((section, index) => (
+          <Box
+            key={section.slotId}
+            style={{
+              animation: `sectionFadeUp 220ms cubic-bezier(0.4, 0, 0.2, 1) both`,
+              animationDelay: `${index * 70}ms`
+            }}
+          >
+            {renderSection(section)}
+          </Box>
+        ))}
+      </VStack>
+    </>
   );
 }
