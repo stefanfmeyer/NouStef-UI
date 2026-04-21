@@ -1,10 +1,9 @@
-import { Alert, Box, Button, Flex, HStack, Text, VStack } from '@chakra-ui/react';
+import { Alert, Box, Flex, HStack, Text } from '@chakra-ui/react';
 import type { ConnectionState } from '@hermes-recipes/protocol';
 import type { ReactNode } from 'react';
 import { ThemeToggle } from '../atoms/ThemeToggle';
 import { BrandLockup } from '../atoms/BrandLockup';
 import { StatusPill } from '../atoms/StatusPill';
-import { ErrorBanner } from '../molecules/ErrorBanner';
 import { PageHeader } from '../molecules/PageHeader';
 import { Sidebar } from '../organisms/Sidebar';
 

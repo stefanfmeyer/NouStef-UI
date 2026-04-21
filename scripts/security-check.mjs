@@ -1,4 +1,71 @@
-import { execSync, spawnSync } from 'node:child_process';
+import { execSync } from 'node:child_process';
+import { readFileSync, readdirSync } from 'node:fs';
+import { join, relative, sep } from 'node:path';
+
+const ROOT = process.cwd();
+
+const SCAN_EXTENSIONS = new Set(['.js', '.jsx', '.ts', '.tsx', '.mjs', '.cjs', '.html']);
+
+const EXCLUDED_PATH_SEGMENTS = new Set([
+  'node_modules',
+  'dist',
+  'dist-electron',
+  'playwright-report',
+  'test-results',
+  '.turbo',
+  '.pnpm-store',
+  'coverage',
+  '.git'
+]);
+
+const EXCLUDED_FILES = new Set(['pnpm-lock.yaml', 'scripts/security-check.mjs']);
+
+const UNSAFE_PATTERN = /(dangerouslySetInnerHTML|eval\(|new Function\(|innerHTML\s*=)/;
+
+function* walk(dir) {
+  let entries;
+  try {
+    entries = readdirSync(dir, { withFileTypes: true });
+  } catch {
+    return;
+  }
+  for (const entry of entries) {
+    if (EXCLUDED_PATH_SEGMENTS.has(entry.name)) {
+      continue;
+    }
+    const full = join(dir, entry.name);
+    if (entry.isDirectory()) {
+      yield* walk(full);
+    } else if (entry.isFile()) {
+      yield full;
+    }
+  }
+}
+
+function scanUnsafePatterns() {
+  const matches = [];
+  for (const filePath of walk(ROOT)) {
+    const rel = relative(ROOT, filePath).split(sep).join('/');
+    if (EXCLUDED_FILES.has(rel)) {
+      continue;
+    }
+    const ext = rel.slice(rel.lastIndexOf('.'));
+    if (!SCAN_EXTENSIONS.has(ext)) {
+      continue;
+    }
+    const content = readFileSync(filePath, 'utf8');
+    const lines = content.split('\n');
+    for (let i = 0; i < lines.length; i++) {
+      if (UNSAFE_PATTERN.test(lines[i])) {
+        matches.push(`${rel}:${i + 1}:${lines[i]}`);
+      }
+    }
+  }
+  if (matches.length > 0) {
+    console.error(matches.join('\n'));
+    throw new Error(`Unsafe patterns found (${matches.length}).`);
+  }
+}
 
 const checks = [
   {
@@ -12,13 +79,12 @@ const checks = [
         const combined = `${stderr}\n${stdout}`;
         if (combined.includes('410') || combined.includes('being retired') || combined.includes('ERR_PNPM_AUDIT_BAD_RESPONSE')) {
           console.warn(
-            '\n\u26A0\uFE0F  npm audit endpoint returned 410 (deprecated).\n' +
+            '\n⚠️  npm audit endpoint returned 410 (deprecated).\n' +
             '    Treating as non-blocking, but vulnerabilities are NOT being checked.\n' +
             '    Consider adding osv-scanner or CodeQL to CI for real coverage.\n'
           );
           return;
         }
-        // Re-print the output for other failures
         if (stderr) process.stderr.write(stderr);
         if (stdout) process.stdout.write(stdout);
         throw error;
@@ -27,52 +93,7 @@ const checks = [
   },
   {
     name: 'unsafe pattern scan',
-    run: () => {
-      const result = spawnSync(
-        'rg',
-        [
-          '-n',
-          '--glob',
-          '!pnpm-lock.yaml',
-          '--glob',
-          '!node_modules/**',
-          '--glob',
-          '*.js',
-          '--glob',
-          '*.jsx',
-          '--glob',
-          '*.ts',
-          '--glob',
-          '*.tsx',
-          '--glob',
-          '*.mjs',
-          '--glob',
-          '*.cjs',
-          '--glob',
-          '*.html',
-          '--glob',
-          '!dist/**',
-          '--glob',
-          '!playwright-report/**',
-          '--glob',
-          '!test-results/**',
-          '--glob',
-          '!scripts/security-check.mjs',
-          '(dangerouslySetInnerHTML|eval\\(|new Function\\(|innerHTML\\s*=)',
-          '.'
-        ],
-        { encoding: 'utf8' }
-      );
-
-      if (result.status === 0) {
-        console.error(result.stdout);
-        throw new Error('Unsafe patterns found.');
-      }
-
-      if (result.status !== 1) {
-        throw new Error(result.stderr || 'rg failed to scan the repository.');
-      }
-    }
+    run: scanUnsafePatterns
   }
 ];
 
@@ -82,11 +103,8 @@ for (const check of checks) {
   try {
     check.run();
   } catch (error) {
-    if (check.name === 'unsafe pattern scan' && error.status === 1) {
-      continue;
-    }
     failed = true;
-    console.error(`Security check failed: ${check.name}`);
+    console.error(`Security check failed: ${check.name}: ${error?.message ?? error}`);
   }
 }
 

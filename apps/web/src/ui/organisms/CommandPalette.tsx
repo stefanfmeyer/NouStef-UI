@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import type { AppPage, Session } from '@hermes-recipes/protocol';
 
 type CommandItem = {
@@ -103,7 +103,7 @@ export function CommandPalette({
   const flatItems = sections.flatMap((s) => filteredItems.filter((i) => i.section === s));
 
   const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent) => {
+    (e: KeyboardEvent) => {
       if (e.key === 'ArrowDown') {
         e.preventDefault();
         setActiveIndex((prev) => Math.min(prev + 1, flatItems.length - 1));
@@ -135,16 +135,21 @@ export function CommandPalette({
   };
 
   return (
-    <div
-      className="command-palette-backdrop"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
-      role="dialog"
-      aria-modal="true"
-      aria-label="Command palette"
-    >
-      <div className="command-palette" role="search">
+    <div className="command-palette-backdrop">
+      <button
+        type="button"
+        aria-label="Close command palette"
+        tabIndex={-1}
+        onClick={onClose}
+        style={{ position: 'absolute', inset: 0, cursor: 'default', background: 'transparent', border: 'none' }}
+      />
+      <div
+        className="command-palette"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Command palette"
+        style={{ position: 'relative' }}
+      >
         <div className="command-palette__input-row">
           <span className="command-palette__icon">
             <SearchIcon />
@@ -164,7 +169,7 @@ export function CommandPalette({
 
         <div className="command-palette__results" role="listbox">
           {flatItems.length === 0 ? (
-            <div className="command-palette__empty">No results for "{query}"</div>
+            <div className="command-palette__empty">No results for &ldquo;{query}&rdquo;</div>
           ) : (
             (() => {
               let globalIndex = 0;
@@ -182,8 +187,10 @@ export function CommandPalette({
                           className={`command-palette__item${activeIndex === idx ? ' command-palette__item--active' : ''}`}
                           role="option"
                           aria-selected={activeIndex === idx}
+                          tabIndex={0}
                           onMouseEnter={() => setActiveIndex(idx)}
                           onClick={() => item.action()}
+                          onKeyDown={(e) => { if (e.key === 'Enter') item.action(); }}
                         >
                           <span className="command-palette__item-icon">
                             {item.section === 'sessions' ? <SessionIcon /> : <NavIcon />}
