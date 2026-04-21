@@ -1811,7 +1811,6 @@ export function classifyRecipeMutationIntent(
   // Derive the most likely target template hint from the signal combination.
   const targetTemplateHint: string | undefined =
     isExplicitSwitch ? undefined :
-    wantsKanban ? 'job-search-pipeline' :
     wantsCharts ? 'vendor-evaluation-matrix' :
     (wantsCards && wantsImages) ? 'shopping-shortlist' :
     wantsTable ? 'vendor-evaluation-matrix' :
@@ -2098,10 +2097,8 @@ Return only the final assistant answer.`;
 ${activeProfileInstruction}
 ${recipeInstruction}
 ${refreshInstruction}
-${structuredRecipeInstruction}
 If this request involves nearby places, restaurants, or local businesses, keep the search scoped to the exact location the user named.
 Prefer one concise nearby-search pass and a short verified shortlist over long setup narration.
-If this request naturally produces a shortlist, create or update the local attached Recipe in the same response with that shortlist.
 Do not inspect the local repository or recipe for nearby-search requests.
 Do not use read_file, open, cat, ls, execute_code, python, shell, or repeated exploratory tool loops unless the user explicitly asked for code or local file analysis.
 If you need prices or rates, inspect only the smallest number of candidate listings needed to produce a useful shortlist, then stop.
@@ -2116,7 +2113,6 @@ Return only the final assistant answer.`;
 ${activeProfileInstruction}
 ${recipeInstruction}
 ${refreshInstruction}
-${structuredRecipeInstruction}
 Keep discovery requests focused and concise.
 Prefer a useful shortlist or direct answer over long setup narration.
 Do not include raw tool output, CLI startup banners, JSON blobs, scripts, or command traces in the final answer.
@@ -2128,7 +2124,6 @@ Return only the final assistant answer.`;
 ${activeProfileInstruction}
 ${recipeInstruction}
 ${refreshInstruction}
-${structuredRecipeInstruction}
 ${isSimpleRecipeWorkflowIntent(intentContent, Boolean(spaceContext)) ? 'Treat this as a single-step recipe action when possible. Do not expand into a longer autonomous workflow.' : ''}
 Return only the final assistant answer.
   Do not include CLI startup banners, tool inventories, tool output, scripts, JSON blobs, or turn-limit summaries in the final answer.`;

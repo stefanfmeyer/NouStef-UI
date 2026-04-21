@@ -1262,7 +1262,7 @@ Keep summaries short and searchable for the active profile.
     20_000
   );
 
-  it('preserves the assistant answer in a baseline Home recipe when a structured-result request would have produced an incomplete rich shell', async () => {
+  it('uses the conversational answer as the baseline when main-chat recipe instructions are absent (Phase 1 slim prompt)', async () => {
     const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'hermes-bridge-shell-recipe-'));
     tempRoots.push(tempRoot);
     const server = await startServer(tempRoot);
@@ -1301,14 +1301,13 @@ Keep summaries short and searchable for the active profile.
     expect(events.some((event) => event.type === 'recipe_event')).toBe(true);
     expect(sessionMessages.attachedRecipe).not.toBeNull();
     expect(sessionMessages.session.attachedRecipeId).toBeTruthy();
-    expectFailedTemplateHomeRecipe(
-      sessionMessages.attachedRecipe,
-      'I created a shell recipe for this request.',
-      'template_selection_failed'
-    );
+    // Phase 1: the main chat no longer appends recipe-creation instructions, so the
+    // baseline Home recipe is seeded from the conversational answer rather than an
+    // empty shell. The structured template is built by the separate enrichment pipeline.
+    expectBaselineHomeRecipe(sessionMessages.attachedRecipe);
     expect(
       sessionMessages.messages.some(
-        (message) => message.role === 'assistant' && message.content.includes('I created a shell recipe for this request.')
+        (message) => message.role === 'assistant' && message.content.includes('Italian restaurants')
       )
     ).toBe(true);
     expect(completeEvent?.type).toBe('complete');

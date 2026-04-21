@@ -18,44 +18,26 @@
   ],
   "slots": [
     { "id": "stats", "kind": "stats" },
-    { "id": "pipeline", "kind": "split", "required": true }
+    { "id": "listings", "kind": "card-grid", "required": true }
   ],
-  "allowedUpdateOps": ["set_header", "upsert_board_cards", "move_board_card", "set_detail", "append_note_lines"],
+  "allowedUpdateOps": ["set_header", "upsert_cards", "remove_items", "append_note_lines"],
   "actions": {
-    "move-job-stage": {
-      "id": "move-job-stage",
-      "label": "Update stage",
+    "find-more-jobs": {
+      "id": "find-more-jobs",
+      "label": "Find more",
       "kind": "bridge",
       "intent": "primary",
-      "visibility": { "requiresSelection": "single", "whenBuildReady": true },
-      "bridge": { "handler": "move_template_card_stage", "payload": {} },
-      "metadata": {}
-    },
-    "run-interview-prep": {
-      "id": "run-interview-prep",
-      "label": "Interview prep",
-      "kind": "bridge",
-      "intent": "primary",
-      "visibility": { "requiresSelection": "single", "whenBuildReady": true },
-      "bridge": { "handler": "generate_interview_prep", "payload": {} },
+      "visibility": { "requiresSelection": "none", "whenBuildReady": true },
+      "bridge": { "handler": "run_template_followup", "payload": {} },
       "prompt": {
-        "promptTemplate": "Prepare targeted interview questions, key talking points, and research notes for the selected job posting.",
-        "includeInputs": ["selected_items", "original_prompt"],
-        "allowedMutations": [],
+        "promptTemplate": "Find additional job listings matching the current search criteria and add them to the grid.",
+        "includeInputs": ["original_prompt"],
+        "allowedMutations": ["raw_data", "normalized_data"],
         "outboundRequestsAllowed": true,
-        "expectedOutput": "assistant_only",
+        "expectedOutput": "recipe_data_update",
         "timeoutMs": 90000,
         "retryable": true
       },
-      "metadata": {}
-    },
-    "append-template-note": {
-      "id": "append-template-note",
-      "label": "Add note",
-      "kind": "bridge",
-      "intent": "neutral",
-      "visibility": { "requiresSelection": "none", "whenBuildReady": true },
-      "bridge": { "handler": "append_template_note", "payload": {} },
       "metadata": {}
     }
   },

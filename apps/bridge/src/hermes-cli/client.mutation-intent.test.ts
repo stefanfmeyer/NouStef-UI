@@ -76,7 +76,7 @@ describe('classifyRecipeMutationIntent', () => {
       expect(result).not.toBeNull();
       expect(result?.kind).toBe('change_layout');
       expect(result?.wantsKanban).toBe(true);
-      expect(result?.targetTemplateHint).toBe('job-search-pipeline');
+      expect(result?.targetTemplateHint).toBeUndefined();
     });
 
     it('detects "redo as cards" request', () => {
