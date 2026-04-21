@@ -4189,6 +4189,31 @@ export class BridgeDatabase {
     return parsedEvent;
   }
 
+  batchAppendTelemetryEvents(events: TelemetryEvent[]) {
+    if (events.length === 0) return;
+    const parsed = events.map((e) => TelemetryEventSchema.parse(e));
+    const insert = this.database.prepare(
+      `INSERT OR IGNORE INTO telemetry_events (
+        id, profile_id, session_id, request_id, severity, category, code,
+        message, detail, payload_json, created_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+    );
+    this.database.exec('BEGIN');
+    try {
+      for (const r of parsed) {
+        insert.run(
+          r.id, r.profileId ?? null, r.sessionId ?? null, r.requestId ?? null,
+          r.severity, r.category, r.code, r.message, r.detail ?? null,
+          JSON.stringify(r.payload), r.createdAt
+        );
+      }
+      this.database.exec('COMMIT');
+    } catch (err) {
+      this.database.exec('ROLLBACK');
+      throw err;
+    }
+  }
+
   listTelemetryEvents(options: {
     profileId?: string | null;
     sessionId?: string | null;

@@ -143,7 +143,7 @@ describe('RecipesPage', () => {
 
     await userEvent.click(screen.getByRole('button', { name: 'Pipelines & Planning' }));
     await userEvent.click(screen.getByTestId('spaces-template-card-job-search-pipeline'));
-    expect(within(inspector).getByText('Apply to selected')).toBeInTheDocument();
+    expect(within(inspector).getByText('Job listings')).toBeInTheDocument();
   });
 
   it('hides the local-discovery-comparison template from the gallery', () => {

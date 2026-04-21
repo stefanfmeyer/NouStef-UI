@@ -29,6 +29,7 @@ import { useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { safeMarkdownUrlTransform } from '../../lib/markdown-url-transform';
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -107,7 +108,7 @@ function actionButtonTone(action: RecipeActionDefinition) {
 function BadgeChip({ label }: { label: string }) {
   return (
     <Box rounded="full" bg="blue.50" px="2.5" py="1" _dark={{ bg: 'whiteAlpha.120' }}>
-      <Text fontSize="10px" fontWeight="500" color="blue.700" textTransform="uppercase" letterSpacing="0.08em" _dark={{ color: 'blue.200' }}>
+      <Text fontSize="10px" fontWeight="500" color="blue.700" textTransform="uppercase" letterSpacing="0" _dark={{ color: 'blue.200' }}>
         {label}
       </Text>
     </Box>
@@ -117,7 +118,7 @@ function BadgeChip({ label }: { label: string }) {
 function StatCard({ label, value }: { label: string; value: string }) {
   return (
     <Box minW="120px" rounded="8px" border="1px solid var(--border-subtle)" bg="var(--surface-2)" px="3.5" py="3">
-      <Text fontSize="10px" fontWeight="600" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0.08em">
+      <Text fontSize="10px" fontWeight="600" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0">
         {label}
       </Text>
       <Text mt="1.5" fontSize="lg" fontWeight="600" color="var(--text-primary)">
@@ -132,6 +133,7 @@ function MarkdownBlock({ content }: { content: string }) {
     <Box color="var(--text-primary)">
       <ReactMarkdown
         skipHtml
+        urlTransform={(url) => safeMarkdownUrlTransform(url) ?? ''}
         remarkPlugins={[remarkGfm]}
         components={{
           a(props) {
@@ -140,7 +142,7 @@ function MarkdownBlock({ content }: { content: string }) {
               <chakra.a
                 href={href}
                 target={href.startsWith('mailto:') ? undefined : '_blank'}
-                rel={href.startsWith('mailto:') ? undefined : 'noreferrer'}
+                rel={href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
                 color="blue.600"
                 textDecoration="underline"
                 textUnderlineOffset="3px"
@@ -174,7 +176,7 @@ function renderValue(value: RecipeCellValue | unknown) {
       <chakra.a
         href={link.url}
         target={link.url.startsWith('mailto:') ? undefined : '_blank'}
-        rel={link.url.startsWith('mailto:') ? undefined : 'noreferrer'}
+        rel={link.url.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
         color="blue.600"
         textDecoration="underline"
         textUnderlineOffset="3px"
@@ -188,7 +190,7 @@ function renderValue(value: RecipeCellValue | unknown) {
   if (isRecord(value) && typeof value.imageUrl === 'string' && value.imageUrl.trim()) {
     return (
       <Button asChild size="xs" variant="outline" colorPalette="blue">
-        <a href={value.imageUrl} target="_blank" rel="noreferrer">
+        <a href={value.imageUrl} target="_blank" rel="noopener noreferrer">
           {getCellText(value) || 'View image'}
         </a>
       </Button>
@@ -464,10 +466,10 @@ export function RecipeDslRenderer({
                 <Text fontSize="sm" fontWeight="600" color="var(--text-primary)">
                   {entity.title}
                 </Text>
-                {entity.image?.url ? <Image src={entity.image.url} alt={entity.image.alt ?? entity.title} rounded="14px" maxH="140px" objectFit="cover" /> : null}
+                {entity.image?.url ? <Image src={entity.image.url} alt={entity.image.alt ?? entity.title} rounded="8px" maxH="140px" objectFit="cover" /> : null}
                 {collection.fieldKeys.slice(0, 5).map((fieldKey) => (
-                  <HStack key={`${entity.id}-${fieldKey}`} justify="recipe-between" align="start" gap="3">
-                    <Text fontSize="xs" fontWeight="500" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0.08em">
+                  <HStack key={`${entity.id}-${fieldKey}`} justify="space-between" align="start" gap="3">
+                    <Text fontSize="xs" fontWeight="500" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0">
                       {humanizeFieldKey(fieldKey)}
                     </Text>
                     {renderValue(fieldValueFromEntity(entity, fieldKey))}
@@ -491,7 +493,7 @@ export function RecipeDslRenderer({
         <Grid templateColumns={{ base: '1fr', xl: `repeat(${Math.min(3, grouped.size)}, minmax(0, 1fr))` }} gap="3">
           {[...grouped.entries()].map(([lane, entities]) => (
             <VStack key={`${section.id}-${lane}`} align="stretch" gap="2">
-              <Text fontSize="xs" fontWeight="600" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0.1em">
+              <Text fontSize="xs" fontWeight="600" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0">
                 {lane}
               </Text>
               {entities.map((entity) => (
@@ -521,7 +523,7 @@ export function RecipeDslRenderer({
         <VStack align="stretch" gap="3">
           {[...grouped.entries()].map(([group, entities]) => (
             <VStack key={`${section.id}-${group}`} align="stretch" gap="2">
-              <Text fontSize="xs" fontWeight="600" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0.1em">
+              <Text fontSize="xs" fontWeight="600" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0">
                 {group}
               </Text>
               {entities.map((entity) => (
@@ -557,7 +559,7 @@ export function RecipeDslRenderer({
           >
             <VStack align="stretch" gap="2.5">
               {entity.image?.url && (mode === 'media' || mode === 'cards') ? (
-                <Image src={entity.image.url} alt={entity.image.alt ?? entity.title} rounded="14px" maxH="140px" objectFit="cover" />
+                <Image src={entity.image.url} alt={entity.image.alt ?? entity.title} rounded="8px" maxH="140px" objectFit="cover" />
               ) : null}
               <VStack align="start" gap="0.5">
                 <Text fontSize="sm" fontWeight="600" color="var(--text-primary)">
@@ -574,8 +576,8 @@ export function RecipeDslRenderer({
               ) : null}
               {mode !== 'list'
                 ? collection.fieldKeys.slice(0, 4).map((fieldKey) => (
-                    <HStack key={`${entity.id}-${fieldKey}`} justify="recipe-between" align="start" gap="3">
-                      <Text fontSize="xs" fontWeight="500" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0.08em">
+                    <HStack key={`${entity.id}-${fieldKey}`} justify="space-between" align="start" gap="3">
+                      <Text fontSize="xs" fontWeight="500" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0">
                         {humanizeFieldKey(fieldKey)}
                       </Text>
                       {renderValue(fieldValueFromEntity(entity, fieldKey))}
@@ -635,7 +637,7 @@ export function RecipeDslRenderer({
         }
         return (
           <VStack key={section.id} align="stretch" gap="3">
-            <HStack justify="recipe-between" align="center" gap="3" wrap="wrap">
+            <HStack justify="space-between" align="center" gap="3" wrap="wrap">
               <VStack align="start" gap="0.5">
                 <Text fontSize="sm" fontWeight="600" color="var(--text-primary)">
                   {section.title ?? collection.label}
@@ -702,8 +704,8 @@ export function RecipeDslRenderer({
                   </Text>
                   {selectedEntity.description ? <Text fontSize="sm" color="var(--text-secondary)">{selectedEntity.description}</Text> : null}
                   {section.fieldKeys.map((fieldKey) => (
-                    <HStack key={`${selectedEntity.id}-${fieldKey}`} justify="recipe-between" align="start" gap="3">
-                      <Text fontSize="xs" fontWeight="500" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0.08em">
+                    <HStack key={`${selectedEntity.id}-${fieldKey}`} justify="space-between" align="start" gap="3">
+                      <Text fontSize="xs" fontWeight="500" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0">
                         {humanizeFieldKey(fieldKey)}
                       </Text>
                       {renderValue(fieldValueFromEntity(selectedEntity, fieldKey))}
@@ -898,9 +900,9 @@ export function RecipeDslRenderer({
 
   return (
     <VStack align="stretch" gap="4" h="100%" minH={0} data-testid="workspace-dsl-ready">
-      <Box rounded="10px" border="1px solid var(--border-subtle)" bg="var(--surface-1)" px="4" py="3.5">
+      <Box rounded="8px" border="1px solid var(--border-subtle)" bg="var(--surface-1)" px="4" py="3.5">
         <VStack align="stretch" gap="3">
-          <HStack justify="recipe-between" align="start" gap="3">
+          <HStack justify="space-between" align="start" gap="3">
             <VStack align="start" gap="1">
               <Text fontSize="md" fontWeight="600" color="var(--text-primary)">
                 {recipeModel.title}
@@ -924,7 +926,7 @@ export function RecipeDslRenderer({
           variant="plain"
           fitted={false}
         >
-          <Tabs.List rounded="999px" bg="var(--surface-2)" p="1" minW="max-content">
+          <Tabs.List rounded="8px" bg="var(--surface-2)" p="1" minW="max-content">
             {recipeModel.tabs.map((tab) => (
               <Tabs.Trigger key={tab.id} value={tab.id}>
                 {tab.label}

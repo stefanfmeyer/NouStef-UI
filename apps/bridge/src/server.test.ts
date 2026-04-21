@@ -32,6 +32,17 @@ import { createBridgeServer } from './server';
 const moduleDirectory = path.dirname(fileURLToPath(import.meta.url));
 const fixtureCliPath = path.resolve(moduleDirectory, '../test/fixtures/hermes-cli-fixture.mjs');
 
+// The bridge requires the x-hermes-bridge: 1 header on non-safe requests (CSRF guard).
+// Wrap global fetch so tests don't have to set it on every call.
+const originalFetch = globalThis.fetch;
+globalThis.fetch = ((input: Parameters<typeof originalFetch>[0], init?: Parameters<typeof originalFetch>[1]) => {
+  const mergedHeaders = {
+    'x-hermes-bridge': '1',
+    ...(init?.headers ?? {})
+  };
+  return originalFetch(input, { ...init, headers: mergedHeaders });
+}) as typeof originalFetch;
+
 async function collectStreamEvents(response: Response) {
   const reader = response.body?.getReader();
   if (!reader) {
@@ -201,27 +212,6 @@ function expectPromotedRichHomeRecipe(recipe: RecipeResponse['recipe'] | null | 
   expect(getPrimaryDynamicDataset(recipe)).not.toBeNull();
 }
 
-function expectFailedTemplateHomeRecipe(
-  recipe: RecipeResponse['recipe'] | null | undefined,
-  expectedSnippet?: string,
-  expectedFailureCategory?: string
-) {
-  expectBaselineHomeRecipe(recipe, expectedSnippet);
-  if (!recipe) {
-    return;
-  }
-
-  expect(recipe.renderMode).toBe('dynamic_v1');
-  expect(recipe.dynamic?.activeBuild?.buildKind).toBe('template_enrichment');
-  expect(recipe.dynamic?.activeBuild?.phase).toBe('failed');
-  if (expectedFailureCategory) {
-    expect(recipe.dynamic?.activeBuild?.failureCategory).toBe(expectedFailureCategory);
-    expect(recipe.metadata.recipePipeline?.applet.failureCategory).toBe(expectedFailureCategory);
-  }
-  expect(recipe.dynamic?.recipeTemplate).toBeUndefined();
-  expect(recipe.dynamic?.recipeDsl).toBeUndefined();
-  expect(recipe.dynamic?.recipeModel).toBeUndefined();
-}
 
 async function startServer(
   tempRoot: string,
@@ -437,6 +427,7 @@ describe.sequential('bridge server', () => {
     // connectProvider in v0.9.0 delegates to discovery — returns provider state
     expect(connected.config).toBeTruthy();
     expect(connected.providers.length).toBeGreaterThan(0);
+    expect(otherProfileProviders.config.profileId).toBe('jbarton');
     expect(settings.settings.unrestrictedAccessEnabled).toBe(false);
 
     await server.close();
@@ -1251,7 +1242,7 @@ Keep summaries short and searchable for the active profile.
     20_000
   );
 
-  it('preserves the assistant answer in a baseline Home recipe when a structured-result request would have produced an incomplete rich shell', async () => {
+  it('uses the conversational answer as the baseline when main-chat recipe instructions are absent (Phase 1 slim prompt)', async () => {
     const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'hermes-bridge-shell-recipe-'));
     tempRoots.push(tempRoot);
     const server = await startServer(tempRoot);
@@ -1290,14 +1281,13 @@ Keep summaries short and searchable for the active profile.
     expect(events.some((event) => event.type === 'recipe_event')).toBe(true);
     expect(sessionMessages.attachedRecipe).not.toBeNull();
     expect(sessionMessages.session.attachedRecipeId).toBeTruthy();
-    expectFailedTemplateHomeRecipe(
-      sessionMessages.attachedRecipe,
-      'I created a shell recipe for this request.',
-      'template_selection_failed'
-    );
+    // Phase 1: the main chat no longer appends recipe-creation instructions, so the
+    // baseline Home recipe is seeded from the conversational answer rather than an
+    // empty shell. The structured template is built by the separate enrichment pipeline.
+    expectBaselineHomeRecipe(sessionMessages.attachedRecipe);
     expect(
       sessionMessages.messages.some(
-        (message) => message.role === 'assistant' && message.content.includes('I created a shell recipe for this request.')
+        (message) => message.role === 'assistant' && message.content.includes('Italian restaurants')
       )
     ).toBe(true);
     expect(completeEvent?.type).toBe('complete');
@@ -1875,7 +1865,9 @@ Keep summaries short and searchable for the active profile.
     expect(errorEvent?.type).toBe('error');
     if (errorEvent?.type === 'error') {
       expect(errorEvent.error.code).toBe('INTERNAL_ERROR');
-      expect(errorEvent.error.message).toContain('Simulated stream failure after headers.');
+      // The client must get a non-empty error message; the message is intentionally
+      // generic (internals stay server-side) so we do not assert its exact text.
+      expect(errorEvent.error.message.length).toBeGreaterThan(0);
     }
     expect(health.status).toBe(200);
 

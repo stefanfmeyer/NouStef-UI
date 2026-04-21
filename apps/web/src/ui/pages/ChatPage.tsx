@@ -97,9 +97,29 @@ export function ChatPage({
   const [spaceChatCollapsed, setRecipeChatCollapsed] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
   const [actionError, setActionError] = useState<string | null>(null);
+  const [recipePanelAnimKey, setRecipePanelAnimKey] = useState(0);
+  const prevRecipeIdRef = useRef<string | null>(null);
   const runtimeButtonRef = useRef<HTMLButtonElement | null>(null);
   const activeSession = sessionPayload?.session ?? null;
   const attachedRecipe = sessionPayload?.attachedRecipe ?? null;
+
+  // Derive the kind of the most recent in-progress activity to drive the chat bubble icon.
+  const typingActivityKind = sending ? (() => {
+    for (let i = activities.length - 1; i >= 0; i--) {
+      const a = activities[i];
+      if (a && (a.state === 'started' || a.state === 'updated')) return a.kind;
+    }
+    return null;
+  })() : null;
+
+  // Bump the animation key every time a NEW recipe attaches so the panel re-runs its entry animation.
+  useEffect(() => {
+    const newId = attachedRecipe?.id ?? null;
+    if (newId && newId !== prevRecipeIdRef.current) {
+      setRecipePanelAnimKey((k) => k + 1);
+    }
+    prevRecipeIdRef.current = newId;
+  }, [attachedRecipe?.id]);
   const handleStandaloneTranscriptMessageClick = useCallback(
     (message: ChatMessage) => {
       onFocusActivityRequest(message.requestId);
@@ -194,14 +214,14 @@ export function ChatPage({
   }
 
   return (
-    <Flex direction="column" h="100%" minH={0} gap="3">
+    <Flex direction="column" h="100%" minH={0} gap="4">
       {!attachedRecipe ? (
-        <HStack justify="recipe-between" align="start" gap="4">
+        <HStack justify="space-between" align="start" gap="4">
           <Box minW={0}>
-            <Text fontSize={{ base: 'xl', xl: '2xl' }} fontWeight="600" color="var(--text-primary)" lineClamp={2}>
+            <Text fontSize={{ base: 'xl', xl: '2xl' }} fontWeight="750" color="var(--text-primary)" lineClamp={2} lineHeight="1.15">
               {activeSession?.title ?? 'Chat'}
             </Text>
-            <Text color="var(--text-secondary)" lineClamp={2}>
+            <Text mt="1" color="var(--text-secondary)" lineClamp={2}>
               {activeSession?.summary ?? 'Choose a recent session or start a new one.'}
             </Text>
           </Box>
@@ -227,18 +247,38 @@ export function ChatPage({
 
       {attachedRecipe ? (
         <>
+          <style>{`
+            @keyframes recipePanelEnter {
+              0%   { opacity: 0; transform: translateX(28px) scale(0.97); }
+              60%  { opacity: 1; }
+              100% { opacity: 1; transform: translateX(0) scale(1); }
+            }
+            @keyframes chatPaneCompress {
+              from { opacity: 0.7; }
+              to   { opacity: 1; }
+            }
+          `}</style>
           <Grid
             flex="1"
             minH={0}
             gap="3"
             templateColumns={
-              spaceChatCollapsed
+            spaceChatCollapsed
                 ? { base: 'minmax(0, 1fr) 92px', xl: 'minmax(0, 1fr) 92px' }
-                : { base: '1fr', xl: 'minmax(0, 1fr) 400px' }
+                : { base: '1fr', xl: 'minmax(0, 1fr) 420px' }
             }
+            css={{ transition: 'grid-template-columns 480ms cubic-bezier(0.4, 0, 0.2, 1)' }}
             data-testid="combined-session-recipe-layout"
           >
-            <Box minH={0} minW={0} overflow="hidden">
+            <Box
+              minH={0}
+              minW={0}
+              overflow="hidden"
+              key={recipePanelAnimKey}
+              style={{
+                animation: 'recipePanelEnter 480ms cubic-bezier(0.4, 0, 0.2, 1) both'
+              }}
+            >
               <SessionRecipePanel
                 recipe={attachedRecipe}
                 onRename={() => {
@@ -260,9 +300,10 @@ export function ChatPage({
               <Flex
                 direction="column"
                 minH={0}
-                rounded="10px"
+                rounded="8px"
                 border="1px solid var(--border-subtle)"
-                bg="var(--surface-1)"
+                bg="var(--surface-elevated)"
+                boxShadow="var(--shadow-sm)"
                 px="2"
                 py="3"
                 align="center"
@@ -298,7 +339,7 @@ export function ChatPage({
                     fontWeight="600"
                     color="var(--text-muted)"
                     textTransform="uppercase"
-                    letterSpacing="0.12em"
+                    letterSpacing="0"
                     style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}
                   >
                     Session chat
@@ -307,13 +348,13 @@ export function ChatPage({
               </Flex>
             ) : (
               <Flex direction="column" minH={0} gap="3">
-                <Box rounded="8px" border="1px solid var(--border-subtle)" bg="var(--surface-1)" px="3.5" py="3">
-                  <HStack justify="recipe-between" align="start" gap="3">
+                <Box rounded="8px" border="1px solid var(--border-subtle)" bg="var(--surface-elevated)" px="4" py="3.5" boxShadow="var(--shadow-xs)">
+                  <HStack justify="space-between" align="start" gap="3">
                     <Box minW={0}>
-                      <Text fontSize="xs" fontWeight="600" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0.12em">
+                      <Text fontSize="xs" fontWeight="700" color="var(--text-muted)" letterSpacing="0">
                         Session chat
                       </Text>
-                      <Text fontSize="sm" fontWeight="600" color="var(--text-primary)" lineClamp={2}>
+                      <Text mt="0.5" fontSize="sm" fontWeight="700" color="var(--text-primary)" lineClamp={2}>
                         {attachedRecipe?.title ?? activeSession?.title ?? 'Attached chat'}
                       </Text>
                     </Box>
@@ -355,11 +396,12 @@ export function ChatPage({
                 <Box
                   flex="1"
                   minH={0}
-                  rounded="10px"
+                  rounded="8px"
                   border="1px solid var(--border-subtle)"
                   bg="var(--surface-1)"
-                  px={{ base: '3', xl: '3.5' }}
-                  py={{ base: '3', xl: '3.5' }}
+                  boxShadow="var(--shadow-sm)"
+                  px={{ base: '3', xl: '4' }}
+                  py={{ base: '3', xl: '4' }}
                   data-testid="session-recipe-chat-pane"
                 >
                   <ChatTranscript
@@ -368,10 +410,11 @@ export function ChatPage({
                     assistantDraft={assistantDraft}
                     showTypingIndicator={typing}
                     typingStatusLabel={progress}
+                    typingActivityKind={typingActivityKind}
                     selectedRequestId={selectedActivityRequestId}
                     onMessageClick={handleAttachedTranscriptMessageClick}
                     emptyTitle="No messages yet"
-                    emptyDetail="Start chatting in this attached recipe session."
+                    emptyDetail="Start chatting in this attached space session."
                   />
                 </Box>
 
@@ -391,12 +434,12 @@ export function ChatPage({
             <Drawer.Backdrop backdropFilter="auto" backdropBlur="sm" bg="blackAlpha.500" />
             <Drawer.Positioner>
               <Drawer.Content
-                bg="var(--surface-1)"
+                bg="var(--surface-elevated)"
                 borderLeft="1px solid var(--border-subtle)"
                 data-testid="recipe-runtime-drawer"
               >
                 <Drawer.Header>
-                  <HStack justify="recipe-between" align="center" gap="3">
+                  <HStack justify="space-between" align="center" gap="3">
                     <Drawer.Title color="var(--text-primary)">Runtime activity</Drawer.Title>
                     <Drawer.CloseTrigger asChild>
                       <CloseButton size="sm" aria-label="Close runtime drawer" title="Close runtime drawer" />
@@ -417,14 +460,15 @@ export function ChatPage({
           </Drawer.Root>
         </>
       ) : (
-        <Grid flex="1" minH={0} gap="4" templateColumns={{ base: '1fr', xl: 'minmax(0, 1fr) 360px' }}>
+        <Grid flex="1" minH={0} gap="5" templateColumns={{ base: '1fr', xl: 'minmax(0, 1fr) 372px' }}>
           <Flex direction="column" minH={0} gap="4">
             <Box
               flex="1"
               minH={0}
-              rounded="12px"
+              rounded="8px"
               border="1px solid var(--border-subtle)"
               bg="var(--surface-1)"
+              boxShadow="var(--shadow-sm)"
               px={{ base: '3', xl: '4' }}
               py={{ base: '3', xl: '4' }}
             >
@@ -434,6 +478,7 @@ export function ChatPage({
                 assistantDraft={assistantDraft}
                 showTypingIndicator={typing}
                 typingStatusLabel={progress}
+                typingActivityKind={typingActivityKind}
                 selectedRequestId={selectedActivityRequestId}
                 onMessageClick={handleStandaloneTranscriptMessageClick}
                 emptyTitle="No messages yet"

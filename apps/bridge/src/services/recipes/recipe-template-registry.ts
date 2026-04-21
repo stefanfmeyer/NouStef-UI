@@ -306,20 +306,14 @@ export const WORKRECIPE_TEMPLATE_RUNTIME_REGISTRY: Record<RecipeTemplateId, Reci
     selectionSignals: ['job listings', 'job postings', 'job search', 'career opportunities', 'open positions'],
     slots: [
       { id: 'stats', kind: 'stats' },
-      { id: 'pipeline', kind: 'split', required: true }
+      { id: 'listings', kind: 'card-grid', required: true }
     ],
-    allowedUpdateOps: ['set_header', 'upsert_board_cards', 'move_board_card', 'set_detail', 'append_note_lines'],
+    allowedUpdateOps: ['set_header', 'upsert_cards', 'remove_items', 'append_note_lines'],
     actions: {
-      'move-job-stage': bridgeAction('move-job-stage', 'Update stage', 'move_template_card_stage', {
+      'find-more-jobs': bridgeAction('find-more-jobs', 'Find more', 'run_template_followup', {
         intent: 'primary',
-        visibility: { requiresSelection: 'single' }
-      }),
-      'run-interview-prep': bridgeAction('run-interview-prep', 'Interview prep', 'generate_interview_prep', {
-        intent: 'primary',
-        visibility: { requiresSelection: 'single' },
-        prompt: { promptTemplate: 'Prepare targeted interview questions, key talking points, and research notes for the selected job posting.', includeInputs: ['selected_items', 'original_prompt'], allowedMutations: [], outboundRequestsAllowed: true, expectedOutput: 'assistant_only', timeoutMs: 90_000, retryable: true }
-      }),
-      'append-template-note': bridgeAction('append-template-note', 'Add note', 'append_template_note')
+        prompt: { promptTemplate: 'Find additional job listings matching the current search criteria and add them to the grid.', includeInputs: ['original_prompt'], allowedMutations: ['raw_data', 'normalized_data'], outboundRequestsAllowed: true, expectedOutput: 'recipe_data_update', timeoutMs: 90_000, retryable: true }
+      })
     },
     transitions: []
   }),

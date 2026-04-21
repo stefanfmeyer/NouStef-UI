@@ -3,117 +3,179 @@
   "schemaVersion": "recipe_template_state/v1",
   "templateId": "job-search-pipeline",
   "title": "Senior SWE job search — Apr 2026",
-  "summary": "9 roles across the pipeline. 3 actively interviewing, 1 offer in hand (Vercel), 4 applied and awaiting reply. Application velocity picked up in the last two weeks.",
+  "summary": "6 curated openings across product-focused engineering teams. Each card links directly to the posting.",
   "sections": [
     {
       "slotId": "stats",
       "kind": "stats",
-      "title": "Pipeline",
+      "title": "At a glance",
       "items": [
-        { "label": "Applied", "value": "4", "helper": "awaiting reply" },
-        { "label": "Interviewing", "value": "3", "helper": "across 3 companies", "tone": "accent" },
-        { "label": "Offer", "value": "1", "helper": "Vercel — decide by Apr 26", "tone": "success" },
-        { "label": "Rejected", "value": "2", "helper": "20% rejection rate" }
+        { "label": "Roles", "value": "6", "helper": "curated for you" },
+        { "label": "Remote-friendly", "value": "5", "helper": "full remote or hybrid", "tone": "accent" },
+        { "label": "Pay range", "value": "$180k – $320k", "helper": "across listings" }
       ]
     },
     {
-      "slotId": "applications-chart",
-      "kind": "bar-chart",
-      "title": "Applications by week",
-      "xKey": "week",
-      "series": [
-        { "id": "applications", "label": "Applications", "tone": "accent" }
-      ],
-      "data": [
-        { "week": "Wk 12", "applications": 1 },
-        { "week": "Wk 13", "applications": 2 },
-        { "week": "Wk 14", "applications": 0 },
-        { "week": "Wk 15", "applications": 3 },
-        { "week": "Wk 16", "applications": 3 }
-      ],
-      "orientation": "vertical",
-      "stacked": false,
-      "valueFormat": "number"
-    },
-    {
-      "slotId": "pipeline",
-      "kind": "split",
-      "title": "Pipeline",
-      "ratio": "list-detail",
-      "left": [
+      "slotId": "listings",
+      "kind": "card-grid",
+      "title": "Job listings",
+      "columns": 2,
+      "cards": [
         {
-          "slotId": "pipeline.kanban",
-          "kind": "kanban",
-          "title": "Stages",
-          "columns": [
+          "id": "job-anthropic-swe",
+          "title": "Senior Software Engineer",
+          "subtitle": "Anthropic",
+          "image": {
+            "src": "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=600&q=80",
+            "alt": "AI research office workspace",
+            "aspect": "video",
+            "fit": "cover",
+            "borderRadius": "none",
+            "border": "none"
+          },
+          "price": "$240k – $320k",
+          "chips": [
+            { "label": "Remote", "tone": "accent" },
+            { "label": "Full-time", "tone": "neutral" }
+          ],
+          "actions": [
             {
-              "id": "applied",
-              "label": "Applied (4)",
-              "tone": "neutral",
-              "cards": [
-                { "id": "j-linear", "title": "Senior Product Engineer", "subtitle": "Linear", "chips": [{ "label": "$200-240k", "tone": "neutral" }, { "label": "Remote", "tone": "accent" }], "footer": "Applied Apr 17", "actions": [] },
-                { "id": "j-vanta", "title": "Senior Full-Stack Engineer", "subtitle": "Vanta", "chips": [{ "label": "$195-225k", "tone": "neutral" }, { "label": "SF / remote", "tone": "accent" }], "footer": "Applied Apr 16", "actions": [] },
-                { "id": "j-ramp", "title": "Senior Platform Engineer", "subtitle": "Ramp", "chips": [{ "label": "$210-250k", "tone": "neutral" }, { "label": "NYC", "tone": "neutral" }], "footer": "Applied Apr 15", "actions": [] },
-                { "id": "j-retool", "title": "Senior Product Engineer", "subtitle": "Retool", "chips": [{ "label": "$215-240k", "tone": "neutral" }, { "label": "SF hybrid", "tone": "neutral" }], "footer": "Applied Apr 14", "actions": [] }
-              ]
-            },
-            {
-              "id": "interviewing",
-              "label": "Interviewing (3)",
-              "tone": "accent",
-              "cards": [
-                { "id": "j-stripe", "title": "Senior Software Engineer", "subtitle": "Stripe · Payments team", "chips": [{ "label": "$230-280k", "tone": "success" }, { "label": "SF", "tone": "neutral" }], "footer": "Onsite scheduled Apr 22", "actions": [] },
-                { "id": "j-anthropic", "title": "Senior Full-Stack Engineer", "subtitle": "Anthropic · Claude Product", "chips": [{ "label": "$260-320k", "tone": "success" }, { "label": "SF / remote", "tone": "accent" }], "footer": "System design Apr 21", "actions": [] },
-                { "id": "j-airbnb", "title": "Senior Software Engineer", "subtitle": "Airbnb · Trust", "chips": [{ "label": "$220-260k", "tone": "neutral" }, { "label": "SF", "tone": "neutral" }], "footer": "Behavioral Apr 20", "actions": [] }
-              ]
-            },
-            {
-              "id": "offer",
-              "label": "Offer (1)",
-              "tone": "success",
-              "cards": [
-                { "id": "j-vercel", "title": "Senior Product Engineer", "subtitle": "Vercel · DX team", "chips": [{ "label": "$245k + equity", "tone": "success" }, { "label": "Remote", "tone": "accent" }], "footer": "Decide by Apr 26", "actions": [] }
-              ]
-            },
-            {
-              "id": "rejected",
-              "label": "Rejected (2)",
-              "tone": "neutral",
-              "cards": [
-                { "id": "j-figma", "title": "Senior Product Engineer", "subtitle": "Figma · Design systems", "chips": [{ "label": "$235-275k", "tone": "neutral" }], "footer": "Rejected after screen", "actions": [] },
-                { "id": "j-datadog", "title": "Senior Engineer, Platform", "subtitle": "Datadog", "chips": [{ "label": "$210-260k", "tone": "neutral" }], "footer": "Role closed", "actions": [] }
-              ]
+              "kind": "link",
+              "label": "Apply",
+              "href": "https://www.anthropic.com/careers",
+              "openInNewTab": true
             }
           ]
-        }
-      ],
-      "right": [
+        },
         {
-          "slotId": "pipeline.detail",
-          "kind": "detail-panel",
-          "title": "Vercel · Senior Product Engineer",
-          "eyebrow": "Offer · DX team",
-          "summary": "Working on the Vercel dashboard experience. Ship-focused product team inside the DX org. Small team (~8 engineers), weekly releases, strong design partnership.",
+          "id": "job-stripe-staff",
+          "title": "Staff Engineer",
+          "subtitle": "Stripe",
+          "image": {
+            "src": "https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?w=600&q=80",
+            "alt": "Financial technology office",
+            "aspect": "video",
+            "fit": "cover",
+            "borderRadius": "none",
+            "border": "none"
+          },
+          "price": "$230k – $290k",
           "chips": [
-            { "label": "$245k base", "tone": "success" },
-            { "label": "Equity grant", "tone": "accent" },
+            { "label": "SF / Remote", "tone": "accent" },
+            { "label": "Full-time", "tone": "neutral" }
+          ],
+          "actions": [
+            {
+              "kind": "link",
+              "label": "Apply",
+              "href": "https://stripe.com/jobs",
+              "openInNewTab": true
+            }
+          ]
+        },
+        {
+          "id": "job-linear-product-eng",
+          "title": "Product Designer",
+          "subtitle": "Linear",
+          "image": {
+            "src": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&q=80",
+            "alt": "Clean minimal product design setup",
+            "aspect": "video",
+            "fit": "cover",
+            "borderRadius": "none",
+            "border": "none"
+          },
+          "price": "$200k – $240k",
+          "chips": [
             { "label": "Remote", "tone": "accent" },
-            { "label": "Offer", "tone": "success" }
+            { "label": "Full-time", "tone": "neutral" }
           ],
-          "fields": [
-            { "label": "Company", "value": "Vercel (Series E, ~600 people)", "chips": [], "bullets": [], "links": [], "fullWidth": false },
-            { "label": "Role", "value": "Senior Product Engineer · DX team", "chips": [], "bullets": [], "links": [], "fullWidth": false },
-            { "label": "Base + OTE", "value": "$245k base + 0.05% equity (4yr vest, 1yr cliff)", "chips": [{ "label": "Competitive", "tone": "success" }], "bullets": [], "links": [], "fullWidth": true },
-            { "label": "Requirements", "value": null, "chips": [], "bullets": [
-              "7+ years shipping production web apps",
-              "Strong React / Next.js",
-              "Comfort with design hand-off and iterating on UX",
-              "Track record of owning features end-to-end"
-            ], "links": [], "fullWidth": true },
-            { "label": "Deadline", "value": "Apr 26 — they'll extend to Apr 29 if needed", "chips": [{ "label": "Soon", "tone": "warning" }], "bullets": [], "links": [], "fullWidth": true }
+          "actions": [
+            {
+              "kind": "link",
+              "label": "Apply",
+              "href": "https://linear.app/careers",
+              "openInNewTab": true
+            }
+          ]
+        },
+        {
+          "id": "job-huggingface-ml",
+          "title": "ML Engineer",
+          "subtitle": "Hugging Face",
+          "image": {
+            "src": "https://images.unsplash.com/photo-1555255707-c07966088b7b?w=600&q=80",
+            "alt": "Machine learning research environment",
+            "aspect": "video",
+            "fit": "cover",
+            "borderRadius": "none",
+            "border": "none"
+          },
+          "price": "$200k – $260k",
+          "chips": [
+            { "label": "Remote", "tone": "accent" },
+            { "label": "Full-time", "tone": "neutral" }
           ],
-          "actions": [],
-          "note": "Recruiter contact: Jules Hernandez. Negotiation angle: Anthropic onsite Apr 22 gives timing leverage."
+          "actions": [
+            {
+              "kind": "link",
+              "label": "Apply",
+              "href": "https://apply.workable.com/huggingface/",
+              "openInNewTab": true
+            }
+          ]
+        },
+        {
+          "id": "job-vercel-frontend",
+          "title": "Frontend Engineer",
+          "subtitle": "Vercel",
+          "image": {
+            "src": "https://images.unsplash.com/photo-1561736778-92e52a7769ef?w=600&q=80",
+            "alt": "Modern web development workspace",
+            "aspect": "video",
+            "fit": "cover",
+            "borderRadius": "none",
+            "border": "none"
+          },
+          "price": "$195k – $250k",
+          "chips": [
+            { "label": "Remote", "tone": "accent" },
+            { "label": "Full-time", "tone": "neutral" }
+          ],
+          "actions": [
+            {
+              "kind": "link",
+              "label": "Apply",
+              "href": "https://vercel.com/careers",
+              "openInNewTab": true
+            }
+          ]
+        },
+        {
+          "id": "job-supabase-solutions",
+          "title": "Solutions Architect",
+          "subtitle": "Supabase",
+          "image": {
+            "src": "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=600&q=80",
+            "alt": "Developer working on backend systems",
+            "aspect": "video",
+            "fit": "cover",
+            "borderRadius": "none",
+            "border": "none"
+          },
+          "price": "$180k – $220k",
+          "chips": [
+            { "label": "Remote", "tone": "accent" },
+            { "label": "Full-time", "tone": "neutral" }
+          ],
+          "actions": [
+            {
+              "kind": "link",
+              "label": "Apply",
+              "href": "https://supabase.com/careers",
+              "openInNewTab": true
+            }
+          ]
         }
       ]
     }

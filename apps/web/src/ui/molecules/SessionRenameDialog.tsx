@@ -52,7 +52,7 @@ export function SessionRenameDialog({
       <Portal>
         <Dialog.Backdrop backdropFilter="auto" backdropBlur="sm" bg="blackAlpha.500" />
         <Dialog.Positioner>
-          <Dialog.Content bg="var(--surface-1)" border="1px solid var(--border-subtle)">
+          <Dialog.Content bg="var(--surface-elevated)" border="1px solid var(--border-subtle)" rounded="8px" boxShadow="var(--shadow-md)">
             <Dialog.Header>
               <Dialog.Title color="var(--text-primary)">{dialogTitle}</Dialog.Title>
             </Dialog.Header>
@@ -84,12 +84,13 @@ export function SessionRenameDialog({
               </VStack>
             </Dialog.Body>
             <Dialog.Footer>
-              <Button variant="outline" onClick={() => onOpenChange(false)}>
+              <Button variant="outline" rounded="8px" onClick={() => onOpenChange(false)}>
                 Cancel
               </Button>
               <Button
                 bg="var(--accent)"
-                color="white"
+                color="var(--accent-contrast)"
+                rounded="8px"
                 _hover={{ bg: 'var(--accent-strong)' }}
                 loading={loading}
                 disabled={trimmedTitle.length === 0 || trimmedTitle === sessionTitle.trim()}

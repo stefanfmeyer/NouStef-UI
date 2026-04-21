@@ -21,6 +21,7 @@ import type {
 import { getRecipeContentTab, getRecipeContentViewData } from '@hermes-recipes/protocol';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { safeMarkdownUrlTransform } from '../../lib/markdown-url-transform';
 import { useMemo, useState } from 'react';
 import { DynamicRecipeView } from './DynamicRecipeView';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -324,7 +325,7 @@ function PipelineStatusPill({
         borderColor: 'whiteAlpha.220'
       }}
     >
-      <Text fontSize="10px" fontWeight="600" color={tone.color} textTransform="uppercase" letterSpacing="0.08em" _dark={{ color: 'whiteAlpha.920' }}>
+      <Text fontSize="10px" fontWeight="600" color={tone.color} textTransform="uppercase" letterSpacing="0" _dark={{ color: 'whiteAlpha.920' }}>
         {label}: {formatPipelineStatus(status)}
       </Text>
     </Box>
@@ -389,7 +390,7 @@ const markdownRendererCss = {
   '& h1, & h2, & h3': {
     fontWeight: 600,
     lineHeight: 1.15,
-    letterSpacing: '-0.03em',
+    letterSpacing: 0,
     marginTop: '0.85rem',
     marginBottom: '0.45rem'
   },
@@ -459,7 +460,7 @@ const markdownRendererCss = {
     fontSize: '0.72rem',
     fontWeight: 600,
     textTransform: 'uppercase',
-    letterSpacing: '0.08em'
+    letterSpacing: 0
   },
   '& tr:last-of-type td': {
     borderBottom: 'none'
@@ -496,7 +497,7 @@ function ExternalActionButton({
   variant?: 'outline' | 'subtle' | 'ghost';
 }) {
   const target = link.url.startsWith('mailto:') ? undefined : '_blank';
-  const rel = link.url.startsWith('mailto:') ? undefined : 'noreferrer';
+  const rel = link.url.startsWith('mailto:') ? undefined : 'noopener noreferrer';
 
   return (
     <Button asChild size="xs" variant={variant} colorPalette={link.kind === 'email' ? 'teal' : 'blue'}>
@@ -510,7 +511,7 @@ function ExternalActionButton({
 function BadgeChip({ label }: { label: string }) {
   return (
     <Box rounded="full" bg="blue.50" px="2.5" py="1" _dark={{ bg: 'whiteAlpha.120' }}>
-      <Text fontSize="10px" fontWeight="500" color="blue.700" textTransform="uppercase" letterSpacing="0.08em" _dark={{ color: 'blue.200' }}>
+      <Text fontSize="10px" fontWeight="500" color="blue.700" textTransform="uppercase" letterSpacing="0" _dark={{ color: 'blue.200' }}>
         {label}
       </Text>
     </Box>
@@ -540,7 +541,7 @@ function TableCellView({
 
     return (
       <Button asChild size="xs" variant="ghost" colorPalette="blue">
-        <a href={href} target="_blank" rel="noreferrer">
+        <a href={href} target="_blank" rel="noopener noreferrer">
           {text || image?.alt || 'View image'}
         </a>
       </Button>
@@ -552,7 +553,7 @@ function TableCellView({
       <chakra.a
         href={link.url}
         target={link.url.startsWith('mailto:') ? undefined : '_blank'}
-        rel={link.url.startsWith('mailto:') ? undefined : 'noreferrer'}
+        rel={link.url.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
         color="blue.600"
         fontWeight="600"
         textDecoration="underline"
@@ -618,8 +619,8 @@ function MarkdownEntryView({
       py="3.5"
       data-testid="recipe-markdown-entry"
     >
-      <HStack justify="recipe-between" align="start" gap="3">
-        <Text fontSize="xs" fontWeight="600" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0.1em">
+      <HStack justify="space-between" align="start" gap="3">
+        <Text fontSize="xs" fontWeight="600" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0">
           Entry
         </Text>
         <EntryActionButtons entry={entry} onRemove={onRemove} onDeleteSource={onDeleteSource} deleting={deleting} />
@@ -631,6 +632,7 @@ function MarkdownEntryView({
       >
         <ReactMarkdown
           skipHtml
+          urlTransform={(url) => safeMarkdownUrlTransform(url) ?? ''}
           remarkPlugins={[remarkGfm]}
           components={{
             a(props) {
@@ -639,7 +641,7 @@ function MarkdownEntryView({
                 <chakra.a
                   href={href}
                   target={href.startsWith('mailto:') ? undefined : '_blank'}
-                  rel={href.startsWith('mailto:') ? undefined : 'noreferrer'}
+                  rel={href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
                   color="blue.600"
                   textDecoration="underline"
                   textUnderlineOffset="3px"
@@ -653,7 +655,7 @@ function MarkdownEntryView({
               const href = props.src ?? '#';
               return (
                 <Button asChild size="xs" variant="outline" colorPalette="blue" mt="2">
-                  <a href={href} target="_blank" rel="noreferrer">
+                  <a href={href} target="_blank" rel="noopener noreferrer">
                     {props.alt?.trim() || 'View image'}
                   </a>
                 </Button>
@@ -670,15 +672,15 @@ function MarkdownEntryView({
 
 function CardMetadataRow({ label, value, link }: { label: string; value: string; link?: RecipeLink }) {
   return (
-    <HStack align="start" justify="recipe-between" gap="3">
-      <Text fontSize="xs" fontWeight="500" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0.08em">
+    <HStack align="start" justify="space-between" gap="3">
+      <Text fontSize="xs" fontWeight="500" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0">
         {label}
       </Text>
       {link ? (
         <chakra.a
           href={link.url}
           target={link.url.startsWith('mailto:') ? undefined : '_blank'}
-          rel={link.url.startsWith('mailto:') ? undefined : 'noreferrer'}
+          rel={link.url.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
           fontSize="sm"
           fontWeight="600"
           color="blue.600"
@@ -713,7 +715,7 @@ function CardView({
     <VStack
       align="stretch"
       gap="4"
-      rounded="10px"
+      rounded="8px"
       border="1px solid var(--border-subtle)"
       bg="var(--surface-2)"
       px="4"
@@ -721,8 +723,8 @@ function CardView({
       boxShadow="sm"
       data-testid="recipe-card-renderer"
     >
-      <HStack justify="recipe-between" align="start" gap="3">
-        <Text fontSize="xs" fontWeight="600" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0.1em">
+      <HStack justify="space-between" align="start" gap="3">
+        <Text fontSize="xs" fontWeight="600" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0">
           Card
         </Text>
         <EntryActionButtons entry={entry} onRemove={onRemove} onDeleteSource={onDeleteSource} deleting={deleting} />
@@ -742,10 +744,10 @@ function CardView({
       ) : null}
 
       <VStack align="stretch" gap="2">
-        <HStack justify="recipe-between" align="start" gap="3">
+        <HStack justify="space-between" align="start" gap="3">
           <VStack align="start" gap="1" minW={0}>
             {card.eyebrow ? (
-              <Text fontSize="10px" fontWeight="600" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0.12em">
+              <Text fontSize="10px" fontWeight="600" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0">
                 {card.eyebrow}
               </Text>
             ) : null}
@@ -864,7 +866,7 @@ function MarkdownPanesRenderer({ markdown }: { markdown: string }) {
               '& h3': { fontSize: '0.95rem' },
               '& table': { width: '100%', maxWidth: '100%', marginTop: '0.5rem', borderCollapse: 'separate', borderSpacing: 0, border: '1px solid var(--border-subtle)', borderRadius: '6px', overflow: 'hidden', tableLayout: 'fixed' },
               '& th, & td': { padding: '0.5rem 0.7rem', textAlign: 'left', borderBottom: '1px solid var(--border-subtle)', wordWrap: 'break-word', overflowWrap: 'break-word' },
-              '& th': { background: 'var(--surface-2)', color: 'var(--text-muted)', fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em' },
+              '& th': { background: 'var(--surface-2)', color: 'var(--text-muted)', fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0 },
               '& blockquote': { paddingInlineStart: '0.75rem', borderLeft: '3px solid var(--border-subtle)', color: 'var(--text-muted)', marginTop: '0.5rem' }
             }}
           >
@@ -953,8 +955,8 @@ function ContentTabRenderer({
 
     return (
       <VStack align="stretch" gap="3">
-        <HStack justify="recipe-between" align="center" gap="3" wrap="wrap">
-          <Text fontSize="xs" fontWeight="600" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0.1em">
+        <HStack justify="space-between" align="center" gap="3" wrap="wrap">
+          <Text fontSize="xs" fontWeight="600" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0">
             {effectiveSelectedIds.length > 0 ? `${effectiveSelectedIds.length} selected` : `${rowsWithEntries.length} rows`}
           </Text>
           <HStack gap="2" wrap="wrap" justify="end">
@@ -1021,7 +1023,7 @@ function ContentTabRenderer({
                     key={column.id}
                     fontSize="11px"
                     fontWeight="600"
-                    letterSpacing="0.08em"
+                    letterSpacing="0"
                     textTransform="uppercase"
                     color="var(--text-muted)"
                     bg="var(--surface-2)"
@@ -1036,7 +1038,7 @@ function ContentTabRenderer({
                       fontSize="inherit"
                       fontWeight="inherit"
                       textTransform="inherit"
-                      letterSpacing="inherit"
+                      letterSpacing="0"
                       onClick={() => {
                         if (sortColumnId === column.id) {
                           setSortDirection((current) => (current === 'asc' ? 'desc' : 'asc'));
@@ -1055,7 +1057,7 @@ function ContentTabRenderer({
                 <Table.ColumnHeader
                   fontSize="11px"
                   fontWeight="600"
-                  letterSpacing="0.08em"
+                  letterSpacing="0"
                   textTransform="uppercase"
                   color="var(--text-muted)"
                   bg="var(--surface-2)"
@@ -1163,7 +1165,7 @@ function ContentTabRenderer({
                   <chakra.a
                     href={href}
                     target={href.startsWith('mailto:') ? undefined : '_blank'}
-                    rel={href.startsWith('mailto:') ? undefined : 'noreferrer'}
+                    rel={href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
                     color="blue.600"
                     textDecoration="underline"
                     textUnderlineOffset="3px"
@@ -1177,7 +1179,7 @@ function ContentTabRenderer({
                 const href = props.src ?? '#';
                 return (
                   <Button asChild size="xs" variant="outline" colorPalette="blue" mt="2">
-                    <a href={href} target="_blank" rel="noreferrer">
+                    <a href={href} target="_blank" rel="noopener noreferrer">
                       {props.alt?.trim() || 'View image'}
                     </a>
                   </Button>
@@ -1236,7 +1238,7 @@ function HomeRecipeStatusBanner({
 
   return (
     <Box
-      rounded="10px"
+      rounded="8px"
       border="1px solid var(--border-subtle)"
       bg="var(--surface-1)"
       px="4"
@@ -1276,14 +1278,14 @@ function HomeRecipeStatusBanner({
             <HStack gap="2" wrap="wrap">
               {failureCategory ? (
                 <Box rounded="full" border="1px solid" borderColor="var(--border-subtle)" px="2.5" py="1">
-                  <Text fontSize="10px" fontWeight="600" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0.08em">
+                  <Text fontSize="10px" fontWeight="600" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0">
                     Cause: {failureCategory}
                   </Text>
                 </Box>
               ) : null}
               {timeoutLabel ? (
                 <Box rounded="full" border="1px solid" borderColor="var(--border-subtle)" px="2.5" py="1">
-                  <Text fontSize="10px" fontWeight="600" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0.08em">
+                  <Text fontSize="10px" fontWeight="600" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0">
                     {timeoutLabel}
                   </Text>
                 </Box>
@@ -1292,7 +1294,7 @@ function HomeRecipeStatusBanner({
           ) : null}
           {buildPhaseLabel ? (
             <Box rounded="full" border="1px solid" borderColor="var(--border-subtle)" px="2.5" py="1">
-              <Text fontSize="10px" fontWeight="600" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0.08em">
+              <Text fontSize="10px" fontWeight="600" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0">
                 Stage: {buildPhaseLabel}
               </Text>
             </Box>
@@ -1380,7 +1382,10 @@ export function SessionRecipePanel({
       <Box
         flex="1"
         minH={0}
-        bg="var(--surface-1)"
+        rounded="8px"
+        border="1px solid var(--border-subtle)"
+        bg="var(--surface-elevated)"
+        boxShadow="var(--shadow-sm)"
         px="4"
         py="4"
         display="flex"

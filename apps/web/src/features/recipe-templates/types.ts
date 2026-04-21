@@ -12,9 +12,11 @@ export type TemplateTone = 'neutral' | 'accent' | 'success' | 'warning' | 'dange
 export type RecipeTemplateLayout =
   | 'comparison-grid'
   | 'image-shortlist'
+  | 'card-grid'
   | 'triage-board'
   | 'rules-builder'
   | 'list-detail'
+  | 'balanced'
   | 'travel-compare'
   | 'timeline-tabs'
   | 'research-notebook'

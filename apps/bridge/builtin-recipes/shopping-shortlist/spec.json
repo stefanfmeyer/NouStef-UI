@@ -22,19 +22,21 @@
   "requiredActions": [],
   "optionalActions": ["append-template-note"],
   "populationInstructions": {
-    "summary": "Produce tiled cards for each product candidate. Always include image.query so the card has a photo. Lead with 1-2 strong value chips (e.g. 'Top pick', 'Under $100'). Keep bullets to 2-3 concrete facts.",
+    "summary": "Produce tiled cards for each product candidate. Always include image.query so the card has a photo. Lead with 1-2 strong value chips (e.g. 'Top pick', 'Under $100'). Every card must have a link action button so the user can open the item.",
     "steps": [
       "Understand the user's constraints: budget, use case, preferred style.",
       "Pick 4-12 products that match. Don't overload.",
       "For each: set image.query to a specific photo search (brand + model works best).",
       "Set price as a string with currency symbol.",
       "Give each card 1-2 chips: 'Top pick', 'Budget', 'Premium', 'Under $X', etc.",
-      "Use bullets for concrete specs or differentiators, not marketing fluff."
+      "Use bullets for concrete specs or differentiators, not marketing fluff.",
+      "Add a link action to every card's actions array — label it 'View on Amazon' (or the appropriate retailer) with the item URL as href. A card with an empty actions array renders no button, which is a bug."
     ],
     "guardrails": [
       "Never invent products or prices.",
       "Keep card count under 12 — split into multiple recipes if needed.",
-      "Don't use bullet points for subjective claims ('great quality') — only concrete facts."
+      "Don't use bullet points for subjective claims ('great quality') — only concrete facts.",
+      "Every card MUST have at least one entry in its actions array. Missing actions = missing button."
     ]
   },
   "updateRules": {

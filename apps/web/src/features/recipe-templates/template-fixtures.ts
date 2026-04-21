@@ -777,52 +777,59 @@ export const RECIPE_TEMPLATE_FIXTURES: Record<RecipeTemplateId, RecipeTemplatePr
     ]
   },
   'job-search-pipeline': {
-    headline: 'Job listings as a selectable table with Apply to selected and Find more actions.',
-    summary: 'Position, company, estimated pay, and a direct link per row. No pipeline or kanban.',
+    headline: 'Job listings as a card grid with per-card Apply links and Find more.',
+    summary: 'Each card shows a company photo or logo, role title, pay range, and a direct Apply link. No pipeline or kanban.',
     sections: [
       {
         kind: 'hero',
         eyebrow: 'Jobs template',
         title: 'Senior product design openings',
-        summary: 'Pick the roles to apply to, or ask Hermes to find more.',
-        chips: [chip('Selectable rows', 'accent'), chip('Direct link per row'), chip('Apply to selected')],
+        summary: 'Browse curated roles, apply directly, or ask Hermes to find more.',
+        chips: [chip('Card grid', 'accent'), chip('Per-card Apply link'), chip('Find more')],
         actions: []
       },
       {
-        kind: 'selectable-table',
-        columns: [
-          { id: 'company', label: 'Company' },
-          { id: 'pay', label: 'Estimated pay', align: 'end' as const },
-          { id: 'link', label: 'Link' }
-        ],
-        rows: [
+        kind: 'card-grid',
+        title: 'Job listings',
+        columns: 2,
+        cards: [
           {
-            id: 'horizon-health',
-            label: 'Senior Product Designer',
-            cells: [{ value: 'Horizon Health' }, { value: '$195k \u2013 $215k', tone: 'success' as const }, { value: 'Link', tone: 'accent' as const }]
+            title: 'Senior Product Designer',
+            subtitle: 'Horizon Health',
+            price: '$195k \u2013 $215k',
+            imageLabel: 'Horizon Health',
+            chips: [chip('Remote', 'accent'), chip('Full-time')],
+            bullets: ['\u{1F517} Apply → direct posting link']
           },
           {
-            id: 'northlane',
-            label: 'Staff Product Designer',
-            cells: [{ value: 'Northlane' }, { value: '$180k \u2013 $195k' }, { value: 'Link', tone: 'accent' as const }]
+            title: 'Staff Product Designer',
+            subtitle: 'Northlane',
+            price: '$180k \u2013 $195k',
+            imageLabel: 'Northlane',
+            chips: [chip('Hybrid'), chip('Full-time')],
+            bullets: ['\u{1F517} Apply → direct posting link']
           },
           {
-            id: 'aster',
-            label: 'Senior Product Designer',
-            cells: [{ value: 'Aster' }, { value: '$175k \u2013 $190k' }, { value: 'Link', tone: 'accent' as const }]
+            title: 'Product Designer — Growth',
+            subtitle: 'Aster',
+            price: '$175k \u2013 $190k',
+            imageLabel: 'Aster',
+            chips: [chip('Remote', 'accent'), chip('Full-time')],
+            bullets: ['\u{1F517} Apply → direct posting link']
           },
           {
-            id: 'beacon',
-            label: 'Product Designer',
-            cells: [{ value: 'Beacon' }, { value: '$160k \u2013 $180k' }, { value: 'Link', tone: 'accent' as const }]
+            title: 'Product Designer',
+            subtitle: 'Beacon',
+            price: '$160k \u2013 $180k',
+            imageLabel: 'Beacon',
+            chips: [chip('SF / Remote'), chip('Full-time')],
+            bullets: ['\u{1F517} Apply → direct posting link']
           }
-        ],
-        primaryAction: 'Apply to selected',
-        secondaryAction: 'Find more'
+        ]
       }
     ]
   },
-  'content-campaign-planner': {
+    'content-campaign-planner': {
     headline: 'A content-ops template with workflow tabs for ideas, drafts, schedule, and email execution.',
     summary: 'The goal is to make status progression, idea expansion, and launch writing feel stable instead of rewrite-prone.',
     sections: [

@@ -594,11 +594,12 @@ export const SessionDeletionModeSchema = z.enum(['soft', 'hybrid']);
 export type SessionDeletionMode = z.infer<typeof SessionDeletionModeSchema>;
 
 export const ChatActivitySchema = z.object({
-  kind: z.enum(['status', 'skill', 'tool', 'command', 'approval', 'warning']),
+  kind: z.enum(['status', 'skill', 'tool', 'command', 'approval', 'warning', 'thinking', 'website']),
   state: z.enum(['started', 'updated', 'completed', 'failed', 'cancelled', 'denied']),
   label: z.string().min(1),
   detail: z.string().optional(),
   command: z.string().optional(),
+  url: z.string().optional(),
   requestId: z.string().min(1).nullable().default(null),
   timestamp: z.string().datetime()
 });

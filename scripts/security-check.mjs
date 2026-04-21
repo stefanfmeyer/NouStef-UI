@@ -11,7 +11,11 @@ const checks = [
         const stdout = error?.stdout ?? '';
         const combined = `${stderr}\n${stdout}`;
         if (combined.includes('410') || combined.includes('being retired') || combined.includes('ERR_PNPM_AUDIT_BAD_RESPONSE')) {
-          console.log('npm audit endpoint returned 410 (deprecated). Treating as non-blocking.');
+          console.warn(
+            '\n\u26A0\uFE0F  npm audit endpoint returned 410 (deprecated).\n' +
+            '    Treating as non-blocking, but vulnerabilities are NOT being checked.\n' +
+            '    Consider adding osv-scanner or CodeQL to CI for real coverage.\n'
+          );
           return;
         }
         // Re-print the output for other failures

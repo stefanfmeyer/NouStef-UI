@@ -2337,25 +2337,6 @@ function comparisonTableToData(section) {
   };
 }
 
-function kanbanToColumns(section) {
-  if (!section || section.kind !== 'kanban') {
-    return [];
-  }
-
-  return (section.columns ?? []).map((column) => ({
-    id: column.id ?? column.label,
-    label: column.label,
-    tone: column.tone,
-    cards: (column.cards ?? []).map((card) => ({
-      id: card.id,
-      title: card.title,
-      subtitle: card.subtitle,
-      chips: card.chips ?? [],
-      footer: card.footer,
-      links: actionRefsToLinks(card.actions)
-    }))
-  }));
-}
 
 function groupedChecklistToItems(section) {
   if (!section || section.kind !== 'grouped-list') {
@@ -2537,8 +2518,8 @@ function convertLegacyTemplateFillArtifact(fill) {
           eyebrow: hero?.eyebrow,
           heroChips: hero?.chips ?? [],
           stats: statsToItems(findTemplateSectionBySlotId(sections, 'stats')),
-          columns: kanbanToColumns(findTemplateSectionBySlotIds(sections, ['pipeline-board', 'job-board'])),
-          detail: detailPanelToDetail(findTemplateSectionBySlotIds(sections, ['pipeline-detail', 'job-detail']))
+          cards: cardGridToCards(findTemplateSectionBySlotIds(sections, ['listings', 'job-listings'])),
+          noteLines: notesToLines(findTemplateSectionBySlotId(sections, 'notes'))
         },
         metadata: fill.metadata ?? {}
       };
@@ -3427,179 +3408,105 @@ function createJobSearchPipelineTemplateFillArtifact() {
     kind: 'recipe_template_fill',
     schemaVersion: 'recipe_template_fill/v1',
     templateId: 'job-search-pipeline',
-    title: 'Job search pipeline',
-    subtitle: 'Applications and interview prep',
-    summary: 'Track each opportunity over time, update stages, and generate interview prep from the posting context.',
+    title: 'Job search — senior engineering roles',
+    subtitle: 'Curated openings with direct Apply links',
+    summary: 'A card grid of curated senior engineering roles. Each card links directly to the job posting.',
     sections: [
       {
         slotId: 'hero',
         kind: 'hero',
-        eyebrow: 'Career search',
-        title: 'Job search pipeline',
-        summary: 'Stage-based application tracker with direct posting links and interview prep actions.',
+        eyebrow: 'Job search',
+        title: 'Senior engineering openings',
+        summary: 'Browse curated roles and apply directly, or ask Hermes for more listings.',
         chips: [
           { label: '3 roles', tone: 'accent' },
-          { label: '1 interview loop', tone: 'success' }
+          { label: 'Per-card Apply link', tone: 'neutral' }
         ],
         actions: []
       },
       {
-        slotId: 'stats',
-        kind: 'stats',
-        title: 'Pipeline health',
-        items: [
-          { label: 'Applied', value: '2', tone: 'accent' },
-          { label: 'Interviewing', value: '1', tone: 'success' }
-        ]
-      },
-      {
-        slotId: 'pipeline',
-        kind: 'split',
-        ratio: 'list-detail',
-        left: [
+        slotId: 'listings',
+        kind: 'card-grid',
+        title: 'Job listings',
+        columns: 2,
+        cards: [
           {
-            slotId: 'job-board',
-            kind: 'kanban',
-            title: 'Stages',
-            columns: [
-              {
-                id: 'applied',
-                label: 'Applied',
-                tone: 'accent',
-                cards: [
-                  {
-                    id: 'job-openai-platform',
-                    title: 'Platform Engineer',
-                    subtitle: 'OpenAI',
-                    chips: [
-                      { label: 'Remote', tone: 'neutral' },
-                      { label: '$220k', tone: 'success' }
-                    ],
-                    footer: 'Keep stage changes local and persistent.',
-                    actions: [
-                      {
-                        kind: 'existing_action',
-                        actionId: 'move-job-stage',
-                        selectedItemIds: ['job-openai-platform']
-                      },
-                      {
-                        kind: 'existing_action',
-                        actionId: 'run-interview-prep',
-                        selectedItemIds: ['job-openai-platform']
-                      },
-                      {
-                        kind: 'link',
-                        label: 'Posting',
-                        href: 'https://example.com/job/openai-platform'
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                id: 'interview',
-                label: 'Interview',
-                tone: 'success',
-                cards: [
-                  {
-                    id: 'job-linear-product',
-                    title: 'Product Engineer',
-                    subtitle: 'Linear',
-                    chips: [
-                      { label: 'Onsite hybrid', tone: 'neutral' },
-                      { label: '$210k', tone: 'accent' }
-                    ],
-                    footer: 'Interview prep should stay attached to this opportunity.',
-                    actions: [
-                      {
-                        kind: 'existing_action',
-                        actionId: 'move-job-stage',
-                        selectedItemIds: ['job-linear-product']
-                      },
-                      {
-                        kind: 'existing_action',
-                        actionId: 'run-interview-prep',
-                        selectedItemIds: ['job-linear-product']
-                      },
-                      {
-                        kind: 'link',
-                        label: 'Posting',
-                        href: 'https://example.com/job/linear-product'
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        right: [
-          {
-            slotId: 'job-detail',
-            kind: 'detail-panel',
-            title: 'Interview prep',
-            eyebrow: 'Selected opportunity',
-            summary: 'Generate prep notes that stay grounded in the role, company, technology stack, and requirements.',
+            id: 'job-stripe-platform',
+            title: 'Platform Engineer',
+            subtitle: 'Stripe',
+            image: {
+              src: 'https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?w=600&q=80',
+              alt: 'Financial technology office',
+              aspect: 'video',
+              fit: 'cover',
+              borderRadius: 'none',
+              border: 'none'
+            },
+            price: '$200k\u2013$240k',
             chips: [
-              { label: 'Interview loop', tone: 'success' },
-              { label: 'Detailed prep', tone: 'accent' }
-            ],
-            fields: [
-              {
-                label: 'Role',
-                value: 'Product Engineer',
-                chips: [],
-                bullets: [],
-                links: [],
-                fullWidth: false
-              },
-              {
-                label: 'Company',
-                value: 'Linear',
-                chips: [],
-                bullets: [],
-                links: [],
-                fullWidth: false
-              },
-              {
-                label: 'Technology',
-                value: 'TypeScript, React, backend APIs, product quality',
-                chips: [],
-                bullets: [],
-                links: [],
-                fullWidth: true
-              },
-              {
-                label: 'Requirements',
-                value: 'Strong product intuition, systems thinking, and execution under ambiguity.',
-                chips: [],
-                bullets: [],
-                links: [],
-                fullWidth: true
-              },
-              {
-                label: 'Posting',
-                value: undefined,
-                chips: [],
-                bullets: [],
-                links: [
-                  {
-                    label: 'Open posting',
-                    href: 'https://example.com/job/linear-product'
-                  }
-                ],
-                fullWidth: true
-              }
+              { label: 'Remote', tone: 'accent' },
+              { label: 'Full-time', tone: 'neutral' }
             ],
             actions: [
               {
-                kind: 'existing_action',
-                actionId: 'run-interview-prep',
-                selectedItemIds: ['job-linear-product']
+                kind: 'link',
+                label: 'Apply',
+                href: 'https://stripe.com/jobs',
+                openInNewTab: true
               }
+            ]
+          },
+          {
+            id: 'job-linear-product',
+            title: 'Product Engineer',
+            subtitle: 'Linear',
+            image: {
+              src: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&q=80',
+              alt: 'Clean minimal product design setup',
+              aspect: 'video',
+              fit: 'cover',
+              borderRadius: 'none',
+              border: 'none'
+            },
+            price: '$200k\u2013$235k',
+            chips: [
+              { label: 'Remote', tone: 'accent' },
+              { label: 'Full-time', tone: 'neutral' }
             ],
-            note: 'The prep action should generate a reusable markdown brief for the selected role.',
-            noteTitle: 'Prep behavior'
+            actions: [
+              {
+                kind: 'link',
+                label: 'Apply',
+                href: 'https://linear.app/careers',
+                openInNewTab: true
+              }
+            ]
+          },
+          {
+            id: 'job-anthropic-swe',
+            title: 'Senior Software Engineer',
+            subtitle: 'Anthropic',
+            image: {
+              src: 'https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=600&q=80',
+              alt: 'AI research workspace',
+              aspect: 'video',
+              fit: 'cover',
+              borderRadius: 'none',
+              border: 'none'
+            },
+            price: '$240k\u2013$320k',
+            chips: [
+              { label: 'Remote', tone: 'accent' },
+              { label: 'Full-time', tone: 'neutral' }
+            ],
+            actions: [
+              {
+                kind: 'link',
+                label: 'Apply',
+                href: 'https://www.anthropic.com/careers',
+                openInNewTab: true
+              }
+            ]
           }
         ]
       }
@@ -3609,7 +3516,6 @@ function createJobSearchPipelineTemplateFillArtifact() {
     }
   };
 }
-
 function createContentCampaignPlannerTemplateFillArtifact() {
   return {
     kind: 'recipe_template_fill',

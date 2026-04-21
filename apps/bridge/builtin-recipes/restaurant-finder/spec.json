@@ -8,32 +8,33 @@
     "Comparing 4-8 dining options by price/vibe"
   ],
   "supports": [
-    "Filter chips for party size, time, cuisine, price",
     "Grouped list of restaurants by neighborhood",
-    "Detail panel with hours, address, price chips, cuisine tags",
-    "Photo per restaurant (image.query)"
+    "Detail panel with hours, website, phone, cuisine as plain label+value rows",
+    "Tabs: Results / Saved / Notes"
   ],
-  "supportedTabs": ["Overview"],
+  "supportedTabs": ["Results", "Saved", "Notes"],
   "idealDataShape": [
-    "Filter context (date, time, party size, cuisine)",
     "Neighborhood groups with 2-4 restaurants each",
-    "Per-restaurant details: hours, address, price, cuisine, booking availability"
+    "Per-restaurant details: hours, website link, phone, cuisine"
   ],
-  "requiredSections": ["filter-strip", "split"],
-  "optionalSections": [],
+  "requiredSections": ["tabs", "split"],
+  "optionalSections": ["saved list", "notes"],
   "requiredActions": [],
   "optionalActions": ["append-template-note"],
   "populationInstructions": {
-    "summary": "Start with filter chips (date/time/party size/cuisine/price). Group 5-7 restaurants by neighborhood on the left. Populate a detail-panel on the right for the initially selected restaurant with hours, address, cuisine, price tier, and a photo query.",
+    "summary": "Wrap all content in a tabs section (Results / Saved / Notes). The Results tab pane holds a balanced split: grouped-list on the left, detail-panel on the right. Do NOT add a filter-strip anywhere.",
     "steps": [
-      "Parse the user's implicit filters: city, neighborhood, cuisine, budget, time.",
-      "Emit filter chips so the user can see and refine them.",
-      "Group 5-7 restaurants by neighborhood; tone-code top picks with success.",
-      "Populate the detail-panel for the first restaurant with hours, price, address, and a photo image.query.",
+      "Create a top-level 'tabs' section with three tabs: Results, Saved, Notes. Set activeTabId to the Results tab id.",
+      "Place the entire split section INSIDE the Results tab pane — never at the top level outside tabs.",
+      "Use ratio: 'balanced' on the split so both columns are equal width.",
+      "Group 5-7 restaurants by neighborhood in a grouped-list on the left side; tone-code top picks with success.",
+      "On the right side, populate a detail-panel for the initially selected restaurant with these fields stacked as plain rows: Hours, Website (as a link), Phone, Cuisine.",
       "Keep per-item subtitle short (cuisine + price tier); put the full description in the detail panel.",
-      "Include an image.query for the detail-panel restaurant photo (e.g. '<restaurant name> interior')."
+      "Do NOT add a filter-strip section — omit all filter chips."
     ],
     "guardrails": [
+      "ALL sections must be nested inside tab panes — never place sections at the top level outside the tabs section.",
+      "Do NOT add a filter-strip. Omit filters entirely.",
       "Don't make up hours or addresses — if unknown, say 'check website'.",
       "Don't claim booking availability unless verified.",
       "Keep to one cuisine-dense neighborhood per group."
@@ -41,7 +42,6 @@
   },
   "updateRules": {
     "patchPrefer": [
-      "Use set_filter_chips when the user refines cuisine/time/price",
       "Use upsert_groups to add or swap restaurants in a neighborhood",
       "Use set_detail when the user picks a different restaurant"
     ],
@@ -49,7 +49,7 @@
       "User changes city entirely",
       "User switches from dinner to a different meal context"
     ],
-    "persistAcrossUpdates": ["filter chips selected by the user", "notes"],
-    "stableRegions": ["header"]
+    "persistAcrossUpdates": ["active tab", "selected restaurant", "notes"],
+    "stableRegions": ["tabs structure", "split structure"]
   }
 }

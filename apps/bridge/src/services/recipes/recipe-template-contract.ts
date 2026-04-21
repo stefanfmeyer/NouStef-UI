@@ -936,49 +936,6 @@ function coerceTimelineItems(value: unknown, repairs: RecipeTemplateRepairSummar
     .filter((item): item is RecipeTemplateAuthoringTimelineItem => Boolean(item));
 }
 
-function coerceBoardColumns(value: unknown, repairs: RecipeTemplateRepairSummary, path: string) {
-  const source = Array.isArray(value) ? value : value === undefined || value === null ? [] : [value];
-  if (!Array.isArray(value) && value !== undefined && value !== null) {
-    registerNormalizedValue(repairs, `${path}:singular -> array`);
-  }
-
-  return source
-    .map((item, index) => {
-      const record = toRecord(item);
-      const label = preferString(record, ['label', 'title', 'name'], repairs, 'label');
-      if (!label) {
-        return null;
-      }
-
-      const cards = (Array.isArray(record.cards) ? record.cards : []).map((card, cardIndex) => {
-        const parsed = RecipeTemplateAuthoringBoardCardSchema.safeParse(card);
-        if (parsed.success) {
-          return parsed.data;
-        }
-        const cardRecord = toRecord(card);
-        const title = preferString(cardRecord, ['title', 'label', 'name'], repairs, 'title');
-        if (!title) {
-          return null;
-        }
-        return {
-          id: preferString(cardRecord, ['id', 'itemId'], repairs, 'id'),
-          title,
-          subtitle: preferString(cardRecord, ['subtitle', 'summary'], repairs, 'subtitle'),
-          chips: coerceChips(cardRecord.chips ?? cardRecord.tags, repairs, `${path}[${index}].cards[${cardIndex}].chips`),
-          footer: preferString(cardRecord, ['footer', 'note'], repairs, 'footer'),
-          links: coerceLinks(cardRecord.links ?? cardRecord.actions, repairs, `${path}[${index}].cards[${cardIndex}].links`)
-        };
-      });
-
-      return {
-        id: preferString(record, ['id', 'columnId', 'key'], repairs, 'id') ?? `column-${index + 1}`,
-        label,
-        tone: asTone(record.tone),
-        cards: cards.filter((card): card is RecipeTemplateAuthoringBoardCard => Boolean(card))
-      };
-    })
-    .filter((item): item is NonNullable<typeof item> => item !== null);
-}
 
 function coerceChecklistItems(value: unknown, repairs: RecipeTemplateRepairSummary, path: string) {
   const source = Array.isArray(value) ? value : value === undefined || value === null ? [] : [value];
@@ -1032,6 +989,7 @@ function unwrapTemplateDataRecord(
         };
       case 'shopping-shortlist':
       case 'hotel-shortlist':
+      case 'job-search-pipeline':
         registerAlias(repairs, `${path}.data`, `${path}.cards`);
         return {
           ...record,
@@ -1189,8 +1147,8 @@ function normalizeTemplateFillData(templateId: RecipeTemplateId, rawData: unknow
         eyebrow: preferString(record, ['eyebrow', 'kicker'], repairs, 'eyebrow'),
         heroChips: coerceChips(record.heroChips ?? record.badges, repairs, 'data.heroChips'),
         stats: coerceStats(record.stats, repairs, 'data.stats'),
-        columns: coerceBoardColumns(record.columns ?? record.stages, repairs, 'data.columns'),
-        detail: coerceDetail(record.detail ?? record.selectedOpportunity ?? record.interviewPrep, repairs, 'data.detail')
+        cards: coerceCards(record.cards ?? record.jobs ?? record.listings, repairs, 'data.cards'),
+        noteLines: coerceNoteLines(record.noteLines ?? record.notes, repairs, 'data.noteLines')
       };
     case 'event-planner':
       return {
@@ -1411,15 +1369,6 @@ function clearTimelineLinks(items: RecipeTemplateAuthoringTimelineItem[]) {
   }));
 }
 
-function clearBoardLinks(columns: RecipeTemplateAuthoringBoardColumn[]) {
-  return columns.map((column) => ({
-    ...column,
-    cards: column.cards.map((card) => ({
-      ...card,
-      links: []
-    }))
-  }));
-}
 
 function clearDetailLinks(detail: RecipeTemplateAuthoringDetail) {
   return {
@@ -1518,8 +1467,7 @@ function stripTemplateActionLinks(fill: RecipeTemplateFill): RecipeTemplateFill 
         ...fill,
         data: {
           ...fill.data,
-          columns: clearBoardLinks(fill.data.columns),
-          detail: clearDetailLinks(fill.data.detail)
+          cards: clearCardLinks(fill.data.cards)
         }
       });
     case 'event-planner':
@@ -1621,19 +1569,6 @@ function collectLinkedTimelineItems(items: RecipeTemplateAuthoringTimelineItem[]
     }));
 }
 
-function collectLinkedBoardColumns(columns: RecipeTemplateAuthoringBoardColumn[]) {
-  return columns
-    .map((column) => ({
-      id: column.id,
-      cards: column.cards
-        .filter((card) => card.links.length > 0)
-        .map((card) => ({
-          id: card.id ?? card.title,
-          links: card.links
-        }))
-    }))
-    .filter((column) => column.cards.length > 0);
-}
 
 function collectLinkedDetail(detail: RecipeTemplateAuthoringDetail | null | undefined) {
   if (!detail) {
@@ -1773,8 +1708,7 @@ export function createRecipeTemplateActionsArtifact(fill: RecipeTemplateFill): R
         schemaVersion: 'recipe_template_actions/v1',
         templateId: fill.templateId,
         data: {
-          columns: collectLinkedBoardColumns(fill.data.columns),
-          detail: collectLinkedDetail(fill.data.detail)
+          cards: collectLinkedCards(fill.data.cards)
         },
         metadata: {}
       });
@@ -1867,27 +1801,6 @@ function mergeTimelineLinks(
   }));
 }
 
-function mergeBoardLinks(
-  columns: RecipeTemplateAuthoringBoardColumn[],
-  overlays: Array<{ id: string; cards: Array<{ id: string; links: RecipeTemplateAuthoringLink[] }> }> = []
-) {
-  const columnMap = new Map(overlays.map((overlay) => [overlay.id, overlay] as const));
-  return columns.map((column) => {
-    const columnOverlay = columnMap.get(column.id ?? column.label);
-    if (!columnOverlay) {
-      return column;
-    }
-
-    const cardMap = new Map((columnOverlay.cards ?? []).map((card) => [card.id, card.links] as const));
-    return {
-      ...column,
-      cards: column.cards.map((card) => ({
-        ...card,
-        links: cardMap.get(card.id ?? card.title) ?? card.links
-      }))
-    };
-  });
-}
 
 function mergeDetailLinks(
   detail: RecipeTemplateAuthoringDetail,
@@ -2015,8 +1928,7 @@ export function assembleRecipeTemplateFill(input: {
         ...baseFill,
         data: {
           ...baseFill.data,
-          columns: mergeBoardLinks(baseFill.data.columns, actions.data.columns),
-          detail: mergeDetailLinks(baseFill.data.detail, actions.data.detail)
+          cards: mergeCardLinks(baseFill.data.cards, actions.data.cards)
         }
       });
     case 'event-planner':
@@ -2175,6 +2087,8 @@ function defaultSlotIdForTemplateOperation(templateId: RecipeTemplateId, op: Rec
           return 'shortlist';
         case 'hotel-shortlist':
           return 'hotels';
+        case 'job-search-pipeline':
+          return 'listings';
         case 'travel-itinerary-planner':
           return 'bookings';
         case 'event-planner':
@@ -2220,8 +2134,6 @@ function defaultSlotIdForTemplateOperation(templateId: RecipeTemplateId, op: Rec
           return 'result-detail';
         case 'security-review-board':
           return 'selected-finding';
-        case 'job-search-pipeline':
-          return 'pipeline-detail';
         default:
           return 'detail';
       }
@@ -2236,6 +2148,8 @@ function defaultSlotIdForTemplateOperation(templateId: RecipeTemplateId, op: Rec
           return 'shortlist';
         case 'hotel-shortlist':
           return 'hotels';
+        case 'job-search-pipeline':
+          return 'listings';
         case 'travel-itinerary-planner':
           return 'bookings';
         case 'event-planner':
@@ -2778,9 +2692,6 @@ function countGroupItems(groups: RecipeTemplateAuthoringGroup[]) {
   return groups.reduce((total, group) => total + group.items.length, 0);
 }
 
-function countBoardCards(columns: RecipeTemplateAuthoringBoardColumn[]) {
-  return columns.reduce((total, column) => total + column.cards.length, 0);
-}
 
 function semanticCompletenessFailure(
   fill: RecipeTemplateFill,
@@ -2969,8 +2880,7 @@ export function validateRecipeTemplateSemanticCompleteness(fill: RecipeTemplateF
     }
     case 'job-search-pipeline': {
       const primaryContentCounts = {
-        columns: fill.data.columns.length,
-        cards: countBoardCards(fill.data.columns)
+        cards: fill.data.cards.length
       };
       return primaryContentCounts.cards > 0
         ? {
@@ -2979,9 +2889,9 @@ export function validateRecipeTemplateSemanticCompleteness(fill: RecipeTemplateF
             primaryContentCounts,
             requiredSignals: ['cards'],
             issues: [],
-            summary: 'Pipeline cards populated.'
+            summary: 'Job listing cards populated.'
           }
-        : semanticCompletenessFailure(fill, primaryContentCounts, ['cards'], 'Pipeline');
+        : semanticCompletenessFailure(fill, primaryContentCounts, ['cards'], 'Job listings');
     }
     case 'event-planner': {
       const primaryContentCounts = {
@@ -3369,27 +3279,14 @@ function compileTemplateSections(fill: RecipeTemplateFill, definition: RecipeTem
     }
     case 'job-search-pipeline': {
       const data = fill.data;
-      const boardActionIds = ['move-job-stage', 'run-interview-prep'];
-      const detail = normalizeDetailValue(
-        data.detail,
-        'Selected opportunity',
-        'Review the role, company, requirements, and interview prep context.'
-      );
       return compactArray<RecipeTemplateSection>([
-        data.stats.length > 0 ? createStatsSection('stats', 'Pipeline status', data.stats) : null,
+        data.stats.length > 0 ? createStatsSection('stats', 'At a glance', data.stats) : null,
         {
-          slotId: 'pipeline',
-          kind: 'split',
-          ratio: 'detail-list',
-          left: [
-            {
-              slotId: 'pipeline-board',
-              kind: 'kanban',
-              title: 'Applications by stage',
-              columns: toBoardColumns(definition, data.columns, boardActionIds, 'pipeline')
-            }
-          ],
-          right: [createDetailPanelSection(definition, 'pipeline-detail', detail.title, detail)]
+          slotId: 'listings',
+          kind: 'card-grid',
+          title: 'Job listings',
+          columns: 2,
+          cards: toCardItems(definition, data.cards, [], 'job-card')
         }
       ]);
     }
@@ -3751,20 +3648,19 @@ function getTemplateFillGuide(templateId: RecipeTemplateId) {
       };
     case 'job-search-pipeline':
       return {
-        allowedDataKeys: ['stats', 'columns', 'detail'],
-        requiredDataKeys: ['columns', 'detail'],
+        allowedDataKeys: ['stats', 'cards', 'noteLines'],
+        requiredDataKeys: ['cards'],
         validExample: {
           kind: 'recipe_template_fill',
           schemaVersion: 'recipe_template_fill/v2',
           templateId,
           title: 'Backend job search',
-          summary: 'Track active applications and interview prep.',
+          summary: 'Curated job listings with pay ranges and direct apply links.',
           data: {
-            columns: [{ id: 'applied', label: 'Applied', cards: [{ id: 'job-1', title: 'Platform Engineer' }] }],
-            detail: { title: 'Platform Engineer', chips: [], fields: [] }
+            cards: [{ id: 'job-1', title: 'Platform Engineer', subtitle: 'Stripe', price: '$200k–$240k', chips: [{ label: 'Remote', tone: 'accent' }], actions: [{ kind: 'link', label: 'Apply', href: 'https://stripe.com/jobs', openInNewTab: true }] }]
           }
         },
-        commonMistakes: ['Use canonical kanban columns and detail. Do not flatten opportunities into grouped lists or markdown prose.']
+        commonMistakes: ['Every card must have an Apply link action. Do not use kanban columns, board stages, or detail panels for this template.']
       };
     case 'shopping-shortlist':
       return {
@@ -4047,7 +3943,7 @@ function getTemplateSemanticRequirements(templateId: RecipeTemplateId) {
     case 'security-review-board':
       return ['Populate at least one finding in the severity-grouped results.'];
     case 'job-search-pipeline':
-      return ['Populate at least one card in the primary pipeline columns.'];
+      return ['Populate at least one job listing card with a title, company subtitle, pay price, and an Apply link action.'];
     case 'event-planner':
       return ['Populate at least one venue, guest, checklist item, or itinerary item.'];
     case 'content-campaign-planner':
@@ -4116,16 +4012,6 @@ function summarizeTimeline(items: RecipeTemplateAuthoringTimelineItem[]) {
   }));
 }
 
-function summarizeBoard(columns: RecipeTemplateAuthoringBoardColumn[]) {
-  return columns.map((column) => ({
-    id: column.id ?? column.label,
-    label: column.label,
-    cards: column.cards.map((card) => ({
-      id: card.id ?? card.title,
-      title: card.title
-    }))
-  }));
-}
 
 function summarizeDetailFields(detail: RecipeTemplateAuthoringDetail | undefined) {
   if (!detail) {
@@ -4190,8 +4076,7 @@ function createRecipeTemplateActionsTargetPacket(text: RecipeTemplateText) {
       };
     case 'job-search-pipeline':
       return {
-        columns: summarizeBoard(text.data.columns),
-        detailFields: summarizeDetailFields(text.data.detail)
+        cards: summarizeCards(text.data.cards)
       };
     case 'event-planner':
       return {
@@ -4740,8 +4625,8 @@ function createGhostRecipeTemplateFill(templateId: RecipeTemplateId, currentStat
         data: {
           heroChips: [],
           stats: [],
-          columns: [],
-          detail: createGhostAuthoringDetail('Selected opportunity', 'Hydrating detail context.')
+          cards: [],
+          noteLines: []
         },
         metadata: {
           preview: true
@@ -5422,7 +5307,7 @@ function upsertBoardCards(
       return section;
     }
 
-    const actionIds = definition.id === 'job-search-pipeline' ? ['move-job-stage', 'run-interview-prep'] : [];
+    const actionIds: string[] = [];
     return {
       ...section,
       columns: section.columns.map((column) =>

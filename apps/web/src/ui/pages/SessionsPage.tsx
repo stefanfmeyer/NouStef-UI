@@ -89,19 +89,20 @@ export function SessionsPage({
   }
 
   return (
-    <VStack align="stretch" h="100%" minH={0} gap="3">
-      <HStack align="end" gap="2.5">
+    <VStack align="stretch" h="100%" minH={0} gap="4">
+      <HStack align="end" gap="3" rounded="8px" border="1px solid var(--border-subtle)" bg="var(--surface-elevated)" p="4" boxShadow="var(--shadow-xs)">
         <Field.Root>
-          <Field.Label color="var(--text-secondary)">Search sessions</Field.Label>
+          <Field.Label color="var(--text-secondary)" fontWeight="650">Search sessions</Field.Label>
           <Input
             value={value}
             onChange={(event) => onChange(event.currentTarget.value)}
             placeholder="Search titles or summaries"
-            bg="var(--surface-1)"
+            bg="var(--surface-2)"
             borderColor="var(--border-subtle)"
+            rounded="8px"
           />
         </Field.Root>
-        <Button rounded="14px" bg="var(--accent)" color="white" _hover={{ bg: 'var(--accent-strong)' }} onClick={onSearch} loading={loading}>
+        <Button rounded="8px" bg="var(--accent)" color="var(--accent-contrast)" _hover={{ bg: 'var(--accent-strong)' }} onClick={onSearch} loading={loading}>
           Search
         </Button>
       </HStack>
@@ -109,7 +110,7 @@ export function SessionsPage({
       {error ? <ErrorBanner title="Session browse failed" detail={error} /> : null}
       {actionError ? <ErrorBanner title="Session update failed" detail={actionError} /> : null}
 
-      <Box flex="1" minH={0} rounded="8px" border="1px solid var(--border-subtle)" bg="var(--surface-1)" p="3.5">
+      <Box flex="1" minH={0} rounded="8px" border="1px solid var(--border-subtle)" bg="var(--surface-elevated)" p="4" boxShadow="var(--shadow-sm)">
         {!response || response.items.length === 0 ? (
           <EmptyStateCard
             title={loading ? 'Loading sessions' : 'No sessions matched'}
@@ -117,7 +118,7 @@ export function SessionsPage({
           />
         ) : (
           <VStack align="stretch" gap="3" h="100%">
-            <Table.ScrollArea data-testid="sessions-table-scroll" borderWidth="1px" borderColor="var(--border-subtle)" rounded="14px" flex="1">
+            <Table.ScrollArea data-testid="sessions-table-scroll" borderWidth="1px" borderColor="var(--border-subtle)" rounded="8px" flex="1">
               <Table.Root size="sm" variant="outline" interactive>
                 <Table.Header>
                   <Table.Row>
@@ -133,9 +134,9 @@ export function SessionsPage({
                   {response.items.map((session) => (
                     <Table.Row key={session.id} cursor="pointer" onClick={() => onOpenSession(session.id)}>
                       <Table.Cell>
-                        <Text fontWeight="700" color="var(--text-primary)">
-                          {session.title}
-                        </Text>
+                          <Text fontWeight="750" color="var(--text-primary)">
+                            {session.title}
+                          </Text>
                       </Table.Cell>
                       <Table.Cell textAlign="center">
                         <RecipeTypeBadge
@@ -161,17 +162,17 @@ export function SessionsPage({
               </Table.Root>
             </Table.ScrollArea>
 
-            <HStack justify="recipe-between" wrap="wrap" gap="3">
+            <HStack justify="space-between" wrap="wrap" gap="3">
               <Text color="var(--text-secondary)">
                 {response.total} visible sessions for {response.profileId}
                 {response.hiddenSyntheticCount > 0 ? ` · ${response.hiddenSyntheticCount} synthetic sessions hidden` : ''}
               </Text>
               <HStack gap="2">
-                <Button variant="outline" onClick={() => onPageChange(Math.max(1, response.page - 1))} disabled={response.page <= 1}>
+                <Button variant="outline" rounded="8px" onClick={() => onPageChange(Math.max(1, response.page - 1))} disabled={response.page <= 1}>
                   Previous
                 </Button>
                 <Text color="var(--text-secondary)">Page {response.page}</Text>
-                <Button variant="outline" onClick={() => onPageChange(response.page + 1)} disabled={response.page * response.pageSize >= response.total}>
+                <Button variant="outline" rounded="8px" onClick={() => onPageChange(response.page + 1)} disabled={response.page * response.pageSize >= response.total}>
                   Next
                 </Button>
               </HStack>
