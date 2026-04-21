@@ -428,7 +428,7 @@ export function ChatPage({
             unmountOnExit
             open={runtimeDrawerOpen}
             onOpenChange={(event) => onRuntimeDrawerOpenChange(event.open)}
-            size={{ base: 'full', md: 'md' }}
+            size={{ base: 'full', md: 'lg', xl: 'xl' }}
             finalFocusEl={() => (runtimeButtonRef.current && runtimeButtonRef.current.isConnected ? runtimeButtonRef.current : document.body)}
           >
             <Drawer.Backdrop backdropFilter="auto" backdropBlur="sm" bg="blackAlpha.500" />
