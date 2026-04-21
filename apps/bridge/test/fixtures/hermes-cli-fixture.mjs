@@ -2049,12 +2049,43 @@ function inferTemplateIdFromPrompt(prompt) {
     'Template text contract packet',
     'Template hydration contract packet',
     'Template actions contract packet',
+    'CANONICAL SCHEMA',
+    'Schema compliance rules',
     'Staged text artifact',
     'Hydrated content artifact',
     'Current Home recipe'
   ]);
   if (selection && typeof selection.templateId === 'string') {
     return selection.templateId;
+  }
+
+  const textContractPacket = parseStructuredPromptJson(prompt, 'Template text contract packet', [
+    'Template hydration contract packet',
+    'Template actions contract packet',
+    'Staged text artifact',
+    'Current Home recipe'
+  ]);
+  if (textContractPacket && typeof textContractPacket.templateId === 'string') {
+    return textContractPacket.templateId;
+  }
+
+  const hydrationContractPacket = parseStructuredPromptJson(prompt, 'Template hydration contract packet', [
+    'Template actions contract packet',
+    'Staged text artifact',
+    'Hydrated content artifact',
+    'Current Home recipe'
+  ]);
+  if (hydrationContractPacket && typeof hydrationContractPacket.templateId === 'string') {
+    return hydrationContractPacket.templateId;
+  }
+
+  const actionsContractPacket = parseStructuredPromptJson(prompt, 'Template actions contract packet', [
+    'Staged text artifact',
+    'Hydrated content artifact',
+    'Current Home recipe'
+  ]);
+  if (actionsContractPacket && typeof actionsContractPacket.templateId === 'string') {
+    return actionsContractPacket.templateId;
   }
 
   const stagedTextArtifact = parseStructuredPromptJson(prompt, 'Staged text artifact', [
@@ -2102,6 +2133,14 @@ function inferTemplateIdFromPrompt(prompt) {
     .filter((value) => typeof value === 'string' && value.trim().length > 0)
     .join(' ')
     .toLowerCase();
+
+  // Short-circuit: recipe was created by the local-discovery fixture operation → always local-discovery
+  if (
+    typeof currentRecipe?.description === 'string' &&
+    /fixture-created local discovery/i.test(currentRecipe.description)
+  ) {
+    return 'local-discovery-comparison';
+  }
 
   if (/\b(email|inbox|mail|sender|unread|rule|rules|filter|routing|automation)\b/u.test(intentText)) {
     return 'inbox-triage-board';
@@ -4176,7 +4215,7 @@ function createAutoStructuredRecipeOperation(kind, userRequest) {
   const conversationalRequest =
     normalizedRequest.length > 0 ? normalizedRequest.charAt(0).toUpperCase() + normalizedRequest.slice(1) : 'this request';
 
-  if (kind === 'places') {
+  if (kind === 'restaurant') {
     return {
       confirmation: `I organized ${conversationalRequest} into an attached shortlist recipe.`,
       operation: {
@@ -4273,6 +4312,37 @@ function createAutoStructuredRecipeOperation(kind, userRequest) {
         },
         metadata: {
           changeSummary: 'Created nearby shortlist',
+          auditTags: ['fixture', 'places']
+        },
+        linkCurrentChat: true
+      }
+    };
+  }
+
+  if (kind === 'places') {
+    return {
+      confirmation: `I organized ${conversationalRequest} into an attached local discovery shortlist.`,
+      operation: {
+        type: 'create_space',
+        title: 'Local discovery near Dayton',
+        description: 'Fixture-created local discovery shortlist',
+        viewType: 'card',
+        status: 'active',
+        data: {
+          cards: [
+            {
+              id: 'place-1',
+              title: 'Dana Hall',
+              description: 'Downtown Dayton historic landmark, available for group bookings',
+              eyebrow: 'Dayton area',
+              badges: ['top-match'],
+              metadata: [{ label: 'Type', value: 'Gathering space' }],
+              links: [{ label: 'Website', url: 'https://example.com/dana-hall', kind: 'website' }]
+            }
+          ]
+        },
+        metadata: {
+          changeSummary: 'Created local discovery shortlist',
           auditTags: ['fixture', 'places']
         },
         linkCurrentChat: true
@@ -4407,7 +4477,7 @@ function createAutoStructuredRecipeOperation(kind, userRequest) {
 }
 
 function getStructuredIntentMetadataForKind(kind) {
-  if (kind === 'places') {
+  if (kind === 'restaurant' || kind === 'places') {
     return {
       category: 'places',
       label: 'nearby shortlist'
@@ -4508,7 +4578,8 @@ async function runChat(args) {
   )?.trim() || describedRequest;
   const normalizedUserRequest = userRequest.toLowerCase();
   const isEmailIntent = /\b(email|gmail|inbox|mail|unread)\b/.test(normalizedUserRequest);
-  const isLocalSearchIntent = /\b(restaurant|restaurants|coffee|cafe|cafes|bar|bars|hotel|hotels|lodging|nearby|near me|around me)\b/.test(
+  const isRestaurantIntent = /\b(restaurant|restaurants|coffee|cafe|cafes|bar|bars)\b/.test(normalizedUserRequest);
+  const isLocalSearchIntent = isRestaurantIntent || /\b(hotel|hotels|lodging|nearby|near me|around me|local places|venue)\b/.test(
     normalizedUserRequest
   );
   const isPlanIntent = /\b(project plan|action plan|roadmap|timeline|milestones?|launch plan|implementation plan|rollout plan)\b/.test(
@@ -4536,7 +4607,7 @@ async function runChat(args) {
   const fixtureRecipeKind = wantsTableRecipe ? 'table' : wantsMarkdownRecipe ? 'markdown' : wantsCardRecipe || wantsRecipeCreate ? 'card' : null;
   const autoStructuredRecipeRequested = /create exactly one attached recipe in this same request|update the current attached recipe/i.test(describedRequest);
   const autoStructuredRecipeKind = isLocalSearchIntent
-    ? 'places'
+    ? (isRestaurantIntent ? 'restaurant' : 'places')
     : isPlanIntent
       ? 'plan'
       : isFinanceIntent
@@ -4638,7 +4709,9 @@ async function runChat(args) {
   if (!structuredArtifactOnly && !recipeDslStage && !recipeAppletStage && isLocalSearchIntent) {
     print('┊ 📞 preparing local search…');
     await sleep(20);
-    print('┊ 📞 tool nearby_restaurants_search 0.3s [exit 0]');
+    print(isRestaurantIntent
+      ? '┊ 📞 tool nearby_restaurants_search 0.3s [exit 0]'
+      : '┊ 📞 tool local_discovery_search 0.3s [exit 0]');
     await sleep(20);
   }
 
@@ -5088,6 +5161,8 @@ if (command === 'chat') {
 }
 
 if (command === 'login') {
+  // Create a pending Nous auth session so the bridge can expose the verification link
+  beginFixtureProviderAuth('nous');
   print('Login successful (fixture)');
   process.exit(0);
 }

@@ -1,4 +1,4 @@
-import { memo, useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { Box, HStack, Text } from '@chakra-ui/react';
 import type { ChatActivity } from '@hermes-recipes/protocol';
 
@@ -26,6 +26,11 @@ function kindColor(kind: ChatActivity['kind']): string {
     case 'website': return 'var(--ticker-website, #0284c7)';
     default: return 'var(--text-secondary)';
   }
+}
+
+function formatElapsed(secs: number): string {
+  if (secs < 60) return `${secs}s`;
+  return `${Math.floor(secs / 60)}m ${secs % 60}s`;
 }
 
 // Each character fades in at a staggered 18 ms interval capped at 300 ms total.
@@ -60,6 +65,31 @@ function AnimatedText({ text, color }: { text: string; color: string }) {
   );
 }
 
+// Shows how long the current status text has been displayed, ticking every second
+// after a 5-second grace period. Resets whenever text changes.
+function ElapsedTimer({ color }: { color: string }) {
+  const [secs, setSecs] = useState(0);
+
+  useEffect(() => {
+    setSecs(0);
+    const id = setInterval(() => setSecs((s) => s + 1), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  if (secs < 5) return null;
+
+  return (
+    <Box
+      as="span"
+      display="inline"
+      color={color}
+      style={{ opacity: 0.55, fontSize: '0.9em' }}
+    >
+      {' '}({formatElapsed(secs)})
+    </Box>
+  );
+}
+
 export const StatusTicker = memo(function StatusTicker({
   text,
   kind = 'status'
@@ -69,8 +99,6 @@ export const StatusTicker = memo(function StatusTicker({
 }) {
   const icon = kindIcon(kind);
   const color = kindColor(kind);
-  const prevRef = useRef(text);
-  prevRef.current = text;
 
   return (
     <HStack gap="1.5" align="center" minW={0} overflow="hidden">
@@ -79,6 +107,7 @@ export const StatusTicker = memo(function StatusTicker({
       </Text>
       <Text as="span" fontSize="xs" color="var(--text-secondary)" lineClamp={1} display="block" minW={0}>
         <AnimatedText text={text} color={color} />
+        <ElapsedTimer key={text} color={color} />
       </Text>
     </HStack>
   );

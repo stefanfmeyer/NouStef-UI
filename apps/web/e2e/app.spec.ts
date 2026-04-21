@@ -71,9 +71,11 @@ test('loads the browser shell with the required left navigation order and no doc
   await expect(page.getByRole('button', { name: 'New session', exact: true })).toBeVisible();
   await expect(page.getByText('Recent sessions', { exact: true })).toBeVisible();
 
-  const sidebarButtons = await page.locator('[data-testid="sidebar-scroll"] button').allInnerTexts();
-  const browseButtons = sidebarButtons.filter((label) => ['All sessions', 'Recipes', 'Jobs', 'Tools', 'Skills', 'Settings'].includes(label.trim()));
-  expect(browseButtons).toEqual(['All sessions', 'Recipes', 'Jobs', 'Tools', 'Skills', 'Settings']);
+  const navLabels = await page.locator('[data-testid="sidebar-scroll"] button[aria-label]').evaluateAll(
+    (els) => els.map((el) => el.getAttribute('aria-label')).filter(Boolean)
+  );
+  const browseButtons = navLabels.filter((label) => ['Spaces', 'All sessions', 'Jobs', 'Tools', 'Skills', 'Settings'].includes(label ?? ''));
+  expect(browseButtons).toEqual(['Spaces', 'All sessions', 'Jobs', 'Tools', 'Skills', 'Settings']);
 
   const layoutState = await page.evaluate(() => ({
     htmlOverflow: getComputedStyle(document.documentElement).overflow,
@@ -111,7 +113,7 @@ test('loads the browser shell with the required left navigation order and no doc
 test('opens the Spaces template gallery and shows a curated template inspector', async ({ page }) => {
   await page.goto('/');
 
-  await page.getByRole('button', { name: 'Recipes', exact: true }).click();
+  await page.getByRole('button', { name: 'Spaces', exact: true }).click();
   await expect(page.getByTestId('page-header')).toContainText('The Kitchen');
   await expect(page.getByRole('tab', { name: 'Recipe Book' })).toBeVisible();
   await expect(page.getByTestId('spaces-template-card-price-comparison-grid')).toBeVisible();
@@ -124,7 +126,7 @@ test('opens the Spaces template gallery and shows a curated template inspector',
 
 test('shows the requested template interaction affordances in the Spaces gallery', async ({ page }) => {
   await page.goto('/');
-  await page.getByRole('button', { name: 'Recipes', exact: true }).click();
+  await page.getByRole('button', { name: 'Spaces', exact: true }).click();
 
   const inspector = page.getByTestId('spaces-template-inspector');
 
@@ -144,7 +146,7 @@ test('opens real sessions from all sessions and recent sessions in chat', async 
   await page.goto('/');
 
   await page.getByRole('button', { name: 'All sessions', exact: true }).click();
-  await page.getByRole('textbox', { name: 'Search sessions' }).fill('Quarterly planning review');
+  await page.getByPlaceholder('Search titles or summaries').fill('Quarterly planning review');
   await page.getByRole('button', { name: 'Search', exact: true }).click();
   await page.getByRole('cell', { name: 'Quarterly planning review', exact: true }).click();
 
@@ -210,15 +212,17 @@ test('shows jobs, tools, tool history, skills, and theme switching through the b
   await expect(page.getByText('No reviewed bridge executions have been recorded for this profile yet.')).toBeVisible();
 
   await page.getByRole('button', { name: 'Skills', exact: true }).click();
-  await expect(page.getByText('google-workspace')).toBeVisible();
-  await expect(page.getByText('project-notes')).toBeVisible();
-  await expect(page.getByText('gmail, calendar, docs')).toBeVisible();
-  await expect(page.getByText('project notes, recipe context')).toBeVisible();
+  const skillsTable = page.getByTestId('skills-table-scroll');
+  await expect(skillsTable).toBeVisible({ timeout: 10_000 });
+  await expect(skillsTable.getByText('google-workspace').first()).toBeVisible();
+  await expect(skillsTable.getByText('project-notes').first()).toBeVisible();
+  await expect(skillsTable.getByText('gmail, calendar, docs')).toBeVisible();
+  await expect(skillsTable.getByText('project notes, recipe context')).toBeVisible();
 
   const themeToggle = page.getByRole('button', { name: /Light mode|Dark mode/ });
-  const previousLabel = await themeToggle.textContent();
+  const previousAriaLabel = await themeToggle.getAttribute('aria-label');
   await themeToggle.click();
-  await expect(themeToggle).toHaveText(previousLabel?.includes('Light') ? 'Dark mode' : 'Light mode');
+  await expect(themeToggle).toHaveAttribute('aria-label', previousAriaLabel?.includes('Light') ? 'Dark mode' : 'Light mode');
 });
 
 test('shows runtime activity in chat and keeps key settings controls usable', async ({ page }) => {
@@ -233,7 +237,7 @@ test('shows runtime activity in chat and keeps key settings controls usable', as
   await page.getByRole('button', { name: 'Send', exact: true }).click();
 
   await Promise.race([
-    expect(page.getByTestId('hermes-typing-indicator')).toBeVisible(),
+    expect(page.getByTestId('chat-transcript-scroll').getByTestId('hermes-typing-indicator')).toBeVisible(),
     expect(page.getByTestId('chat-transcript-scroll').getByText('You have 1 unread email in 8tn.', { exact: true })).toBeVisible({
       timeout: 15_000
     })
