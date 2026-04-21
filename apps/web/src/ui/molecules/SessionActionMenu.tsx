@@ -22,7 +22,7 @@ export function SessionActionMenu({
           size={size}
           minW={0}
           px="2.5"
-          rounded="full"
+          rounded="8px"
           aria-label={label}
           color="var(--text-secondary)"
           _hover={{ bg: 'var(--surface-2)', color: 'var(--text-primary)' }}
@@ -32,7 +32,7 @@ export function SessionActionMenu({
       </Menu.Trigger>
       <Portal>
         <Menu.Positioner>
-          <Menu.Content minW="11rem">
+          <Menu.Content minW="11rem" bg="var(--surface-elevated)" borderColor="var(--border-subtle)" boxShadow="var(--shadow-sm)" rounded="8px">
             {showRename ? (
               <Menu.Item value="rename" onClick={onRename}>
                 Rename

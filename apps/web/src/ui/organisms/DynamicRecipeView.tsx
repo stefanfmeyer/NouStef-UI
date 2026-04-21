@@ -113,7 +113,7 @@ function actionButtonTone(action: RecipeActionDefinition) {
 function BadgeChip({ label }: { label: string }) {
   return (
     <Box rounded="full" bg="blue.50" px="2.5" py="1" _dark={{ bg: 'whiteAlpha.120' }}>
-      <Text fontSize="10px" fontWeight="500" color="blue.700" textTransform="uppercase" letterSpacing="0.08em" _dark={{ color: 'blue.200' }}>
+      <Text fontSize="10px" fontWeight="500" color="blue.700" textTransform="uppercase" letterSpacing="0" _dark={{ color: 'blue.200' }}>
         {label}
       </Text>
     </Box>
@@ -132,7 +132,7 @@ function StatCard({ label, value }: { label: string; value: string }) {
       py="2.5"
       minW="120px"
     >
-      <Text fontSize="10px" fontWeight="600" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0.1em">
+      <Text fontSize="10px" fontWeight="600" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0">
         {label}
       </Text>
       <Text fontSize="lg" fontWeight="600" color="var(--text-primary)" lineHeight="1.1">
@@ -146,7 +146,7 @@ const markdownRendererCss = {
   '& h1, & h2, & h3': {
     fontWeight: 600,
     lineHeight: 1.15,
-    letterSpacing: '-0.03em',
+    letterSpacing: 0,
     marginTop: '0.85rem',
     marginBottom: '0.45rem'
   },
@@ -195,7 +195,7 @@ const markdownRendererCss = {
     fontSize: '0.72rem',
     fontWeight: 600,
     textTransform: 'uppercase',
-    letterSpacing: '0.08em'
+    letterSpacing: 0
   },
   '& tr:last-of-type td': {
     borderBottom: 'none'
@@ -459,7 +459,7 @@ function PipelineStatusPill({
         borderColor: 'whiteAlpha.220'
       }}
     >
-      <Text fontSize="10px" fontWeight="600" color={tone.color} textTransform="uppercase" letterSpacing="0.08em" _dark={{ color: 'whiteAlpha.920' }}>
+      <Text fontSize="10px" fontWeight="600" color={tone.color} textTransform="uppercase" letterSpacing="0" _dark={{ color: 'whiteAlpha.920' }}>
         {label}: {formatPipelineStatus(status)}
       </Text>
     </Box>
@@ -708,7 +708,7 @@ export function DynamicRecipeView({
 
     return (
       <VStack key={node.id} align="stretch" gap="3" data-testid={`dynamic-recipe-node-${node.id}`}>
-        <HStack justify="recipe-between" align="center" gap="3" wrap="wrap">
+        <HStack justify="space-between" align="center" gap="3" wrap="wrap">
           <VStack align="start" gap="0.5">
             <Text fontSize="sm" fontWeight="600" color="var(--text-primary)">
               {node.title}
@@ -777,7 +777,7 @@ export function DynamicRecipeView({
                 onClick={() => setSelectedDatasetItem(dataset.id, item.id, node.selectable)}
               >
                 <VStack align="stretch" gap="2.5">
-                  <HStack justify="recipe-between" align="start" gap="3">
+                  <HStack justify="space-between" align="start" gap="3">
                     <VStack align="start" gap="0.5" minW={0}>
                       <Text fontSize="sm" fontWeight="600" color="var(--text-primary)" lineClamp={2}>
                         {item.title}
@@ -804,8 +804,8 @@ export function DynamicRecipeView({
                   ) : null}
 
                   {fieldBindings.slice(0, 3).map((field) => (
-                    <HStack key={`${item.id}-${field.fieldKey}`} justify="recipe-between" align="start" gap="3">
-                      <Text fontSize="xs" fontWeight="500" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0.08em">
+                    <HStack key={`${item.id}-${field.fieldKey}`} justify="space-between" align="start" gap="3">
+                      <Text fontSize="xs" fontWeight="500" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0">
                         {field.label}
                       </Text>
                       {renderValue(fieldValueFromItem(item, field), field.presentation)}
@@ -854,7 +854,7 @@ export function DynamicRecipeView({
           ? renderEmptyCard(node.emptyState.title, node.emptyState.description)
           : [...groups.entries()].map(([groupLabel, items]) => (
               <VStack key={`${node.id}-${groupLabel}`} align="stretch" gap="2">
-                <Text fontSize="xs" fontWeight="600" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0.1em">
+                <Text fontSize="xs" fontWeight="600" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0">
                   {groupLabel}
                 </Text>
                 {items.map((item) => (
@@ -937,8 +937,8 @@ export function DynamicRecipeView({
                 </Text>
               ) : null}
               {fieldBindings.map((field) => (
-                <HStack key={`${selectedItem.id}-${field.fieldKey}`} justify="recipe-between" align="start" gap="3">
-                  <Text fontSize="xs" fontWeight="500" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0.08em">
+                <HStack key={`${selectedItem.id}-${field.fieldKey}`} justify="space-between" align="start" gap="3">
+                  <Text fontSize="xs" fontWeight="500" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0">
                     {field.label}
                   </Text>
                   {renderValue(fieldValueFromItem(selectedItem, field), field.presentation)}
@@ -1041,7 +1041,7 @@ export function DynamicRecipeView({
               }
               variant="plain"
             >
-              <Tabs.List rounded="999px" bg="var(--surface-2)" p="1" minW="max-content">
+              <Tabs.List rounded="8px" bg="var(--surface-2)" p="1" minW="max-content">
                 {node.tabs.map((tab) => (
                   <Tabs.Trigger key={tab.id} value={tab.id}>
                     {tab.label}
@@ -1127,7 +1127,7 @@ export function DynamicRecipeView({
             return null;
           }
           return (
-            <HStack key={node.id} justify="recipe-between" align="center">
+            <HStack key={node.id} justify="space-between" align="center">
               <Button
                 size="xs"
                 variant="outline"
@@ -1186,7 +1186,7 @@ export function DynamicRecipeView({
 
     return (
       <Box
-        rounded="10px"
+        rounded="8px"
         border="1px solid var(--border-subtle)"
         bg="var(--surface-1)"
         px="4"
@@ -1229,14 +1229,14 @@ export function DynamicRecipeView({
               <HStack gap="2" wrap="wrap">
                 {failureCategory ? (
                   <Box rounded="full" border="1px solid" borderColor="var(--border-subtle)" px="2.5" py="1">
-                    <Text fontSize="10px" fontWeight="600" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0.08em">
+                    <Text fontSize="10px" fontWeight="600" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0">
                       Cause: {failureCategory}
                     </Text>
                   </Box>
                 ) : null}
                 {timeoutLabel ? (
                   <Box rounded="full" border="1px solid" borderColor="var(--border-subtle)" px="2.5" py="1">
-                    <Text fontSize="10px" fontWeight="600" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0.08em">
+                    <Text fontSize="10px" fontWeight="600" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0">
                       {timeoutLabel}
                     </Text>
                   </Box>
@@ -1245,7 +1245,7 @@ export function DynamicRecipeView({
             ) : null}
             {buildPhaseLabel ? (
               <Box rounded="full" border="1px solid" borderColor="var(--border-subtle)" px="2.5" py="1">
-                <Text fontSize="10px" fontWeight="600" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0.08em">
+                <Text fontSize="10px" fontWeight="600" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0">
                   Stage: {buildPhaseLabel}
                 </Text>
               </Box>
@@ -1353,7 +1353,7 @@ export function DynamicRecipeView({
       <Box
         flex="1"
         minH={0}
-        rounded="10px"
+        rounded="8px"
         border="1px solid var(--border-subtle)"
         bg="var(--surface-1)"
         px="4"
@@ -1397,7 +1397,7 @@ export function DynamicRecipeView({
         <Box
           flex="1"
           minH={0}
-          rounded="10px"
+          rounded="8px"
           border="1px solid var(--border-subtle)"
           bg="var(--surface-1)"
           px="4"
@@ -1651,7 +1651,7 @@ export function DynamicRecipeView({
         <Box
           flex="1"
           minH={0}
-          rounded="10px"
+          rounded="8px"
           border="1px solid var(--border-subtle)"
           bg="var(--surface-1)"
           px="4"
@@ -1667,7 +1667,7 @@ export function DynamicRecipeView({
 
   if (!uiSpec || !actionSpec || !normalizedData || !summary) {
     return (
-      <Box rounded="10px" border="1px solid var(--border-subtle)" bg="var(--surface-1)" px="4" py="4">
+      <Box rounded="8px" border="1px solid var(--border-subtle)" bg="var(--surface-1)" px="4" py="4">
         <Text fontSize="sm" color="var(--text-secondary)">
           The richer recipe is missing validated artifacts. Showing the safe fallback instead.
         </Text>
@@ -1679,9 +1679,9 @@ export function DynamicRecipeView({
   return (
     <VStack align="stretch" gap="3" h="100%" minH={0} data-testid="dynamic-recipe-ready">
       {renderEnrichmentStatusBanner()}
-      <Box rounded="10px" border="1px solid var(--border-subtle)" bg="var(--surface-1)" px="4" py="3.5">
+      <Box rounded="8px" border="1px solid var(--border-subtle)" bg="var(--surface-1)" px="4" py="3.5">
         <VStack align="stretch" gap="3">
-          <HStack justify="recipe-between" align="start" gap="3">
+          <HStack justify="space-between" align="start" gap="3">
             <VStack align="start" gap="1" minW={0}>
               <Text fontSize="md" fontWeight="600" color="var(--text-primary)" lineClamp={2}>
                 {uiSpec.header.title}
@@ -1748,7 +1748,7 @@ export function DynamicRecipeView({
           <Box
             flex="1"
             minH={0}
-            rounded="10px"
+            rounded="8px"
             border="1px solid var(--border-subtle)"
             bg="var(--surface-1)"
             px="4"
@@ -1820,7 +1820,7 @@ export function DynamicRecipeView({
 
               return (
                 <VStack key={section.id} align="stretch" gap="3" data-testid={`dynamic-recipe-collection-${section.id}`}>
-                  <HStack justify="recipe-between" align="center" gap="3" wrap="wrap">
+                  <HStack justify="space-between" align="center" gap="3" wrap="wrap">
                     <VStack align="start" gap="0.5">
                       <Text fontSize="sm" fontWeight="600" color="var(--text-primary)">
                         {section.title}
@@ -1987,7 +1987,7 @@ export function DynamicRecipeView({
                           }}
                         >
                           <VStack align="stretch" gap="2.5">
-                            <HStack justify="recipe-between" align="start" gap="3">
+                            <HStack justify="space-between" align="start" gap="3">
                               <VStack align="start" gap="0.5" minW={0}>
                                 <Text fontSize="sm" fontWeight="600" color="var(--text-primary)" lineClamp={2}>
                                   {item.title}
@@ -2014,8 +2014,8 @@ export function DynamicRecipeView({
                             ) : null}
 
                             {(section.presentation === 'cards' ? section.cardFields : section.columns).slice(0, 3).map((field) => (
-                              <HStack key={`${item.id}-${field.fieldKey}`} justify="recipe-between" align="start" gap="3">
-                                <Text fontSize="xs" fontWeight="500" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0.08em">
+                              <HStack key={`${item.id}-${field.fieldKey}`} justify="space-between" align="start" gap="3">
+                                <Text fontSize="xs" fontWeight="500" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0">
                                   {field.label}
                                 </Text>
                                 {renderValue(fieldValueFromItem(item, field), field.presentation)}
@@ -2065,7 +2065,7 @@ export function DynamicRecipeView({
                   )}
 
                   {totalPages > 1 ? (
-                    <HStack justify="recipe-between" align="center">
+                    <HStack justify="space-between" align="center">
                       <Button
                         size="xs"
                         variant="outline"
@@ -2134,8 +2134,8 @@ export function DynamicRecipeView({
                           </Text>
                         ) : null}
                         {section.fields.map((field) => (
-                          <HStack key={`${selectedItem.id}-${field.fieldKey}`} justify="recipe-between" align="start" gap="3">
-                            <Text fontSize="xs" fontWeight="500" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0.08em">
+                          <HStack key={`${selectedItem.id}-${field.fieldKey}`} justify="space-between" align="start" gap="3">
+                            <Text fontSize="xs" fontWeight="500" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0">
                               {field.label}
                             </Text>
                             {renderValue(fieldValueFromItem(selectedItem, field), field.presentation)}
@@ -2216,7 +2216,7 @@ export function DynamicRecipeView({
                   ) : null}
                   {section.fields.map((field) => (
                     <VStack key={field.key} align="stretch" gap="1">
-                      <Text fontSize="xs" fontWeight="500" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0.08em">
+                      <Text fontSize="xs" fontWeight="500" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0">
                         {field.label}
                       </Text>
                       {field.input === 'textarea' ? (

@@ -30,14 +30,14 @@ export function RecipeTypeBadge({
     <Box
       data-testid={testId}
       display="inline-flex"
-      rounded="full"
+      rounded="8px"
       bg={presentation.background}
       px="2"
       py="0.5"
       aria-label={`${presentation.label} workspace`}
       title={`${presentation.label} workspace`}
     >
-      <Text fontSize="10px" fontWeight="600" color={presentation.color} letterSpacing="0.08em">
+      <Text fontSize="10px" fontWeight="600" color={presentation.color} letterSpacing="0">
         {presentation.label}
       </Text>
     </Box>

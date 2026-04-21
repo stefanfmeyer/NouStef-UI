@@ -83,7 +83,7 @@ export const ChatTranscript = memo(function ChatTranscript({
   return (
     <ScrollArea.Root flex="1" minH={0} variant="hover">
       <ScrollArea.Viewport ref={viewportRef} data-testid="chat-transcript-scroll">
-        <VStack align="stretch" gap="5" px="1" py="1">
+        <VStack align="stretch" gap={{ base: '5', md: '6' }} px={{ base: '1', md: '2' }} py={{ base: '2', md: '3' }}>
           {loading ? (
             <TranscriptBubble messageRole="system">
               <Text fontWeight="700">Loading session…</Text>
@@ -129,9 +129,8 @@ const MarkdownMessage = memo(function MarkdownMessage({ children }: { children: 
       wordBreak="break-word"
       css={{
         '& h1, & h2, & h3': {
-          fontWeight: 600,
+          fontWeight: 700,
           lineHeight: 1.15,
-          letterSpacing: '-0.03em',
           marginTop: '0.9rem',
           marginBottom: '0.45rem'
         },
@@ -180,6 +179,7 @@ const MarkdownMessage = memo(function MarkdownMessage({ children }: { children: 
           border: '1px solid var(--border-subtle)',
           borderRadius: '8px',
           overflow: 'hidden',
+          boxShadow: 'var(--shadow-xs)',
           display: 'block',
           overflowX: 'auto',
           maxWidth: '100%'
@@ -196,7 +196,7 @@ const MarkdownMessage = memo(function MarkdownMessage({ children }: { children: 
           fontSize: '0.72rem',
           fontWeight: 600,
           textTransform: 'uppercase',
-          letterSpacing: '0.08em'
+          letterSpacing: 0
         },
         '& tr:last-of-type td': {
           borderBottom: 'none'
@@ -206,6 +206,7 @@ const MarkdownMessage = memo(function MarkdownMessage({ children }: { children: 
           padding: '0.85rem',
           borderRadius: '8px',
           background: 'var(--surface-2)',
+          border: '1px solid var(--border-subtle)',
           maxWidth: '100%'
         },
         '& blockquote': {
@@ -353,13 +354,13 @@ function TranscriptBubble({
   const alignment = isUser ? 'flex-end' : 'flex-start';
   const bubbleTone = isUser
     ? {
-        bg: 'var(--surface-accent)',
-        border: 'rgba(18, 115, 91, 0.26)'
+        bg: 'var(--surface-selected)',
+        border: 'rgba(14, 116, 103, 0.22)'
       }
     : isAssistant
       ? {
-          bg: 'rgba(18, 115, 91, 0.08)',
-          border: messageRole === 'assistant_draft' ? 'rgba(18, 115, 91, 0.32)' : 'rgba(18, 115, 91, 0.18)'
+          bg: 'var(--surface-elevated)',
+          border: messageRole === 'assistant_draft' ? 'rgba(14, 116, 103, 0.24)' : 'var(--border-subtle)'
         }
       : {
           bg: 'var(--surface-2)',
@@ -367,7 +368,7 @@ function TranscriptBubble({
         };
 
   const activeBorder = selected ? 'var(--accent)' : bubbleTone.border;
-  const ClickableBubble = chakra('button');
+  const ClickableBubble = chakra('div');
   const [copied, setCopied] = useState(false);
 
   function handleCopy() {
@@ -381,7 +382,7 @@ function TranscriptBubble({
   return (
     <Box display="flex" justifyContent={alignment} overflow="hidden">
       <HStack
-        align="end"
+        align="start"
         gap="3"
         justify={isUser ? 'flex-end' : 'flex-start'}
         flexDirection={isUser ? 'row-reverse' : 'row'}
@@ -392,7 +393,8 @@ function TranscriptBubble({
         {isAssistant ? <HermesAvatar size="sm" /> : null}
         {clickable ? (
           <ClickableBubble
-            type="button"
+            role="button"
+            tabIndex={0}
             maxW="min(760px, 100%)"
             minW={0}
             overflow="hidden"
@@ -400,20 +402,27 @@ function TranscriptBubble({
             border={`1px solid ${activeBorder}`}
             bg={bubbleTone.bg}
             px={{ base: '4', md: '5' }}
-            py="4"
+            py={{ base: '4', md: '4.5' }}
             textAlign="left"
             cursor="pointer"
             transition="border-color 140ms ease, transform 140ms ease, box-shadow 140ms ease"
-            boxShadow={selected ? '0 0 0 1px var(--accent)' : 'none'}
+            boxShadow={selected ? '0 0 0 1px var(--accent), var(--shadow-sm)' : 'var(--shadow-xs)'}
             _hover={{
               borderColor: 'var(--accent)',
-              transform: 'translateY(-1px)'
+              transform: 'translateY(-1px)',
+              boxShadow: 'var(--shadow-sm)'
             }}
             onClick={onClick}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                onClick?.();
+              }
+            }}
           >
             <VStack align="stretch" gap="3">
-              <HStack justify="recipe-between" gap="3" wrap="wrap">
-                <Text fontSize="xs" fontWeight="500" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0.12em" flex="1">
+              <HStack justify="space-between" gap="3" wrap="wrap">
+                <Text fontSize="xs" fontWeight="700" color="var(--text-muted)" letterSpacing="0">
                   {roleLabel(messageRole)}
                 </Text>
                 <HStack gap="2">
@@ -425,13 +434,13 @@ function TranscriptBubble({
                       minW={0}
                       px="2"
                       py="1"
-                      rounded="6px"
+                      rounded="8px"
                       color="var(--text-muted)"
-                      fontSize="xl"
+                      fontSize="xs"
                       _hover={{ bg: 'var(--surface-2)', color: 'var(--text-primary)' }}
                       onClick={(e) => { e.stopPropagation(); handleCopy(); }}
                     >
-                      {copied ? '✓' : '⎘'}
+                      {copied ? 'Copied' : 'Copy'}
                     </Button>
                   ) : null}
                   {formatMessageTime(timestamp) ? (
@@ -453,13 +462,13 @@ function TranscriptBubble({
             border={`1px solid ${activeBorder}`}
             bg={bubbleTone.bg}
             px={{ base: '4', md: '5' }}
-            py="4"
+            py={{ base: '4', md: '4.5' }}
             textAlign="left"
-            boxShadow={selected ? '0 0 0 1px var(--accent)' : 'none'}
+            boxShadow={selected ? '0 0 0 1px var(--accent), var(--shadow-sm)' : 'var(--shadow-xs)'}
           >
             <VStack align="stretch" gap="3">
-              <HStack justify="recipe-between" gap="3" wrap="wrap">
-                <Text fontSize="xs" fontWeight="500" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0.12em" flex="1">
+              <HStack justify="space-between" gap="3" wrap="wrap">
+                <Text fontSize="xs" fontWeight="700" color="var(--text-muted)" letterSpacing="0">
                   {roleLabel(messageRole)}
                 </Text>
                 <HStack gap="2">
@@ -471,13 +480,13 @@ function TranscriptBubble({
                       minW={0}
                       px="2"
                       py="1"
-                      rounded="6px"
+                      rounded="8px"
                       color="var(--text-muted)"
-                      fontSize="xl"
+                      fontSize="xs"
                       _hover={{ bg: 'var(--surface-2)', color: 'var(--text-primary)' }}
                       onClick={handleCopy}
                     >
-                      {copied ? '✓' : '⎘'}
+                      {copied ? 'Copied' : 'Copy'}
                     </Button>
                   ) : null}
                   {formatMessageTime(timestamp) ? (

@@ -27,6 +27,23 @@ function requestStatusColor(status: RuntimeRequest['status'] | null, sending: bo
   }
 }
 
+function StatusDot({ active }: { active: boolean }) {
+  return (
+    <span
+      style={{
+        display: 'inline-block',
+        width: 6,
+        height: 6,
+        borderRadius: '50%',
+        background: active ? 'var(--accent)' : 'var(--status-neutral)',
+        flexShrink: 0,
+        animation: active ? 'status-pulse 1.4s ease infinite' : undefined,
+        marginRight: 2
+      }}
+    />
+  );
+}
+
 export function ChatActivityFeed({
   activities,
   sending,

@@ -46,7 +46,7 @@ export function ConfirmDialog({
       <Portal>
         <Dialog.Backdrop backdropFilter="auto" backdropBlur="sm" bg="blackAlpha.500" />
         <Dialog.Positioner>
-          <Dialog.Content bg="var(--surface-1)" border="1px solid var(--border-subtle)">
+          <Dialog.Content bg="var(--surface-elevated)" border="1px solid var(--border-subtle)" rounded="8px" boxShadow="var(--shadow-md)">
             <Dialog.Header>
               <Dialog.Title color="var(--text-primary)">{title}</Dialog.Title>
             </Dialog.Header>
@@ -55,10 +55,10 @@ export function ConfirmDialog({
               {children}
             </Dialog.Body>
             <Dialog.Footer>
-              <Button variant="outline" onClick={() => onOpenChange(false)}>
+              <Button variant="outline" rounded="8px" onClick={() => onOpenChange(false)}>
                 Cancel
               </Button>
-              <Button colorPalette={confirmColorPalette} loading={loading} onClick={() => void onConfirm()}>
+              <Button rounded="8px" colorPalette={confirmColorPalette} loading={loading} onClick={() => void onConfirm()}>
                 {confirmLabel}
               </Button>
             </Dialog.Footer>

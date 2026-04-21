@@ -403,7 +403,7 @@ describe.sequential('bridge server', () => {
         label: 'ANTHROPIC_API_KEY'
       })
     }).then((result) => readJson<ModelProviderResponse>(result));
-    await fetch(`${server.baseUrl}/api/model-providers?profileId=jbarton`).then((result) =>
+    const otherProfileProviders = await fetch(`${server.baseUrl}/api/model-providers?profileId=jbarton`).then((result) =>
       readJson<ModelProviderResponse>(result)
     );
     const settings = await fetch(`${server.baseUrl}/api/settings`).then((result) => readJson<SettingsResponse>(result));
@@ -427,6 +427,7 @@ describe.sequential('bridge server', () => {
     // connectProvider in v0.9.0 delegates to discovery — returns provider state
     expect(connected.config).toBeTruthy();
     expect(connected.providers.length).toBeGreaterThan(0);
+    expect(otherProfileProviders.config.profileId).toBe('jbarton');
     expect(settings.settings.unrestrictedAccessEnabled).toBe(false);
 
     await server.close();

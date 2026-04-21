@@ -9,7 +9,7 @@ import type { RecipeTemplateDefinition, RecipeTemplatePreviewSection } from './t
 function InfoPane({ label, children }: { label: string; children: ReactNode }) {
   return (
     <Box borderLeft="3px solid var(--accent)" pl="4" py="2">
-      <Text fontSize="xs" fontWeight="600" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0.08em" mb="1.5">
+      <Text fontSize="xs" fontWeight="600" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0" mb="1.5">
         {label}
       </Text>
       {children}
@@ -40,10 +40,10 @@ export function RecipeTemplateDetailDrawer({
   return (
     <Drawer.Root lazyMount unmountOnExit open={open} onOpenChange={(event) => onOpenChange(event.open)} size={{ base: 'full', xl: 'xl' }}>
       <Drawer.Backdrop backdropFilter="auto" backdropBlur="sm" bg="blackAlpha.500" />
-      <Drawer.Positioner>
-        <Drawer.Content bg="var(--surface-1)" borderLeft="1px solid var(--border-subtle)" data-testid="recipe-template-detail-drawer">
+        <Drawer.Positioner>
+          <Drawer.Content bg="var(--surface-elevated)" borderLeft="1px solid var(--border-subtle)" data-testid="recipe-template-detail-drawer">
           <Drawer.Header>
-            <Flex justify="recipe-between" align="start" gap="4">
+            <Flex justify="space-between" align="start" gap="4">
               <VStack align="start" gap="1.5">
                 <Drawer.Title color="var(--text-primary)">{template.name}</Drawer.Title>
                 <Text fontSize="sm" color="var(--text-secondary)">
@@ -60,12 +60,12 @@ export function RecipeTemplateDetailDrawer({
               defaultValue="info"
               variant="plain"
               css={{
-                '--tabs-indicator-bg': 'var(--surface-2)',
-                '--tabs-indicator-shadow': 'none',
-                '--tabs-trigger-radius': 'full'
+                '--tabs-indicator-bg': 'var(--surface-1)',
+                '--tabs-indicator-shadow': 'var(--shadow-xs)',
+                '--tabs-trigger-radius': '8px'
               }}
             >
-              <Tabs.List rounded="full" bg="var(--surface-2)" p="1" mb="4" flexShrink={0}>
+              <Tabs.List rounded="8px" bg="var(--surface-2)" border="1px solid var(--border-subtle)" p="1" mb="4" flexShrink={0}>
                 <Tabs.Trigger value="info">Info</Tabs.Trigger>
                 <Tabs.Trigger value="preview">Preview</Tabs.Trigger>
                 <Tabs.Trigger value="instructions">Instructions</Tabs.Trigger>
@@ -531,7 +531,7 @@ function EmptySectionShell({ section }: { section: RecipeTemplatePreviewSection 
   if (section.kind === 'tabs') {
     return (
       <Box
-        rounded="10px"
+        rounded="8px"
         border="2px dashed var(--border-subtle)"
         px="5"
         py="8"
@@ -541,7 +541,7 @@ function EmptySectionShell({ section }: { section: RecipeTemplatePreviewSection 
         justifyContent="center"
         gap="2"
       >
-        <Text fontSize="xs" fontWeight="600" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0.08em">
+        <Text fontSize="xs" fontWeight="600" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0">
           Tabs
         </Text>
         <Flex gap="2" mb="1">
@@ -560,7 +560,7 @@ function EmptySectionShell({ section }: { section: RecipeTemplatePreviewSection 
 
   return (
     <Box
-      rounded="10px"
+      rounded="8px"
       border="2px dashed var(--border-subtle)"
       px="5"
       py="8"
@@ -570,7 +570,7 @@ function EmptySectionShell({ section }: { section: RecipeTemplatePreviewSection 
       justifyContent="center"
       gap="1.5"
     >
-      <Text fontSize="xs" fontWeight="600" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0.08em">
+      <Text fontSize="xs" fontWeight="600" color="var(--text-muted)" textTransform="uppercase" letterSpacing="0">
         {kindLabel}
       </Text>
       <Text fontSize="sm" color="var(--text-muted)">Waiting for data</Text>

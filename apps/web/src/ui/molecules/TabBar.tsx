@@ -86,13 +86,13 @@ export function TabBar({
       <style>{tabPulseStyle}</style>
       <Flex
         align="center"
-        gap="0"
+        gap="2"
         bg="transparent"
         borderBottom="1px solid var(--border-subtle)"
         px={{ base: '4', lg: '6' }}
         minH="34px"
       >
-        <HStack gap="1" flex="1" minW={0} overflow="auto" css={{ scrollbarWidth: 'none', '&::-webkit-scrollbar': { display: 'none' } }}>
+        <HStack gap="2" flex="1" minW={0} overflow="auto" css={{ scrollbarWidth: 'none', '&::-webkit-scrollbar': { display: 'none' } }}>
           {tabs.map((tab, index) => {
             const isActive = tab.sessionId === activeTabId;
             const isDragOver = dragOverIndex === index;
@@ -103,7 +103,7 @@ export function TabBar({
                 gap="0"
                 align="center"
                 px="3"
-                py="1"
+                py="1.5"
                 cursor="pointer"
                 bg={isActive ? 'var(--surface-1)' : 'transparent'}
                 rounded="6px 6px 0 0"
@@ -137,7 +137,7 @@ export function TabBar({
               >
                 <Text
                   fontSize="xs"
-                  fontWeight={isActive ? '600' : '400'}
+                  fontWeight={isActive ? '700' : '500'}
                   color={isActive ? 'var(--text-primary)' : 'var(--text-muted)'}
                   lineClamp={1}
                   flex="1"
@@ -154,7 +154,7 @@ export function TabBar({
                   px="1"
                   py="0"
                   ml="1"
-                  rounded="full"
+                  rounded="8px"
                   fontSize="xs"
                   color="var(--text-muted)"
                   _hover={{ color: 'var(--text-primary)', bg: 'var(--surface-accent)' }}
@@ -176,7 +176,7 @@ export function TabBar({
             minW={0}
             px="2"
             py="1"
-            rounded="full"
+            rounded="8px"
             fontSize="sm"
             color="var(--text-muted)"
             _hover={{ color: 'var(--text-primary)', bg: 'var(--surface-accent)' }}

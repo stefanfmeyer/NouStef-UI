@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Box, Button, Center, HStack, Spinner, Text, VStack } from '@chakra-ui/react';
 import { useAppController } from './hooks/use-app-controller';
 import { ChatPage } from './ui/pages/ChatPage';
@@ -10,15 +11,28 @@ import { ToolsPage } from './ui/pages/ToolsPage';
 import { ModelSelector } from './ui/molecules/ModelSelector';
 import { TabBar } from './ui/molecules/TabBar';
 import { ShellLayout, Sidebar } from './ui/templates/ShellLayout';
+import { CommandPalette } from './ui/organisms/CommandPalette';
 import { AppToaster } from './ui/toaster';
 
 export function App() {
   const controller = useAppController();
+  const [cmdPaletteOpen, setCmdPaletteOpen] = useState(false);
+
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setCmdPaletteOpen((prev) => !prev);
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
   if (controller.bootstrapStatus === 'loading' && !controller.bootstrap) {
     return (
       <Center h="100dvh" bg="transparent">
-        <Box rounded="10px" border="1px solid var(--border-subtle)" bg="var(--surface-1)" px="7" py="7">
-          <Text fontWeight="700" color="var(--text-primary)">
+        <Box rounded="8px" border="1px solid var(--border-subtle)" bg="var(--surface-elevated)" px="8" py="7" boxShadow="var(--shadow-md)">
+          <Text fontWeight="750" color="var(--text-primary)">
             Connecting to the local Hermes bridge…
           </Text>
           <Text color="var(--text-secondary)">No fallback data is rendered while the real bridge loads.</Text>
@@ -34,13 +48,14 @@ export function App() {
           align="stretch"
           gap="4"
           maxW="560px"
-          rounded="10px"
+          rounded="8px"
           border="1px solid var(--border-danger)"
           bg="var(--surface-danger)"
+          boxShadow="var(--shadow-md)"
           px="8"
           py="8"
         >
-          <Text fontSize="2xl" fontWeight="600" color="var(--text-primary)">
+          <Text fontSize="2xl" fontWeight="750" color="var(--text-primary)">
             Bridge unavailable
           </Text>
           <Text color="var(--text-secondary)">
@@ -48,9 +63,9 @@ export function App() {
           </Text>
           <Button
             alignSelf="start"
-            rounded="6px"
+            rounded="8px"
             bg="var(--accent)"
-            color="white"
+            color="var(--accent-contrast)"
             _hover={{ bg: 'var(--accent-strong)' }}
             onClick={() =>
               void controller.refreshBootstrap({
@@ -75,8 +90,30 @@ export function App() {
     !(controller.runtimeConfigGate.status === 'checking' && controller.chatSending);
   const usesCombinedSessionRecipeLayout = controller.page === 'chat' && Boolean(controller.sessionPayload?.attachedRecipe);
 
+  const activeModelLabel = controller.runtimeConfigGate.modelId
+    ? `${controller.modelProviderResponse?.config?.provider ?? ''}/${controller.runtimeConfigGate.modelId}`.replace(/^\//, '')
+    : null;
+
   return (
     <>
+      {cmdPaletteOpen ? (
+        <CommandPalette
+          recentSessions={controller.bootstrap.recentSessions}
+          onOpenSession={(sessionId) => {
+            void controller.openSession(sessionId);
+            setCmdPaletteOpen(false);
+          }}
+          onOpenPage={(page) => {
+            void controller.openPage(page);
+            setCmdPaletteOpen(false);
+          }}
+          onCreateSession={() => {
+            void controller.handleCreateSession();
+            setCmdPaletteOpen(false);
+          }}
+          onClose={() => setCmdPaletteOpen(false)}
+        />
+      ) : null}
       <ShellLayout
         connection={controller.bootstrap.connection}
         profileName={controller.activeProfile?.name ?? controller.activeProfile?.id ?? null}
@@ -85,6 +122,7 @@ export function App() {
         headerMode={usesCombinedSessionRecipeLayout ? 'compact' : 'full'}
         hermesVersion={controller.bootstrap.hermesVersion}
         expectedHermesVersion={controller.bootstrap.expectedHermesVersion}
+        activeModelLabel={activeModelLabel}
         onPersistTheme={async (themeMode) => {
           await controller.handleSaveSettings({
             themeMode
@@ -316,21 +354,22 @@ function RuntimeConfigBlockedState({
         align="stretch"
         gap="4"
         maxW="640px"
-        rounded="10px"
+        rounded="8px"
         border={status === 'checking' ? '1px solid rgba(59, 130, 246, 0.28)' : '1px solid var(--border-subtle)'}
-        bg={status === 'checking' ? 'rgba(59, 130, 246, 0.08)' : 'var(--surface-1)'}
+        bg={status === 'checking' ? 'rgba(59, 130, 246, 0.08)' : 'var(--surface-elevated)'}
+        boxShadow="var(--shadow-md)"
         px="7"
         py="7"
       >
         {status === 'checking' ? (
           <HStack align="center" gap="3">
             <Spinner size="sm" color="blue.500" />
-            <Text fontSize="2xl" fontWeight="600" color="var(--text-primary)">
+            <Text fontSize="2xl" fontWeight="750" color="var(--text-primary)">
               {title}
             </Text>
           </HStack>
         ) : (
-          <Text fontSize="2xl" fontWeight="600" color="var(--text-primary)">
+          <Text fontSize="2xl" fontWeight="750" color="var(--text-primary)">
             {title}
           </Text>
         )}
@@ -341,9 +380,9 @@ function RuntimeConfigBlockedState({
         {status === 'checking' ? null : (
           <Button
             alignSelf="start"
-            rounded="6px"
+            rounded="8px"
             bg="var(--accent)"
-            color="white"
+            color="var(--accent-contrast)"
             _hover={{ bg: 'var(--accent-strong)' }}
             onClick={onOpenSettings}
           >
@@ -360,7 +399,7 @@ function pageTitle(page: string) {
     case 'sessions':
       return 'All sessions';
     case 'recipes':
-      return 'Recipes';
+      return 'Spaces';
     case 'jobs':
       return 'Jobs';
     case 'tools':

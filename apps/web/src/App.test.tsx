@@ -1211,8 +1211,8 @@ describe('App', () => {
     expect(screen.getByText('Connect OpenRouter and choose a default model before using chat.')).toBeInTheDocument();
     expect(screen.queryByPlaceholderText('Ask Hermes something real.')).not.toBeInTheDocument();
 
-    await userEvent.click(screen.getByRole('button', { name: 'Recipes' }));
-    expect(await screen.findByRole('tab', { name: 'Recipe Book' })).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: 'Spaces' }));
+    expect(await screen.findByTestId('spaces-template-gallery')).toBeInTheDocument();
 
     await userEvent.click(screen.getByRole('button', { name: 'Settings' }));
     expect(await screen.findByText('Local preferences')).toBeInTheDocument();
@@ -2648,17 +2648,18 @@ describe('App', () => {
     );
 
     const sidebarScroll = await screen.findByTestId('sidebar-scroll');
-    expect(within(sidebarScroll).getByRole('button', { name: /^Recipes$/ })).toBeInTheDocument();
+    expect(within(sidebarScroll).getByRole('button', { name: /^Spaces$/ })).toBeInTheDocument();
     const recentRow = within(sidebarScroll)
       .getAllByTestId('recent-session-row')
       .find((row) => row.getAttribute('data-session-id') === attachedSession.id);
     expect(recentRow).toBeTruthy();
     expect(within(recentRow as HTMLElement).getByTestId('recent-session-meta')).toHaveTextContent('2 messages');
+    expect(within(recentRow as HTMLElement).getByTestId('recent-session-space-indicator')).toHaveTextContent('Space');
     expect(within(recentRow as HTMLElement).queryByText(attachedSession.summary)).not.toBeInTheDocument();
     expect(screen.getAllByTestId('hermes-home-brand').length).toBeGreaterThan(0);
 
-    await userEvent.click(screen.getByRole('button', { name: /^Recipes$/ }));
-    expect(await screen.findByRole('tab', { name: 'Recipe Book' })).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: /^Spaces$/ }));
+    expect(await screen.findByTestId('spaces-template-gallery')).toBeInTheDocument();
     expect(screen.getByTestId('page-header')).toBeInTheDocument();
 
     await userEvent.click(screen.getByRole('button', { name: /^All sessions$/ }));
@@ -4173,8 +4174,11 @@ describe('App', () => {
       </HermesUiProvider>
     );
 
-    await screen.findByPlaceholderText('Ask Hermes something real.');
-    await userEvent.type(screen.getByPlaceholderText('Ask Hermes something real.'), 'Run the inbox check');
+    const composerInput = await screen.findByPlaceholderText('Ask Hermes something real.');
+    await waitFor(() => {
+      expect(composerInput).not.toBeDisabled();
+    });
+    await userEvent.type(composerInput, 'Run the inbox check');
     await userEvent.click(screen.getByRole('button', { name: 'Send' }));
 
     expect(await screen.findByText('The inbox check completed.')).toBeInTheDocument();

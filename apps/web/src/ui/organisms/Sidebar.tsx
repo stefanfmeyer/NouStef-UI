@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { flushSync } from 'react-dom';
-import { Box, Button, Flex, HStack, ScrollArea, Separator, Text, VStack, chakra } from '@chakra-ui/react';
+import { Box, Button, Flex, HStack, Input, ScrollArea, Text, VStack, chakra } from '@chakra-ui/react';
 import type { AppPage, Profile, Session } from '@hermes-recipes/protocol';
 import { ConfirmDialog } from '../molecules/ConfirmDialog';
 import { ErrorBanner } from '../molecules/ErrorBanner';
@@ -9,11 +9,11 @@ import { SessionRow } from '../molecules/SessionRow';
 import { SessionRenameDialog } from '../molecules/SessionRenameDialog';
 import { BrandLockup } from '../atoms/BrandLockup';
 
-type SidebarIconName = 'recipes' | 'sessions' | 'jobs' | 'tools' | 'skills' | 'settings' | 'new-session' | 'collapse' | 'expand';
+type SidebarIconName = 'recipes' | 'sessions' | 'jobs' | 'tools' | 'skills' | 'settings' | 'new-session' | 'collapse' | 'expand' | 'search';
 
-const navItems: Array<{ page: AppPage; label: string; icon: SidebarIconName }> = [
-  { page: 'sessions', label: 'All sessions', icon: 'sessions' },
-  { page: 'recipes', label: 'Recipes', icon: 'recipes' },
+const navItems: Array<{ page: AppPage; label: string; icon: SidebarIconName; shortcut?: string }> = [
+  { page: 'recipes', label: 'Spaces', icon: 'recipes', shortcut: '⌘R' },
+  { page: 'sessions', label: 'All sessions', icon: 'sessions', shortcut: '⌘⇧S' },
   { page: 'jobs', label: 'Jobs', icon: 'jobs' },
   { page: 'tools', label: 'Tools', icon: 'tools' },
   { page: 'skills', label: 'Skills', icon: 'skills' },
@@ -54,20 +54,24 @@ export function Sidebar({
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
   const [actionError, setActionError] = useState<string | null>(null);
+  const [sessionSearch, setSessionSearch] = useState('');
+
   const activeProfile = useMemo(
     () => profiles.find((profile) => profile.id === activeProfileId) ?? null,
     [activeProfileId, profiles]
   );
   const activeProfileBadge = activeProfile?.name?.slice(0, 2).toUpperCase() ?? activeProfile?.id?.slice(0, 2).toUpperCase() ?? 'HM';
 
-  async function handleRename(title: string) {
-    if (!selectedSession) {
-      return;
-    }
+  const filteredSessions = useMemo(() => {
+    if (!sessionSearch.trim()) return recentSessions;
+    const q = sessionSearch.toLowerCase();
+    return recentSessions.filter((s) => s.title.toLowerCase().includes(q));
+  }, [recentSessions, sessionSearch]);
 
+  async function handleRename(title: string) {
+    if (!selectedSession) return;
     setActionLoading(true);
     setActionError(null);
-
     try {
       await onRenameSession(selectedSession.id, title);
       setRenameOpen(false);
@@ -79,16 +83,12 @@ export function Sidebar({
   }
 
   async function handleDelete() {
-    if (!selectedSession) {
-      return;
-    }
-
+    if (!selectedSession) return;
     flushSync(() => {
       setDeleteOpen(false);
       setActionError(null);
     });
     setActionLoading(true);
-
     try {
       await onDeleteSession(selectedSession.id);
     } catch (error) {
@@ -102,9 +102,9 @@ export function Sidebar({
     <>
       <Flex
         direction="column"
-        width={{ base: '100%', lg: collapsed ? '72px' : '304px' }}
-        minWidth={{ base: '100%', lg: collapsed ? '72px' : '304px' }}
-        maxWidth={{ base: '100%', lg: collapsed ? '72px' : '304px' }}
+        width={{ base: '100%', lg: collapsed ? '60px' : '264px' }}
+        minWidth={{ base: '100%', lg: collapsed ? '60px' : '264px' }}
+        maxWidth={{ base: '100%', lg: collapsed ? '60px' : '264px' }}
         flexShrink={0}
         height={{ base: '34dvh', lg: 'auto' }}
         minHeight={{ base: '260px', lg: '0' }}
@@ -112,23 +112,27 @@ export function Sidebar({
         rounded={{ base: '0', lg: '10px' }}
         border={{ base: 'none', lg: '1px solid var(--border-subtle)' }}
         bg="var(--sidebar-bg)"
+        boxShadow={{ base: 'none', lg: 'var(--shadow-sm)' }}
+        backdropFilter="blur(20px)"
         minH={0}
         overflow="hidden"
         overflowX="hidden"
-        transition="width 180ms ease, min-width 180ms ease, max-width 180ms ease"
+        transition="width 200ms ease, min-width 200ms ease, max-width 200ms ease"
       >
-        <VStack align="stretch" gap="3.5" px={collapsed ? '2.5' : '4.5'} py="4.5" minW={0}>
-          {collapsed ? (
-            <VStack align="center" gap="2.5">
+        {collapsed ? (
+          /* ── Collapsed layout ── */
+          <>
+            <VStack align="center" gap="2" px="2" pt="3" pb="2" flexShrink={0}>
               <Button
                 variant="ghost"
-                rounded="12px"
+                rounded="8px"
                 minW="0"
-                w="8"
-                h="8"
+                w="9"
+                h="9"
                 px="0"
                 py="0"
                 color="var(--text-muted)"
+                _hover={{ bg: 'var(--surface-hover)', color: 'var(--text-primary)' }}
                 title="Expand sidebar"
                 aria-label="Expand sidebar"
                 onClick={() => void onCollapsedChange(false)}
@@ -138,12 +142,12 @@ export function Sidebar({
 
               <Button
                 variant="ghost"
-                rounded="6px"
+                rounded="8px"
                 minW="0"
                 px="0"
                 py="0"
-                w="11"
-                h="11"
+                w="9"
+                h="9"
                 title={activeProfile ? `${activeProfile.name} (${activeProfile.id})` : 'Active profile'}
                 aria-label={activeProfile ? `${activeProfile.name} (${activeProfile.id})` : 'Active profile'}
                 onClick={() => void onCollapsedChange(false)}
@@ -151,12 +155,12 @@ export function Sidebar({
                 <Flex
                   align="center"
                   justify="center"
-                  w="9"
-                  h="9"
-                  rounded="14px"
-                  bg="var(--surface-accent)"
-                  color="var(--text-primary)"
-                  fontWeight="600"
+                  w="7"
+                  h="7"
+                  rounded="6px"
+                  bg="var(--surface-selected)"
+                  color="var(--text-secondary)"
+                  fontWeight="750"
                   fontSize="10px"
                 >
                   {activeProfileBadge}
@@ -164,40 +168,61 @@ export function Sidebar({
               </Button>
 
               <Button
-                size="sm"
-                rounded="14px"
+                variant="ghost"
+                rounded="8px"
                 minW="0"
-                w="11"
-                h="11"
+                w="9"
+                h="7"
                 px="0"
                 py="0"
-                bg="var(--accent)"
-                color="white"
-                _hover={{ bg: 'var(--accent-strong)' }}
+                color="var(--text-muted)"
+                border="1px solid var(--border-subtle)"
+                _hover={{ bg: 'var(--surface-hover)', color: 'var(--text-primary)' }}
                 onClick={onCreateSession}
-                title="New session"
+                title="New session (⌘N)"
                 aria-label="New session"
               >
                 <SidebarIcon name="new-session" />
               </Button>
             </VStack>
-          ) : (
-            <>
-              <BrandLockup />
 
-              <HStack justify="recipe-between" align="center" gap="2">
-                <Box flex="1" minW={0}>
-                  <ProfileSelector profiles={profiles} activeProfileId={activeProfileId} onChange={onProfileChange} />
-                </Box>
+            {/* Spacer pushes nav to bottom */}
+            <Box flex="1" minH={0} />
 
+            {/* Nav footer */}
+            <Box flexShrink={0} px="2" pt="1" pb="2">
+              <Box h="1px" bg="var(--border-subtle)" mb="1.5" />
+              <VStack align="stretch" gap="0.5">
+                {navItems.map((item) => (
+                  <NavButton
+                    key={item.page}
+                    label={item.label}
+                    icon={item.icon}
+                    collapsed={collapsed}
+                    active={activePage === item.page}
+                    onClick={() => onOpenPage(item.page)}
+                  />
+                ))}
+              </VStack>
+            </Box>
+          </>
+        ) : (
+          /* ── Expanded layout ── */
+          <>
+            {/* Header */}
+            <VStack align="stretch" gap="2" px="3" pt="3" pb="2" flexShrink={0} minW={0}>
+              <HStack justify="space-between" align="center" gap="2">
+                <BrandLockup />
                 <Button
                   variant="ghost"
-                  rounded="12px"
+                  rounded="7px"
                   minW="0"
-                  w="8"
-                  h="8"
+                  w="7"
+                  h="7"
                   px="0"
                   py="0"
+                  color="var(--text-muted)"
+                  _hover={{ bg: 'var(--surface-hover)', color: 'var(--text-primary)' }}
                   title="Collapse sidebar"
                   aria-label="Collapse sidebar"
                   onClick={() => void onCollapsedChange(true)}
@@ -206,93 +231,124 @@ export function Sidebar({
                 </Button>
               </HStack>
 
+              <Box minW={0}>
+                <ProfileSelector profiles={profiles} activeProfileId={activeProfileId} onChange={onProfileChange} compact />
+              </Box>
+
               <Button
-                size="sm"
-                rounded="14px"
-                bg="var(--accent)"
-                color="white"
-                _hover={{ bg: 'var(--accent-strong)' }}
+                justifyContent="start"
+                variant="ghost"
+                w="100%"
+                minH={0}
+                h="7"
+                px="2"
+                rounded="7px"
+                color="var(--text-muted)"
+                fontSize="xs"
+                fontWeight="500"
+                _hover={{ bg: 'var(--surface-hover)', color: 'var(--text-primary)' }}
                 onClick={onCreateSession}
-                title="New session"
+                title="New session (⌘N)"
                 aria-label="New session"
               >
-                <HStack justify="start" w="100%" gap="2">
+                <HStack gap="1.5" w="100%">
                   <SidebarIcon name="new-session" />
                   <Text>New session</Text>
+                  <Box ml="auto" fontSize="10px" fontWeight="400" opacity={0.5}>⌘N</Box>
                 </HStack>
               </Button>
-            </>
-          )}
-          {actionError ? <ErrorBanner title="Recent session update failed" detail={actionError} /> : null}
-        </VStack>
 
-        <Separator borderColor="var(--border-subtle)" />
+              {actionError ? (
+                <ErrorBanner title="Session update failed" detail={actionError} />
+              ) : null}
+            </VStack>
 
-        <ScrollArea.Root flex="1" minH={0} variant="hover" overflow="hidden" maxW="100%">
-          <ScrollArea.Viewport data-testid="sidebar-scroll" style={{ overflowX: 'hidden', maxWidth: '100%' }}>
-            <VStack align="stretch" gap="5" px={collapsed ? '3' : '4'} py="4" minW={0} w="100%" maxW="100%">
-              {!collapsed ? (
-                <Box minW={0}>
-                  <Text
-                    px="2"
-                    pb="1.5"
-                    fontSize="xs"
-                    fontWeight="500"
-                    color="var(--text-muted)"
-                    letterSpacing="0.12em"
-                    textTransform="uppercase"
-                  >
+            {/* Body wrapper — data-testid covers sessions + nav for test selectors */}
+            <Flex
+              data-testid="sidebar-scroll"
+              direction="column"
+              flex="1"
+              minH={0}
+              overflow="hidden"
+            >
+              {/* Sessions area */}
+              <Flex direction="column" flex="1" minH={0}>
+                <Box px="3" pt="0.5" pb="1" flexShrink={0}>
+                  <Text fontSize="11px" fontWeight="600" color="var(--text-muted)" px="1" pb="1" lineHeight="1.4">
                     Recent sessions
                   </Text>
-                  <VStack align="stretch" gap="1">
-                    {recentSessions.length === 0 ? (
-                      <Text px="2" fontSize="sm" color="var(--text-secondary)">
-                        No sessions yet.
-                      </Text>
-                    ) : (
-                      recentSessions.map((session) => (
-                        <SessionRow
-                          key={session.id}
-                          session={session}
-                          active={session.id === activeSessionId && activePage === 'chat'}
-                          onClick={() => onOpenSession(session.id)}
-                          onRename={() => {
-                            setSelectedSession(session);
-                            setActionError(null);
-                            setRenameOpen(true);
-                          }}
-                          onDelete={() => {
-                            setSelectedSession(session);
-                            setActionError(null);
-                            setDeleteOpen(true);
-                          }}
-                        />
-                      ))
-                    )}
-                  </VStack>
+                  <Box position="relative">
+                    <Box
+                      position="absolute"
+                      left="7px"
+                      top="50%"
+                      transform="translateY(-50%)"
+                      pointerEvents="none"
+                      color="var(--text-muted)"
+                    >
+                      <SidebarIcon name="search" />
+                    </Box>
+                    <Input
+                      value={sessionSearch}
+                      onChange={(e) => setSessionSearch(e.currentTarget.value)}
+                      placeholder="Search sessions…"
+                      size="sm"
+                      pl="6"
+                      rounded="7px"
+                      bg="var(--surface-2)"
+                      border="1px solid var(--border-subtle)"
+                      color="var(--text-primary)"
+                      fontSize="12px"
+                      h="6"
+                      _placeholder={{ color: 'var(--text-muted)' }}
+                      _focus={{ borderColor: 'var(--accent)', boxShadow: 'var(--focus-ring)', bg: 'var(--surface-1)' }}
+                    />
+                  </Box>
                 </Box>
-              ) : null}
 
-              <Box minW={0}>
-                {!collapsed ? (
-                  <Text
-                    px="2"
-                    pb="1.5"
-                    fontSize="xs"
-                    fontWeight="500"
-                    color="var(--text-muted)"
-                    letterSpacing="0.12em"
-                    textTransform="uppercase"
-                  >
-                    Browse
-                  </Text>
-                ) : null}
-                <VStack align="stretch" gap="1">
+                <ScrollArea.Root flex="1" minH={0} variant="hover" overflow="hidden" maxW="100%">
+                  <ScrollArea.Viewport style={{ overflowX: 'hidden', maxWidth: '100%' }}>
+                    <VStack align="stretch" gap="0.5" px="2" py="0.5" minW={0} w="100%" maxW="100%">
+                      {filteredSessions.length === 0 ? (
+                        <Text px="1" fontSize="xs" color="var(--text-muted)">
+                          {sessionSearch ? 'No matching sessions.' : 'No sessions yet.'}
+                        </Text>
+                      ) : (
+                        filteredSessions.map((session) => (
+                          <SessionRow
+                            key={session.id}
+                            session={session}
+                            active={session.id === activeSessionId && activePage === 'chat'}
+                            onClick={() => onOpenSession(session.id)}
+                            onRename={() => {
+                              setSelectedSession(session);
+                              setActionError(null);
+                              setRenameOpen(true);
+                            }}
+                            onDelete={() => {
+                              setSelectedSession(session);
+                              setActionError(null);
+                              setDeleteOpen(true);
+                            }}
+                          />
+                        ))
+                      )}
+                    </VStack>
+                  </ScrollArea.Viewport>
+                  <ScrollArea.Scrollbar />
+                </ScrollArea.Root>
+              </Flex>
+
+              {/* Nav footer */}
+              <Box flexShrink={0} px="2" pt="1" pb="2">
+                <Box h="1px" bg="var(--border-subtle)" mb="1.5" mx="1" />
+                <VStack align="stretch" gap="0.5">
                   {navItems.map((item) => (
                     <NavButton
                       key={item.page}
                       label={item.label}
                       icon={item.icon}
+                      shortcut={item.shortcut}
                       collapsed={collapsed}
                       active={activePage === item.page}
                       onClick={() => onOpenPage(item.page)}
@@ -300,10 +356,9 @@ export function Sidebar({
                   ))}
                 </VStack>
               </Box>
-            </VStack>
-          </ScrollArea.Viewport>
-          <ScrollArea.Scrollbar />
-        </ScrollArea.Root>
+            </Flex>
+          </>
+        )}
       </Flex>
 
       {selectedSession ? (
@@ -345,12 +400,14 @@ export function Sidebar({
 function NavButton({
   label,
   icon,
+  shortcut,
   collapsed,
   active,
   onClick
 }: {
   label: string;
   icon: SidebarIconName;
+  shortcut?: string;
   collapsed: boolean;
   active: boolean;
   onClick: () => void;
@@ -361,25 +418,50 @@ function NavButton({
       variant="ghost"
       width="100%"
       minW={0}
-      rounded="6px"
-      px={collapsed ? '0' : '3'}
-      py="2.5"
-      height="auto"
-      bg={active ? 'var(--surface-accent)' : 'transparent'}
-      color="var(--text-primary)"
+      rounded="7px"
+      px={collapsed ? '0' : '2'}
+      h="7"
+      bg={active ? 'var(--surface-selected)' : 'transparent'}
+      color={active ? 'var(--text-primary)' : 'var(--text-secondary)'}
+      fontWeight={active ? '600' : '450'}
+      fontSize="xs"
       overflow="hidden"
       textOverflow="ellipsis"
       whiteSpace="nowrap"
       title={collapsed ? label : undefined}
       aria-label={label}
       _hover={{
-        bg: 'var(--surface-2)'
+        bg: active ? 'var(--surface-selected)' : 'var(--surface-hover)',
+        color: 'var(--text-primary)'
       }}
       onClick={onClick}
     >
-      <HStack justify={collapsed ? 'center' : 'start'} gap="3" w="100%">
-        <SidebarIcon name={icon} />
-        {!collapsed ? <Text>{label}</Text> : null}
+      <HStack justify={collapsed ? 'center' : 'start'} gap="2" w="100%">
+        <Box
+          color={active ? 'var(--text-primary)' : 'var(--text-muted)'}
+          flexShrink={0}
+          transition="color var(--transition-base)"
+        >
+          <SidebarIcon name={icon} />
+        </Box>
+        {!collapsed ? (
+          <>
+            <Text flex="1" minW={0} overflow="hidden" textOverflow="ellipsis">{label}</Text>
+            {shortcut ? (
+              <Text
+                fontSize="10px"
+                color="var(--text-muted)"
+                fontWeight="400"
+                opacity={0}
+                _groupHover={{ opacity: 1 }}
+                transition="opacity var(--transition-base)"
+                flexShrink={0}
+              >
+                {shortcut}
+              </Text>
+            ) : null}
+          </>
+        ) : null}
       </HStack>
     </Button>
   );
@@ -440,6 +522,13 @@ function SidebarIcon({ name }: { name: SidebarIconName }) {
               strokeWidth="1.5"
               strokeLinecap="round"
             />
+          </>
+        );
+      case 'search':
+        return (
+          <>
+            <circle cx="7" cy="7" r="4" fill="none" stroke="currentColor" strokeWidth="1.5" />
+            <path d="M10.5 10.5L13.5 13.5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
           </>
         );
       case 'collapse':

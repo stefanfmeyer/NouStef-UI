@@ -120,7 +120,7 @@ function TemplateTabsPreview({
               <Button
                 key={tab.id}
                 type="button"
-                rounded="999px"
+                rounded="8px"
                 border="1px solid var(--border-subtle)"
                 bg={active ? 'var(--surface-accent)' : 'var(--surface-2)'}
                 px="3.5"

@@ -10,7 +10,7 @@ export function InfoTag({
   variant?: 'subtle' | 'solid' | 'outline' | 'surface';
 }) {
   return (
-    <Tag.Root size="sm" colorPalette={colorPalette} variant={variant} rounded="full">
+    <Tag.Root size="sm" colorPalette={colorPalette} variant={variant} rounded="8px">
       <Tag.Label>{label}</Tag.Label>
     </Tag.Root>
   );
