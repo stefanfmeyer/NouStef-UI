@@ -436,17 +436,18 @@ export function ChatPage({
               <Drawer.Content
                 bg="var(--surface-elevated)"
                 borderLeft="1px solid var(--border-subtle)"
+                overflow="hidden"
                 data-testid="recipe-runtime-drawer"
               >
                 <Drawer.Header>
-                  <HStack justify="space-between" align="center" gap="3">
+                  <HStack justify="space-between" align="center" gap="3" minW={0}>
                     <Drawer.Title color="var(--text-primary)">Runtime activity</Drawer.Title>
                     <Drawer.CloseTrigger asChild>
                       <CloseButton size="sm" aria-label="Close runtime drawer" title="Close runtime drawer" />
                     </Drawer.CloseTrigger>
                   </HStack>
                 </Drawer.Header>
-                <Drawer.Body>
+                <Drawer.Body overflowX="hidden" minW={0}>
                   <ChatActivityFeed
                     activities={activities}
                     sending={sending}
