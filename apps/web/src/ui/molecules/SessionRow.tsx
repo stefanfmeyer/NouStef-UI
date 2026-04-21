@@ -30,20 +30,20 @@ export function SessionRow({
 
   return (
     <Box
+      className="session-row"
       data-testid="recent-session-row"
       data-session-id={session.id}
       width="100%"
       maxW="100%"
       minW={0}
       rounded="8px"
-      border="1px solid transparent"
       bg={active ? 'var(--surface-selected)' : 'transparent'}
       overflow="hidden"
-      transition="background-color 140ms ease, border-color 140ms ease, box-shadow 140ms ease"
-      boxShadow={active ? 'inset 0 0 0 1px var(--accent)' : 'none'}
+      transition="background-color 140ms ease"
+      position="relative"
       _hover={{ bg: active ? 'var(--surface-selected)' : 'var(--surface-hover)' }}
     >
-      <Flex align="start" gap="1" px="2" py="2" minW={0} maxW="100%" overflow="hidden">
+      <Flex align="center" gap="1" px="2" py="1.5" minW={0} maxW="100%" overflow="hidden">
         <Button
           justifyContent="start"
           alignItems="start"
@@ -53,44 +53,44 @@ export function SessionRow({
           maxW="100%"
           minW={0}
           minH="0"
-          rounded="8px"
-          px="0"
+          rounded="6px"
+          px="1"
           py="0"
           height="auto"
           bg="transparent"
           overflow="hidden"
-          _hover={{
-            bg: 'transparent'
-          }}
+          _hover={{ bg: 'transparent' }}
           onClick={onClick}
         >
-          <VStack align="start" gap="1" width="100%" minW={0} overflow="hidden">
-              <Text
-                data-testid="recent-session-title"
-                width="100%"
-                minW={0}
-                overflow="hidden"
-                textOverflow="ellipsis"
-                whiteSpace="nowrap"
-                fontSize="sm"
-                fontWeight="650"
-                color="var(--text-primary)"
-              >
-                {session.title}
-              </Text>
+          <VStack align="start" gap="0.5" width="100%" minW={0} overflow="hidden">
+            <Text
+              data-testid="recent-session-title"
+              width="100%"
+              minW={0}
+              overflow="hidden"
+              textOverflow="ellipsis"
+              whiteSpace="nowrap"
+              fontSize="sm"
+              fontWeight="600"
+              color={active ? 'var(--text-primary)' : 'var(--text-secondary)'}
+              lineHeight="1.3"
+            >
+              {session.title}
+            </Text>
             <HStack gap="1.5" width="100%" minW={0}>
               {hasAttachedSpace ? (
                 <Box
                   data-testid="recent-session-space-indicator"
                   flexShrink={0}
-                  rounded="6px"
-                  bg="var(--accent-soft)"
-                  color="var(--accent)"
+                  rounded="4px"
+                  bg="var(--surface-2)"
+                  color="var(--text-muted)"
+                  border="1px solid var(--border-subtle)"
                   px="1.5"
-                  py="0.5"
+                  py="0"
                   fontSize="10px"
-                  fontWeight="700"
-                  lineHeight="1"
+                  fontWeight="600"
+                  lineHeight="1.6"
                 >
                   Space
                 </Box>
@@ -103,32 +103,41 @@ export function SessionRow({
                 textOverflow="ellipsis"
                 whiteSpace="nowrap"
                 fontSize="xs"
-                lineHeight="shorter"
                 color="var(--text-muted)"
+                lineHeight="1"
               >
                 {formatSessionMeta(session)}
               </Text>
             </HStack>
           </VStack>
         </Button>
+
         {onRename && onDelete ? (
-          <Flex align="center" gap="0.5" flexShrink={0}>
+          <Box className="session-row__actions" flexShrink={0}>
             <Button
               type="button"
               variant="ghost"
               size="xs"
               minW={0}
               px="2"
-              rounded="8px"
+              h="6"
+              rounded="6px"
               aria-label={`Rename ${session.title}`}
               color="var(--text-secondary)"
+              fontSize="xs"
               _hover={{ bg: 'var(--surface-2)', color: 'var(--text-primary)' }}
               onClick={onRename}
             >
               Rename
             </Button>
-            <SessionActionMenu label={`Actions for ${session.title}`} onRename={onRename} onDelete={onDelete} size="xs" showRename={false} />
-          </Flex>
+            <SessionActionMenu
+              label={`Actions for ${session.title}`}
+              onRename={onRename}
+              onDelete={onDelete}
+              size="xs"
+              showRename={false}
+            />
+          </Box>
         ) : null}
       </Flex>
     </Box>
