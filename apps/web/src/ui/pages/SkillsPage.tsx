@@ -37,22 +37,6 @@ function CategoryBadge({ value }: { value: string }) {
   );
 }
 
-function CapabilityChips({ summary }: { summary: string | undefined }) {
-  if (!summary) return null;
-  const caps = summary.split(',').map((s) => s.trim()).filter(Boolean);
-  const visible = caps.slice(0, 4);
-  const overflow = caps.length - 4;
-  return (
-    <span style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginTop: 4 }}>
-      {visible.map((cap, i) => (
-        <span key={i} className="skill-chip">{cap}</span>
-      ))}
-      {overflow > 0 ? (
-        <span className="skill-chip-overflow">+{overflow} more</span>
-      ) : null}
-    </span>
-  );
-}
 
 function SkillsIcon() {
   return (

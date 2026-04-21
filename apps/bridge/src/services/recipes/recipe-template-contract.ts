@@ -3673,7 +3673,7 @@ function getTemplateFillGuide(templateId: RecipeTemplateId) {
           title: 'Monitor shortlist',
           summary: 'Curated shortlist of candidate monitors.',
           data: {
-            cards: [{ id: 'item-1', title: 'Dell 27" 4K', subtitle: '$299', chips: [{ label: 'Best value', tone: 'accent' }] }],
+            cards: [{ id: 'item-1', title: 'Dell 27" 4K', subtitle: '$299', imageLabel: 'Dell 27 inch 4K monitor', chips: [{ label: 'Best value', tone: 'accent' }], links: [{ label: 'View product', href: 'https://www.dell.com/monitors/27-4k' }] }],
             noteLines: ['All prices checked 2026-04-14.']
           }
         },
@@ -3690,7 +3690,11 @@ function getTemplateFillGuide(templateId: RecipeTemplateId) {
             whyInvalid: 'Use data.cards directly. Do not nest data.data or rename cards to items.'
           }
         ],
-        commonMistakes: ['Use cards as canonical card items. Do not use data.data, items, or shortlistItems.']
+        commonMistakes: [
+          'Use cards as canonical card items. Do not use data.data, items, or shortlistItems.',
+          'Always include product/item URLs as links on each card when the source data provides them (e.g. links: [{ label: "View product", href: "https://..." }]).',
+          'Always include imageLabel on each card to describe the item visually for image lookup (e.g. imageLabel: "Nike Air Force 1 white sneaker").'
+        ]
       };
     case 'inbox-triage-board':
       return {

@@ -4,11 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "tsx src/server.ts --port 8787",
+    "dev": "NODE_OPTIONS=--experimental-sqlite tsx src/server.ts --port 8787",
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "start": "tsx src/server.ts",
-    "start:fixture": "tsx src/server.ts --fixture",
+    "start": "NODE_OPTIONS=--experimental-sqlite tsx src/server.ts",
+    "start:fixture": "NODE_OPTIONS=--experimental-sqlite tsx src/server.ts --fixture",
     "test:live:home": "tsx scripts/live-home-workspace-validation.ts"
   },
   "dependencies": {
