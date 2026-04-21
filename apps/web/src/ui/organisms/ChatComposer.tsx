@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, type FormEvent } from 'react';
 import { Box, Button, Flex, Textarea } from '@chakra-ui/react';
 
 export function ChatComposer({
@@ -35,7 +35,7 @@ export function ChatComposer({
           boxShadow: 'var(--focus-ring)'
         }
       }}
-      onSubmit={(event: React.FormEvent) => {
+      onSubmit={(event: FormEvent) => {
         event.preventDefault();
         if (canSubmit) void handleSubmit();
       }}

@@ -27,22 +27,6 @@ function requestStatusColor(status: RuntimeRequest['status'] | null, sending: bo
   }
 }
 
-function StatusDot({ active }: { active: boolean }) {
-  return (
-    <span
-      style={{
-        display: 'inline-block',
-        width: 6,
-        height: 6,
-        borderRadius: '50%',
-        background: active ? 'var(--accent)' : 'var(--status-neutral)',
-        flexShrink: 0,
-        animation: active ? 'status-pulse 1.4s ease infinite' : undefined,
-        marginRight: 2
-      }}
-    />
-  );
-}
 
 export function ChatActivityFeed({
   activities,
@@ -131,9 +115,9 @@ export function ChatActivityFeed({
       </Box>
 
       {/* Activity log */}
-      <ScrollArea.Root flex="1" minH={0} variant="hover">
+      <ScrollArea.Root flex="1" minH={0} minW={0} variant="hover">
         <ScrollArea.Viewport data-testid="chat-activity-scroll">
-          <VStack align="stretch" gap="0" px="2" py="1.5">
+          <VStack align="stretch" gap="0" px="2" py="1.5" minW={0}>
             {activities.length === 0 ? (
               <Box px="1" py="2">
                 <Text fontSize="xs" color="var(--text-muted)">
