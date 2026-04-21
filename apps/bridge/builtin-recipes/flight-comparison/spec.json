@@ -1,0 +1,55 @@
+{
+  "purpose": "Let the user compare outbound and return flight options side-by-side inside tabbed comparison tables.",
+  "primaryUserGoal": "Pick a flight itinerary that balances price, stops, and time.",
+  "whenHermesShouldChoose": "User asks to compare flights, find a round trip, search for the cheapest or most direct option between two airports.",
+  "goodFor": [
+    "Round-trip flight comparisons",
+    "Deciding between a cheaper long layover and a pricier direct",
+    "Seeing price / duration / stops in one grid"
+  ],
+  "supports": [
+    "Tabs for outbound and return legs (and optional multi-city)",
+    "Carrier logos via row.leadingImage",
+    "Emphasized price cells with success tone for best value",
+    "Stop-count warnings (tone='warning' for 1-stop, 'danger' for 2+)"
+  ],
+  "supportedTabs": ["Outbound", "Return"],
+  "idealDataShape": [
+    "Origin, destination, outbound date, return date, passengers",
+    "Per-leg: 3-6 options with carrier, depart, arrive, duration, stops, price"
+  ],
+  "requiredSections": ["tabs"],
+  "optionalSections": [],
+  "requiredActions": [],
+  "optionalActions": ["get-flight-details", "continue-booking", "append-template-note"],
+  "populationInstructions": {
+    "summary": "Create a tabs section with 'Outbound' and 'Return' panes. Each pane contains a comparison-table: one row per itinerary with carrier logo (leadingImage, query: '<carrier> logo'), cells for depart, arrive, duration, stops, price.",
+    "steps": [
+      "Parse origin, destination, outbound date, return date, passengers.",
+      "Set activeTabId to 'outbound' initially.",
+      "For each leg, produce 4-5 rows sorted by a sensible default (price ascending).",
+      "Row label: carrier + flight number. leadingImage query: '<carrier> airline logo'.",
+      "Cells: depart (local time + airport), arrive (local time + airport), duration, stops, price.",
+      "Mark the best-value itinerary on each leg with tone='success' and emphasis=true on price.",
+      "Use tone='warning' on stops cell for 1 stop, tone='danger' for 2+ stops."
+    ],
+    "guardrails": [
+      "Don't include itineraries with unrealistic layover times.",
+      "Don't invent airline logos — use the airline name as the query.",
+      "Always show local times with airport code, never UTC."
+    ]
+  },
+  "updateRules": {
+    "patchPrefer": [
+      "Use set_active_tab when the user switches legs",
+      "Use upsert_table_rows to refresh price/availability",
+      "Use remove_items to drop itineraries the user rejected"
+    ],
+    "replaceTriggers": [
+      "User changes route or dates",
+      "User asks for one-way instead of round trip"
+    ],
+    "persistAcrossUpdates": ["header", "column structure"],
+    "stableRegions": ["header"]
+  }
+}

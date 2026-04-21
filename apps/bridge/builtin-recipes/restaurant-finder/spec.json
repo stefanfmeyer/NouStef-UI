@@ -1,0 +1,55 @@
+{
+  "purpose": "Help the user pick a restaurant fast, with neighborhood context, key chips (price, cuisine, vibe), and quick booking detail.",
+  "primaryUserGoal": "Decide where to eat tonight (or for a specific occasion) and see what's worth booking.",
+  "whenHermesShouldChoose": "User asks for restaurant recommendations, dinner options, where to eat, or a shortlist of places in a neighborhood.",
+  "goodFor": [
+    "Tonight's dinner in a specific city or neighborhood",
+    "Restaurant shortlists for a visiting friend",
+    "Comparing 4-8 dining options by price/vibe"
+  ],
+  "supports": [
+    "Grouped list of restaurants by neighborhood",
+    "Detail panel with hours, website, phone, cuisine as plain label+value rows",
+    "Tabs: Results / Saved / Notes"
+  ],
+  "supportedTabs": ["Results", "Saved", "Notes"],
+  "idealDataShape": [
+    "Neighborhood groups with 2-4 restaurants each",
+    "Per-restaurant details: hours, website link, phone, cuisine"
+  ],
+  "requiredSections": ["tabs", "split"],
+  "optionalSections": ["saved list", "notes"],
+  "requiredActions": [],
+  "optionalActions": ["append-template-note"],
+  "populationInstructions": {
+    "summary": "Wrap all content in a tabs section (Results / Saved / Notes). The Results tab pane holds a balanced split: grouped-list on the left, detail-panel on the right. Do NOT add a filter-strip anywhere.",
+    "steps": [
+      "Create a top-level 'tabs' section with three tabs: Results, Saved, Notes. Set activeTabId to the Results tab id.",
+      "Place the entire split section INSIDE the Results tab pane — never at the top level outside tabs.",
+      "Use ratio: 'balanced' on the split so both columns are equal width.",
+      "Group 5-7 restaurants by neighborhood in a grouped-list on the left side; tone-code top picks with success.",
+      "On the right side, populate a detail-panel for the initially selected restaurant with these fields stacked as plain rows: Hours, Website (as a link), Phone, Cuisine.",
+      "Keep per-item subtitle short (cuisine + price tier); put the full description in the detail panel.",
+      "Do NOT add a filter-strip section — omit all filter chips."
+    ],
+    "guardrails": [
+      "ALL sections must be nested inside tab panes — never place sections at the top level outside the tabs section.",
+      "Do NOT add a filter-strip. Omit filters entirely.",
+      "Don't make up hours or addresses — if unknown, say 'check website'.",
+      "Don't claim booking availability unless verified.",
+      "Keep to one cuisine-dense neighborhood per group."
+    ]
+  },
+  "updateRules": {
+    "patchPrefer": [
+      "Use upsert_groups to add or swap restaurants in a neighborhood",
+      "Use set_detail when the user picks a different restaurant"
+    ],
+    "replaceTriggers": [
+      "User changes city entirely",
+      "User switches from dinner to a different meal context"
+    ],
+    "persistAcrossUpdates": ["active tab", "selected restaurant", "notes"],
+    "stableRegions": ["tabs structure", "split structure"]
+  }
+}

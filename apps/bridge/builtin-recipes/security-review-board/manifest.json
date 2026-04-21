@@ -1,0 +1,11 @@
+{
+  "id": "security-review-board",
+  "version": "1.0.0",
+  "name": "Security Review Board",
+  "category": "operations",
+  "description": "Review security findings by severity with evidence, CVE data, and remediation context.",
+  "author": "Hermes",
+  "source": "builtin",
+  "enabled": true,
+  "protocolVersion": "1.0.0"
+}

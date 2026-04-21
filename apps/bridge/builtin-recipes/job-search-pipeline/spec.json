@@ -1,0 +1,55 @@
+{
+  "purpose": "Manage an active job search as a kanban pipeline with stats, a detail panel for the selected role, and an applications-per-week chart.",
+  "primaryUserGoal": "Track roles from Applied through Interviewing to Offer or Rejected without dropping any.",
+  "whenHermesShouldChoose": "User asks to track job applications, build a pipeline of roles, or review open positions they're considering.",
+  "goodFor": [
+    "Actively managing 5-20 open applications",
+    "Tracking interview progress",
+    "Reviewing open positions before applying"
+  ],
+  "supports": [
+    "Stats (total applied, interviewing, offers, rejection rate)",
+    "Kanban with columns Applied / Interviewing / Offer / Rejected",
+    "Detail panel with company info, salary, role, requirements",
+    "Bar-chart of applications over time"
+  ],
+  "supportedTabs": ["Overview"],
+  "idealDataShape": [
+    "8-20 jobs across the 4 stages",
+    "Per-job: company, role, salary range, location, stage",
+    "Weekly application volume"
+  ],
+  "requiredSections": ["split"],
+  "optionalSections": ["stats", "bar-chart"],
+  "requiredActions": [],
+  "optionalActions": ["move-job-stage", "run-interview-prep", "append-template-note"],
+  "populationInstructions": {
+    "summary": "Lead with stats. Include a bar-chart of applications by week. The split section has a kanban on the left (4 columns) and a detail-panel for the selected job on the right with company/salary/role/requirements.",
+    "steps": [
+      "Compute stats: total applied, currently interviewing, offers, rejection rate.",
+      "Build a bar-chart with 4-6 weeks of application counts.",
+      "Populate the kanban with columns: Applied, Interviewing, Offer, Rejected (tone-coded).",
+      "Each card: title=role, subtitle=company, chips for salary + location, footer for stage meta (e.g., 'round 2').",
+      "Detail panel for the highest-interest active role: fields for company, salary, role summary, requirements.",
+      "Include chips for remote/hybrid, seniority, and fit score."
+    ],
+    "guardrails": [
+      "Never fabricate salary bands.",
+      "Don't auto-move a job to 'Rejected' without explicit input.",
+      "Keep card titles short — full job descriptions belong in the detail panel."
+    ]
+  },
+  "updateRules": {
+    "patchPrefer": [
+      "Use move_board_card when stage changes",
+      "Use upsert_board_cards to add new applications",
+      "Use set_detail when the user picks a different job",
+      "Use append_note_lines for interview feedback"
+    ],
+    "replaceTriggers": [
+      "User pivots to a different career track (ICs to managers, etc.)"
+    ],
+    "persistAcrossUpdates": ["rejected jobs", "notes"],
+    "stableRegions": ["header"]
+  }
+}

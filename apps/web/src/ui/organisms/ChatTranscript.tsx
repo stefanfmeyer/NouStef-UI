@@ -1,11 +1,13 @@
 import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import { Box, Button, Code, HStack, ScrollArea, Text, VStack, chakra } from '@chakra-ui/react';
-import type { ChatMessage } from '@hermes-recipes/protocol';
+import type { ChatActivity, ChatMessage } from '@hermes-recipes/protocol';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { HermesAvatar } from '../atoms/HermesAvatar';
 import { TypingDots } from '../atoms/TypingDots';
+import { StatusTicker } from '../atoms/StatusTicker';
+import { safeMarkdownUrlTransform } from '../../lib/markdown-url-transform';
 
 function formatMessageTime(value: string | undefined) {
   if (!value) {
@@ -43,6 +45,7 @@ export const ChatTranscript = memo(function ChatTranscript({
   emptyDetail,
   showTypingIndicator,
   typingStatusLabel,
+  typingActivityKind,
   selectedRequestId,
   onMessageClick
 }: {
@@ -53,6 +56,7 @@ export const ChatTranscript = memo(function ChatTranscript({
   emptyDetail: string;
   showTypingIndicator: boolean;
   typingStatusLabel?: string | null;
+  typingActivityKind?: ChatActivity['kind'] | null;
   selectedRequestId: string | null;
   onMessageClick?: (message: ChatMessage) => void;
 }) {
@@ -105,6 +109,7 @@ export const ChatTranscript = memo(function ChatTranscript({
                   assistantDraft={assistantDraft}
                   selected={selectedRequestId !== null}
                   typingStatusLabel={typingStatusLabel}
+                  typingActivityKind={typingActivityKind}
                 />
               ) : null}
             </>
@@ -120,6 +125,8 @@ const MarkdownMessage = memo(function MarkdownMessage({ children }: { children: 
   return (
     <Box
       color="var(--text-primary)"
+      overflowX="hidden"
+      wordBreak="break-word"
       css={{
         '& h1, & h2, & h3': {
           fontWeight: 700,
@@ -137,7 +144,7 @@ const MarkdownMessage = memo(function MarkdownMessage({ children }: { children: 
           fontSize: '0.98rem'
         },
         '& p': {
-          fontSize: '0.96rem',
+          fontSize: '0.875rem',
           lineHeight: 1.72
         },
         '& p + p': {
@@ -220,6 +227,7 @@ const MarkdownMessage = memo(function MarkdownMessage({ children }: { children: 
     >
       <ReactMarkdown
         skipHtml
+        urlTransform={(url) => safeMarkdownUrlTransform(url) ?? ''}
         remarkPlugins={[remarkGfm]}
         components={{
           a(props) {
@@ -228,7 +236,7 @@ const MarkdownMessage = memo(function MarkdownMessage({ children }: { children: 
               <chakra.a
                 href={href}
                 target={href.startsWith('mailto:') ? undefined : '_blank'}
-                rel={href.startsWith('mailto:') ? undefined : 'noreferrer'}
+                rel={href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
                 color="blue.600"
                 fontWeight="600"
                 textDecoration="underline"
@@ -253,7 +261,7 @@ const MarkdownMessage = memo(function MarkdownMessage({ children }: { children: 
           img(props) {
             return (
               <Button asChild size="xs" variant="outline" colorPalette="blue" mt="2">
-                <a href={props.src ?? '#'} target="_blank" rel="noreferrer">
+                <a href={props.src ?? '#'} target="_blank" rel="noopener noreferrer">
                   {props.alt?.trim() || 'View image'}
                 </a>
               </Button>
@@ -301,21 +309,23 @@ const TranscriptMessageRow = memo(
 const TranscriptTypingRow = memo(function TranscriptTypingRow({
   assistantDraft,
   selected,
-  typingStatusLabel
+  typingStatusLabel,
+  typingActivityKind
 }: {
   assistantDraft: string;
   selected: boolean;
   typingStatusLabel?: string | null;
+  typingActivityKind?: ChatActivity['kind'] | null;
 }) {
+  const statusText = typingStatusLabel?.trim() || 'Hermes is working…';
+  const activityKind = typingActivityKind ?? 'status';
   return (
     <TranscriptBubble messageRole="assistant_draft" selected={selected}>
       <VStack align="stretch" gap="3">
         {assistantDraft.length > 0 ? <MarkdownMessage>{assistantDraft}</MarkdownMessage> : null}
-        <HStack gap="3" align="center">
+        <HStack gap="2.5" align="center">
           <TypingDots />
-          <Text fontSize="sm" color="var(--text-secondary)">
-            {typingStatusLabel?.trim() || 'Hermes is typing…'}
-          </Text>
+          <StatusTicker text={statusText} kind={activityKind} />
         </HStack>
       </VStack>
     </TranscriptBubble>
@@ -370,22 +380,25 @@ function TranscriptBubble({
   }
 
   return (
-    <Box display="flex" justifyContent={alignment}>
+    <Box display="flex" justifyContent={alignment} overflow="hidden">
       <HStack
         align="start"
         gap="3"
         justify={isUser ? 'flex-end' : 'flex-start'}
         flexDirection={isUser ? 'row-reverse' : 'row'}
-        maxW="min(880px, 100%)"
-        w={isUser ? 'auto' : '100%'}
+        maxW="min(820px, 100%)"
+        minW={0}
+        overflow="hidden"
       >
         {isAssistant ? <HermesAvatar size="sm" /> : null}
         {clickable ? (
           <ClickableBubble
             role="button"
             tabIndex={0}
-            maxW={isUser ? 'min(680px, 100%)' : 'min(780px, 100%)'}
-            rounded="8px"
+            maxW="min(760px, 100%)"
+            minW={0}
+            overflow="hidden"
+            rounded="12px"
             border={`1px solid ${activeBorder}`}
             bg={bubbleTone.bg}
             px={{ base: '4', md: '5' }}
@@ -442,8 +455,10 @@ function TranscriptBubble({
           </ClickableBubble>
         ) : (
           <Box
-            maxW={isUser ? 'min(680px, 100%)' : 'min(780px, 100%)'}
-            rounded="8px"
+            maxW="min(760px, 100%)"
+            minW={0}
+            overflow="hidden"
+            rounded="12px"
             border={`1px solid ${activeBorder}`}
             bg={bubbleTone.bg}
             px={{ base: '4', md: '5' }}

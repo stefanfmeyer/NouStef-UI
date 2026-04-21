@@ -240,6 +240,21 @@ function deriveProgressMessageFromActivity(activity: ChatActivity) {
     return activity.detail ?? activity.label;
   }
 
+  if (activity.kind === 'thinking') {
+    const snippet = activity.label.length > 60 ? `${activity.label.slice(0, 60)}…` : activity.label;
+    return `Thinking: ${snippet}`;
+  }
+
+  if (activity.kind === 'website') {
+    let host: string;
+    try {
+      host = new URL(activity.url?.startsWith('http') ? (activity.url ?? '') : `https://${activity.url ?? activity.label}`).hostname;
+    } catch {
+      host = activity.url ?? activity.label;
+    }
+    return activity.state === 'started' ? `Visiting ${host}…` : `Visited ${host}.`;
+  }
+
   return null;
 }
 
@@ -452,6 +467,7 @@ interface SessionStreamState {
   error: string | null;
   activityRequests: ActivityRequestBucket[];
   selectedActivityRequestId: string | null;
+  lastHydratedSessionId: string | null;
 }
 
 const EMPTY_SESSION_STREAM: SessionStreamState = {
@@ -461,7 +477,8 @@ const EMPTY_SESSION_STREAM: SessionStreamState = {
   awaitingFinalAssistant: false,
   error: null,
   activityRequests: [],
-  selectedActivityRequestId: null
+  selectedActivityRequestId: null,
+  lastHydratedSessionId: null
 };
 
 export function useAppController() {
@@ -733,7 +750,9 @@ export function useAppController() {
           ? seedActivityRequestsFromRuntimeRequests(payload.runtimeRequests)
           : seedActivityRequestsFromMessages(payload.messages);
       updateSessionStream(sessionId, (prev) => {
+        const sessionChanged = prev.lastHydratedSessionId !== sessionId;
         const nextSelected =
+          !sessionChanged &&
           prev.selectedActivityRequestId &&
           nextBuckets.some((bucket) => bucket.requestId === prev.selectedActivityRequestId)
             ? prev.selectedActivityRequestId
@@ -742,6 +761,7 @@ export function useAppController() {
           ...prev,
           activityRequests: nextBuckets,
           selectedActivityRequestId: nextSelected,
+          lastHydratedSessionId: sessionId,
           // Preserve the typing indicator while a stream is still running so navigating away
           // and back keeps showing that Hermes is still generating for this session.
           awaitingFinalAssistant: prev.awaitingFinalAssistant && prev.sending
@@ -752,7 +772,7 @@ export function useAppController() {
   );
 
   useEffect(() => {
-    if (page !== 'chat' || !sessionPayload || activityRequests.length > 0) {
+    if (page !== 'chat' || !sessionPayload) {
       return;
     }
 
@@ -760,8 +780,9 @@ export function useAppController() {
       return;
     }
 
+    // Always re-hydrate when session changes so switching sessions never shows stale activity.
     hydrateRuntimeRequestState(sessionPayload);
-  }, [activityRequests.length, hydrateRuntimeRequestState, page, sessionPayload]);
+  }, [hydrateRuntimeRequestState, page, sessionPayload]);
 
   useEffect(() => {
     if (
@@ -2127,18 +2148,20 @@ export function useAppController() {
 
             const partialTemplateState = event.partialTemplateState ?? null;
             const hasPromotedTemplate = Boolean(event.recipe.dynamic?.recipeTemplate);
-            const recipeToStore =
+            // The dynamic sub-type has optional fields upstream but is required here; the spread
+            // carries over optionality that TS then flags. Cast is safe because the runtime shape
+            // is identical — we only augment recipeTemplate.
+            const recipeToStore = (
               partialTemplateState && !hasPromotedTemplate
                 ? {
                     ...event.recipe,
                     dynamic: {
                       ...event.recipe.dynamic,
-                      renderMode: event.recipe.dynamic?.renderMode ?? 'dynamic_v1',
-                      activeBuild: event.recipe.dynamic?.activeBuild ?? null,
                       recipeTemplate: partialTemplateState
                     }
                   }
-                : event.recipe;
+                : event.recipe
+            ) as typeof event.recipe;
 
             return {
               ...currentPayload,

@@ -89,9 +89,8 @@ export function TabBar({
         gap="2"
         bg="transparent"
         borderBottom="1px solid var(--border-subtle)"
-        px="4"
-        py="2"
-        minH="44px"
+        px={{ base: '4', lg: '6' }}
+        minH="34px"
       >
         <HStack gap="2" flex="1" minW={0} overflow="auto" css={{ scrollbarWidth: 'none', '&::-webkit-scrollbar': { display: 'none' } }}>
           {tabs.map((tab, index) => {

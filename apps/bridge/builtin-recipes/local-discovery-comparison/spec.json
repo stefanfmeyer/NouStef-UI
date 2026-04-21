@@ -1,0 +1,55 @@
+{
+  "purpose": "Compare nearby local businesses or services — groomers, dentists, studios, repair shops — grouped by neighborhood or category.",
+  "primaryUserGoal": "Pick a local business that fits the user's needs without needing a separate search tool.",
+  "whenHermesShouldChoose": "User asks for nearby options outside the restaurant/hotel flow: 'best dog groomers near me', 'dentists nearby', 'yoga studios in my area'.",
+  "goodFor": [
+    "Service providers (groomers, salons, repair)",
+    "Local studios (yoga, pottery, music)",
+    "Any local shortlist outside food + lodging"
+  ],
+  "supports": [
+    "Filter chips (category, distance, price, rating)",
+    "Grouped list by neighborhood or subcategory",
+    "Detail panel with hours, contact, price chips, photo",
+    "Transition to event-planner when user wants to book or plan around the choice"
+  ],
+  "supportedTabs": ["Overview"],
+  "idealDataShape": [
+    "Search query + location",
+    "Filter chips the user cares about",
+    "4-8 options grouped by neighborhood",
+    "Per-option: hours, address, price tier, contact"
+  ],
+  "requiredSections": ["filter-strip", "split"],
+  "optionalSections": [],
+  "requiredActions": [],
+  "optionalActions": ["save-place", "switch-to-event-planner", "append-template-note"],
+  "populationInstructions": {
+    "summary": "Start with filter chips for the user's constraints. Group 4-8 local providers by neighborhood on the left. Populate the detail-panel for the initially-selected provider with hours, address, contact, price, and a photo query.",
+    "steps": [
+      "Parse the category (groomer, salon, studio, etc.) and location.",
+      "Emit filter chips for category, distance, price, and any user-specified constraint.",
+      "Group 4-8 providers by neighborhood. Tone-code the top-pick group with success.",
+      "Detail panel for the highest-match provider: hours, address, phone, price chips, 2-3 bullets.",
+      "Include an image descriptor (leadingImage or detail image) with query like '<business name>' or '<category> storefront'.",
+      "Keep subtitles short — cuisine/vibe/price tier, not full description."
+    ],
+    "guardrails": [
+      "Don't invent phone numbers or addresses.",
+      "If unsure on hours, say 'call to confirm'.",
+      "Avoid duplicating the restaurant/hotel templates — this is for everything else."
+    ]
+  },
+  "updateRules": {
+    "patchPrefer": [
+      "Use set_filter_chips when the user refines constraints",
+      "Use upsert_groups to add or refresh providers",
+      "Use set_detail when the user selects a different option"
+    ],
+    "replaceTriggers": [
+      "User changes city or category entirely"
+    ],
+    "persistAcrossUpdates": ["filter chips the user confirmed", "notes"],
+    "stableRegions": ["header"]
+  }
+}

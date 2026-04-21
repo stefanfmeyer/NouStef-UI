@@ -1,7 +1,9 @@
 import { z } from 'zod';
 export declare const RECIPE_TEMPLATE_IDS: readonly ["price-comparison-grid", "shopping-shortlist", "inbox-triage-board", "restaurant-finder", "hotel-shortlist", "flight-comparison", "travel-itinerary-planner", "research-notebook", "security-review-board", "vendor-evaluation-matrix", "event-planner", "job-search-pipeline", "content-campaign-planner", "local-discovery-comparison", "step-by-step-instructions"];
-export declare const RecipeTemplateIdSchema: z.ZodEnum<["price-comparison-grid", "shopping-shortlist", "inbox-triage-board", "restaurant-finder", "hotel-shortlist", "flight-comparison", "travel-itinerary-planner", "research-notebook", "security-review-board", "vendor-evaluation-matrix", "event-planner", "job-search-pipeline", "content-campaign-planner", "local-discovery-comparison", "step-by-step-instructions"]>;
-export type RecipeTemplateId = z.infer<typeof RecipeTemplateIdSchema>;
+export type LegacyRecipeTemplateId = (typeof RECIPE_TEMPLATE_IDS)[number];
+export declare const LegacyRecipeTemplateIdSchema: z.ZodEnum<["price-comparison-grid", "shopping-shortlist", "inbox-triage-board", "restaurant-finder", "hotel-shortlist", "flight-comparison", "travel-itinerary-planner", "research-notebook", "security-review-board", "vendor-evaluation-matrix", "event-planner", "job-search-pipeline", "content-campaign-planner", "local-discovery-comparison", "step-by-step-instructions"]>;
+export declare const RecipeTemplateIdSchema: z.ZodString;
+export type RecipeTemplateId = string;
 export declare const RecipeTemplateToneSchema: z.ZodEnum<["neutral", "accent", "success", "warning", "danger"]>;
 export type RecipeTemplateTone = z.infer<typeof RecipeTemplateToneSchema>;
 export declare const RecipeTemplateChipSchema: z.ZodObject<{
@@ -15,6 +17,43 @@ export declare const RecipeTemplateChipSchema: z.ZodObject<{
     tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
 }>;
 export type RecipeTemplateChip = z.infer<typeof RecipeTemplateChipSchema>;
+export declare const RecipeTemplateImageBorderRadiusSchema: z.ZodEnum<["none", "sm", "md", "lg", "full"]>;
+export type RecipeTemplateImageBorderRadius = z.infer<typeof RecipeTemplateImageBorderRadiusSchema>;
+export declare const RecipeTemplateImageBorderSchema: z.ZodEnum<["none", "subtle", "strong"]>;
+export type RecipeTemplateImageBorder = z.infer<typeof RecipeTemplateImageBorderSchema>;
+export declare const RecipeTemplateImageAspectSchema: z.ZodEnum<["square", "video", "portrait", "natural"]>;
+export type RecipeTemplateImageAspect = z.infer<typeof RecipeTemplateImageAspectSchema>;
+export declare const RecipeTemplateImageFitSchema: z.ZodEnum<["cover", "contain"]>;
+export type RecipeTemplateImageFit = z.infer<typeof RecipeTemplateImageFitSchema>;
+export declare const RecipeTemplateImageSchema: z.ZodObject<{
+    src: z.ZodDefault<z.ZodNullable<z.ZodString>>;
+    query: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+    alt: z.ZodString;
+    caption: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+    borderRadius: z.ZodDefault<z.ZodEnum<["none", "sm", "md", "lg", "full"]>>;
+    border: z.ZodDefault<z.ZodEnum<["none", "subtle", "strong"]>>;
+    aspect: z.ZodDefault<z.ZodEnum<["square", "video", "portrait", "natural"]>>;
+    fit: z.ZodDefault<z.ZodEnum<["cover", "contain"]>>;
+}, "strict", z.ZodTypeAny, {
+    src: string | null;
+    alt: string;
+    borderRadius: "none" | "sm" | "md" | "lg" | "full";
+    border: "none" | "subtle" | "strong";
+    aspect: "square" | "video" | "portrait" | "natural";
+    fit: "cover" | "contain";
+    query?: string | undefined;
+    caption?: string | undefined;
+}, {
+    alt: string;
+    src?: string | null | undefined;
+    query?: unknown;
+    caption?: unknown;
+    borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+    border?: "none" | "subtle" | "strong" | undefined;
+    aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+    fit?: "cover" | "contain" | undefined;
+}>;
+export type RecipeTemplateImage = z.infer<typeof RecipeTemplateImageSchema>;
 export declare const RecipeTemplateActionReferenceSchema: z.ZodDiscriminatedUnion<"kind", [z.ZodObject<{
     kind: z.ZodLiteral<"existing_action">;
     actionId: z.ZodString;
@@ -214,6 +253,34 @@ export declare const RecipeTemplateCardItemSchema: z.ZodObject<{
     subtitle: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
     meta: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
     imageLabel: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+    image: z.ZodOptional<z.ZodObject<{
+        src: z.ZodDefault<z.ZodNullable<z.ZodString>>;
+        query: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+        alt: z.ZodString;
+        caption: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+        borderRadius: z.ZodDefault<z.ZodEnum<["none", "sm", "md", "lg", "full"]>>;
+        border: z.ZodDefault<z.ZodEnum<["none", "subtle", "strong"]>>;
+        aspect: z.ZodDefault<z.ZodEnum<["square", "video", "portrait", "natural"]>>;
+        fit: z.ZodDefault<z.ZodEnum<["cover", "contain"]>>;
+    }, "strict", z.ZodTypeAny, {
+        src: string | null;
+        alt: string;
+        borderRadius: "none" | "sm" | "md" | "lg" | "full";
+        border: "none" | "subtle" | "strong";
+        aspect: "square" | "video" | "portrait" | "natural";
+        fit: "cover" | "contain";
+        query?: string | undefined;
+        caption?: string | undefined;
+    }, {
+        alt: string;
+        src?: string | null | undefined;
+        query?: unknown;
+        caption?: unknown;
+        borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+        border?: "none" | "subtle" | "strong" | undefined;
+        aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+        fit?: "cover" | "contain" | undefined;
+    }>>;
     price: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
     chips: z.ZodDefault<z.ZodArray<z.ZodObject<{
         label: z.ZodString;
@@ -276,6 +343,16 @@ export declare const RecipeTemplateCardItemSchema: z.ZodObject<{
     subtitle?: string | undefined;
     meta?: string | undefined;
     imageLabel?: string | undefined;
+    image?: {
+        src: string | null;
+        alt: string;
+        borderRadius: "none" | "sm" | "md" | "lg" | "full";
+        border: "none" | "subtle" | "strong";
+        aspect: "square" | "video" | "portrait" | "natural";
+        fit: "cover" | "contain";
+        query?: string | undefined;
+        caption?: string | undefined;
+    } | undefined;
     price?: string | undefined;
     footer?: string | undefined;
 }, {
@@ -299,6 +376,16 @@ export declare const RecipeTemplateCardItemSchema: z.ZodObject<{
         openInNewTab?: boolean | undefined;
     })[] | undefined;
     imageLabel?: unknown;
+    image?: {
+        alt: string;
+        src?: string | null | undefined;
+        query?: unknown;
+        caption?: unknown;
+        borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+        border?: "none" | "subtle" | "strong" | undefined;
+        aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+        fit?: "cover" | "contain" | undefined;
+    } | undefined;
     price?: unknown;
     footer?: unknown;
 }>;
@@ -659,6 +746,34 @@ export type RecipeTemplateTableCell = z.infer<typeof RecipeTemplateTableCellSche
 export declare const RecipeTemplateTableRowSchema: z.ZodObject<{
     id: z.ZodString;
     label: z.ZodString;
+    leadingImage: z.ZodOptional<z.ZodObject<{
+        src: z.ZodDefault<z.ZodNullable<z.ZodString>>;
+        query: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+        alt: z.ZodString;
+        caption: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+        borderRadius: z.ZodDefault<z.ZodEnum<["none", "sm", "md", "lg", "full"]>>;
+        border: z.ZodDefault<z.ZodEnum<["none", "subtle", "strong"]>>;
+        aspect: z.ZodDefault<z.ZodEnum<["square", "video", "portrait", "natural"]>>;
+        fit: z.ZodDefault<z.ZodEnum<["cover", "contain"]>>;
+    }, "strict", z.ZodTypeAny, {
+        src: string | null;
+        alt: string;
+        borderRadius: "none" | "sm" | "md" | "lg" | "full";
+        border: "none" | "subtle" | "strong";
+        aspect: "square" | "video" | "portrait" | "natural";
+        fit: "cover" | "contain";
+        query?: string | undefined;
+        caption?: string | undefined;
+    }, {
+        alt: string;
+        src?: string | null | undefined;
+        query?: unknown;
+        caption?: unknown;
+        borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+        border?: "none" | "subtle" | "strong" | undefined;
+        aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+        fit?: "cover" | "contain" | undefined;
+    }>>;
     cells: z.ZodDefault<z.ZodArray<z.ZodObject<{
         value: z.ZodString;
         subvalue: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
@@ -722,6 +837,16 @@ export declare const RecipeTemplateTableRowSchema: z.ZodObject<{
         tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
         subvalue?: string | undefined;
     }[];
+    leadingImage?: {
+        src: string | null;
+        alt: string;
+        borderRadius: "none" | "sm" | "md" | "lg" | "full";
+        border: "none" | "subtle" | "strong";
+        aspect: "square" | "video" | "portrait" | "natural";
+        fit: "cover" | "contain";
+        query?: string | undefined;
+        caption?: string | undefined;
+    } | undefined;
 }, {
     label: string;
     id: string;
@@ -735,6 +860,16 @@ export declare const RecipeTemplateTableRowSchema: z.ZodObject<{
         href: string;
         openInNewTab?: boolean | undefined;
     })[] | undefined;
+    leadingImage?: {
+        alt: string;
+        src?: string | null | undefined;
+        query?: unknown;
+        caption?: unknown;
+        borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+        border?: "none" | "subtle" | "strong" | undefined;
+        aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+        fit?: "cover" | "contain" | undefined;
+    } | undefined;
     cells?: {
         value: string;
         tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
@@ -906,21 +1041,84 @@ export declare const RecipeTemplateSectionSchema: z.ZodType<({
         checked?: boolean;
     }>;
     actions: RecipeTemplateActionReference[];
+}) | ({
+    slotId: string;
+    kind: 'image';
+    title?: string;
+    image: RecipeTemplateImage;
+}) | ({
+    slotId: string;
+    kind: 'audio';
+    title: string;
+    src: string;
+    subtitle?: string;
+    transcript?: string;
+}) | ({
+    slotId: string;
+    kind: 'bar-chart';
+    title: string;
+    xKey: string;
+    series: Array<{
+        id: string;
+        label: string;
+        tone?: RecipeTemplateTone;
+    }>;
+    data: Array<Record<string, string | number>>;
+    orientation?: 'vertical' | 'horizontal';
+    stacked?: boolean;
+    valueFormat?: 'number' | 'currency' | 'percent';
+}) | ({
+    slotId: string;
+    kind: 'line-chart';
+    title: string;
+    xKey: string;
+    series: Array<{
+        id: string;
+        label: string;
+        tone?: RecipeTemplateTone;
+    }>;
+    data: Array<Record<string, string | number>>;
+    smooth?: boolean;
+    valueFormat?: 'number' | 'currency' | 'percent';
+}) | ({
+    slotId: string;
+    kind: 'pie-chart';
+    title: string;
+    data: Array<{
+        id: string;
+        label: string;
+        value: number;
+        tone?: RecipeTemplateTone;
+    }>;
+    variant?: 'pie' | 'donut';
+    valueFormat?: 'number' | 'currency' | 'percent';
+}) | ({
+    slotId: string;
+    kind: 'time-series';
+    title: string;
+    xKey: string;
+    series: Array<{
+        id: string;
+        label: string;
+        tone?: RecipeTemplateTone;
+    }>;
+    data: Array<Record<string, string | number>>;
+    valueFormat?: 'number' | 'currency' | 'percent';
 }), z.ZodTypeDef, unknown>;
 export type RecipeTemplateSection = z.infer<typeof RecipeTemplateSectionSchema>;
 export declare const RecipeTemplateTransitionRecordSchema: z.ZodObject<{
-    fromTemplateId: z.ZodEnum<["price-comparison-grid", "shopping-shortlist", "inbox-triage-board", "restaurant-finder", "hotel-shortlist", "flight-comparison", "travel-itinerary-planner", "research-notebook", "security-review-board", "vendor-evaluation-matrix", "event-planner", "job-search-pipeline", "content-campaign-planner", "local-discovery-comparison", "step-by-step-instructions"]>;
-    toTemplateId: z.ZodEnum<["price-comparison-grid", "shopping-shortlist", "inbox-triage-board", "restaurant-finder", "hotel-shortlist", "flight-comparison", "travel-itinerary-planner", "research-notebook", "security-review-board", "vendor-evaluation-matrix", "event-planner", "job-search-pipeline", "content-campaign-planner", "local-discovery-comparison", "step-by-step-instructions"]>;
+    fromTemplateId: z.ZodString;
+    toTemplateId: z.ZodString;
     switchedAt: z.ZodString;
     reason: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
 }, "strict", z.ZodTypeAny, {
-    fromTemplateId: "price-comparison-grid" | "shopping-shortlist" | "inbox-triage-board" | "restaurant-finder" | "hotel-shortlist" | "flight-comparison" | "travel-itinerary-planner" | "research-notebook" | "security-review-board" | "vendor-evaluation-matrix" | "event-planner" | "job-search-pipeline" | "content-campaign-planner" | "local-discovery-comparison" | "step-by-step-instructions";
-    toTemplateId: "price-comparison-grid" | "shopping-shortlist" | "inbox-triage-board" | "restaurant-finder" | "hotel-shortlist" | "flight-comparison" | "travel-itinerary-planner" | "research-notebook" | "security-review-board" | "vendor-evaluation-matrix" | "event-planner" | "job-search-pipeline" | "content-campaign-planner" | "local-discovery-comparison" | "step-by-step-instructions";
+    fromTemplateId: string;
+    toTemplateId: string;
     switchedAt: string;
     reason?: string | undefined;
 }, {
-    fromTemplateId: "price-comparison-grid" | "shopping-shortlist" | "inbox-triage-board" | "restaurant-finder" | "hotel-shortlist" | "flight-comparison" | "travel-itinerary-planner" | "research-notebook" | "security-review-board" | "vendor-evaluation-matrix" | "event-planner" | "job-search-pipeline" | "content-campaign-planner" | "local-discovery-comparison" | "step-by-step-instructions";
-    toTemplateId: "price-comparison-grid" | "shopping-shortlist" | "inbox-triage-board" | "restaurant-finder" | "hotel-shortlist" | "flight-comparison" | "travel-itinerary-planner" | "research-notebook" | "security-review-board" | "vendor-evaluation-matrix" | "event-planner" | "job-search-pipeline" | "content-campaign-planner" | "local-discovery-comparison" | "step-by-step-instructions";
+    fromTemplateId: string;
+    toTemplateId: string;
     switchedAt: string;
     reason?: unknown;
 }>;
@@ -928,7 +1126,7 @@ export type RecipeTemplateTransitionRecord = z.infer<typeof RecipeTemplateTransi
 export declare const RecipeTemplateStateSchema: z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_state">;
     schemaVersion: z.ZodLiteral<"recipe_template_state/v1">;
-    templateId: z.ZodEnum<["price-comparison-grid", "shopping-shortlist", "inbox-triage-board", "restaurant-finder", "hotel-shortlist", "flight-comparison", "travel-itinerary-planner", "research-notebook", "security-review-board", "vendor-evaluation-matrix", "event-planner", "job-search-pipeline", "content-campaign-planner", "local-discovery-comparison", "step-by-step-instructions"]>;
+    templateId: z.ZodString;
     title: z.ZodString;
     subtitle: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
     summary: z.ZodString;
@@ -1066,21 +1264,84 @@ export declare const RecipeTemplateStateSchema: z.ZodObject<{
             checked?: boolean;
         }>;
         actions: RecipeTemplateActionReference[];
+    } | {
+        slotId: string;
+        kind: "image";
+        title?: string;
+        image: RecipeTemplateImage;
+    } | {
+        slotId: string;
+        kind: "audio";
+        title: string;
+        src: string;
+        subtitle?: string;
+        transcript?: string;
+    } | {
+        slotId: string;
+        kind: "bar-chart";
+        title: string;
+        xKey: string;
+        series: Array<{
+            id: string;
+            label: string;
+            tone?: RecipeTemplateTone;
+        }>;
+        data: Array<Record<string, string | number>>;
+        orientation?: "vertical" | "horizontal";
+        stacked?: boolean;
+        valueFormat?: "number" | "currency" | "percent";
+    } | {
+        slotId: string;
+        kind: "line-chart";
+        title: string;
+        xKey: string;
+        series: Array<{
+            id: string;
+            label: string;
+            tone?: RecipeTemplateTone;
+        }>;
+        data: Array<Record<string, string | number>>;
+        smooth?: boolean;
+        valueFormat?: "number" | "currency" | "percent";
+    } | {
+        slotId: string;
+        kind: "pie-chart";
+        title: string;
+        data: Array<{
+            id: string;
+            label: string;
+            value: number;
+            tone?: RecipeTemplateTone;
+        }>;
+        variant?: "pie" | "donut";
+        valueFormat?: "number" | "currency" | "percent";
+    } | {
+        slotId: string;
+        kind: "time-series";
+        title: string;
+        xKey: string;
+        series: Array<{
+            id: string;
+            label: string;
+            tone?: RecipeTemplateTone;
+        }>;
+        data: Array<Record<string, string | number>>;
+        valueFormat?: "number" | "currency" | "percent";
     }, z.ZodTypeDef, unknown>, "many">>;
-    transitionTargets: z.ZodDefault<z.ZodArray<z.ZodEnum<["price-comparison-grid", "shopping-shortlist", "inbox-triage-board", "restaurant-finder", "hotel-shortlist", "flight-comparison", "travel-itinerary-planner", "research-notebook", "security-review-board", "vendor-evaluation-matrix", "event-planner", "job-search-pipeline", "content-campaign-planner", "local-discovery-comparison", "step-by-step-instructions"]>, "many">>;
+    transitionTargets: z.ZodDefault<z.ZodArray<z.ZodString, "many">>;
     transitionHistory: z.ZodDefault<z.ZodArray<z.ZodObject<{
-        fromTemplateId: z.ZodEnum<["price-comparison-grid", "shopping-shortlist", "inbox-triage-board", "restaurant-finder", "hotel-shortlist", "flight-comparison", "travel-itinerary-planner", "research-notebook", "security-review-board", "vendor-evaluation-matrix", "event-planner", "job-search-pipeline", "content-campaign-planner", "local-discovery-comparison", "step-by-step-instructions"]>;
-        toTemplateId: z.ZodEnum<["price-comparison-grid", "shopping-shortlist", "inbox-triage-board", "restaurant-finder", "hotel-shortlist", "flight-comparison", "travel-itinerary-planner", "research-notebook", "security-review-board", "vendor-evaluation-matrix", "event-planner", "job-search-pipeline", "content-campaign-planner", "local-discovery-comparison", "step-by-step-instructions"]>;
+        fromTemplateId: z.ZodString;
+        toTemplateId: z.ZodString;
         switchedAt: z.ZodString;
         reason: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
     }, "strict", z.ZodTypeAny, {
-        fromTemplateId: "price-comparison-grid" | "shopping-shortlist" | "inbox-triage-board" | "restaurant-finder" | "hotel-shortlist" | "flight-comparison" | "travel-itinerary-planner" | "research-notebook" | "security-review-board" | "vendor-evaluation-matrix" | "event-planner" | "job-search-pipeline" | "content-campaign-planner" | "local-discovery-comparison" | "step-by-step-instructions";
-        toTemplateId: "price-comparison-grid" | "shopping-shortlist" | "inbox-triage-board" | "restaurant-finder" | "hotel-shortlist" | "flight-comparison" | "travel-itinerary-planner" | "research-notebook" | "security-review-board" | "vendor-evaluation-matrix" | "event-planner" | "job-search-pipeline" | "content-campaign-planner" | "local-discovery-comparison" | "step-by-step-instructions";
+        fromTemplateId: string;
+        toTemplateId: string;
         switchedAt: string;
         reason?: string | undefined;
     }, {
-        fromTemplateId: "price-comparison-grid" | "shopping-shortlist" | "inbox-triage-board" | "restaurant-finder" | "hotel-shortlist" | "flight-comparison" | "travel-itinerary-planner" | "research-notebook" | "security-review-board" | "vendor-evaluation-matrix" | "event-planner" | "job-search-pipeline" | "content-campaign-planner" | "local-discovery-comparison" | "step-by-step-instructions";
-        toTemplateId: "price-comparison-grid" | "shopping-shortlist" | "inbox-triage-board" | "restaurant-finder" | "hotel-shortlist" | "flight-comparison" | "travel-itinerary-planner" | "research-notebook" | "security-review-board" | "vendor-evaluation-matrix" | "event-planner" | "job-search-pipeline" | "content-campaign-planner" | "local-discovery-comparison" | "step-by-step-instructions";
+        fromTemplateId: string;
+        toTemplateId: string;
         switchedAt: string;
         reason?: unknown;
     }>, "many">>;
@@ -1090,7 +1351,7 @@ export declare const RecipeTemplateStateSchema: z.ZodObject<{
     title: string;
     summary: string;
     schemaVersion: "recipe_template_state/v1";
-    templateId: "price-comparison-grid" | "shopping-shortlist" | "inbox-triage-board" | "restaurant-finder" | "hotel-shortlist" | "flight-comparison" | "travel-itinerary-planner" | "research-notebook" | "security-review-board" | "vendor-evaluation-matrix" | "event-planner" | "job-search-pipeline" | "content-campaign-planner" | "local-discovery-comparison" | "step-by-step-instructions";
+    templateId: string;
     sections: ({
         slotId: string;
         kind: "hero";
@@ -1209,11 +1470,74 @@ export declare const RecipeTemplateStateSchema: z.ZodObject<{
             checked?: boolean;
         }>;
         actions: RecipeTemplateActionReference[];
+    } | {
+        slotId: string;
+        kind: "image";
+        title?: string;
+        image: RecipeTemplateImage;
+    } | {
+        slotId: string;
+        kind: "audio";
+        title: string;
+        src: string;
+        subtitle?: string;
+        transcript?: string;
+    } | {
+        slotId: string;
+        kind: "bar-chart";
+        title: string;
+        xKey: string;
+        series: Array<{
+            id: string;
+            label: string;
+            tone?: RecipeTemplateTone;
+        }>;
+        data: Array<Record<string, string | number>>;
+        orientation?: "vertical" | "horizontal";
+        stacked?: boolean;
+        valueFormat?: "number" | "currency" | "percent";
+    } | {
+        slotId: string;
+        kind: "line-chart";
+        title: string;
+        xKey: string;
+        series: Array<{
+            id: string;
+            label: string;
+            tone?: RecipeTemplateTone;
+        }>;
+        data: Array<Record<string, string | number>>;
+        smooth?: boolean;
+        valueFormat?: "number" | "currency" | "percent";
+    } | {
+        slotId: string;
+        kind: "pie-chart";
+        title: string;
+        data: Array<{
+            id: string;
+            label: string;
+            value: number;
+            tone?: RecipeTemplateTone;
+        }>;
+        variant?: "pie" | "donut";
+        valueFormat?: "number" | "currency" | "percent";
+    } | {
+        slotId: string;
+        kind: "time-series";
+        title: string;
+        xKey: string;
+        series: Array<{
+            id: string;
+            label: string;
+            tone?: RecipeTemplateTone;
+        }>;
+        data: Array<Record<string, string | number>>;
+        valueFormat?: "number" | "currency" | "percent";
     })[];
-    transitionTargets: ("price-comparison-grid" | "shopping-shortlist" | "inbox-triage-board" | "restaurant-finder" | "hotel-shortlist" | "flight-comparison" | "travel-itinerary-planner" | "research-notebook" | "security-review-board" | "vendor-evaluation-matrix" | "event-planner" | "job-search-pipeline" | "content-campaign-planner" | "local-discovery-comparison" | "step-by-step-instructions")[];
+    transitionTargets: string[];
     transitionHistory: {
-        fromTemplateId: "price-comparison-grid" | "shopping-shortlist" | "inbox-triage-board" | "restaurant-finder" | "hotel-shortlist" | "flight-comparison" | "travel-itinerary-planner" | "research-notebook" | "security-review-board" | "vendor-evaluation-matrix" | "event-planner" | "job-search-pipeline" | "content-campaign-planner" | "local-discovery-comparison" | "step-by-step-instructions";
-        toTemplateId: "price-comparison-grid" | "shopping-shortlist" | "inbox-triage-board" | "restaurant-finder" | "hotel-shortlist" | "flight-comparison" | "travel-itinerary-planner" | "research-notebook" | "security-review-board" | "vendor-evaluation-matrix" | "event-planner" | "job-search-pipeline" | "content-campaign-planner" | "local-discovery-comparison" | "step-by-step-instructions";
+        fromTemplateId: string;
+        toTemplateId: string;
         switchedAt: string;
         reason?: string | undefined;
     }[];
@@ -1230,7 +1554,7 @@ export declare const RecipeTemplateStateSchema: z.ZodObject<{
     title: string;
     summary: string;
     schemaVersion: "recipe_template_state/v1";
-    templateId: "price-comparison-grid" | "shopping-shortlist" | "inbox-triage-board" | "restaurant-finder" | "hotel-shortlist" | "flight-comparison" | "travel-itinerary-planner" | "research-notebook" | "security-review-board" | "vendor-evaluation-matrix" | "event-planner" | "job-search-pipeline" | "content-campaign-planner" | "local-discovery-comparison" | "step-by-step-instructions";
+    templateId: string;
     status?: {
         lastUpdatedAt?: unknown;
         errorMessage?: unknown;
@@ -1239,10 +1563,10 @@ export declare const RecipeTemplateStateSchema: z.ZodObject<{
     } | undefined;
     subtitle?: unknown;
     sections?: unknown[] | undefined;
-    transitionTargets?: ("price-comparison-grid" | "shopping-shortlist" | "inbox-triage-board" | "restaurant-finder" | "hotel-shortlist" | "flight-comparison" | "travel-itinerary-planner" | "research-notebook" | "security-review-board" | "vendor-evaluation-matrix" | "event-planner" | "job-search-pipeline" | "content-campaign-planner" | "local-discovery-comparison" | "step-by-step-instructions")[] | undefined;
+    transitionTargets?: string[] | undefined;
     transitionHistory?: {
-        fromTemplateId: "price-comparison-grid" | "shopping-shortlist" | "inbox-triage-board" | "restaurant-finder" | "hotel-shortlist" | "flight-comparison" | "travel-itinerary-planner" | "research-notebook" | "security-review-board" | "vendor-evaluation-matrix" | "event-planner" | "job-search-pipeline" | "content-campaign-planner" | "local-discovery-comparison" | "step-by-step-instructions";
-        toTemplateId: "price-comparison-grid" | "shopping-shortlist" | "inbox-triage-board" | "restaurant-finder" | "hotel-shortlist" | "flight-comparison" | "travel-itinerary-planner" | "research-notebook" | "security-review-board" | "vendor-evaluation-matrix" | "event-planner" | "job-search-pipeline" | "content-campaign-planner" | "local-discovery-comparison" | "step-by-step-instructions";
+        fromTemplateId: string;
+        toTemplateId: string;
         switchedAt: string;
         reason?: unknown;
     }[] | undefined;

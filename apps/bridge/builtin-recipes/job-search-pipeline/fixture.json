@@ -1,0 +1,186 @@
+{
+  "kind": "recipe_template_state",
+  "schemaVersion": "recipe_template_state/v1",
+  "templateId": "job-search-pipeline",
+  "title": "Senior SWE job search — Apr 2026",
+  "summary": "6 curated openings across product-focused engineering teams. Each card links directly to the posting.",
+  "sections": [
+    {
+      "slotId": "stats",
+      "kind": "stats",
+      "title": "At a glance",
+      "items": [
+        { "label": "Roles", "value": "6", "helper": "curated for you" },
+        { "label": "Remote-friendly", "value": "5", "helper": "full remote or hybrid", "tone": "accent" },
+        { "label": "Pay range", "value": "$180k – $320k", "helper": "across listings" }
+      ]
+    },
+    {
+      "slotId": "listings",
+      "kind": "card-grid",
+      "title": "Job listings",
+      "columns": 2,
+      "cards": [
+        {
+          "id": "job-anthropic-swe",
+          "title": "Senior Software Engineer",
+          "subtitle": "Anthropic",
+          "image": {
+            "src": "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=600&q=80",
+            "alt": "AI research office workspace",
+            "aspect": "video",
+            "fit": "cover",
+            "borderRadius": "none",
+            "border": "none"
+          },
+          "price": "$240k – $320k",
+          "chips": [
+            { "label": "Remote", "tone": "accent" },
+            { "label": "Full-time", "tone": "neutral" }
+          ],
+          "actions": [
+            {
+              "kind": "link",
+              "label": "Apply",
+              "href": "https://www.anthropic.com/careers",
+              "openInNewTab": true
+            }
+          ]
+        },
+        {
+          "id": "job-stripe-staff",
+          "title": "Staff Engineer",
+          "subtitle": "Stripe",
+          "image": {
+            "src": "https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?w=600&q=80",
+            "alt": "Financial technology office",
+            "aspect": "video",
+            "fit": "cover",
+            "borderRadius": "none",
+            "border": "none"
+          },
+          "price": "$230k – $290k",
+          "chips": [
+            { "label": "SF / Remote", "tone": "accent" },
+            { "label": "Full-time", "tone": "neutral" }
+          ],
+          "actions": [
+            {
+              "kind": "link",
+              "label": "Apply",
+              "href": "https://stripe.com/jobs",
+              "openInNewTab": true
+            }
+          ]
+        },
+        {
+          "id": "job-linear-product-eng",
+          "title": "Product Designer",
+          "subtitle": "Linear",
+          "image": {
+            "src": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&q=80",
+            "alt": "Clean minimal product design setup",
+            "aspect": "video",
+            "fit": "cover",
+            "borderRadius": "none",
+            "border": "none"
+          },
+          "price": "$200k – $240k",
+          "chips": [
+            { "label": "Remote", "tone": "accent" },
+            { "label": "Full-time", "tone": "neutral" }
+          ],
+          "actions": [
+            {
+              "kind": "link",
+              "label": "Apply",
+              "href": "https://linear.app/careers",
+              "openInNewTab": true
+            }
+          ]
+        },
+        {
+          "id": "job-huggingface-ml",
+          "title": "ML Engineer",
+          "subtitle": "Hugging Face",
+          "image": {
+            "src": "https://images.unsplash.com/photo-1555255707-c07966088b7b?w=600&q=80",
+            "alt": "Machine learning research environment",
+            "aspect": "video",
+            "fit": "cover",
+            "borderRadius": "none",
+            "border": "none"
+          },
+          "price": "$200k – $260k",
+          "chips": [
+            { "label": "Remote", "tone": "accent" },
+            { "label": "Full-time", "tone": "neutral" }
+          ],
+          "actions": [
+            {
+              "kind": "link",
+              "label": "Apply",
+              "href": "https://apply.workable.com/huggingface/",
+              "openInNewTab": true
+            }
+          ]
+        },
+        {
+          "id": "job-vercel-frontend",
+          "title": "Frontend Engineer",
+          "subtitle": "Vercel",
+          "image": {
+            "src": "https://images.unsplash.com/photo-1561736778-92e52a7769ef?w=600&q=80",
+            "alt": "Modern web development workspace",
+            "aspect": "video",
+            "fit": "cover",
+            "borderRadius": "none",
+            "border": "none"
+          },
+          "price": "$195k – $250k",
+          "chips": [
+            { "label": "Remote", "tone": "accent" },
+            { "label": "Full-time", "tone": "neutral" }
+          ],
+          "actions": [
+            {
+              "kind": "link",
+              "label": "Apply",
+              "href": "https://vercel.com/careers",
+              "openInNewTab": true
+            }
+          ]
+        },
+        {
+          "id": "job-supabase-solutions",
+          "title": "Solutions Architect",
+          "subtitle": "Supabase",
+          "image": {
+            "src": "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=600&q=80",
+            "alt": "Developer working on backend systems",
+            "aspect": "video",
+            "fit": "cover",
+            "borderRadius": "none",
+            "border": "none"
+          },
+          "price": "$180k – $220k",
+          "chips": [
+            { "label": "Remote", "tone": "accent" },
+            { "label": "Full-time", "tone": "neutral" }
+          ],
+          "actions": [
+            {
+              "kind": "link",
+              "label": "Apply",
+              "href": "https://supabase.com/careers",
+              "openInNewTab": true
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "transitionTargets": [],
+  "transitionHistory": [],
+  "metadata": {}
+}

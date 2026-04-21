@@ -327,8 +327,8 @@ const JobSearchPipelineDataSchema = z
     eyebrow: OptionalTextSchema,
     heroChips: z.array(RecipeTemplateChipSchema).default([]),
     stats: z.array(RecipeTemplateStatSchema).default([]),
-    columns: z.array(RecipeTemplateAuthoringBoardColumnSchema).default([]),
-    detail: RecipeTemplateAuthoringDetailSchema
+    cards: z.array(RecipeTemplateAuthoringCardItemSchema).default([]),
+    noteLines: z.array(z.string().min(1)).default([])
   })
   .strict();
 
@@ -634,8 +634,7 @@ const EventPlannerActionsDataSchema = z
 
 const JobSearchPipelineActionsDataSchema = z
   .object({
-    columns: z.array(RecipeTemplateBoardColumnLinksOverlaySchema).default([]),
-    detail: RecipeTemplateDetailLinksOverlaySchema.optional()
+    cards: z.array(RecipeTemplateCardLinksOverlaySchema).default([])
   })
   .strict();
 

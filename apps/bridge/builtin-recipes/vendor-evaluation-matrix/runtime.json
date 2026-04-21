@@ -1,0 +1,46 @@
+{
+  "id": "vendor-evaluation-matrix",
+  "name": "Comparison Matrix",
+  "useCase": "Compare any set of items (frameworks, vendors, technologies, apps, products) side by side.",
+  "enabled": true,
+  "selectionSignals": [
+    "comparison matrix",
+    "compare frameworks",
+    "compare technologies",
+    "compare vendors",
+    "compare apps",
+    "versus",
+    "evaluate vendors",
+    "vendor evaluation",
+    "RFP comparison",
+    "tool comparison",
+    "which is better",
+    "side by side"
+  ],
+  "slots": [
+    { "id": "stats", "kind": "stats" },
+    { "id": "matrix", "kind": "comparison-table", "required": true }
+  ],
+  "allowedUpdateOps": ["set_header", "upsert_table_rows", "remove_items", "set_scope_tags"],
+  "actions": {
+    "compare-vendor": {
+      "id": "compare-vendor",
+      "label": "Compare in detail",
+      "kind": "bridge",
+      "intent": "primary",
+      "visibility": { "requiresSelection": "single", "whenBuildReady": true },
+      "bridge": { "handler": "run_template_followup", "payload": {} },
+      "prompt": {
+        "promptTemplate": "Compare the selected option in depth: strengths, weaknesses, pricing, and a recommendation relative to the other candidates.",
+        "includeInputs": ["selected_items", "original_prompt"],
+        "allowedMutations": [],
+        "outboundRequestsAllowed": false,
+        "expectedOutput": "assistant_only",
+        "timeoutMs": 60000,
+        "retryable": true
+      },
+      "metadata": {}
+    }
+  },
+  "transitions": []
+}

@@ -1,0 +1,91 @@
+{
+  "kind": "recipe_template_state",
+  "schemaVersion": "recipe_template_state/v1",
+  "templateId": "hotel-shortlist",
+  "title": "Tokyo — 4 nights in late April",
+  "summary": "6 hotels across Shinjuku, Shibuya, and Ginza. Priced $180-$520/night; most have a 5-minute walk to a metro line.",
+  "sections": [
+    {
+      "slotId": "stats",
+      "kind": "stats",
+      "title": "Trip snapshot",
+      "items": [
+        { "label": "Nights", "value": "4", "helper": "Apr 24 – Apr 28" },
+        { "label": "Hotels", "value": "6", "helper": "across 3 neighborhoods" },
+        { "label": "Avg nightly", "value": "$285", "helper": "median $260", "tone": "neutral" },
+        { "label": "Range", "value": "$180 – $520" }
+      ]
+    },
+    {
+      "slotId": "hotels",
+      "kind": "card-grid",
+      "title": "Shortlist",
+      "columns": 2,
+      "cards": [
+        {
+          "id": "park-hyatt",
+          "title": "Park Hyatt Tokyo",
+          "subtitle": "Shinjuku · 5★",
+          "price": "$520 / night",
+          "image": { "src": null, "query": "Park Hyatt Tokyo exterior skyline", "alt": "Park Hyatt Tokyo", "borderRadius": "md", "border": "none", "aspect": "video", "fit": "cover" },
+          "chips": [{ "label": "Iconic", "tone": "accent" }, { "label": "9.4", "tone": "success" }],
+          "bullets": ["Top-floor pool with Mt Fuji views", "15-min walk to Shinjuku Station", "Lost-in-Translation bar on 52F"],
+          "actions": []
+        },
+        {
+          "id": "aman",
+          "title": "Aman Tokyo",
+          "subtitle": "Otemachi · 5★",
+          "price": "$480 / night",
+          "image": { "src": null, "query": "Aman Tokyo lobby interior", "alt": "Aman Tokyo lobby", "borderRadius": "md", "border": "none", "aspect": "video", "fit": "cover" },
+          "chips": [{ "label": "Spa focus", "tone": "accent" }],
+          "bullets": ["2000sqm spa on 33F", "Directly connected to Otemachi Station", "Biggest rooms in central Tokyo"],
+          "actions": []
+        },
+        {
+          "id": "shibuya-stream",
+          "title": "Shibuya Stream Excel Hotel Tokyu",
+          "subtitle": "Shibuya · 4★",
+          "price": "$260 / night",
+          "image": { "src": null, "query": "Shibuya Stream Excel Hotel exterior Tokyo", "alt": "Shibuya Stream Excel Hotel", "borderRadius": "md", "border": "none", "aspect": "video", "fit": "cover" },
+          "chips": [{ "label": "Top pick", "tone": "success" }, { "label": "Transit", "tone": "neutral" }],
+          "bullets": ["Direct access to Shibuya Station", "Walkable to Shibuya Sky observation deck", "Free wifi and laundry service"],
+          "actions": []
+        },
+        {
+          "id": "hotel-indigo-shinjuku",
+          "title": "Hotel Indigo Tokyo Shinjuku",
+          "subtitle": "Shinjuku · 4★",
+          "price": "$245 / night",
+          "image": { "src": null, "query": "Hotel Indigo Tokyo Shinjuku", "alt": "Hotel Indigo Tokyo Shinjuku", "borderRadius": "md", "border": "none", "aspect": "video", "fit": "cover" },
+          "chips": [{ "label": "8.8", "tone": "success" }],
+          "bullets": ["Rooftop bar with Shinjuku views", "10-min walk to Shinjuku Gyoen park", "Boutique design, opened 2023"],
+          "actions": []
+        },
+        {
+          "id": "mitsui-ginza",
+          "title": "Mitsui Garden Hotel Ginza Premier",
+          "subtitle": "Ginza · 4★",
+          "price": "$225 / night",
+          "image": { "src": null, "query": "Mitsui Garden Hotel Ginza Premier exterior", "alt": "Mitsui Garden Hotel Ginza Premier", "borderRadius": "md", "border": "none", "aspect": "video", "fit": "cover" },
+          "chips": [{ "label": "Value", "tone": "success" }],
+          "bullets": ["16F sky lobby with city views", "5-min walk to Ginza Station", "Spacious for Tokyo — 21sqm rooms"],
+          "actions": []
+        },
+        {
+          "id": "nine-hours-shinjuku",
+          "title": "Nine Hours Shinjuku-North",
+          "subtitle": "Shinjuku · capsule",
+          "price": "$180 / night",
+          "image": { "src": null, "query": "Nine Hours capsule hotel Tokyo interior", "alt": "Nine Hours capsule hotel", "borderRadius": "md", "border": "none", "aspect": "video", "fit": "cover" },
+          "chips": [{ "label": "Budget", "tone": "neutral" }, { "label": "Capsule", "tone": "accent" }],
+          "bullets": ["Minimalist capsule design", "Women-only floor available", "3-min walk to Shin-Okubo Station"],
+          "actions": []
+        }
+      ]
+    }
+  ],
+  "transitionTargets": [],
+  "transitionHistory": [],
+  "metadata": {}
+}

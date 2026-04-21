@@ -1,0 +1,54 @@
+{
+  "id": "security-review-board",
+  "name": "Security Review Board",
+  "useCase": "Review security findings by severity with evidence and remediation context.",
+  "enabled": true,
+  "selectionSignals": [
+    "security review",
+    "threat findings",
+    "audit board",
+    "severity triage",
+    "CVE findings",
+    "security audit",
+    "vulnerability review",
+    "pen test results",
+    "security scan",
+    "risk assessment",
+    "remediation plan"
+  ],
+  "slots": [
+    { "id": "stats", "kind": "stats" },
+    { "id": "findings", "kind": "split", "required": true }
+  ],
+  "allowedUpdateOps": ["set_header", "upsert_groups", "set_detail", "set_status"],
+  "actions": {
+    "ignore-finding": {
+      "id": "ignore-finding",
+      "label": "Ignore",
+      "kind": "bridge",
+      "intent": "neutral",
+      "visibility": { "requiresSelection": "single", "whenBuildReady": true },
+      "bridge": { "handler": "remove_selected_items", "payload": {} },
+      "metadata": {}
+    },
+    "remediate-finding": {
+      "id": "remediate-finding",
+      "label": "Remediate",
+      "kind": "bridge",
+      "intent": "primary",
+      "visibility": { "requiresSelection": "single", "whenBuildReady": true },
+      "bridge": { "handler": "run_template_followup", "payload": {} },
+      "prompt": {
+        "promptTemplate": "Provide a remediation plan for the selected security finding, including steps, priority, and affected components.",
+        "includeInputs": ["selected_items"],
+        "allowedMutations": [],
+        "outboundRequestsAllowed": false,
+        "expectedOutput": "assistant_only",
+        "timeoutMs": 60000,
+        "retryable": true
+      },
+      "metadata": {}
+    }
+  },
+  "transitions": []
+}

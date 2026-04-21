@@ -1,0 +1,11 @@
+{
+  "id": "price-comparison-grid",
+  "version": "1.0.0",
+  "name": "Price Comparison Grid",
+  "category": "commerce",
+  "description": "Compare the same product or closely adjacent products across multiple merchants, with prices, stock, and shipping at a glance.",
+  "author": "Hermes",
+  "source": "builtin",
+  "enabled": true,
+  "protocolVersion": "1.0.0"
+}

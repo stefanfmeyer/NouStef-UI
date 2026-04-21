@@ -1,0 +1,55 @@
+{
+  "kind": "recipe_template_state",
+  "schemaVersion": "recipe_template_state/v1",
+  "templateId": "step-by-step-instructions",
+  "title": "Deploy to production",
+  "summary": "Ship the v0.4.0 release to production. Takes about 10 minutes from green CI to verified deploy.",
+  "sections": [
+    {
+      "slotId": "checklist",
+      "kind": "checklist",
+      "title": "Release checklist",
+      "prerequisites": [
+        "Green CI on main",
+        "Migration tested on staging",
+        "Release notes drafted"
+      ],
+      "steps": [
+        {
+          "id": "tag",
+          "label": "Tag the release",
+          "detail": "git tag v0.4.0 && git push --tags",
+          "checked": true
+        },
+        {
+          "id": "migrate",
+          "label": "Run the production migration",
+          "detail": "pnpm run migrate:prod",
+          "checked": true
+        },
+        {
+          "id": "deploy-bridge",
+          "label": "Deploy the bridge",
+          "detail": "pnpm --filter bridge deploy",
+          "checked": false
+        },
+        {
+          "id": "smoke",
+          "label": "Smoke-test the deploy",
+          "detail": "Hit /health and confirm 200",
+          "checked": false
+        },
+        {
+          "id": "announce",
+          "label": "Announce in #releases",
+          "detail": "Paste the release notes",
+          "checked": false
+        }
+      ],
+      "actions": []
+    }
+  ],
+  "transitionTargets": [],
+  "transitionHistory": [],
+  "metadata": {}
+}

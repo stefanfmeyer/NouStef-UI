@@ -1,0 +1,55 @@
+{
+  "purpose": "Surface a photo-forward shortlist of hotels for a destination and date window with enough context to choose one.",
+  "primaryUserGoal": "Pick a hotel for a specific trip, balancing price, location, and amenities.",
+  "whenHermesShouldChoose": "User asks where to stay, requests hotel options for a trip, or is comparing lodging in a specific city.",
+  "goodFor": [
+    "Choosing a hotel for a vacation or business trip",
+    "Comparing 4-8 hotels in a city by price and neighborhood",
+    "Narrowing down on amenities (pool, gym, spa)"
+  ],
+  "supports": [
+    "Stats header (nights, avg nightly, total range)",
+    "Card-grid with hotel photos (image.query)",
+    "Price, rating chips, 2-3 amenity bullets per card",
+    "Neighborhood tagging"
+  ],
+  "supportedTabs": ["Overview"],
+  "idealDataShape": [
+    "Destination city + date range + nights",
+    "4-8 hotels, each with: title, neighborhood, price/night, rating, 2-3 bullets"
+  ],
+  "requiredSections": ["card-grid"],
+  "optionalSections": ["stats", "notes"],
+  "requiredActions": [],
+  "optionalActions": ["get-hotel-details", "append-template-note"],
+  "populationInstructions": {
+    "summary": "Lead with a stats header (nights, price range, top neighborhoods). Then 4-8 hotel cards each with a photo image.query, price, rating chip, and 2-3 concrete amenity bullets.",
+    "steps": [
+      "Parse destination, check-in/check-out dates, number of nights, budget.",
+      "Emit stats with: nights, total hotel count, avg nightly price, top neighborhoods.",
+      "Produce 4-8 cards — don't overload the grid.",
+      "For each card: image.query as '<hotel name> exterior' or 'lobby'.",
+      "Set price string as '$X / night' with a subtitle for neighborhood.",
+      "Bullets should be concrete amenities: 'Rooftop pool', 'Free breakfast', '10-min walk to station' — not marketing copy.",
+      "Mark the best-value pick with a 'Top pick' chip and tone='success'."
+    ],
+    "guardrails": [
+      "Never fabricate prices or availability.",
+      "Limit to 8 cards; past that, split or ask the user to narrow.",
+      "Don't use subjective chips like 'great location' — use a concrete anchor ('5-min to metro')."
+    ]
+  },
+  "updateRules": {
+    "patchPrefer": [
+      "Use upsert_cards to add newly-found options or refresh prices",
+      "Use remove_items to drop hotels the user rejected",
+      "Use append_note_lines for operator context"
+    ],
+    "replaceTriggers": [
+      "User changes city or dates significantly",
+      "User asks to start over"
+    ],
+    "persistAcrossUpdates": ["notes", "header"],
+    "stableRegions": []
+  }
+}

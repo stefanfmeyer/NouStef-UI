@@ -1,0 +1,184 @@
+{
+  "kind": "recipe_template_state",
+  "schemaVersion": "recipe_template_state/v1",
+  "templateId": "flight-comparison",
+  "title": "SFO ↔ JFK — May 8 / May 12",
+  "summary": "Round trip for 1, economy. JetBlue direct is the sweet spot on the outbound; Delta redeye is the cheapest return.",
+  "sections": [
+    {
+      "slotId": "flight-tabs",
+      "kind": "tabs",
+      "title": "Flights",
+      "tabs": [
+        { "id": "outbound", "label": "Outbound · May 8", "badge": "4" },
+        { "id": "return", "label": "Return · May 12", "badge": "5" }
+      ],
+      "activeTabId": "outbound",
+      "panes": {
+        "outbound": [
+          {
+            "slotId": "flight-tabs.outbound.table",
+            "kind": "comparison-table",
+            "title": "SFO → JFK · Thu May 8",
+            "columns": [
+              { "id": "depart", "label": "Depart", "align": "start" },
+              { "id": "arrive", "label": "Arrive", "align": "start" },
+              { "id": "duration", "label": "Duration", "align": "start" },
+              { "id": "stops", "label": "Stops", "align": "start" },
+              { "id": "price", "label": "Price", "align": "end" }
+            ],
+            "rows": [
+              {
+                "id": "ob-jetblue-20",
+                "label": "JetBlue 20",
+                "leadingImage": { "src": null, "query": "JetBlue airline logo", "alt": "JetBlue", "borderRadius": "sm", "border": "subtle", "aspect": "square", "fit": "contain" },
+                "cells": [
+                  { "value": "8:40 AM", "subvalue": "SFO", "emphasis": false },
+                  { "value": "5:10 PM", "subvalue": "JFK", "emphasis": false },
+                  { "value": "5h 30m", "emphasis": false },
+                  { "value": "Nonstop", "emphasis": false, "tone": "success" },
+                  { "value": "$268", "emphasis": true, "tone": "success" }
+                ],
+                "actions": []
+              },
+              {
+                "id": "ob-delta-426",
+                "label": "Delta 426",
+                "leadingImage": { "src": null, "query": "Delta Air Lines logo", "alt": "Delta", "borderRadius": "sm", "border": "subtle", "aspect": "square", "fit": "contain" },
+                "cells": [
+                  { "value": "10:25 AM", "subvalue": "SFO", "emphasis": false },
+                  { "value": "6:55 PM", "subvalue": "JFK", "emphasis": false },
+                  { "value": "5h 30m", "emphasis": false },
+                  { "value": "Nonstop", "emphasis": false, "tone": "success" },
+                  { "value": "$312", "emphasis": false }
+                ],
+                "actions": []
+              },
+              {
+                "id": "ob-united-628",
+                "label": "United 628",
+                "leadingImage": { "src": null, "query": "United Airlines logo", "alt": "United", "borderRadius": "sm", "border": "subtle", "aspect": "square", "fit": "contain" },
+                "cells": [
+                  { "value": "7:15 AM", "subvalue": "SFO", "emphasis": false },
+                  { "value": "6:02 PM", "subvalue": "JFK", "emphasis": false },
+                  { "value": "7h 47m", "emphasis": false },
+                  { "value": "1 stop", "subvalue": "ORD 1h 20m", "emphasis": false, "tone": "warning" },
+                  { "value": "$248", "emphasis": false }
+                ],
+                "actions": []
+              },
+              {
+                "id": "ob-american-192",
+                "label": "American 192",
+                "leadingImage": { "src": null, "query": "American Airlines logo", "alt": "American Airlines", "borderRadius": "sm", "border": "subtle", "aspect": "square", "fit": "contain" },
+                "cells": [
+                  { "value": "2:55 PM", "subvalue": "SFO", "emphasis": false },
+                  { "value": "11:30 PM", "subvalue": "JFK", "emphasis": false },
+                  { "value": "5h 35m", "emphasis": false },
+                  { "value": "Nonstop", "emphasis": false, "tone": "success" },
+                  { "value": "$298", "emphasis": false }
+                ],
+                "actions": []
+              }
+            ],
+            "footerChips": [
+              { "label": "Economy", "tone": "neutral" },
+              { "label": "1 passenger", "tone": "neutral" },
+              { "label": "Prices live", "tone": "success" }
+            ],
+            "footnote": "Nonstop on JetBlue 20 is the best value: ~$20 more than the cheapest stopover but 2h shorter."
+          }
+        ],
+        "return": [
+          {
+            "slotId": "flight-tabs.return.table",
+            "kind": "comparison-table",
+            "title": "JFK → SFO · Mon May 12",
+            "columns": [
+              { "id": "depart", "label": "Depart", "align": "start" },
+              { "id": "arrive", "label": "Arrive", "align": "start" },
+              { "id": "duration", "label": "Duration", "align": "start" },
+              { "id": "stops", "label": "Stops", "align": "start" },
+              { "id": "price", "label": "Price", "align": "end" }
+            ],
+            "rows": [
+              {
+                "id": "rt-delta-487",
+                "label": "Delta 487 (redeye)",
+                "leadingImage": { "src": null, "query": "Delta Air Lines logo", "alt": "Delta", "borderRadius": "sm", "border": "subtle", "aspect": "square", "fit": "contain" },
+                "cells": [
+                  { "value": "9:55 PM", "subvalue": "JFK", "emphasis": false },
+                  { "value": "1:30 AM", "subvalue": "SFO (+1d)", "emphasis": false },
+                  { "value": "6h 35m", "emphasis": false },
+                  { "value": "Nonstop", "emphasis": false, "tone": "success" },
+                  { "value": "$232", "emphasis": true, "tone": "success" }
+                ],
+                "actions": []
+              },
+              {
+                "id": "rt-jetblue-15",
+                "label": "JetBlue 15",
+                "leadingImage": { "src": null, "query": "JetBlue airline logo", "alt": "JetBlue", "borderRadius": "sm", "border": "subtle", "aspect": "square", "fit": "contain" },
+                "cells": [
+                  { "value": "6:00 AM", "subvalue": "JFK", "emphasis": false },
+                  { "value": "9:42 AM", "subvalue": "SFO", "emphasis": false },
+                  { "value": "6h 42m", "emphasis": false },
+                  { "value": "Nonstop", "emphasis": false, "tone": "success" },
+                  { "value": "$278", "emphasis": false }
+                ],
+                "actions": []
+              },
+              {
+                "id": "rt-alaska-1124",
+                "label": "Alaska 1124",
+                "leadingImage": { "src": null, "query": "Alaska Airlines logo", "alt": "Alaska Airlines", "borderRadius": "sm", "border": "subtle", "aspect": "square", "fit": "contain" },
+                "cells": [
+                  { "value": "10:30 AM", "subvalue": "JFK", "emphasis": false },
+                  { "value": "2:18 PM", "subvalue": "SFO", "emphasis": false },
+                  { "value": "6h 48m", "emphasis": false },
+                  { "value": "Nonstop", "emphasis": false, "tone": "success" },
+                  { "value": "$289", "emphasis": false }
+                ],
+                "actions": []
+              },
+              {
+                "id": "rt-united-711",
+                "label": "United 711",
+                "leadingImage": { "src": null, "query": "United Airlines logo", "alt": "United", "borderRadius": "sm", "border": "subtle", "aspect": "square", "fit": "contain" },
+                "cells": [
+                  { "value": "4:45 PM", "subvalue": "JFK", "emphasis": false },
+                  { "value": "8:29 PM", "subvalue": "SFO", "emphasis": false },
+                  { "value": "6h 44m", "emphasis": false },
+                  { "value": "Nonstop", "emphasis": false, "tone": "success" },
+                  { "value": "$305", "emphasis": false }
+                ],
+                "actions": []
+              },
+              {
+                "id": "rt-american-297",
+                "label": "American 297",
+                "leadingImage": { "src": null, "query": "American Airlines logo", "alt": "American Airlines", "borderRadius": "sm", "border": "subtle", "aspect": "square", "fit": "contain" },
+                "cells": [
+                  { "value": "7:20 AM", "subvalue": "JFK", "emphasis": false },
+                  { "value": "1:14 PM", "subvalue": "SFO", "emphasis": false },
+                  { "value": "8h 54m", "emphasis": false },
+                  { "value": "1 stop", "subvalue": "DFW 1h 30m", "emphasis": false, "tone": "warning" },
+                  { "value": "$221", "emphasis": false }
+                ],
+                "actions": []
+              }
+            ],
+            "footerChips": [
+              { "label": "Economy", "tone": "neutral" },
+              { "label": "Redeye = cheapest", "tone": "success" }
+            ],
+            "footnote": "If sleep matters, JetBlue 15 at 6am is the next-cheapest nonstop — only $46 over the redeye."
+          }
+        ]
+      }
+    }
+  ],
+  "transitionTargets": [],
+  "transitionHistory": [],
+  "metadata": {}
+}

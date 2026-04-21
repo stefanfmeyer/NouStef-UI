@@ -1,0 +1,11 @@
+{
+  "id": "flight-comparison",
+  "version": "1.0.0",
+  "name": "Flight Comparison",
+  "category": "travel",
+  "description": "Compare flight options across outbound and return legs in tab panes with carrier logos and price-forward cells.",
+  "author": "Hermes",
+  "source": "builtin",
+  "enabled": true,
+  "protocolVersion": "1.0.0"
+}

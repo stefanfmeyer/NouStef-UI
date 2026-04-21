@@ -1,0 +1,53 @@
+{
+  "id": "travel-itinerary-planner",
+  "name": "Travel Itinerary Planner",
+  "useCase": "Organize a trip across itinerary, bookings, packing, and saved links.",
+  "enabled": true,
+  "selectionSignals": [
+    "trip itinerary",
+    "travel planner",
+    "bookings and packing",
+    "trip notes",
+    "plan my trip",
+    "day by day itinerary",
+    "packing list for",
+    "things to do in",
+    "upcoming trip to",
+    "help me pack",
+    "organize my travel"
+  ],
+  "slots": [
+    { "id": "trip-tabs", "kind": "tabs", "required": true }
+  ],
+  "allowedUpdateOps": ["set_header", "set_active_tab", "upsert_timeline_items", "upsert_cards", "append_note_lines", "remove_items"],
+  "actions": {
+    "get-trip-details": {
+      "id": "get-trip-details",
+      "label": "Get details",
+      "kind": "bridge",
+      "intent": "primary",
+      "visibility": { "requiresSelection": "single", "whenBuildReady": true },
+      "bridge": { "handler": "run_template_followup", "payload": {} },
+      "prompt": {
+        "promptTemplate": "Get details for the selected trip item and suggest next steps.",
+        "includeInputs": ["selected_items"],
+        "allowedMutations": [],
+        "outboundRequestsAllowed": true,
+        "expectedOutput": "assistant_only",
+        "timeoutMs": 60000,
+        "retryable": true
+      },
+      "metadata": {}
+    },
+    "append-template-note": {
+      "id": "append-template-note",
+      "label": "Add note",
+      "kind": "bridge",
+      "intent": "neutral",
+      "visibility": { "requiresSelection": "none", "whenBuildReady": true },
+      "bridge": { "handler": "append_template_note", "payload": {} },
+      "metadata": {}
+    }
+  },
+  "transitions": []
+}

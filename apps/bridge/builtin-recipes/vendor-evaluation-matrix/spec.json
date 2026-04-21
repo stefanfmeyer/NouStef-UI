@@ -1,0 +1,56 @@
+{
+  "purpose": "Compare any set of options (frameworks, vendors, tools, technologies) across consistent criteria in a single table.",
+  "primaryUserGoal": "Pick the best option from a shortlist by scanning how each performs across the criteria that matter.",
+  "whenHermesShouldChoose": "User asks to compare vendors, tools, frameworks, or technologies — anywhere the decision is 'X vs Y vs Z across these dimensions'.",
+  "goodFor": [
+    "Vendor / RFP evaluations",
+    "Tool selection (analytics, CI/CD, observability)",
+    "Framework comparisons (React vs Vue vs Svelte)"
+  ],
+  "supports": [
+    "Stats with summary counts (options, criteria, winner)",
+    "Comparison-table with vendor logos via leadingImage",
+    "Tone-coded cells: success for best, warning for caveat, danger for gap",
+    "Notes for context and weighting rationale"
+  ],
+  "supportedTabs": ["Overview"],
+  "idealDataShape": [
+    "3-6 vendors/options as rows",
+    "4-8 criteria as columns",
+    "Each cell is a short value with optional tone"
+  ],
+  "requiredSections": ["comparison-table"],
+  "optionalSections": ["stats", "notes"],
+  "requiredActions": [],
+  "optionalActions": ["compare-vendor", "append-template-note"],
+  "populationInstructions": {
+    "summary": "Lead with stats (options, criteria, recommended winner). Then a comparison-table: rows are vendors (with leadingImage logo, query '<vendor> logo'), columns are criteria (price, features, support, integration, etc.). Notes at the bottom for qualitative context.",
+    "steps": [
+      "Identify the class of thing being compared (analytics platforms, frontend frameworks, etc.).",
+      "Pick 4-6 meaningful criteria as columns — 'price', 'features', 'support', 'integration', 'docs'.",
+      "For each vendor, populate the row with short cell values. Use subvalue for details.",
+      "Mark the best cell per column with tone='success' and emphasis=true.",
+      "Use tone='warning' for notable caveats, 'danger' for gaps or unsupported.",
+      "Include a leadingImage query like '<vendor> logo'.",
+      "Summarize the recommendation in the notes section."
+    ],
+    "guardrails": [
+      "Never invent prices or support SLAs — leave as 'unknown' if not verified.",
+      "Keep cell values short — put nuance in notes.",
+      "Don't use more than 6 columns; past that readability collapses."
+    ]
+  },
+  "updateRules": {
+    "patchPrefer": [
+      "Use upsert_table_rows to add or refresh a vendor",
+      "Use set_scope_tags for scope chips (region, company size)",
+      "Use append_note_lines for weighting rationale"
+    ],
+    "replaceTriggers": [
+      "User changes the criteria significantly",
+      "User asks to start over"
+    ],
+    "persistAcrossUpdates": ["Notes", "criteria columns"],
+    "stableRegions": ["header"]
+  }
+}

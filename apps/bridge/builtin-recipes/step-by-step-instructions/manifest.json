@@ -1,0 +1,11 @@
+{
+  "id": "step-by-step-instructions",
+  "version": "1.0.0",
+  "name": "Step-by-Step Instructions",
+  "category": "general",
+  "description": "Follow a procedure with prerequisites and numbered steps that can be checked off.",
+  "author": "Hermes",
+  "source": "builtin",
+  "enabled": true,
+  "protocolVersion": "1.0.0"
+}

@@ -1,0 +1,28 @@
+{
+  "id": "price-comparison-grid",
+  "name": "Price Comparison Grid",
+  "useCase": "Compare the same product (or closely adjacent products) across multiple merchants.",
+  "enabled": true,
+  "selectionSignals": [
+    "price comparison",
+    "compare prices",
+    "same product",
+    "cheapest store",
+    "cheapest place",
+    "best price",
+    "where to buy",
+    "merchant grid",
+    "across retailers"
+  ],
+  "slots": [
+    { "id": "offer-grid", "kind": "comparison-table", "required": true }
+  ],
+  "allowedUpdateOps": [
+    "set_header",
+    "set_scope_tags",
+    "upsert_table_rows",
+    "remove_items"
+  ],
+  "actions": {},
+  "transitions": []
+}

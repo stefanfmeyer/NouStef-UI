@@ -1,0 +1,97 @@
+{
+  "kind": "recipe_template_state",
+  "schemaVersion": "recipe_template_state/v1",
+  "templateId": "inbox-triage-board",
+  "title": "Inbox triage — 237 unread",
+  "summary": "Unread inbox grouped by sender type. GitHub and newsletters dominate the volume; 4 work threads need a human reply today.",
+  "sections": [
+    {
+      "slotId": "stats",
+      "kind": "stats",
+      "title": "Snapshot",
+      "items": [
+        { "label": "Unread", "value": "237", "helper": "across 18 senders" },
+        { "label": "Action items", "value": "4", "helper": "need a reply today", "tone": "warning" },
+        { "label": "Senders", "value": "18", "helper": "7 are newsletters" },
+        { "label": "Oldest unread", "value": "9 days", "helper": "GitHub digest", "tone": "neutral" }
+      ]
+    },
+    {
+      "slotId": "triage-board",
+      "kind": "split",
+      "title": "Senders",
+      "ratio": "list-detail",
+      "left": [
+        {
+          "slotId": "triage-board.list",
+          "kind": "grouped-list",
+          "title": "Grouped by type",
+          "groups": [
+            {
+              "id": "work",
+              "label": "Work (needs reply)",
+              "tone": "warning",
+              "items": [
+                { "id": "work-dana", "title": "Dana Park", "subtitle": "Q3 planning doc — can you review by Friday?", "meta": "2 threads", "chips": [{ "label": "Action", "tone": "warning" }], "actions": [] },
+                { "id": "work-amir", "title": "Amir Singh", "subtitle": "Re: bridge deploy rollback", "meta": "1 thread", "chips": [{ "label": "Action", "tone": "warning" }], "actions": [] },
+                { "id": "work-ops", "title": "ops@company.com", "subtitle": "Weekly incident review", "meta": "1 thread", "chips": [], "actions": [] }
+              ]
+            },
+            {
+              "id": "github",
+              "label": "GitHub notifications",
+              "tone": "neutral",
+              "items": [
+                { "id": "gh-notifications", "title": "notifications@github.com", "subtitle": "PR reviews, issue updates, security advisories", "meta": "124 threads", "chips": [{ "label": "Auto-archive safe", "tone": "success" }], "actions": [] }
+              ]
+            },
+            {
+              "id": "newsletters",
+              "label": "Newsletters",
+              "tone": "neutral",
+              "items": [
+                { "id": "nl-stratechery", "title": "Stratechery", "subtitle": "Ben Thompson — daily update", "meta": "22 threads", "chips": [], "actions": [] },
+                { "id": "nl-tldr", "title": "TLDR", "subtitle": "Daily dev news roundup", "meta": "18 threads", "chips": [], "actions": [] },
+                { "id": "nl-longform", "title": "The Longform", "subtitle": "Weekly essays", "meta": "9 threads", "chips": [], "actions": [] }
+              ]
+            },
+            {
+              "id": "marketing",
+              "label": "Marketing",
+              "tone": "neutral",
+              "items": [
+                { "id": "mk-figma", "title": "Figma", "subtitle": "Product announcements", "meta": "11 threads", "chips": [{ "label": "Unsubscribe?", "tone": "neutral" }], "actions": [] },
+                { "id": "mk-linear", "title": "Linear", "subtitle": "Feature releases", "meta": "8 threads", "chips": [], "actions": [] },
+                { "id": "mk-notion", "title": "Notion", "subtitle": "Template spotlights", "meta": "6 threads", "chips": [{ "label": "Unsubscribe?", "tone": "neutral" }], "actions": [] }
+              ]
+            }
+          ]
+        }
+      ],
+      "right": [
+        {
+          "slotId": "triage-board.detail",
+          "kind": "detail-panel",
+          "title": "Dana Park",
+          "eyebrow": "Work — needs reply",
+          "summary": "2 unread threads from Dana. The Q3 planning doc review is time-sensitive; the other is a social ping.",
+          "chips": [
+            { "label": "Action today", "tone": "warning" },
+            { "label": "2 threads", "tone": "neutral" }
+          ],
+          "fields": [
+            { "label": "Latest subject", "value": "Q3 planning doc — can you review by Friday?", "chips": [], "bullets": [], "links": [], "fullWidth": true },
+            { "label": "Received", "value": "yesterday, 4:12 PM", "chips": [], "bullets": [], "links": [], "fullWidth": false },
+            { "label": "Other thread", "value": "Coffee Thursday?", "chips": [], "bullets": [], "links": [], "fullWidth": false },
+            { "label": "Suggested action", "value": "Reply with doc feedback; defer coffee thread.", "chips": [{ "label": "High priority", "tone": "warning" }], "bullets": [], "links": [], "fullWidth": true }
+          ],
+          "actions": [],
+          "note": "Dana is the Q3 planning DRI — don't auto-archive."
+        }
+      ]
+    }
+  ],
+  "transitionTargets": [],
+  "transitionHistory": [],
+  "metadata": {}
+}

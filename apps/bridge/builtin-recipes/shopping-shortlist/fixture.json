@@ -1,0 +1,223 @@
+{
+  "kind": "recipe_template_state",
+  "schemaVersion": "recipe_template_state/v1",
+  "templateId": "shopping-shortlist",
+  "title": "Gift ideas for a home-cooking friend ($75-$150)",
+  "summary": "6 curated kitchen gifts between $75 and $150. Mix of everyday-useful and delight items.",
+  "sections": [
+    {
+      "slotId": "shortlist",
+      "kind": "card-grid",
+      "title": "Shopping results",
+      "columns": 2,
+      "cards": [
+        {
+          "id": "c1",
+          "title": "Lodge 12-inch Cast Iron Skillet",
+          "subtitle": "Pre-seasoned, made in USA",
+          "price": "$34",
+          "image": {
+            "src": null,
+            "query": "Lodge cast iron skillet product photo",
+            "alt": "Lodge cast iron skillet",
+            "borderRadius": "md",
+            "border": "none",
+            "aspect": "video",
+            "fit": "cover"
+          },
+          "chips": [
+            {
+              "label": "Budget staple",
+              "tone": "success"
+            }
+          ],
+          "bullets": [
+            "Lasts a lifetime with basic care",
+            "Great sear for steaks and vegetables"
+          ],
+          "actions": [
+            {
+              "kind": "link",
+              "label": "View on Amazon",
+              "href": "https://www.amazon.com/dp/B00006JSUA",
+              "openInNewTab": true
+            }
+          ]
+        },
+        {
+          "id": "c2",
+          "title": "Microplane Premium Zester",
+          "subtitle": "Stainless steel, razor sharp",
+          "price": "$18",
+          "image": {
+            "src": null,
+            "query": "Microplane zester grater",
+            "alt": "Microplane zester",
+            "borderRadius": "md",
+            "border": "none",
+            "aspect": "video",
+            "fit": "cover"
+          },
+          "chips": [
+            {
+              "label": "Stocking stuffer",
+              "tone": "neutral"
+            }
+          ],
+          "bullets": [
+            "Zests citrus, parmesan, nutmeg, ginger",
+            "The one tool no home cook regrets owning"
+          ],
+          "actions": [
+            {
+              "kind": "link",
+              "label": "View on Amazon",
+              "href": "https://www.amazon.com/dp/B00004OCNS",
+              "openInNewTab": true
+            }
+          ]
+        },
+        {
+          "id": "c3",
+          "title": "OXO Good Grips Digital Scale",
+          "subtitle": "11 lb capacity with pull-out display",
+          "price": "$55",
+          "image": {
+            "src": null,
+            "query": "OXO kitchen scale",
+            "alt": "OXO digital scale",
+            "borderRadius": "md",
+            "border": "none",
+            "aspect": "video",
+            "fit": "cover"
+          },
+          "chips": [
+            {
+              "label": "Baker favourite",
+              "tone": "accent"
+            }
+          ],
+          "bullets": [
+            "Switches between grams and ounces",
+            "Pull-out display reads under large bowls"
+          ],
+          "actions": [
+            {
+              "kind": "link",
+              "label": "View on Amazon",
+              "href": "https://www.amazon.com/dp/B079N6GKN3",
+              "openInNewTab": true
+            }
+          ]
+        },
+        {
+          "id": "c4",
+          "title": "Staub 4qt Round Cocotte",
+          "subtitle": "Enameled cast iron, cherry red",
+          "price": "$149",
+          "image": {
+            "src": null,
+            "query": "Staub enameled dutch oven red",
+            "alt": "Staub dutch oven",
+            "borderRadius": "md",
+            "border": "none",
+            "aspect": "video",
+            "fit": "cover"
+          },
+          "chips": [
+            {
+              "label": "Top pick",
+              "tone": "success"
+            },
+            {
+              "label": "Premium",
+              "tone": "accent"
+            }
+          ],
+          "bullets": [
+            "Oven-safe to 500°F",
+            "Self-basting lid studs",
+            "Goes from stovetop to oven to table"
+          ],
+          "actions": [
+            {
+              "kind": "link",
+              "label": "View on Williams Sonoma",
+              "href": "https://www.williams-sonoma.com/products/staub-round-cocotte/",
+              "openInNewTab": true
+            }
+          ]
+        },
+        {
+          "id": "c5",
+          "title": "Kitchen Aid Immersion Blender",
+          "subtitle": "5-speed variable, dishwasher-safe",
+          "price": "$69",
+          "image": {
+            "src": null,
+            "query": "KitchenAid immersion blender red",
+            "alt": "KitchenAid immersion blender",
+            "borderRadius": "md",
+            "border": "none",
+            "aspect": "video",
+            "fit": "cover"
+          },
+          "chips": [
+            {
+              "label": "Everyday use",
+              "tone": "neutral"
+            }
+          ],
+          "bullets": [
+            "Soups, smoothies, sauces",
+            "Stainless blade guard protects non-stick pots"
+          ],
+          "actions": [
+            {
+              "kind": "link",
+              "label": "View on Amazon",
+              "href": "https://www.amazon.com/dp/B00418VFEI",
+              "openInNewTab": true
+            }
+          ]
+        },
+        {
+          "id": "c6",
+          "title": "Salt Fat Acid Heat (Samin Nosrat)",
+          "subtitle": "Illustrated cookbook",
+          "price": "$38",
+          "image": {
+            "src": null,
+            "query": "Salt Fat Acid Heat cookbook cover",
+            "alt": "Salt Fat Acid Heat book",
+            "borderRadius": "md",
+            "border": "none",
+            "aspect": "video",
+            "fit": "cover"
+          },
+          "chips": [
+            {
+              "label": "Teaches technique",
+              "tone": "accent"
+            }
+          ],
+          "bullets": [
+            "Covers the four elements of good cooking",
+            "Well-illustrated by Wendy MacNaughton"
+          ],
+          "actions": [
+            {
+              "kind": "link",
+              "label": "View on Amazon",
+              "href": "https://www.amazon.com/dp/0451494835",
+              "openInNewTab": true
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "transitionTargets": [],
+  "transitionHistory": [],
+  "metadata": {}
+}

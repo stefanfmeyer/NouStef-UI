@@ -1,0 +1,45 @@
+{
+  "id": "job-search-pipeline",
+  "name": "Job Listings",
+  "useCase": "Find and compare job postings with salary ranges, descriptions, and application links.",
+  "enabled": true,
+  "selectionSignals": [
+    "job listings",
+    "job postings",
+    "job search",
+    "career opportunities",
+    "open positions",
+    "looking for a job",
+    "find me a job",
+    "job board",
+    "apply for jobs",
+    "job pipeline",
+    "interviewing for"
+  ],
+  "slots": [
+    { "id": "stats", "kind": "stats" },
+    { "id": "listings", "kind": "card-grid", "required": true }
+  ],
+  "allowedUpdateOps": ["set_header", "upsert_cards", "remove_items", "append_note_lines"],
+  "actions": {
+    "find-more-jobs": {
+      "id": "find-more-jobs",
+      "label": "Find more",
+      "kind": "bridge",
+      "intent": "primary",
+      "visibility": { "requiresSelection": "none", "whenBuildReady": true },
+      "bridge": { "handler": "run_template_followup", "payload": {} },
+      "prompt": {
+        "promptTemplate": "Find additional job listings matching the current search criteria and add them to the grid.",
+        "includeInputs": ["original_prompt"],
+        "allowedMutations": ["raw_data", "normalized_data"],
+        "outboundRequestsAllowed": true,
+        "expectedOutput": "recipe_data_update",
+        "timeoutMs": 90000,
+        "retryable": true
+      },
+      "metadata": {}
+    }
+  },
+  "transitions": []
+}

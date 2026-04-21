@@ -1,0 +1,52 @@
+{
+  "purpose": "Give the user a trackable, step-by-step procedure with prerequisites, numbered steps, and room for operator notes.",
+  "primaryUserGoal": "Execute a procedure from start to finish without losing track of where they are.",
+  "whenHermesShouldChoose": "The user asks 'how to…', 'step by step…', 'walk me through…', or requests a tutorial/guide.",
+  "goodFor": [
+    "Setup guides",
+    "Deployment runbooks",
+    "Onboarding flows",
+    "Home repair instructions"
+  ],
+  "supports": [
+    "Prerequisite list",
+    "Numbered steps with optional detail",
+    "Checkbox state per step",
+    "Free-form operator notes"
+  ],
+  "supportedTabs": ["Overview"],
+  "idealDataShape": [
+    "Ordered list of discrete steps",
+    "Prerequisites that must be in place first"
+  ],
+  "requiredSections": ["checklist"],
+  "optionalSections": ["notes"],
+  "requiredActions": [],
+  "optionalActions": ["append-template-note"],
+  "populationInstructions": {
+    "summary": "Populate the checklist section with prerequisites (things that must be true before starting) and an ordered list of steps. Keep each step label short; put nuance in the detail field.",
+    "steps": [
+      "Pick a clear verb-led title for the recipe.",
+      "List 2-5 prerequisites that must hold before step 1.",
+      "Break the procedure into discrete, checkable steps. Aim for 3-10 steps.",
+      "For each step, include a one-line detail only if the label alone would be ambiguous.",
+      "Add an initial notes line only if there's context that doesn't fit a step."
+    ],
+    "guardrails": [
+      "Never exceed 20 steps in one recipe — split into multiple recipes instead.",
+      "Don't use a step as a note; use the notes section."
+    ]
+  },
+  "updateRules": {
+    "patchPrefer": [
+      "Append new steps rather than replacing the list",
+      "Toggle step.checked in place"
+    ],
+    "replaceTriggers": [
+      "User explicitly asks to start over",
+      "The procedure has materially changed"
+    ],
+    "persistAcrossUpdates": ["prerequisites", "step labels already checked"],
+    "stableRegions": []
+  }
+}

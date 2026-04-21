@@ -1,0 +1,60 @@
+{
+  "id": "local-discovery-comparison",
+  "name": "Local Discovery Comparison",
+  "useCase": "Compare nearby providers, venues, or local services outside the dedicated restaurant and hotel templates.",
+  "enabled": true,
+  "selectionSignals": [
+    "nearby places",
+    "local comparison",
+    "service providers",
+    "venue shortlist",
+    "near me",
+    "in my area",
+    "local businesses",
+    "best in the area",
+    "find a",
+    "around me",
+    "local options"
+  ],
+  "slots": [
+    { "id": "filters", "kind": "filter-strip", "required": true },
+    { "id": "results", "kind": "split", "required": true }
+  ],
+  "allowedUpdateOps": ["set_header", "set_filter_chips", "upsert_groups", "set_detail", "append_note_lines"],
+  "actions": {
+    "save-place": {
+      "id": "save-place",
+      "label": "Save place",
+      "kind": "bridge",
+      "intent": "primary",
+      "visibility": { "requiresSelection": "single", "whenBuildReady": true },
+      "bridge": { "handler": "save_template_place", "payload": {} },
+      "metadata": {}
+    },
+    "switch-to-event-planner": {
+      "id": "switch-to-event-planner",
+      "label": "Convert to event plan",
+      "kind": "bridge",
+      "intent": "primary",
+      "visibility": { "requiresSelection": "single", "whenBuildReady": true },
+      "bridge": { "handler": "switch_template", "payload": { "targetTemplateId": "event-planner" } },
+      "metadata": {}
+    },
+    "append-template-note": {
+      "id": "append-template-note",
+      "label": "Add note",
+      "kind": "bridge",
+      "intent": "neutral",
+      "visibility": { "requiresSelection": "none", "whenBuildReady": true },
+      "bridge": { "handler": "append_template_note", "payload": {} },
+      "metadata": {}
+    }
+  },
+  "transitions": [
+    {
+      "targetTemplateId": "event-planner",
+      "reason": "Carry the selected place forward into event planning when the user pivots from comparison to planning.",
+      "migration": "local-discovery-to-event-planner"
+    }
+  ]
+}

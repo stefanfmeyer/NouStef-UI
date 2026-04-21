@@ -4,9 +4,29 @@ import type { ServerResponse } from 'node:http';
 
 const themePlaceholder = '__HERMES_THEME_MODE__';
 
+const SECURITY_HEADERS = {
+  'x-content-type-options': 'nosniff',
+  'x-frame-options': 'DENY',
+  'referrer-policy': 'no-referrer',
+  'content-security-policy':
+    "default-src 'self'; " +
+    "script-src 'self' 'unsafe-inline'; " +
+    "style-src 'self' 'unsafe-inline'; " +
+    "img-src 'self' data: https:; " +
+    "font-src 'self' data:; " +
+    "connect-src 'self'; " +
+    "frame-ancestors 'none'; " +
+    "base-uri 'self'; " +
+    "form-action 'self'"
+} as const;
+
+function isWithinRoot(resolvedRoot: string, resolvedFilePath: string): boolean {
+  return resolvedFilePath === resolvedRoot || resolvedFilePath.startsWith(`${resolvedRoot}${path.sep}`);
+}
+
 function writeHtml(response: ServerResponse, filePath: string, themeMode: 'dark' | 'light') {
   const html = fs.readFileSync(filePath, 'utf8').replaceAll(themePlaceholder, themeMode);
-  response.writeHead(200, { 'content-type': 'text/html; charset=utf-8' });
+  response.writeHead(200, { ...SECURITY_HEADERS, 'content-type': 'text/html; charset=utf-8' });
   response.end(html);
 }
 
@@ -21,7 +41,7 @@ export function serveStaticAsset(
   const resolvedFilePath = path.resolve(filePath);
   const resolvedRoot = path.resolve(staticDirectory);
 
-  if (!resolvedFilePath.startsWith(resolvedRoot)) {
+  if (!isWithinRoot(resolvedRoot, resolvedFilePath)) {
     response.statusCode = 403;
     response.end('Forbidden');
     return;
@@ -58,6 +78,6 @@ export function serveStaticAsset(
     return;
   }
 
-  response.writeHead(200, { 'content-type': contentType });
+  response.writeHead(200, { ...SECURITY_HEADERS, 'content-type': contentType });
   fs.createReadStream(resolvedFilePath).pipe(response);
 }

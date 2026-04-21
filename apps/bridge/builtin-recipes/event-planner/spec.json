@@ -1,0 +1,58 @@
+{
+  "purpose": "Let the user plan an event end-to-end: pick a venue, manage guests, tick off prep tasks, and run the day-of itinerary.",
+  "primaryUserGoal": "Organize an event from idea to execution without losing track of moving pieces.",
+  "whenHermesShouldChoose": "User asks to plan a party, dinner, birthday, wedding, offsite, or similar gathering that needs a venue + guests + checklist.",
+  "goodFor": [
+    "Birthday and milestone parties",
+    "Small weddings / engagements",
+    "Company offsites",
+    "Dinner parties and gatherings"
+  ],
+  "supports": [
+    "Tabs: Venue (card-grid with venue images), Guests (grouped-list), Checklist, Itinerary (timeline), Notes",
+    "Guest grouping by RSVP or dietary restriction",
+    "Day-of timeline with arrival, toasts, dinner, cake"
+  ],
+  "supportedTabs": ["Venue", "Guests", "Checklist", "Itinerary", "Notes"],
+  "idealDataShape": [
+    "Event type, date, headcount",
+    "2-5 candidate venues with photo queries",
+    "Guest list with RSVP status",
+    "Checklist of prep tasks",
+    "Day-of timeline"
+  ],
+  "requiredSections": ["tabs"],
+  "optionalSections": [],
+  "requiredActions": [],
+  "optionalActions": ["add-event-guest", "toggle-template-checklist", "append-template-note", "switch-template"],
+  "populationInstructions": {
+    "summary": "Create a tabs section with 5 panes: Venue (card-grid with venue images), Guests (grouped-list with RSVP tone), Checklist, Itinerary (timeline for event day), Notes.",
+    "steps": [
+      "Parse event type, date/time, headcount, budget.",
+      "Venue tab: card-grid of 2-4 venue options, each with image.query ('<venue name>' or '<venue type> <city>'), price/capacity, and 2-3 bullets.",
+      "Guests tab: grouped-list by RSVP status (Yes, No, Pending). Include dietary notes.",
+      "Checklist tab: prep tasks with a few prerequisites.",
+      "Itinerary tab: timeline of the event day with times.",
+      "Notes tab: free-form for contacts, song requests, etc.",
+      "Set activeTabId to 'venue' initially."
+    ],
+    "guardrails": [
+      "Never include guests' personal contact info in free text — only names + RSVP.",
+      "Don't invent venue availability — mark as 'check with venue'.",
+      "Keep the Checklist focused on prep; day-of details belong in Itinerary."
+    ]
+  },
+  "updateRules": {
+    "patchPrefer": [
+      "Use upsert_cards to add/refresh venue options",
+      "Use upsert_groups to update RSVP status",
+      "Use upsert_timeline_items for itinerary adjustments",
+      "Use set_active_tab as the user shifts focus"
+    ],
+    "replaceTriggers": [
+      "User pivots to a completely different event (different date + theme)"
+    ],
+    "persistAcrossUpdates": ["Notes", "confirmed guests", "completed checklist items"],
+    "stableRegions": ["header"]
+  }
+}

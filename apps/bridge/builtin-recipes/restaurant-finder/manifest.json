@@ -1,0 +1,11 @@
+{
+  "id": "restaurant-finder",
+  "version": "1.0.0",
+  "name": "Restaurant Finder",
+  "category": "travel",
+  "description": "Find and compare nearby restaurants with neighborhood groupings and booking-oriented detail.",
+  "author": "Hermes",
+  "source": "builtin",
+  "enabled": true,
+  "protocolVersion": "1.0.0"
+}

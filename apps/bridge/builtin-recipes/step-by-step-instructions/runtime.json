@@ -1,0 +1,13 @@
+{
+  "id": "step-by-step-instructions",
+  "name": "Step-by-Step Instructions",
+  "useCase": "Follow a procedure with prerequisites and numbered steps that can be checked off.",
+  "enabled": true,
+  "selectionSignals": ["how to", "step by step", "instructions", "tutorial", "guide"],
+  "slots": [
+    { "id": "checklist", "kind": "checklist", "required": true }
+  ],
+  "allowedUpdateOps": ["set_header"],
+  "actions": {},
+  "transitions": []
+}

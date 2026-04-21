@@ -1,0 +1,258 @@
+{
+  "kind": "recipe_template_state",
+  "schemaVersion": "recipe_template_state/v1",
+  "templateId": "vendor-evaluation-matrix",
+  "title": "Product analytics \u2014 vendor comparison",
+  "summary": "Comparing 4 analytics platforms for a 50-person SaaS: Amplitude, Mixpanel, PostHog, Heap. PostHog wins on price and self-host; Amplitude on maturity and enterprise features.",
+  "sections": [
+    {
+      "slotId": "stats",
+      "kind": "stats",
+      "title": "Summary",
+      "items": [
+        {
+          "label": "Options",
+          "value": "4",
+          "helper": "shortlisted from 9"
+        },
+        {
+          "label": "Criteria",
+          "value": "5"
+        },
+        {
+          "label": "Recommended",
+          "value": "PostHog",
+          "helper": "best price + self-host",
+          "tone": "success"
+        },
+        {
+          "label": "Runner-up",
+          "value": "Amplitude",
+          "helper": "if you need SSO enterprise tier"
+        }
+      ]
+    },
+    {
+      "slotId": "matrix",
+      "kind": "comparison-table",
+      "title": "Analytics platforms",
+      "columns": [
+        {
+          "id": "price",
+          "label": "Price (starter)",
+          "align": "end"
+        },
+        {
+          "id": "features",
+          "label": "Features",
+          "align": "start"
+        },
+        {
+          "id": "self-host",
+          "label": "Self-host",
+          "align": "start"
+        },
+        {
+          "id": "integrations",
+          "label": "Integrations",
+          "align": "start"
+        },
+        {
+          "id": "support",
+          "label": "Support",
+          "align": "start"
+        }
+      ],
+      "rows": [
+        {
+          "id": "posthog",
+          "label": "PostHog",
+          "leadingImage": {
+            "src": null,
+            "query": "PostHog logo",
+            "alt": "PostHog",
+            "borderRadius": "sm",
+            "border": "subtle",
+            "aspect": "square",
+            "fit": "contain"
+          },
+          "cells": [
+            {
+              "value": "$0",
+              "subvalue": "1M events free",
+              "emphasis": true,
+              "tone": "success"
+            },
+            {
+              "value": "Events + session recording + feature flags + experiments",
+              "emphasis": false
+            },
+            {
+              "value": "Yes",
+              "subvalue": "Open-source, Docker",
+              "emphasis": false,
+              "tone": "success"
+            },
+            {
+              "value": "50+",
+              "emphasis": false
+            },
+            {
+              "value": "Community + paid",
+              "subvalue": "Slack, docs, email",
+              "emphasis": false
+            }
+          ],
+          "actions": [
+            { "kind": "link", "label": "Open PostHog", "href": "https://posthog.com", "openInNewTab": true }
+          ]
+        },
+        {
+          "id": "amplitude",
+          "label": "Amplitude",
+          "leadingImage": {
+            "src": null,
+            "query": "Amplitude Analytics logo",
+            "alt": "Amplitude",
+            "borderRadius": "sm",
+            "border": "subtle",
+            "aspect": "square",
+            "fit": "contain"
+          },
+          "cells": [
+            {
+              "value": "$0",
+              "subvalue": "10M events free, paid from $61k/yr",
+              "emphasis": false
+            },
+            {
+              "value": "Events + behavioral cohorts + predictions + data studio",
+              "emphasis": true,
+              "tone": "success"
+            },
+            {
+              "value": "No",
+              "subvalue": "Cloud-only",
+              "emphasis": false,
+              "tone": "danger"
+            },
+            {
+              "value": "100+",
+              "emphasis": true,
+              "tone": "success"
+            },
+            {
+              "value": "Enterprise",
+              "subvalue": "TAM at scale",
+              "emphasis": false,
+              "tone": "success"
+            }
+          ],
+          "actions": [
+            { "kind": "link", "label": "Open Amplitude", "href": "https://amplitude.com", "openInNewTab": true }
+          ]
+        },
+        {
+          "id": "mixpanel",
+          "label": "Mixpanel",
+          "leadingImage": {
+            "src": null,
+            "query": "Mixpanel logo",
+            "alt": "Mixpanel",
+            "borderRadius": "sm",
+            "border": "subtle",
+            "aspect": "square",
+            "fit": "contain"
+          },
+          "cells": [
+            {
+              "value": "$20/mo",
+              "subvalue": "starter tier, 1M events",
+              "emphasis": false
+            },
+            {
+              "value": "Events + funnels + retention + user segments",
+              "emphasis": false
+            },
+            {
+              "value": "No",
+              "emphasis": false,
+              "tone": "danger"
+            },
+            {
+              "value": "60+",
+              "emphasis": false
+            },
+            {
+              "value": "Email + chat",
+              "emphasis": false
+            }
+          ],
+          "actions": [
+            { "kind": "link", "label": "Open Mixpanel", "href": "https://mixpanel.com", "openInNewTab": true }
+          ]
+        },
+        {
+          "id": "heap",
+          "label": "Heap",
+          "leadingImage": {
+            "src": null,
+            "query": "Heap Analytics logo",
+            "alt": "Heap",
+            "borderRadius": "sm",
+            "border": "subtle",
+            "aspect": "square",
+            "fit": "contain"
+          },
+          "cells": [
+            {
+              "value": "Custom",
+              "subvalue": "quote only",
+              "emphasis": false,
+              "tone": "warning"
+            },
+            {
+              "value": "Autocapture + session replay",
+              "emphasis": false,
+              "tone": "warning"
+            },
+            {
+              "value": "No",
+              "emphasis": false,
+              "tone": "danger"
+            },
+            {
+              "value": "40+",
+              "emphasis": false
+            },
+            {
+              "value": "Enterprise",
+              "emphasis": false
+            }
+          ],
+          "actions": [
+            { "kind": "link", "label": "Open Heap", "href": "https://heap.io", "openInNewTab": true }
+          ]
+        }
+      ],
+      "footerChips": [
+        {
+          "label": "50-person SaaS",
+          "tone": "neutral"
+        },
+        {
+          "label": "Event volume: 5M/mo",
+          "tone": "neutral"
+        },
+        {
+          "label": "Criteria revised Apr 18",
+          "tone": "neutral"
+        }
+      ],
+      "footnote": "Price is the 'starter tier' sticker price \u2014 real vendor pricing depends on event volume and negotiation."
+    }
+  ],
+  "transitionTargets": [],
+  "transitionHistory": [],
+  "metadata": {}
+}

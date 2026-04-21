@@ -1,224 +1,155 @@
-import { Badge, Box, Code, Flex, HStack, Spinner, Text, VStack } from '@chakra-ui/react';
+import { Box, Code, HStack, Text, VStack } from '@chakra-ui/react';
 import type { ChatActivity } from '@hermes-recipes/protocol';
-import { InfoTag } from '../atoms/InfoTag';
 
 function formatTimestamp(value: string) {
   const parsed = Date.parse(value);
-  if (Number.isNaN(parsed)) {
-    return value;
-  }
-
+  if (Number.isNaN(parsed)) return value;
   return new Date(parsed).toLocaleTimeString([], {
-    hour: 'numeric',
-    minute: '2-digit'
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false
   });
 }
 
-function detailForActivity(activity: ChatActivity) {
-  if (activity.kind === 'command' && activity.command) {
-    return activity.command;
-  }
+function formatTimestampFull(value: string) {
+  const parsed = Date.parse(value);
+  if (Number.isNaN(parsed)) return value;
+  return new Date(parsed).toLocaleString([], {
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    fractionalSecondDigits: 3,
+    hour12: false
+  });
+}
 
+function kindBorderColor(kind: ChatActivity['kind']): string {
+  switch (kind) {
+    case 'tool': return '#6366f1';
+    case 'skill': return '#0d9488';
+    case 'command': return '#d97706';
+    case 'approval': return '#7c3aed';
+    case 'thinking': return '#64748b';
+    case 'website': return '#0284c7';
+    case 'warning': return '#dc2626';
+    default: return 'var(--border-subtle)';
+  }
+}
+
+function kindLabel(kind: ChatActivity['kind']): string {
+  switch (kind) {
+    case 'tool': return 'Tool';
+    case 'skill': return 'Skill';
+    case 'command': return 'CLI';
+    case 'approval': return 'Approval';
+    case 'warning': return 'Warning';
+    case 'thinking': return 'Thinking';
+    case 'website': return 'Web';
+    default: return 'Status';
+  }
+}
+
+function kindIcon(kind: ChatActivity['kind']): string {
+  switch (kind) {
+    case 'tool': return '📞';
+    case 'skill': return '📚';
+    case 'command': return '💻';
+    case 'approval': return '⚠️';
+    case 'thinking': return '💭';
+    case 'website': return '🌐';
+    case 'warning': return '⚠️';
+    default: return '⚙️';
+  }
+}
+
+function stateIcon(state: ChatActivity['state']): string {
+  switch (state) {
+    case 'completed': return '✓';
+    case 'failed':
+    case 'denied': return '✗';
+    case 'cancelled': return '–';
+    default: return '…';
+  }
+}
+
+function isInProgress(state: ChatActivity['state']): boolean {
+  return state === 'started' || state === 'updated';
+}
+
+function isError(activity: ChatActivity): boolean {
+  return activity.state === 'failed' || activity.state === 'denied' || activity.kind === 'warning';
+}
+
+function detailForActivity(activity: ChatActivity) {
+  if (activity.kind === 'command' && activity.command) return activity.command;
   return activity.detail ?? null;
 }
 
-function kindPalette(kind: ChatActivity['kind']) {
-  switch (kind) {
-    case 'tool':
-      return 'blue';
-    case 'skill':
-      return 'teal';
-    case 'command':
-      return 'orange';
-    case 'approval':
-      return 'yellow';
-    case 'warning':
-      return 'red';
-    default:
-      return 'gray';
-  }
-}
-
-function kindLabel(kind: ChatActivity['kind']) {
-  switch (kind) {
-    case 'tool':
-      return 'Tool call';
-    case 'skill':
-      return 'Skill';
-    case 'command':
-      return 'CLI';
-    case 'approval':
-      return 'Approval';
-    case 'warning':
-      return 'Warning';
-    default:
-      return 'Status';
-  }
-}
-
-function surfaceTone(activity: ChatActivity) {
-  if (activity.state === 'failed' || activity.state === 'denied' || activity.kind === 'warning') {
-    return {
-      bg: 'var(--surface-danger)',
-      border: 'var(--border-danger)'
-    };
-  }
-
-  switch (activity.kind) {
-    case 'tool':
-      return {
-        bg: 'rgba(14, 116, 103, 0.1)',
-        border: 'rgba(14, 116, 103, 0.2)'
-      };
-    case 'skill':
-      return {
-        bg: 'rgba(59, 130, 246, 0.09)',
-        border: 'rgba(59, 130, 246, 0.18)'
-      };
-    case 'command':
-      return {
-        bg: 'rgba(232, 89, 53, 0.1)',
-        border: 'rgba(232, 89, 53, 0.2)'
-      };
-    case 'approval':
-      return {
-        bg: 'var(--surface-warning)',
-        border: 'rgba(183, 121, 31, 0.22)'
-      };
-    default:
-      return {
-        bg: 'var(--surface-2)',
-        border: 'var(--border-subtle)'
-      };
-  }
-}
-
-function statusBadgeTone(state: ChatActivity['state']) {
-  switch (state) {
-    case 'completed':
-      return 'green';
-    case 'failed':
-    case 'denied':
-      return 'red';
-    case 'started':
-    case 'updated':
-    default:
-      return 'gray';
-  }
-}
-
-function ActivityStatusIcon({ activity }: { activity: ChatActivity }) {
-  if (activity.state === 'completed') {
-    return (
-      <Flex
-        align="center"
-        justify="center"
-        w="5"
-        h="5"
-        rounded="6px"
-        bg="rgba(18, 115, 91, 0.16)"
-        color="green.500"
-        fontSize="xs"
-        fontWeight="700"
-      >
-        OK
-      </Flex>
-    );
-  }
-
-  if (activity.state === 'failed' || activity.state === 'denied') {
-    return (
-      <Flex
-        align="center"
-        justify="center"
-        w="5"
-        h="5"
-        rounded="6px"
-        bg="rgba(132, 22, 53, 0.18)"
-        color="red.500"
-        fontSize="xs"
-        fontWeight="700"
-      >
-        !
-      </Flex>
-    );
-  }
-
-  if (activity.state === 'cancelled') {
-    return (
-      <Flex
-        align="center"
-        justify="center"
-        w="5"
-        h="5"
-        rounded="6px"
-        bg="var(--surface-1)"
-        color="var(--text-muted)"
-        fontSize="xs"
-        fontWeight="700"
-      >
-        -
-      </Flex>
-    );
-  }
-
-  return (
-    <Flex align="center" justify="center" w="5" h="5" rounded="6px" bg="var(--surface-1)">
-      <Spinner size="xs" color="var(--accent)" borderWidth="2px" />
-    </Flex>
-  );
-}
-
 export function ActivityCard({ activity }: { activity: ChatActivity }) {
-  const tone = surfaceTone(activity);
   const detail = detailForActivity(activity);
+  const borderColor = isError(activity) ? '#dc2626' : kindBorderColor(activity.kind);
+  const inProgress = isInProgress(activity.state);
 
   return (
     <Box
       data-testid="activity-card"
       data-activity-kind={activity.kind}
-      rounded="8px"
-      border={`1px solid ${tone.border}`}
-      bg={tone.bg}
-      px="3"
-      py="2.5"
-      boxShadow="var(--shadow-xs)"
+      borderLeft={`3px solid ${borderColor}`}
+      borderRadius="0 6px 6px 0"
+      bg="transparent"
+      px="2.5"
+      py="1.5"
+      _hover={{ bg: 'var(--surface-2)' }}
+      transition="background 120ms ease"
+      style={inProgress ? {
+        animation: 'activityPulse 1.6s ease-in-out infinite'
+      } : undefined}
     >
-      <VStack align="stretch" gap="2">
+      <VStack align="stretch" gap="1">
         <HStack align="start" justify="space-between" gap="2">
-          <HStack align="start" gap="2" minW={0}>
-            <ActivityStatusIcon activity={activity} />
-            <VStack align="stretch" gap="0.75" minW={0}>
-              <Text fontSize="xs" fontWeight="650" color="var(--text-primary)" lineClamp={2}>
-                {activity.label}
-              </Text>
-              <HStack gap="1" wrap="wrap">
-                <InfoTag label={kindLabel(activity.kind)} colorPalette={kindPalette(activity.kind)} />
-                <Badge
-                  rounded="full"
-                  colorPalette={statusBadgeTone(activity.state)}
-                  variant="subtle"
-                  textTransform="none"
-                  fontSize="2xs"
-                  px="1.5"
-                >
-                  {activity.state}
-                </Badge>
-              </HStack>
-            </VStack>
+          <HStack align="center" gap="1.5" minW={0} flex="1">
+            <Text as="span" fontSize="sm" lineHeight={1} flexShrink={0}>
+              {kindIcon(activity.kind)}
+            </Text>
+            <Text fontSize="xs" fontWeight="500" color="var(--text-primary)" lineClamp={2} minW={0}>
+              {activity.label}
+            </Text>
           </HStack>
-          <Text flexShrink={0} fontSize="xs" color="var(--text-muted)">
-            {formatTimestamp(activity.timestamp)}
-          </Text>
+          <HStack gap="1.5" flexShrink={0} align="center">
+            <Text fontSize="2xs" color="var(--text-muted)" letterSpacing="0.06em" textTransform="uppercase">
+              {kindLabel(activity.kind)}
+            </Text>
+            <Text
+              fontSize="2xs"
+              color={isError(activity) ? '#dc2626' : inProgress ? 'var(--accent)' : 'var(--text-muted)'}
+              fontWeight="500"
+            >
+              {stateIcon(activity.state)}
+            </Text>
+            <Text fontSize="2xs" color="var(--text-muted)" title={formatTimestampFull(activity.timestamp)}>
+              {formatTimestamp(activity.timestamp)}
+            </Text>
+          </HStack>
         </HStack>
 
         {detail ? (
           activity.kind === 'command' && activity.command ? (
-            <Code whiteSpace="pre-wrap" rounded="8px" px="2" py="1.5" bg="var(--surface-1)" color="var(--text-primary)" fontSize="xs">
+            <Code
+              whiteSpace="pre-wrap"
+              rounded="6px"
+              px="1.5"
+              py="1"
+              bg="var(--surface-1)"
+              color="var(--text-secondary)"
+              fontSize="2xs"
+            >
               {detail}
             </Code>
           ) : (
-            <Text fontSize="xs" color="var(--text-secondary)" lineClamp={4}>
+            <Text fontSize="2xs" color="var(--text-muted)" lineClamp={2} pl="5">
               {detail}
             </Text>
           )

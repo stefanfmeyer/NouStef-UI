@@ -147,7 +147,7 @@ export function TemplateActionButton({
       }}
       disabled={disabled}
     >
-      <a href={href} target={openInNewTab ? '_blank' : undefined} rel={openInNewTab ? 'noreferrer' : undefined}>
+      <a href={href} target={openInNewTab ? '_blank' : undefined} rel={openInNewTab ? 'noopener noreferrer' : undefined}>
         {action.label}
       </a>
     </Button>
@@ -520,7 +520,7 @@ export function TemplateDetailPanel({
                       <a
                         href={link.href}
                         target="_blank"
-                        rel="noreferrer"
+                        rel="noopener noreferrer"
                         style={{ color: 'var(--accent)', textDecoration: 'underline', textUnderlineOffset: '3px' }}
                       >
                         {link.href}
@@ -562,7 +562,7 @@ export function TemplateDetailPanel({
                     <a
                       href={link.href}
                       target="_blank"
-                      rel="noreferrer"
+                      rel="noopener noreferrer"
                       style={{ color: 'var(--accent)', textDecoration: 'underline', textUnderlineOffset: '3px' }}
                     >
                       {link.href}

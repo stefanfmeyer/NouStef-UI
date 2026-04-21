@@ -134,7 +134,7 @@ test('shows the requested template interaction affordances in the Spaces gallery
 
   await page.getByRole('button', { name: 'Pipelines & Planning', exact: true }).click();
   await page.getByTestId('spaces-template-card-job-search-pipeline').click();
-  await expect(inspector.getByText('Openings')).toBeVisible();
+  await expect(inspector.getByText('Job listings')).toBeVisible();
 
   await page.getByRole('button', { name: 'Travel & Local', exact: true }).click();
   await expect(page.getByTestId('spaces-template-card-local-discovery-comparison')).toHaveCount(0);

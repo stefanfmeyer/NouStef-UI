@@ -1,0 +1,11 @@
+{
+  "id": "vendor-evaluation-matrix",
+  "version": "1.0.0",
+  "name": "Comparison Matrix",
+  "category": "research",
+  "description": "Compare any set of items (frameworks, vendors, technologies, apps, products) side by side with scored criteria and notes.",
+  "author": "Hermes",
+  "source": "builtin",
+  "enabled": true,
+  "protocolVersion": "1.0.0"
+}

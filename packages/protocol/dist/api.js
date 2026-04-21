@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { AuditEventSchema, AccessAuditSummarySchema, AppSettingsSchema, ChatActivitySchema, ChatMessageSchema, ConnectionStateSchema, JobsFreshnessSchema, JobSchema, ProfileSchema, RuntimeActivityHistoryEntrySchema, RuntimeModelConfigSchema, RuntimeReadinessSchema, RuntimeRequestSchema, RuntimeProviderOptionSchema, SessionDeletionModeSchema, SessionFilterSummarySchema, SessionSchema, RecipeContentFormatSchema, RecipeBuildSchema, RecipeEventSchema, RecipeMetadataSchema, RecipeSchema, RecipeStatusSchema, RecipeTabSchema, RecipeUiStateSchema, SkillSchema, TelemetryEventSchema, ThemeModeSchema, ToolExecutionSchema, ToolSchema, ToolsTabSchema, UiStateSchema } from './schemas';
+import { RecipeTemplateStateSchema } from './recipe-template-schemas';
 export const ApiErrorSchema = z.object({
     code: z.string().min(1),
     message: z.string().min(1)
@@ -218,7 +219,8 @@ export const RecipeBuildProgressEventSchema = z
     .object({
     recipeId: z.string().min(1),
     build: RecipeBuildSchema,
-    recipe: RecipeSchema.nullable().default(null)
+    recipe: RecipeSchema.nullable().default(null),
+    partialTemplateState: RecipeTemplateStateSchema.nullable().default(null)
 })
     .strict();
 export const UpdateRuntimeModelConfigRequestSchema = z
@@ -294,7 +296,8 @@ const ChatStreamRecipeBuildProgressEventSchema = z.object({
     type: z.literal('recipe_build_progress'),
     recipeId: z.string().min(1),
     build: RecipeBuildSchema,
-    recipe: RecipeSchema.nullable().default(null)
+    recipe: RecipeSchema.nullable().default(null),
+    partialTemplateState: RecipeTemplateStateSchema.nullable().default(null)
 });
 const ChatStreamErrorEventSchema = z.object({
     type: z.literal('error'),
@@ -330,4 +333,14 @@ export const AuditEventsResponseSchema = z.object({
     page: z.number().int().positive(),
     pageSize: z.number().int().positive(),
     total: z.number().int().nonnegative()
+});
+export const ResolveImagesRequestSchema = z.object({
+    queries: z.array(z.string().min(1)).min(1).max(32)
+});
+export const ResolveImagesResponseSchema = z.object({
+    results: z.array(z.object({
+        query: z.string(),
+        url: z.string().nullable(),
+        error: z.string().nullable()
+    }))
 });

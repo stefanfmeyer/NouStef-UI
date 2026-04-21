@@ -1,63 +1,103 @@
 import { z } from 'zod';
 export declare const RecipeTemplateSelectionHintsSchema: z.ZodObject<{
     primaryEntity: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
-    currentTemplateId: z.ZodOptional<z.ZodEnum<["price-comparison-grid", "shopping-shortlist", "inbox-triage-board", "restaurant-finder", "hotel-shortlist", "flight-comparison", "travel-itinerary-planner", "research-notebook", "security-review-board", "vendor-evaluation-matrix", "event-planner", "job-search-pipeline", "content-campaign-planner", "local-discovery-comparison", "step-by-step-instructions"]>>;
-    suggestedTransitionFrom: z.ZodOptional<z.ZodEnum<["price-comparison-grid", "shopping-shortlist", "inbox-triage-board", "restaurant-finder", "hotel-shortlist", "flight-comparison", "travel-itinerary-planner", "research-notebook", "security-review-board", "vendor-evaluation-matrix", "event-planner", "job-search-pipeline", "content-campaign-planner", "local-discovery-comparison", "step-by-step-instructions"]>>;
+    currentTemplateId: z.ZodOptional<z.ZodString>;
+    suggestedTransitionFrom: z.ZodOptional<z.ZodString>;
 }, "strict", z.ZodTypeAny, {
     primaryEntity?: string | undefined;
-    currentTemplateId?: "price-comparison-grid" | "shopping-shortlist" | "inbox-triage-board" | "restaurant-finder" | "hotel-shortlist" | "flight-comparison" | "travel-itinerary-planner" | "research-notebook" | "security-review-board" | "vendor-evaluation-matrix" | "event-planner" | "job-search-pipeline" | "content-campaign-planner" | "local-discovery-comparison" | "step-by-step-instructions" | undefined;
-    suggestedTransitionFrom?: "price-comparison-grid" | "shopping-shortlist" | "inbox-triage-board" | "restaurant-finder" | "hotel-shortlist" | "flight-comparison" | "travel-itinerary-planner" | "research-notebook" | "security-review-board" | "vendor-evaluation-matrix" | "event-planner" | "job-search-pipeline" | "content-campaign-planner" | "local-discovery-comparison" | "step-by-step-instructions" | undefined;
+    currentTemplateId?: string | undefined;
+    suggestedTransitionFrom?: string | undefined;
 }, {
     primaryEntity?: unknown;
-    currentTemplateId?: "price-comparison-grid" | "shopping-shortlist" | "inbox-triage-board" | "restaurant-finder" | "hotel-shortlist" | "flight-comparison" | "travel-itinerary-planner" | "research-notebook" | "security-review-board" | "vendor-evaluation-matrix" | "event-planner" | "job-search-pipeline" | "content-campaign-planner" | "local-discovery-comparison" | "step-by-step-instructions" | undefined;
-    suggestedTransitionFrom?: "price-comparison-grid" | "shopping-shortlist" | "inbox-triage-board" | "restaurant-finder" | "hotel-shortlist" | "flight-comparison" | "travel-itinerary-planner" | "research-notebook" | "security-review-board" | "vendor-evaluation-matrix" | "event-planner" | "job-search-pipeline" | "content-campaign-planner" | "local-discovery-comparison" | "step-by-step-instructions" | undefined;
+    currentTemplateId?: string | undefined;
+    suggestedTransitionFrom?: string | undefined;
 }>;
 export type RecipeTemplateSelectionHints = z.infer<typeof RecipeTemplateSelectionHintsSchema>;
+export declare const RecipeMutationKindSchema: z.ZodEnum<["change_layout", "change_visual", "add_content", "remove_content", "refine_existing", "switch_recipe"]>;
+export type RecipeMutationKind = z.infer<typeof RecipeMutationKindSchema>;
+export declare const RecipeMutationIntentSchema: z.ZodObject<{
+    kind: z.ZodEnum<["change_layout", "change_visual", "add_content", "remove_content", "refine_existing", "switch_recipe"]>;
+    wantsImages: z.ZodDefault<z.ZodBoolean>;
+    wantsCards: z.ZodDefault<z.ZodBoolean>;
+    wantsCharts: z.ZodDefault<z.ZodBoolean>;
+    wantsTable: z.ZodDefault<z.ZodBoolean>;
+    wantsKanban: z.ZodDefault<z.ZodBoolean>;
+    wantsTimeline: z.ZodDefault<z.ZodBoolean>;
+    wantsFewerItems: z.ZodDefault<z.ZodBoolean>;
+    wantsMoreItems: z.ZodDefault<z.ZodBoolean>;
+    targetTemplateHint: z.ZodOptional<z.ZodString>;
+    mutationSummary: z.ZodString;
+}, "strict", z.ZodTypeAny, {
+    kind: "change_layout" | "change_visual" | "add_content" | "remove_content" | "refine_existing" | "switch_recipe";
+    wantsImages: boolean;
+    wantsCards: boolean;
+    wantsCharts: boolean;
+    wantsTable: boolean;
+    wantsKanban: boolean;
+    wantsTimeline: boolean;
+    wantsFewerItems: boolean;
+    wantsMoreItems: boolean;
+    mutationSummary: string;
+    targetTemplateHint?: string | undefined;
+}, {
+    kind: "change_layout" | "change_visual" | "add_content" | "remove_content" | "refine_existing" | "switch_recipe";
+    mutationSummary: string;
+    wantsImages?: boolean | undefined;
+    wantsCards?: boolean | undefined;
+    wantsCharts?: boolean | undefined;
+    wantsTable?: boolean | undefined;
+    wantsKanban?: boolean | undefined;
+    wantsTimeline?: boolean | undefined;
+    wantsFewerItems?: boolean | undefined;
+    wantsMoreItems?: boolean | undefined;
+    targetTemplateHint?: string | undefined;
+}>;
+export type RecipeMutationIntent = z.infer<typeof RecipeMutationIntentSchema>;
 export declare const RecipeTemplateSelectionModeSchema: z.ZodEnum<["fill", "update", "switch"]>;
 export type RecipeTemplateSelectionMode = z.infer<typeof RecipeTemplateSelectionModeSchema>;
 export declare const RecipeTemplateSelectionSchema: z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_selection">;
     schemaVersion: z.ZodLiteral<"recipe_template_selection/v2">;
-    templateId: z.ZodEnum<["price-comparison-grid", "shopping-shortlist", "inbox-triage-board", "restaurant-finder", "hotel-shortlist", "flight-comparison", "travel-itinerary-planner", "research-notebook", "security-review-board", "vendor-evaluation-matrix", "event-planner", "job-search-pipeline", "content-campaign-planner", "local-discovery-comparison", "step-by-step-instructions"]>;
+    templateId: z.ZodString;
     mode: z.ZodDefault<z.ZodEnum<["fill", "update", "switch"]>>;
     reason: z.ZodString;
     confidence: z.ZodNumber;
     hints: z.ZodOptional<z.ZodObject<{
         primaryEntity: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
-        currentTemplateId: z.ZodOptional<z.ZodEnum<["price-comparison-grid", "shopping-shortlist", "inbox-triage-board", "restaurant-finder", "hotel-shortlist", "flight-comparison", "travel-itinerary-planner", "research-notebook", "security-review-board", "vendor-evaluation-matrix", "event-planner", "job-search-pipeline", "content-campaign-planner", "local-discovery-comparison", "step-by-step-instructions"]>>;
-        suggestedTransitionFrom: z.ZodOptional<z.ZodEnum<["price-comparison-grid", "shopping-shortlist", "inbox-triage-board", "restaurant-finder", "hotel-shortlist", "flight-comparison", "travel-itinerary-planner", "research-notebook", "security-review-board", "vendor-evaluation-matrix", "event-planner", "job-search-pipeline", "content-campaign-planner", "local-discovery-comparison", "step-by-step-instructions"]>>;
+        currentTemplateId: z.ZodOptional<z.ZodString>;
+        suggestedTransitionFrom: z.ZodOptional<z.ZodString>;
     }, "strict", z.ZodTypeAny, {
         primaryEntity?: string | undefined;
-        currentTemplateId?: "price-comparison-grid" | "shopping-shortlist" | "inbox-triage-board" | "restaurant-finder" | "hotel-shortlist" | "flight-comparison" | "travel-itinerary-planner" | "research-notebook" | "security-review-board" | "vendor-evaluation-matrix" | "event-planner" | "job-search-pipeline" | "content-campaign-planner" | "local-discovery-comparison" | "step-by-step-instructions" | undefined;
-        suggestedTransitionFrom?: "price-comparison-grid" | "shopping-shortlist" | "inbox-triage-board" | "restaurant-finder" | "hotel-shortlist" | "flight-comparison" | "travel-itinerary-planner" | "research-notebook" | "security-review-board" | "vendor-evaluation-matrix" | "event-planner" | "job-search-pipeline" | "content-campaign-planner" | "local-discovery-comparison" | "step-by-step-instructions" | undefined;
+        currentTemplateId?: string | undefined;
+        suggestedTransitionFrom?: string | undefined;
     }, {
         primaryEntity?: unknown;
-        currentTemplateId?: "price-comparison-grid" | "shopping-shortlist" | "inbox-triage-board" | "restaurant-finder" | "hotel-shortlist" | "flight-comparison" | "travel-itinerary-planner" | "research-notebook" | "security-review-board" | "vendor-evaluation-matrix" | "event-planner" | "job-search-pipeline" | "content-campaign-planner" | "local-discovery-comparison" | "step-by-step-instructions" | undefined;
-        suggestedTransitionFrom?: "price-comparison-grid" | "shopping-shortlist" | "inbox-triage-board" | "restaurant-finder" | "hotel-shortlist" | "flight-comparison" | "travel-itinerary-planner" | "research-notebook" | "security-review-board" | "vendor-evaluation-matrix" | "event-planner" | "job-search-pipeline" | "content-campaign-planner" | "local-discovery-comparison" | "step-by-step-instructions" | undefined;
+        currentTemplateId?: string | undefined;
+        suggestedTransitionFrom?: string | undefined;
     }>>;
 }, "strict", z.ZodTypeAny, {
     kind: "recipe_template_selection";
     reason: string;
     schemaVersion: "recipe_template_selection/v2";
-    templateId: "price-comparison-grid" | "shopping-shortlist" | "inbox-triage-board" | "restaurant-finder" | "hotel-shortlist" | "flight-comparison" | "travel-itinerary-planner" | "research-notebook" | "security-review-board" | "vendor-evaluation-matrix" | "event-planner" | "job-search-pipeline" | "content-campaign-planner" | "local-discovery-comparison" | "step-by-step-instructions";
+    templateId: string;
     mode: "fill" | "update" | "switch";
     confidence: number;
     hints?: {
         primaryEntity?: string | undefined;
-        currentTemplateId?: "price-comparison-grid" | "shopping-shortlist" | "inbox-triage-board" | "restaurant-finder" | "hotel-shortlist" | "flight-comparison" | "travel-itinerary-planner" | "research-notebook" | "security-review-board" | "vendor-evaluation-matrix" | "event-planner" | "job-search-pipeline" | "content-campaign-planner" | "local-discovery-comparison" | "step-by-step-instructions" | undefined;
-        suggestedTransitionFrom?: "price-comparison-grid" | "shopping-shortlist" | "inbox-triage-board" | "restaurant-finder" | "hotel-shortlist" | "flight-comparison" | "travel-itinerary-planner" | "research-notebook" | "security-review-board" | "vendor-evaluation-matrix" | "event-planner" | "job-search-pipeline" | "content-campaign-planner" | "local-discovery-comparison" | "step-by-step-instructions" | undefined;
+        currentTemplateId?: string | undefined;
+        suggestedTransitionFrom?: string | undefined;
     } | undefined;
 }, {
     kind: "recipe_template_selection";
     reason: string;
     schemaVersion: "recipe_template_selection/v2";
-    templateId: "price-comparison-grid" | "shopping-shortlist" | "inbox-triage-board" | "restaurant-finder" | "hotel-shortlist" | "flight-comparison" | "travel-itinerary-planner" | "research-notebook" | "security-review-board" | "vendor-evaluation-matrix" | "event-planner" | "job-search-pipeline" | "content-campaign-planner" | "local-discovery-comparison" | "step-by-step-instructions";
+    templateId: string;
     confidence: number;
     mode?: "fill" | "update" | "switch" | undefined;
     hints?: {
         primaryEntity?: unknown;
-        currentTemplateId?: "price-comparison-grid" | "shopping-shortlist" | "inbox-triage-board" | "restaurant-finder" | "hotel-shortlist" | "flight-comparison" | "travel-itinerary-planner" | "research-notebook" | "security-review-board" | "vendor-evaluation-matrix" | "event-planner" | "job-search-pipeline" | "content-campaign-planner" | "local-discovery-comparison" | "step-by-step-instructions" | undefined;
-        suggestedTransitionFrom?: "price-comparison-grid" | "shopping-shortlist" | "inbox-triage-board" | "restaurant-finder" | "hotel-shortlist" | "flight-comparison" | "travel-itinerary-planner" | "research-notebook" | "security-review-board" | "vendor-evaluation-matrix" | "event-planner" | "job-search-pipeline" | "content-campaign-planner" | "local-discovery-comparison" | "step-by-step-instructions" | undefined;
+        currentTemplateId?: string | undefined;
+        suggestedTransitionFrom?: string | undefined;
     } | undefined;
 }>;
 export type RecipeTemplateSelection = z.infer<typeof RecipeTemplateSelectionSchema>;
@@ -291,6 +331,34 @@ export declare const RecipeTemplateAuthoringCardItemSchema: z.ZodObject<Omit<{
     subtitle: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
     meta: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
     imageLabel: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+    image: z.ZodOptional<z.ZodObject<{
+        src: z.ZodDefault<z.ZodNullable<z.ZodString>>;
+        query: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+        alt: z.ZodString;
+        caption: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+        borderRadius: z.ZodDefault<z.ZodEnum<["none", "sm", "md", "lg", "full"]>>;
+        border: z.ZodDefault<z.ZodEnum<["none", "subtle", "strong"]>>;
+        aspect: z.ZodDefault<z.ZodEnum<["square", "video", "portrait", "natural"]>>;
+        fit: z.ZodDefault<z.ZodEnum<["cover", "contain"]>>;
+    }, "strict", z.ZodTypeAny, {
+        src: string | null;
+        alt: string;
+        borderRadius: "none" | "sm" | "md" | "lg" | "full";
+        border: "none" | "subtle" | "strong";
+        aspect: "square" | "video" | "portrait" | "natural";
+        fit: "cover" | "contain";
+        query?: string | undefined;
+        caption?: string | undefined;
+    }, {
+        alt: string;
+        src?: string | null | undefined;
+        query?: unknown;
+        caption?: unknown;
+        borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+        border?: "none" | "subtle" | "strong" | undefined;
+        aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+        fit?: "cover" | "contain" | undefined;
+    }>>;
     price: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
     chips: z.ZodDefault<z.ZodArray<z.ZodObject<{
         label: z.ZodString;
@@ -358,6 +426,16 @@ export declare const RecipeTemplateAuthoringCardItemSchema: z.ZodObject<Omit<{
     subtitle?: string | undefined;
     meta?: string | undefined;
     imageLabel?: string | undefined;
+    image?: {
+        src: string | null;
+        alt: string;
+        borderRadius: "none" | "sm" | "md" | "lg" | "full";
+        border: "none" | "subtle" | "strong";
+        aspect: "square" | "video" | "portrait" | "natural";
+        fit: "cover" | "contain";
+        query?: string | undefined;
+        caption?: string | undefined;
+    } | undefined;
     price?: string | undefined;
     footer?: string | undefined;
 }, {
@@ -375,6 +453,16 @@ export declare const RecipeTemplateAuthoringCardItemSchema: z.ZodObject<Omit<{
     subtitle?: unknown;
     meta?: unknown;
     imageLabel?: unknown;
+    image?: {
+        alt: string;
+        src?: string | null | undefined;
+        query?: unknown;
+        caption?: unknown;
+        borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+        border?: "none" | "subtle" | "strong" | undefined;
+        aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+        fit?: "cover" | "contain" | undefined;
+    } | undefined;
     price?: unknown;
     footer?: unknown;
 }>;
@@ -669,6 +757,34 @@ export type RecipeTemplateAuthoringBoardColumn = z.infer<typeof RecipeTemplateAu
 export declare const RecipeTemplateAuthoringTableRowSchema: z.ZodObject<Omit<{
     id: z.ZodString;
     label: z.ZodString;
+    leadingImage: z.ZodOptional<z.ZodObject<{
+        src: z.ZodDefault<z.ZodNullable<z.ZodString>>;
+        query: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+        alt: z.ZodString;
+        caption: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+        borderRadius: z.ZodDefault<z.ZodEnum<["none", "sm", "md", "lg", "full"]>>;
+        border: z.ZodDefault<z.ZodEnum<["none", "subtle", "strong"]>>;
+        aspect: z.ZodDefault<z.ZodEnum<["square", "video", "portrait", "natural"]>>;
+        fit: z.ZodDefault<z.ZodEnum<["cover", "contain"]>>;
+    }, "strict", z.ZodTypeAny, {
+        src: string | null;
+        alt: string;
+        borderRadius: "none" | "sm" | "md" | "lg" | "full";
+        border: "none" | "subtle" | "strong";
+        aspect: "square" | "video" | "portrait" | "natural";
+        fit: "cover" | "contain";
+        query?: string | undefined;
+        caption?: string | undefined;
+    }, {
+        alt: string;
+        src?: string | null | undefined;
+        query?: unknown;
+        caption?: unknown;
+        borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+        border?: "none" | "subtle" | "strong" | undefined;
+        aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+        fit?: "cover" | "contain" | undefined;
+    }>>;
     cells: z.ZodDefault<z.ZodArray<z.ZodObject<{
         value: z.ZodString;
         subvalue: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
@@ -737,6 +853,16 @@ export declare const RecipeTemplateAuthoringTableRowSchema: z.ZodObject<Omit<{
         tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
         subvalue?: string | undefined;
     }[];
+    leadingImage?: {
+        src: string | null;
+        alt: string;
+        borderRadius: "none" | "sm" | "md" | "lg" | "full";
+        border: "none" | "subtle" | "strong";
+        aspect: "square" | "video" | "portrait" | "natural";
+        fit: "cover" | "contain";
+        query?: string | undefined;
+        caption?: string | undefined;
+    } | undefined;
 }, {
     label: string;
     id: string;
@@ -744,6 +870,16 @@ export declare const RecipeTemplateAuthoringTableRowSchema: z.ZodObject<Omit<{
         label: string;
         href: string;
     }[] | undefined;
+    leadingImage?: {
+        alt: string;
+        src?: string | null | undefined;
+        query?: unknown;
+        caption?: unknown;
+        borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+        border?: "none" | "subtle" | "strong" | undefined;
+        aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+        fit?: "cover" | "contain" | undefined;
+    } | undefined;
     cells?: {
         value: string;
         tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
@@ -944,8 +1080,8 @@ export declare const RecipeTemplateFillSchema: z.ZodDiscriminatedUnion<"template
     schemaVersion: "recipe_template_fill/v2";
     templateId: "price-comparison-grid";
     subtitle?: unknown;
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_fill">;
     schemaVersion: z.ZodLiteral<"recipe_template_fill/v2">;
@@ -972,8 +1108,8 @@ export declare const RecipeTemplateFillSchema: z.ZodDiscriminatedUnion<"template
     schemaVersion: "recipe_template_fill/v2";
     templateId: "shopping-shortlist";
     subtitle?: unknown;
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_fill">;
     schemaVersion: z.ZodLiteral<"recipe_template_fill/v2">;
@@ -1000,8 +1136,8 @@ export declare const RecipeTemplateFillSchema: z.ZodDiscriminatedUnion<"template
     schemaVersion: "recipe_template_fill/v2";
     templateId: "inbox-triage-board";
     subtitle?: unknown;
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_fill">;
     schemaVersion: z.ZodLiteral<"recipe_template_fill/v2">;
@@ -1028,8 +1164,8 @@ export declare const RecipeTemplateFillSchema: z.ZodDiscriminatedUnion<"template
     schemaVersion: "recipe_template_fill/v2";
     templateId: "restaurant-finder";
     subtitle?: unknown;
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_fill">;
     schemaVersion: z.ZodLiteral<"recipe_template_fill/v2">;
@@ -1056,8 +1192,8 @@ export declare const RecipeTemplateFillSchema: z.ZodDiscriminatedUnion<"template
     schemaVersion: "recipe_template_fill/v2";
     templateId: "hotel-shortlist";
     subtitle?: unknown;
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_fill">;
     schemaVersion: z.ZodLiteral<"recipe_template_fill/v2">;
@@ -1084,8 +1220,8 @@ export declare const RecipeTemplateFillSchema: z.ZodDiscriminatedUnion<"template
     schemaVersion: "recipe_template_fill/v2";
     templateId: "flight-comparison";
     subtitle?: unknown;
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_fill">;
     schemaVersion: z.ZodLiteral<"recipe_template_fill/v2">;
@@ -1112,8 +1248,8 @@ export declare const RecipeTemplateFillSchema: z.ZodDiscriminatedUnion<"template
     schemaVersion: "recipe_template_fill/v2";
     templateId: "travel-itinerary-planner";
     subtitle?: unknown;
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_fill">;
     schemaVersion: z.ZodLiteral<"recipe_template_fill/v2">;
@@ -1140,8 +1276,8 @@ export declare const RecipeTemplateFillSchema: z.ZodDiscriminatedUnion<"template
     schemaVersion: "recipe_template_fill/v2";
     templateId: "research-notebook";
     subtitle?: unknown;
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_fill">;
     schemaVersion: z.ZodLiteral<"recipe_template_fill/v2">;
@@ -1168,8 +1304,8 @@ export declare const RecipeTemplateFillSchema: z.ZodDiscriminatedUnion<"template
     schemaVersion: "recipe_template_fill/v2";
     templateId: "security-review-board";
     subtitle?: unknown;
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_fill">;
     schemaVersion: z.ZodLiteral<"recipe_template_fill/v2">;
@@ -1196,8 +1332,8 @@ export declare const RecipeTemplateFillSchema: z.ZodDiscriminatedUnion<"template
     schemaVersion: "recipe_template_fill/v2";
     templateId: "vendor-evaluation-matrix";
     subtitle?: unknown;
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_fill">;
     schemaVersion: z.ZodLiteral<"recipe_template_fill/v2">;
@@ -1224,8 +1360,8 @@ export declare const RecipeTemplateFillSchema: z.ZodDiscriminatedUnion<"template
     schemaVersion: "recipe_template_fill/v2";
     templateId: "event-planner";
     subtitle?: unknown;
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_fill">;
     schemaVersion: z.ZodLiteral<"recipe_template_fill/v2">;
@@ -1252,8 +1388,8 @@ export declare const RecipeTemplateFillSchema: z.ZodDiscriminatedUnion<"template
     schemaVersion: "recipe_template_fill/v2";
     templateId: "job-search-pipeline";
     subtitle?: unknown;
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_fill">;
     schemaVersion: z.ZodLiteral<"recipe_template_fill/v2">;
@@ -1280,8 +1416,8 @@ export declare const RecipeTemplateFillSchema: z.ZodDiscriminatedUnion<"template
     schemaVersion: "recipe_template_fill/v2";
     templateId: "content-campaign-planner";
     subtitle?: unknown;
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_fill">;
     schemaVersion: z.ZodLiteral<"recipe_template_fill/v2">;
@@ -1308,8 +1444,8 @@ export declare const RecipeTemplateFillSchema: z.ZodDiscriminatedUnion<"template
     schemaVersion: "recipe_template_fill/v2";
     templateId: "local-discovery-comparison";
     subtitle?: unknown;
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_fill">;
     schemaVersion: z.ZodLiteral<"recipe_template_fill/v2">;
@@ -1336,8 +1472,8 @@ export declare const RecipeTemplateFillSchema: z.ZodDiscriminatedUnion<"template
     schemaVersion: "recipe_template_fill/v2";
     templateId: "step-by-step-instructions";
     subtitle?: unknown;
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>]>;
 export type RecipeTemplateFill = z.infer<typeof RecipeTemplateFillSchema>;
 export declare const RecipeTemplateHydrationSchema: z.ZodDiscriminatedUnion<"templateId", [z.ZodObject<{
@@ -1366,8 +1502,8 @@ export declare const RecipeTemplateHydrationSchema: z.ZodDiscriminatedUnion<"tem
     schemaVersion: "recipe_template_hydration/v1";
     templateId: "price-comparison-grid";
     subtitle?: unknown;
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_hydration">;
     schemaVersion: z.ZodLiteral<"recipe_template_hydration/v1">;
@@ -1394,8 +1530,8 @@ export declare const RecipeTemplateHydrationSchema: z.ZodDiscriminatedUnion<"tem
     schemaVersion: "recipe_template_hydration/v1";
     templateId: "shopping-shortlist";
     subtitle?: unknown;
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_hydration">;
     schemaVersion: z.ZodLiteral<"recipe_template_hydration/v1">;
@@ -1422,8 +1558,8 @@ export declare const RecipeTemplateHydrationSchema: z.ZodDiscriminatedUnion<"tem
     schemaVersion: "recipe_template_hydration/v1";
     templateId: "inbox-triage-board";
     subtitle?: unknown;
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_hydration">;
     schemaVersion: z.ZodLiteral<"recipe_template_hydration/v1">;
@@ -1450,8 +1586,8 @@ export declare const RecipeTemplateHydrationSchema: z.ZodDiscriminatedUnion<"tem
     schemaVersion: "recipe_template_hydration/v1";
     templateId: "restaurant-finder";
     subtitle?: unknown;
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_hydration">;
     schemaVersion: z.ZodLiteral<"recipe_template_hydration/v1">;
@@ -1478,8 +1614,8 @@ export declare const RecipeTemplateHydrationSchema: z.ZodDiscriminatedUnion<"tem
     schemaVersion: "recipe_template_hydration/v1";
     templateId: "hotel-shortlist";
     subtitle?: unknown;
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_hydration">;
     schemaVersion: z.ZodLiteral<"recipe_template_hydration/v1">;
@@ -1506,8 +1642,8 @@ export declare const RecipeTemplateHydrationSchema: z.ZodDiscriminatedUnion<"tem
     schemaVersion: "recipe_template_hydration/v1";
     templateId: "flight-comparison";
     subtitle?: unknown;
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_hydration">;
     schemaVersion: z.ZodLiteral<"recipe_template_hydration/v1">;
@@ -1534,8 +1670,8 @@ export declare const RecipeTemplateHydrationSchema: z.ZodDiscriminatedUnion<"tem
     schemaVersion: "recipe_template_hydration/v1";
     templateId: "travel-itinerary-planner";
     subtitle?: unknown;
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_hydration">;
     schemaVersion: z.ZodLiteral<"recipe_template_hydration/v1">;
@@ -1562,8 +1698,8 @@ export declare const RecipeTemplateHydrationSchema: z.ZodDiscriminatedUnion<"tem
     schemaVersion: "recipe_template_hydration/v1";
     templateId: "research-notebook";
     subtitle?: unknown;
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_hydration">;
     schemaVersion: z.ZodLiteral<"recipe_template_hydration/v1">;
@@ -1590,8 +1726,8 @@ export declare const RecipeTemplateHydrationSchema: z.ZodDiscriminatedUnion<"tem
     schemaVersion: "recipe_template_hydration/v1";
     templateId: "security-review-board";
     subtitle?: unknown;
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_hydration">;
     schemaVersion: z.ZodLiteral<"recipe_template_hydration/v1">;
@@ -1618,8 +1754,8 @@ export declare const RecipeTemplateHydrationSchema: z.ZodDiscriminatedUnion<"tem
     schemaVersion: "recipe_template_hydration/v1";
     templateId: "vendor-evaluation-matrix";
     subtitle?: unknown;
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_hydration">;
     schemaVersion: z.ZodLiteral<"recipe_template_hydration/v1">;
@@ -1646,8 +1782,8 @@ export declare const RecipeTemplateHydrationSchema: z.ZodDiscriminatedUnion<"tem
     schemaVersion: "recipe_template_hydration/v1";
     templateId: "event-planner";
     subtitle?: unknown;
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_hydration">;
     schemaVersion: z.ZodLiteral<"recipe_template_hydration/v1">;
@@ -1674,8 +1810,8 @@ export declare const RecipeTemplateHydrationSchema: z.ZodDiscriminatedUnion<"tem
     schemaVersion: "recipe_template_hydration/v1";
     templateId: "job-search-pipeline";
     subtitle?: unknown;
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_hydration">;
     schemaVersion: z.ZodLiteral<"recipe_template_hydration/v1">;
@@ -1702,8 +1838,8 @@ export declare const RecipeTemplateHydrationSchema: z.ZodDiscriminatedUnion<"tem
     schemaVersion: "recipe_template_hydration/v1";
     templateId: "content-campaign-planner";
     subtitle?: unknown;
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_hydration">;
     schemaVersion: z.ZodLiteral<"recipe_template_hydration/v1">;
@@ -1730,8 +1866,8 @@ export declare const RecipeTemplateHydrationSchema: z.ZodDiscriminatedUnion<"tem
     schemaVersion: "recipe_template_hydration/v1";
     templateId: "local-discovery-comparison";
     subtitle?: unknown;
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_hydration">;
     schemaVersion: z.ZodLiteral<"recipe_template_hydration/v1">;
@@ -1758,8 +1894,8 @@ export declare const RecipeTemplateHydrationSchema: z.ZodDiscriminatedUnion<"tem
     schemaVersion: "recipe_template_hydration/v1";
     templateId: "step-by-step-instructions";
     subtitle?: unknown;
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>]>;
 export type RecipeTemplateHydration = z.infer<typeof RecipeTemplateHydrationSchema>;
 export declare const RecipeTemplateTextSchema: z.ZodDiscriminatedUnion<"templateId", [z.ZodObject<{
@@ -1788,8 +1924,8 @@ export declare const RecipeTemplateTextSchema: z.ZodDiscriminatedUnion<"template
     schemaVersion: "recipe_template_text/v1";
     templateId: "price-comparison-grid";
     subtitle?: unknown;
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_text">;
     schemaVersion: z.ZodLiteral<"recipe_template_text/v1">;
@@ -1816,8 +1952,8 @@ export declare const RecipeTemplateTextSchema: z.ZodDiscriminatedUnion<"template
     schemaVersion: "recipe_template_text/v1";
     templateId: "shopping-shortlist";
     subtitle?: unknown;
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_text">;
     schemaVersion: z.ZodLiteral<"recipe_template_text/v1">;
@@ -1844,8 +1980,8 @@ export declare const RecipeTemplateTextSchema: z.ZodDiscriminatedUnion<"template
     schemaVersion: "recipe_template_text/v1";
     templateId: "inbox-triage-board";
     subtitle?: unknown;
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_text">;
     schemaVersion: z.ZodLiteral<"recipe_template_text/v1">;
@@ -1872,8 +2008,8 @@ export declare const RecipeTemplateTextSchema: z.ZodDiscriminatedUnion<"template
     schemaVersion: "recipe_template_text/v1";
     templateId: "restaurant-finder";
     subtitle?: unknown;
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_text">;
     schemaVersion: z.ZodLiteral<"recipe_template_text/v1">;
@@ -1900,8 +2036,8 @@ export declare const RecipeTemplateTextSchema: z.ZodDiscriminatedUnion<"template
     schemaVersion: "recipe_template_text/v1";
     templateId: "hotel-shortlist";
     subtitle?: unknown;
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_text">;
     schemaVersion: z.ZodLiteral<"recipe_template_text/v1">;
@@ -1928,8 +2064,8 @@ export declare const RecipeTemplateTextSchema: z.ZodDiscriminatedUnion<"template
     schemaVersion: "recipe_template_text/v1";
     templateId: "flight-comparison";
     subtitle?: unknown;
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_text">;
     schemaVersion: z.ZodLiteral<"recipe_template_text/v1">;
@@ -1956,8 +2092,8 @@ export declare const RecipeTemplateTextSchema: z.ZodDiscriminatedUnion<"template
     schemaVersion: "recipe_template_text/v1";
     templateId: "travel-itinerary-planner";
     subtitle?: unknown;
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_text">;
     schemaVersion: z.ZodLiteral<"recipe_template_text/v1">;
@@ -1984,8 +2120,8 @@ export declare const RecipeTemplateTextSchema: z.ZodDiscriminatedUnion<"template
     schemaVersion: "recipe_template_text/v1";
     templateId: "research-notebook";
     subtitle?: unknown;
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_text">;
     schemaVersion: z.ZodLiteral<"recipe_template_text/v1">;
@@ -2012,8 +2148,8 @@ export declare const RecipeTemplateTextSchema: z.ZodDiscriminatedUnion<"template
     schemaVersion: "recipe_template_text/v1";
     templateId: "security-review-board";
     subtitle?: unknown;
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_text">;
     schemaVersion: z.ZodLiteral<"recipe_template_text/v1">;
@@ -2040,8 +2176,8 @@ export declare const RecipeTemplateTextSchema: z.ZodDiscriminatedUnion<"template
     schemaVersion: "recipe_template_text/v1";
     templateId: "vendor-evaluation-matrix";
     subtitle?: unknown;
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_text">;
     schemaVersion: z.ZodLiteral<"recipe_template_text/v1">;
@@ -2068,8 +2204,8 @@ export declare const RecipeTemplateTextSchema: z.ZodDiscriminatedUnion<"template
     schemaVersion: "recipe_template_text/v1";
     templateId: "event-planner";
     subtitle?: unknown;
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_text">;
     schemaVersion: z.ZodLiteral<"recipe_template_text/v1">;
@@ -2096,8 +2232,8 @@ export declare const RecipeTemplateTextSchema: z.ZodDiscriminatedUnion<"template
     schemaVersion: "recipe_template_text/v1";
     templateId: "job-search-pipeline";
     subtitle?: unknown;
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_text">;
     schemaVersion: z.ZodLiteral<"recipe_template_text/v1">;
@@ -2124,8 +2260,8 @@ export declare const RecipeTemplateTextSchema: z.ZodDiscriminatedUnion<"template
     schemaVersion: "recipe_template_text/v1";
     templateId: "content-campaign-planner";
     subtitle?: unknown;
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_text">;
     schemaVersion: z.ZodLiteral<"recipe_template_text/v1">;
@@ -2152,8 +2288,8 @@ export declare const RecipeTemplateTextSchema: z.ZodDiscriminatedUnion<"template
     schemaVersion: "recipe_template_text/v1";
     templateId: "local-discovery-comparison";
     subtitle?: unknown;
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_text">;
     schemaVersion: z.ZodLiteral<"recipe_template_text/v1">;
@@ -2180,8 +2316,8 @@ export declare const RecipeTemplateTextSchema: z.ZodDiscriminatedUnion<"template
     schemaVersion: "recipe_template_text/v1";
     templateId: "step-by-step-instructions";
     subtitle?: unknown;
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>]>;
 export type RecipeTemplateText = z.infer<typeof RecipeTemplateTextSchema>;
 export declare const RecipeTemplateActionsSchema: z.ZodDiscriminatedUnion<"templateId", [z.ZodObject<{
@@ -2201,8 +2337,8 @@ export declare const RecipeTemplateActionsSchema: z.ZodDiscriminatedUnion<"templ
     kind: "recipe_template_actions";
     schemaVersion: "recipe_template_actions/v1";
     templateId: "price-comparison-grid";
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_actions">;
     schemaVersion: z.ZodLiteral<"recipe_template_actions/v1">;
@@ -2220,8 +2356,8 @@ export declare const RecipeTemplateActionsSchema: z.ZodDiscriminatedUnion<"templ
     kind: "recipe_template_actions";
     schemaVersion: "recipe_template_actions/v1";
     templateId: "shopping-shortlist";
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_actions">;
     schemaVersion: z.ZodLiteral<"recipe_template_actions/v1">;
@@ -2239,8 +2375,8 @@ export declare const RecipeTemplateActionsSchema: z.ZodDiscriminatedUnion<"templ
     kind: "recipe_template_actions";
     schemaVersion: "recipe_template_actions/v1";
     templateId: "inbox-triage-board";
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_actions">;
     schemaVersion: z.ZodLiteral<"recipe_template_actions/v1">;
@@ -2258,8 +2394,8 @@ export declare const RecipeTemplateActionsSchema: z.ZodDiscriminatedUnion<"templ
     kind: "recipe_template_actions";
     schemaVersion: "recipe_template_actions/v1";
     templateId: "restaurant-finder";
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_actions">;
     schemaVersion: z.ZodLiteral<"recipe_template_actions/v1">;
@@ -2277,8 +2413,8 @@ export declare const RecipeTemplateActionsSchema: z.ZodDiscriminatedUnion<"templ
     kind: "recipe_template_actions";
     schemaVersion: "recipe_template_actions/v1";
     templateId: "hotel-shortlist";
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_actions">;
     schemaVersion: z.ZodLiteral<"recipe_template_actions/v1">;
@@ -2296,8 +2432,8 @@ export declare const RecipeTemplateActionsSchema: z.ZodDiscriminatedUnion<"templ
     kind: "recipe_template_actions";
     schemaVersion: "recipe_template_actions/v1";
     templateId: "flight-comparison";
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_actions">;
     schemaVersion: z.ZodLiteral<"recipe_template_actions/v1">;
@@ -2315,8 +2451,8 @@ export declare const RecipeTemplateActionsSchema: z.ZodDiscriminatedUnion<"templ
     kind: "recipe_template_actions";
     schemaVersion: "recipe_template_actions/v1";
     templateId: "travel-itinerary-planner";
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_actions">;
     schemaVersion: z.ZodLiteral<"recipe_template_actions/v1">;
@@ -2334,8 +2470,8 @@ export declare const RecipeTemplateActionsSchema: z.ZodDiscriminatedUnion<"templ
     kind: "recipe_template_actions";
     schemaVersion: "recipe_template_actions/v1";
     templateId: "research-notebook";
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_actions">;
     schemaVersion: z.ZodLiteral<"recipe_template_actions/v1">;
@@ -2353,8 +2489,8 @@ export declare const RecipeTemplateActionsSchema: z.ZodDiscriminatedUnion<"templ
     kind: "recipe_template_actions";
     schemaVersion: "recipe_template_actions/v1";
     templateId: "security-review-board";
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_actions">;
     schemaVersion: z.ZodLiteral<"recipe_template_actions/v1">;
@@ -2372,8 +2508,8 @@ export declare const RecipeTemplateActionsSchema: z.ZodDiscriminatedUnion<"templ
     kind: "recipe_template_actions";
     schemaVersion: "recipe_template_actions/v1";
     templateId: "vendor-evaluation-matrix";
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_actions">;
     schemaVersion: z.ZodLiteral<"recipe_template_actions/v1">;
@@ -2391,8 +2527,8 @@ export declare const RecipeTemplateActionsSchema: z.ZodDiscriminatedUnion<"templ
     kind: "recipe_template_actions";
     schemaVersion: "recipe_template_actions/v1";
     templateId: "event-planner";
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_actions">;
     schemaVersion: z.ZodLiteral<"recipe_template_actions/v1">;
@@ -2410,8 +2546,8 @@ export declare const RecipeTemplateActionsSchema: z.ZodDiscriminatedUnion<"templ
     kind: "recipe_template_actions";
     schemaVersion: "recipe_template_actions/v1";
     templateId: "job-search-pipeline";
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_actions">;
     schemaVersion: z.ZodLiteral<"recipe_template_actions/v1">;
@@ -2429,8 +2565,8 @@ export declare const RecipeTemplateActionsSchema: z.ZodDiscriminatedUnion<"templ
     kind: "recipe_template_actions";
     schemaVersion: "recipe_template_actions/v1";
     templateId: "content-campaign-planner";
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_actions">;
     schemaVersion: z.ZodLiteral<"recipe_template_actions/v1">;
@@ -2448,8 +2584,8 @@ export declare const RecipeTemplateActionsSchema: z.ZodDiscriminatedUnion<"templ
     kind: "recipe_template_actions";
     schemaVersion: "recipe_template_actions/v1";
     templateId: "local-discovery-comparison";
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>, z.ZodObject<{
     kind: z.ZodLiteral<"recipe_template_actions">;
     schemaVersion: z.ZodLiteral<"recipe_template_actions/v1">;
@@ -2467,8 +2603,8 @@ export declare const RecipeTemplateActionsSchema: z.ZodDiscriminatedUnion<"templ
     kind: "recipe_template_actions";
     schemaVersion: "recipe_template_actions/v1";
     templateId: "step-by-step-instructions";
-    metadata?: Record<string, unknown> | undefined;
     data?: any;
+    metadata?: Record<string, unknown> | undefined;
 }>]>;
 export type RecipeTemplateActions = z.infer<typeof RecipeTemplateActionsSchema>;
 export declare const RecipeTemplateUpdateOperationSchema: z.ZodDiscriminatedUnion<"op", [z.ZodObject<{
@@ -2573,6 +2709,34 @@ export declare const RecipeTemplateUpdateOperationSchema: z.ZodDiscriminatedUnio
     rows: z.ZodArray<z.ZodObject<Omit<{
         id: z.ZodString;
         label: z.ZodString;
+        leadingImage: z.ZodOptional<z.ZodObject<{
+            src: z.ZodDefault<z.ZodNullable<z.ZodString>>;
+            query: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+            alt: z.ZodString;
+            caption: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+            borderRadius: z.ZodDefault<z.ZodEnum<["none", "sm", "md", "lg", "full"]>>;
+            border: z.ZodDefault<z.ZodEnum<["none", "subtle", "strong"]>>;
+            aspect: z.ZodDefault<z.ZodEnum<["square", "video", "portrait", "natural"]>>;
+            fit: z.ZodDefault<z.ZodEnum<["cover", "contain"]>>;
+        }, "strict", z.ZodTypeAny, {
+            src: string | null;
+            alt: string;
+            borderRadius: "none" | "sm" | "md" | "lg" | "full";
+            border: "none" | "subtle" | "strong";
+            aspect: "square" | "video" | "portrait" | "natural";
+            fit: "cover" | "contain";
+            query?: string | undefined;
+            caption?: string | undefined;
+        }, {
+            alt: string;
+            src?: string | null | undefined;
+            query?: unknown;
+            caption?: unknown;
+            borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+            border?: "none" | "subtle" | "strong" | undefined;
+            aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+            fit?: "cover" | "contain" | undefined;
+        }>>;
         cells: z.ZodDefault<z.ZodArray<z.ZodObject<{
             value: z.ZodString;
             subvalue: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
@@ -2641,6 +2805,16 @@ export declare const RecipeTemplateUpdateOperationSchema: z.ZodDiscriminatedUnio
             tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
             subvalue?: string | undefined;
         }[];
+        leadingImage?: {
+            src: string | null;
+            alt: string;
+            borderRadius: "none" | "sm" | "md" | "lg" | "full";
+            border: "none" | "subtle" | "strong";
+            aspect: "square" | "video" | "portrait" | "natural";
+            fit: "cover" | "contain";
+            query?: string | undefined;
+            caption?: string | undefined;
+        } | undefined;
     }, {
         label: string;
         id: string;
@@ -2648,6 +2822,16 @@ export declare const RecipeTemplateUpdateOperationSchema: z.ZodDiscriminatedUnio
             label: string;
             href: string;
         }[] | undefined;
+        leadingImage?: {
+            alt: string;
+            src?: string | null | undefined;
+            query?: unknown;
+            caption?: unknown;
+            borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+            border?: "none" | "subtle" | "strong" | undefined;
+            aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+            fit?: "cover" | "contain" | undefined;
+        } | undefined;
         cells?: {
             value: string;
             tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
@@ -2670,6 +2854,16 @@ export declare const RecipeTemplateUpdateOperationSchema: z.ZodDiscriminatedUnio
             tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
             subvalue?: string | undefined;
         }[];
+        leadingImage?: {
+            src: string | null;
+            alt: string;
+            borderRadius: "none" | "sm" | "md" | "lg" | "full";
+            border: "none" | "subtle" | "strong";
+            aspect: "square" | "video" | "portrait" | "natural";
+            fit: "cover" | "contain";
+            query?: string | undefined;
+            caption?: string | undefined;
+        } | undefined;
     }[];
     op: "upsert_table_rows";
 }, {
@@ -2681,6 +2875,16 @@ export declare const RecipeTemplateUpdateOperationSchema: z.ZodDiscriminatedUnio
             label: string;
             href: string;
         }[] | undefined;
+        leadingImage?: {
+            alt: string;
+            src?: string | null | undefined;
+            query?: unknown;
+            caption?: unknown;
+            borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+            border?: "none" | "subtle" | "strong" | undefined;
+            aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+            fit?: "cover" | "contain" | undefined;
+        } | undefined;
         cells?: {
             value: string;
             tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
@@ -2698,6 +2902,34 @@ export declare const RecipeTemplateUpdateOperationSchema: z.ZodDiscriminatedUnio
         subtitle: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
         meta: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
         imageLabel: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+        image: z.ZodOptional<z.ZodObject<{
+            src: z.ZodDefault<z.ZodNullable<z.ZodString>>;
+            query: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+            alt: z.ZodString;
+            caption: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+            borderRadius: z.ZodDefault<z.ZodEnum<["none", "sm", "md", "lg", "full"]>>;
+            border: z.ZodDefault<z.ZodEnum<["none", "subtle", "strong"]>>;
+            aspect: z.ZodDefault<z.ZodEnum<["square", "video", "portrait", "natural"]>>;
+            fit: z.ZodDefault<z.ZodEnum<["cover", "contain"]>>;
+        }, "strict", z.ZodTypeAny, {
+            src: string | null;
+            alt: string;
+            borderRadius: "none" | "sm" | "md" | "lg" | "full";
+            border: "none" | "subtle" | "strong";
+            aspect: "square" | "video" | "portrait" | "natural";
+            fit: "cover" | "contain";
+            query?: string | undefined;
+            caption?: string | undefined;
+        }, {
+            alt: string;
+            src?: string | null | undefined;
+            query?: unknown;
+            caption?: unknown;
+            borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+            border?: "none" | "subtle" | "strong" | undefined;
+            aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+            fit?: "cover" | "contain" | undefined;
+        }>>;
         price: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
         chips: z.ZodDefault<z.ZodArray<z.ZodObject<{
             label: z.ZodString;
@@ -2765,6 +2997,16 @@ export declare const RecipeTemplateUpdateOperationSchema: z.ZodDiscriminatedUnio
         subtitle?: string | undefined;
         meta?: string | undefined;
         imageLabel?: string | undefined;
+        image?: {
+            src: string | null;
+            alt: string;
+            borderRadius: "none" | "sm" | "md" | "lg" | "full";
+            border: "none" | "subtle" | "strong";
+            aspect: "square" | "video" | "portrait" | "natural";
+            fit: "cover" | "contain";
+            query?: string | undefined;
+            caption?: string | undefined;
+        } | undefined;
         price?: string | undefined;
         footer?: string | undefined;
     }, {
@@ -2782,6 +3024,16 @@ export declare const RecipeTemplateUpdateOperationSchema: z.ZodDiscriminatedUnio
         subtitle?: unknown;
         meta?: unknown;
         imageLabel?: unknown;
+        image?: {
+            alt: string;
+            src?: string | null | undefined;
+            query?: unknown;
+            caption?: unknown;
+            borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+            border?: "none" | "subtle" | "strong" | undefined;
+            aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+            fit?: "cover" | "contain" | undefined;
+        } | undefined;
         price?: unknown;
         footer?: unknown;
     }>, "many">;
@@ -2801,6 +3053,16 @@ export declare const RecipeTemplateUpdateOperationSchema: z.ZodDiscriminatedUnio
         subtitle?: string | undefined;
         meta?: string | undefined;
         imageLabel?: string | undefined;
+        image?: {
+            src: string | null;
+            alt: string;
+            borderRadius: "none" | "sm" | "md" | "lg" | "full";
+            border: "none" | "subtle" | "strong";
+            aspect: "square" | "video" | "portrait" | "natural";
+            fit: "cover" | "contain";
+            query?: string | undefined;
+            caption?: string | undefined;
+        } | undefined;
         price?: string | undefined;
         footer?: string | undefined;
     }[];
@@ -2822,6 +3084,16 @@ export declare const RecipeTemplateUpdateOperationSchema: z.ZodDiscriminatedUnio
         subtitle?: unknown;
         meta?: unknown;
         imageLabel?: unknown;
+        image?: {
+            alt: string;
+            src?: string | null | undefined;
+            query?: unknown;
+            caption?: unknown;
+            borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+            border?: "none" | "subtle" | "strong" | undefined;
+            aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+            fit?: "cover" | "contain" | undefined;
+        } | undefined;
         price?: unknown;
         footer?: unknown;
     }[];
@@ -3569,6 +3841,34 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
         rows: z.ZodArray<z.ZodObject<Omit<{
             id: z.ZodString;
             label: z.ZodString;
+            leadingImage: z.ZodOptional<z.ZodObject<{
+                src: z.ZodDefault<z.ZodNullable<z.ZodString>>;
+                query: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                alt: z.ZodString;
+                caption: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                borderRadius: z.ZodDefault<z.ZodEnum<["none", "sm", "md", "lg", "full"]>>;
+                border: z.ZodDefault<z.ZodEnum<["none", "subtle", "strong"]>>;
+                aspect: z.ZodDefault<z.ZodEnum<["square", "video", "portrait", "natural"]>>;
+                fit: z.ZodDefault<z.ZodEnum<["cover", "contain"]>>;
+            }, "strict", z.ZodTypeAny, {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            }, {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            }>>;
             cells: z.ZodDefault<z.ZodArray<z.ZodObject<{
                 value: z.ZodString;
                 subvalue: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
@@ -3637,6 +3937,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
                 subvalue?: string | undefined;
             }[];
+            leadingImage?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
         }, {
             label: string;
             id: string;
@@ -3644,6 +3954,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 label: string;
                 href: string;
             }[] | undefined;
+            leadingImage?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             cells?: {
                 value: string;
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
@@ -3666,6 +3986,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
                 subvalue?: string | undefined;
             }[];
+            leadingImage?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
         }[];
         op: "upsert_table_rows";
     }, {
@@ -3677,6 +4007,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 label: string;
                 href: string;
             }[] | undefined;
+            leadingImage?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             cells?: {
                 value: string;
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
@@ -3694,6 +4034,34 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             meta: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             imageLabel: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+            image: z.ZodOptional<z.ZodObject<{
+                src: z.ZodDefault<z.ZodNullable<z.ZodString>>;
+                query: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                alt: z.ZodString;
+                caption: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                borderRadius: z.ZodDefault<z.ZodEnum<["none", "sm", "md", "lg", "full"]>>;
+                border: z.ZodDefault<z.ZodEnum<["none", "subtle", "strong"]>>;
+                aspect: z.ZodDefault<z.ZodEnum<["square", "video", "portrait", "natural"]>>;
+                fit: z.ZodDefault<z.ZodEnum<["cover", "contain"]>>;
+            }, "strict", z.ZodTypeAny, {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            }, {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            }>>;
             price: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             chips: z.ZodDefault<z.ZodArray<z.ZodObject<{
                 label: z.ZodString;
@@ -3761,6 +4129,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: string | undefined;
             meta?: string | undefined;
             imageLabel?: string | undefined;
+            image?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
             price?: string | undefined;
             footer?: string | undefined;
         }, {
@@ -3778,6 +4156,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: unknown;
             meta?: unknown;
             imageLabel?: unknown;
+            image?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             price?: unknown;
             footer?: unknown;
         }>, "many">;
@@ -3797,6 +4185,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: string | undefined;
             meta?: string | undefined;
             imageLabel?: string | undefined;
+            image?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
             price?: string | undefined;
             footer?: string | undefined;
         }[];
@@ -3818,6 +4216,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: unknown;
             meta?: unknown;
             imageLabel?: unknown;
+            image?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             price?: unknown;
             footer?: unknown;
         }[];
@@ -4510,6 +4918,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
                 subvalue?: string | undefined;
             }[];
+            leadingImage?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
         }[];
         op: "upsert_table_rows";
     } | {
@@ -4528,6 +4946,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: string | undefined;
             meta?: string | undefined;
             imageLabel?: string | undefined;
+            image?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
             price?: string | undefined;
             footer?: string | undefined;
         }[];
@@ -4676,6 +5104,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 label: string;
                 href: string;
             }[] | undefined;
+            leadingImage?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             cells?: {
                 value: string;
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
@@ -4700,6 +5138,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: unknown;
             meta?: unknown;
             imageLabel?: unknown;
+            image?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             price?: unknown;
             footer?: unknown;
         }[];
@@ -4911,6 +5359,34 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
         rows: z.ZodArray<z.ZodObject<Omit<{
             id: z.ZodString;
             label: z.ZodString;
+            leadingImage: z.ZodOptional<z.ZodObject<{
+                src: z.ZodDefault<z.ZodNullable<z.ZodString>>;
+                query: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                alt: z.ZodString;
+                caption: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                borderRadius: z.ZodDefault<z.ZodEnum<["none", "sm", "md", "lg", "full"]>>;
+                border: z.ZodDefault<z.ZodEnum<["none", "subtle", "strong"]>>;
+                aspect: z.ZodDefault<z.ZodEnum<["square", "video", "portrait", "natural"]>>;
+                fit: z.ZodDefault<z.ZodEnum<["cover", "contain"]>>;
+            }, "strict", z.ZodTypeAny, {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            }, {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            }>>;
             cells: z.ZodDefault<z.ZodArray<z.ZodObject<{
                 value: z.ZodString;
                 subvalue: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
@@ -4979,6 +5455,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
                 subvalue?: string | undefined;
             }[];
+            leadingImage?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
         }, {
             label: string;
             id: string;
@@ -4986,6 +5472,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 label: string;
                 href: string;
             }[] | undefined;
+            leadingImage?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             cells?: {
                 value: string;
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
@@ -5008,6 +5504,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
                 subvalue?: string | undefined;
             }[];
+            leadingImage?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
         }[];
         op: "upsert_table_rows";
     }, {
@@ -5019,6 +5525,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 label: string;
                 href: string;
             }[] | undefined;
+            leadingImage?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             cells?: {
                 value: string;
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
@@ -5036,6 +5552,34 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             meta: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             imageLabel: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+            image: z.ZodOptional<z.ZodObject<{
+                src: z.ZodDefault<z.ZodNullable<z.ZodString>>;
+                query: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                alt: z.ZodString;
+                caption: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                borderRadius: z.ZodDefault<z.ZodEnum<["none", "sm", "md", "lg", "full"]>>;
+                border: z.ZodDefault<z.ZodEnum<["none", "subtle", "strong"]>>;
+                aspect: z.ZodDefault<z.ZodEnum<["square", "video", "portrait", "natural"]>>;
+                fit: z.ZodDefault<z.ZodEnum<["cover", "contain"]>>;
+            }, "strict", z.ZodTypeAny, {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            }, {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            }>>;
             price: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             chips: z.ZodDefault<z.ZodArray<z.ZodObject<{
                 label: z.ZodString;
@@ -5103,6 +5647,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: string | undefined;
             meta?: string | undefined;
             imageLabel?: string | undefined;
+            image?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
             price?: string | undefined;
             footer?: string | undefined;
         }, {
@@ -5120,6 +5674,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: unknown;
             meta?: unknown;
             imageLabel?: unknown;
+            image?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             price?: unknown;
             footer?: unknown;
         }>, "many">;
@@ -5139,6 +5703,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: string | undefined;
             meta?: string | undefined;
             imageLabel?: string | undefined;
+            image?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
             price?: string | undefined;
             footer?: string | undefined;
         }[];
@@ -5160,6 +5734,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: unknown;
             meta?: unknown;
             imageLabel?: unknown;
+            image?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             price?: unknown;
             footer?: unknown;
         }[];
@@ -5852,6 +6436,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
                 subvalue?: string | undefined;
             }[];
+            leadingImage?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
         }[];
         op: "upsert_table_rows";
     } | {
@@ -5870,6 +6464,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: string | undefined;
             meta?: string | undefined;
             imageLabel?: string | undefined;
+            image?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
             price?: string | undefined;
             footer?: string | undefined;
         }[];
@@ -6018,6 +6622,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 label: string;
                 href: string;
             }[] | undefined;
+            leadingImage?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             cells?: {
                 value: string;
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
@@ -6042,6 +6656,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: unknown;
             meta?: unknown;
             imageLabel?: unknown;
+            image?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             price?: unknown;
             footer?: unknown;
         }[];
@@ -6253,6 +6877,34 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
         rows: z.ZodArray<z.ZodObject<Omit<{
             id: z.ZodString;
             label: z.ZodString;
+            leadingImage: z.ZodOptional<z.ZodObject<{
+                src: z.ZodDefault<z.ZodNullable<z.ZodString>>;
+                query: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                alt: z.ZodString;
+                caption: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                borderRadius: z.ZodDefault<z.ZodEnum<["none", "sm", "md", "lg", "full"]>>;
+                border: z.ZodDefault<z.ZodEnum<["none", "subtle", "strong"]>>;
+                aspect: z.ZodDefault<z.ZodEnum<["square", "video", "portrait", "natural"]>>;
+                fit: z.ZodDefault<z.ZodEnum<["cover", "contain"]>>;
+            }, "strict", z.ZodTypeAny, {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            }, {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            }>>;
             cells: z.ZodDefault<z.ZodArray<z.ZodObject<{
                 value: z.ZodString;
                 subvalue: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
@@ -6321,6 +6973,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
                 subvalue?: string | undefined;
             }[];
+            leadingImage?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
         }, {
             label: string;
             id: string;
@@ -6328,6 +6990,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 label: string;
                 href: string;
             }[] | undefined;
+            leadingImage?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             cells?: {
                 value: string;
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
@@ -6350,6 +7022,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
                 subvalue?: string | undefined;
             }[];
+            leadingImage?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
         }[];
         op: "upsert_table_rows";
     }, {
@@ -6361,6 +7043,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 label: string;
                 href: string;
             }[] | undefined;
+            leadingImage?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             cells?: {
                 value: string;
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
@@ -6378,6 +7070,34 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             meta: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             imageLabel: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+            image: z.ZodOptional<z.ZodObject<{
+                src: z.ZodDefault<z.ZodNullable<z.ZodString>>;
+                query: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                alt: z.ZodString;
+                caption: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                borderRadius: z.ZodDefault<z.ZodEnum<["none", "sm", "md", "lg", "full"]>>;
+                border: z.ZodDefault<z.ZodEnum<["none", "subtle", "strong"]>>;
+                aspect: z.ZodDefault<z.ZodEnum<["square", "video", "portrait", "natural"]>>;
+                fit: z.ZodDefault<z.ZodEnum<["cover", "contain"]>>;
+            }, "strict", z.ZodTypeAny, {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            }, {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            }>>;
             price: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             chips: z.ZodDefault<z.ZodArray<z.ZodObject<{
                 label: z.ZodString;
@@ -6445,6 +7165,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: string | undefined;
             meta?: string | undefined;
             imageLabel?: string | undefined;
+            image?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
             price?: string | undefined;
             footer?: string | undefined;
         }, {
@@ -6462,6 +7192,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: unknown;
             meta?: unknown;
             imageLabel?: unknown;
+            image?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             price?: unknown;
             footer?: unknown;
         }>, "many">;
@@ -6481,6 +7221,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: string | undefined;
             meta?: string | undefined;
             imageLabel?: string | undefined;
+            image?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
             price?: string | undefined;
             footer?: string | undefined;
         }[];
@@ -6502,6 +7252,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: unknown;
             meta?: unknown;
             imageLabel?: unknown;
+            image?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             price?: unknown;
             footer?: unknown;
         }[];
@@ -7194,6 +7954,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
                 subvalue?: string | undefined;
             }[];
+            leadingImage?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
         }[];
         op: "upsert_table_rows";
     } | {
@@ -7212,6 +7982,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: string | undefined;
             meta?: string | undefined;
             imageLabel?: string | undefined;
+            image?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
             price?: string | undefined;
             footer?: string | undefined;
         }[];
@@ -7360,6 +8140,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 label: string;
                 href: string;
             }[] | undefined;
+            leadingImage?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             cells?: {
                 value: string;
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
@@ -7384,6 +8174,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: unknown;
             meta?: unknown;
             imageLabel?: unknown;
+            image?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             price?: unknown;
             footer?: unknown;
         }[];
@@ -7595,6 +8395,34 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
         rows: z.ZodArray<z.ZodObject<Omit<{
             id: z.ZodString;
             label: z.ZodString;
+            leadingImage: z.ZodOptional<z.ZodObject<{
+                src: z.ZodDefault<z.ZodNullable<z.ZodString>>;
+                query: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                alt: z.ZodString;
+                caption: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                borderRadius: z.ZodDefault<z.ZodEnum<["none", "sm", "md", "lg", "full"]>>;
+                border: z.ZodDefault<z.ZodEnum<["none", "subtle", "strong"]>>;
+                aspect: z.ZodDefault<z.ZodEnum<["square", "video", "portrait", "natural"]>>;
+                fit: z.ZodDefault<z.ZodEnum<["cover", "contain"]>>;
+            }, "strict", z.ZodTypeAny, {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            }, {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            }>>;
             cells: z.ZodDefault<z.ZodArray<z.ZodObject<{
                 value: z.ZodString;
                 subvalue: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
@@ -7663,6 +8491,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
                 subvalue?: string | undefined;
             }[];
+            leadingImage?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
         }, {
             label: string;
             id: string;
@@ -7670,6 +8508,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 label: string;
                 href: string;
             }[] | undefined;
+            leadingImage?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             cells?: {
                 value: string;
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
@@ -7692,6 +8540,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
                 subvalue?: string | undefined;
             }[];
+            leadingImage?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
         }[];
         op: "upsert_table_rows";
     }, {
@@ -7703,6 +8561,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 label: string;
                 href: string;
             }[] | undefined;
+            leadingImage?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             cells?: {
                 value: string;
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
@@ -7720,6 +8588,34 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             meta: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             imageLabel: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+            image: z.ZodOptional<z.ZodObject<{
+                src: z.ZodDefault<z.ZodNullable<z.ZodString>>;
+                query: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                alt: z.ZodString;
+                caption: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                borderRadius: z.ZodDefault<z.ZodEnum<["none", "sm", "md", "lg", "full"]>>;
+                border: z.ZodDefault<z.ZodEnum<["none", "subtle", "strong"]>>;
+                aspect: z.ZodDefault<z.ZodEnum<["square", "video", "portrait", "natural"]>>;
+                fit: z.ZodDefault<z.ZodEnum<["cover", "contain"]>>;
+            }, "strict", z.ZodTypeAny, {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            }, {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            }>>;
             price: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             chips: z.ZodDefault<z.ZodArray<z.ZodObject<{
                 label: z.ZodString;
@@ -7787,6 +8683,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: string | undefined;
             meta?: string | undefined;
             imageLabel?: string | undefined;
+            image?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
             price?: string | undefined;
             footer?: string | undefined;
         }, {
@@ -7804,6 +8710,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: unknown;
             meta?: unknown;
             imageLabel?: unknown;
+            image?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             price?: unknown;
             footer?: unknown;
         }>, "many">;
@@ -7823,6 +8739,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: string | undefined;
             meta?: string | undefined;
             imageLabel?: string | undefined;
+            image?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
             price?: string | undefined;
             footer?: string | undefined;
         }[];
@@ -7844,6 +8770,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: unknown;
             meta?: unknown;
             imageLabel?: unknown;
+            image?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             price?: unknown;
             footer?: unknown;
         }[];
@@ -8536,6 +9472,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
                 subvalue?: string | undefined;
             }[];
+            leadingImage?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
         }[];
         op: "upsert_table_rows";
     } | {
@@ -8554,6 +9500,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: string | undefined;
             meta?: string | undefined;
             imageLabel?: string | undefined;
+            image?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
             price?: string | undefined;
             footer?: string | undefined;
         }[];
@@ -8702,6 +9658,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 label: string;
                 href: string;
             }[] | undefined;
+            leadingImage?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             cells?: {
                 value: string;
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
@@ -8726,6 +9692,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: unknown;
             meta?: unknown;
             imageLabel?: unknown;
+            image?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             price?: unknown;
             footer?: unknown;
         }[];
@@ -8937,6 +9913,34 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
         rows: z.ZodArray<z.ZodObject<Omit<{
             id: z.ZodString;
             label: z.ZodString;
+            leadingImage: z.ZodOptional<z.ZodObject<{
+                src: z.ZodDefault<z.ZodNullable<z.ZodString>>;
+                query: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                alt: z.ZodString;
+                caption: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                borderRadius: z.ZodDefault<z.ZodEnum<["none", "sm", "md", "lg", "full"]>>;
+                border: z.ZodDefault<z.ZodEnum<["none", "subtle", "strong"]>>;
+                aspect: z.ZodDefault<z.ZodEnum<["square", "video", "portrait", "natural"]>>;
+                fit: z.ZodDefault<z.ZodEnum<["cover", "contain"]>>;
+            }, "strict", z.ZodTypeAny, {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            }, {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            }>>;
             cells: z.ZodDefault<z.ZodArray<z.ZodObject<{
                 value: z.ZodString;
                 subvalue: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
@@ -9005,6 +10009,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
                 subvalue?: string | undefined;
             }[];
+            leadingImage?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
         }, {
             label: string;
             id: string;
@@ -9012,6 +10026,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 label: string;
                 href: string;
             }[] | undefined;
+            leadingImage?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             cells?: {
                 value: string;
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
@@ -9034,6 +10058,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
                 subvalue?: string | undefined;
             }[];
+            leadingImage?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
         }[];
         op: "upsert_table_rows";
     }, {
@@ -9045,6 +10079,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 label: string;
                 href: string;
             }[] | undefined;
+            leadingImage?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             cells?: {
                 value: string;
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
@@ -9062,6 +10106,34 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             meta: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             imageLabel: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+            image: z.ZodOptional<z.ZodObject<{
+                src: z.ZodDefault<z.ZodNullable<z.ZodString>>;
+                query: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                alt: z.ZodString;
+                caption: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                borderRadius: z.ZodDefault<z.ZodEnum<["none", "sm", "md", "lg", "full"]>>;
+                border: z.ZodDefault<z.ZodEnum<["none", "subtle", "strong"]>>;
+                aspect: z.ZodDefault<z.ZodEnum<["square", "video", "portrait", "natural"]>>;
+                fit: z.ZodDefault<z.ZodEnum<["cover", "contain"]>>;
+            }, "strict", z.ZodTypeAny, {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            }, {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            }>>;
             price: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             chips: z.ZodDefault<z.ZodArray<z.ZodObject<{
                 label: z.ZodString;
@@ -9129,6 +10201,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: string | undefined;
             meta?: string | undefined;
             imageLabel?: string | undefined;
+            image?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
             price?: string | undefined;
             footer?: string | undefined;
         }, {
@@ -9146,6 +10228,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: unknown;
             meta?: unknown;
             imageLabel?: unknown;
+            image?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             price?: unknown;
             footer?: unknown;
         }>, "many">;
@@ -9165,6 +10257,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: string | undefined;
             meta?: string | undefined;
             imageLabel?: string | undefined;
+            image?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
             price?: string | undefined;
             footer?: string | undefined;
         }[];
@@ -9186,6 +10288,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: unknown;
             meta?: unknown;
             imageLabel?: unknown;
+            image?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             price?: unknown;
             footer?: unknown;
         }[];
@@ -9878,6 +10990,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
                 subvalue?: string | undefined;
             }[];
+            leadingImage?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
         }[];
         op: "upsert_table_rows";
     } | {
@@ -9896,6 +11018,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: string | undefined;
             meta?: string | undefined;
             imageLabel?: string | undefined;
+            image?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
             price?: string | undefined;
             footer?: string | undefined;
         }[];
@@ -10044,6 +11176,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 label: string;
                 href: string;
             }[] | undefined;
+            leadingImage?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             cells?: {
                 value: string;
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
@@ -10068,6 +11210,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: unknown;
             meta?: unknown;
             imageLabel?: unknown;
+            image?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             price?: unknown;
             footer?: unknown;
         }[];
@@ -10279,6 +11431,34 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
         rows: z.ZodArray<z.ZodObject<Omit<{
             id: z.ZodString;
             label: z.ZodString;
+            leadingImage: z.ZodOptional<z.ZodObject<{
+                src: z.ZodDefault<z.ZodNullable<z.ZodString>>;
+                query: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                alt: z.ZodString;
+                caption: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                borderRadius: z.ZodDefault<z.ZodEnum<["none", "sm", "md", "lg", "full"]>>;
+                border: z.ZodDefault<z.ZodEnum<["none", "subtle", "strong"]>>;
+                aspect: z.ZodDefault<z.ZodEnum<["square", "video", "portrait", "natural"]>>;
+                fit: z.ZodDefault<z.ZodEnum<["cover", "contain"]>>;
+            }, "strict", z.ZodTypeAny, {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            }, {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            }>>;
             cells: z.ZodDefault<z.ZodArray<z.ZodObject<{
                 value: z.ZodString;
                 subvalue: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
@@ -10347,6 +11527,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
                 subvalue?: string | undefined;
             }[];
+            leadingImage?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
         }, {
             label: string;
             id: string;
@@ -10354,6 +11544,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 label: string;
                 href: string;
             }[] | undefined;
+            leadingImage?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             cells?: {
                 value: string;
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
@@ -10376,6 +11576,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
                 subvalue?: string | undefined;
             }[];
+            leadingImage?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
         }[];
         op: "upsert_table_rows";
     }, {
@@ -10387,6 +11597,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 label: string;
                 href: string;
             }[] | undefined;
+            leadingImage?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             cells?: {
                 value: string;
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
@@ -10404,6 +11624,34 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             meta: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             imageLabel: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+            image: z.ZodOptional<z.ZodObject<{
+                src: z.ZodDefault<z.ZodNullable<z.ZodString>>;
+                query: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                alt: z.ZodString;
+                caption: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                borderRadius: z.ZodDefault<z.ZodEnum<["none", "sm", "md", "lg", "full"]>>;
+                border: z.ZodDefault<z.ZodEnum<["none", "subtle", "strong"]>>;
+                aspect: z.ZodDefault<z.ZodEnum<["square", "video", "portrait", "natural"]>>;
+                fit: z.ZodDefault<z.ZodEnum<["cover", "contain"]>>;
+            }, "strict", z.ZodTypeAny, {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            }, {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            }>>;
             price: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             chips: z.ZodDefault<z.ZodArray<z.ZodObject<{
                 label: z.ZodString;
@@ -10471,6 +11719,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: string | undefined;
             meta?: string | undefined;
             imageLabel?: string | undefined;
+            image?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
             price?: string | undefined;
             footer?: string | undefined;
         }, {
@@ -10488,6 +11746,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: unknown;
             meta?: unknown;
             imageLabel?: unknown;
+            image?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             price?: unknown;
             footer?: unknown;
         }>, "many">;
@@ -10507,6 +11775,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: string | undefined;
             meta?: string | undefined;
             imageLabel?: string | undefined;
+            image?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
             price?: string | undefined;
             footer?: string | undefined;
         }[];
@@ -10528,6 +11806,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: unknown;
             meta?: unknown;
             imageLabel?: unknown;
+            image?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             price?: unknown;
             footer?: unknown;
         }[];
@@ -11220,6 +12508,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
                 subvalue?: string | undefined;
             }[];
+            leadingImage?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
         }[];
         op: "upsert_table_rows";
     } | {
@@ -11238,6 +12536,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: string | undefined;
             meta?: string | undefined;
             imageLabel?: string | undefined;
+            image?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
             price?: string | undefined;
             footer?: string | undefined;
         }[];
@@ -11386,6 +12694,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 label: string;
                 href: string;
             }[] | undefined;
+            leadingImage?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             cells?: {
                 value: string;
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
@@ -11410,6 +12728,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: unknown;
             meta?: unknown;
             imageLabel?: unknown;
+            image?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             price?: unknown;
             footer?: unknown;
         }[];
@@ -11621,6 +12949,34 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
         rows: z.ZodArray<z.ZodObject<Omit<{
             id: z.ZodString;
             label: z.ZodString;
+            leadingImage: z.ZodOptional<z.ZodObject<{
+                src: z.ZodDefault<z.ZodNullable<z.ZodString>>;
+                query: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                alt: z.ZodString;
+                caption: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                borderRadius: z.ZodDefault<z.ZodEnum<["none", "sm", "md", "lg", "full"]>>;
+                border: z.ZodDefault<z.ZodEnum<["none", "subtle", "strong"]>>;
+                aspect: z.ZodDefault<z.ZodEnum<["square", "video", "portrait", "natural"]>>;
+                fit: z.ZodDefault<z.ZodEnum<["cover", "contain"]>>;
+            }, "strict", z.ZodTypeAny, {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            }, {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            }>>;
             cells: z.ZodDefault<z.ZodArray<z.ZodObject<{
                 value: z.ZodString;
                 subvalue: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
@@ -11689,6 +13045,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
                 subvalue?: string | undefined;
             }[];
+            leadingImage?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
         }, {
             label: string;
             id: string;
@@ -11696,6 +13062,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 label: string;
                 href: string;
             }[] | undefined;
+            leadingImage?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             cells?: {
                 value: string;
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
@@ -11718,6 +13094,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
                 subvalue?: string | undefined;
             }[];
+            leadingImage?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
         }[];
         op: "upsert_table_rows";
     }, {
@@ -11729,6 +13115,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 label: string;
                 href: string;
             }[] | undefined;
+            leadingImage?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             cells?: {
                 value: string;
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
@@ -11746,6 +13142,34 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             meta: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             imageLabel: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+            image: z.ZodOptional<z.ZodObject<{
+                src: z.ZodDefault<z.ZodNullable<z.ZodString>>;
+                query: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                alt: z.ZodString;
+                caption: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                borderRadius: z.ZodDefault<z.ZodEnum<["none", "sm", "md", "lg", "full"]>>;
+                border: z.ZodDefault<z.ZodEnum<["none", "subtle", "strong"]>>;
+                aspect: z.ZodDefault<z.ZodEnum<["square", "video", "portrait", "natural"]>>;
+                fit: z.ZodDefault<z.ZodEnum<["cover", "contain"]>>;
+            }, "strict", z.ZodTypeAny, {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            }, {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            }>>;
             price: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             chips: z.ZodDefault<z.ZodArray<z.ZodObject<{
                 label: z.ZodString;
@@ -11813,6 +13237,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: string | undefined;
             meta?: string | undefined;
             imageLabel?: string | undefined;
+            image?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
             price?: string | undefined;
             footer?: string | undefined;
         }, {
@@ -11830,6 +13264,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: unknown;
             meta?: unknown;
             imageLabel?: unknown;
+            image?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             price?: unknown;
             footer?: unknown;
         }>, "many">;
@@ -11849,6 +13293,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: string | undefined;
             meta?: string | undefined;
             imageLabel?: string | undefined;
+            image?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
             price?: string | undefined;
             footer?: string | undefined;
         }[];
@@ -11870,6 +13324,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: unknown;
             meta?: unknown;
             imageLabel?: unknown;
+            image?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             price?: unknown;
             footer?: unknown;
         }[];
@@ -12562,6 +14026,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
                 subvalue?: string | undefined;
             }[];
+            leadingImage?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
         }[];
         op: "upsert_table_rows";
     } | {
@@ -12580,6 +14054,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: string | undefined;
             meta?: string | undefined;
             imageLabel?: string | undefined;
+            image?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
             price?: string | undefined;
             footer?: string | undefined;
         }[];
@@ -12728,6 +14212,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 label: string;
                 href: string;
             }[] | undefined;
+            leadingImage?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             cells?: {
                 value: string;
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
@@ -12752,6 +14246,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: unknown;
             meta?: unknown;
             imageLabel?: unknown;
+            image?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             price?: unknown;
             footer?: unknown;
         }[];
@@ -12963,6 +14467,34 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
         rows: z.ZodArray<z.ZodObject<Omit<{
             id: z.ZodString;
             label: z.ZodString;
+            leadingImage: z.ZodOptional<z.ZodObject<{
+                src: z.ZodDefault<z.ZodNullable<z.ZodString>>;
+                query: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                alt: z.ZodString;
+                caption: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                borderRadius: z.ZodDefault<z.ZodEnum<["none", "sm", "md", "lg", "full"]>>;
+                border: z.ZodDefault<z.ZodEnum<["none", "subtle", "strong"]>>;
+                aspect: z.ZodDefault<z.ZodEnum<["square", "video", "portrait", "natural"]>>;
+                fit: z.ZodDefault<z.ZodEnum<["cover", "contain"]>>;
+            }, "strict", z.ZodTypeAny, {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            }, {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            }>>;
             cells: z.ZodDefault<z.ZodArray<z.ZodObject<{
                 value: z.ZodString;
                 subvalue: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
@@ -13031,6 +14563,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
                 subvalue?: string | undefined;
             }[];
+            leadingImage?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
         }, {
             label: string;
             id: string;
@@ -13038,6 +14580,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 label: string;
                 href: string;
             }[] | undefined;
+            leadingImage?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             cells?: {
                 value: string;
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
@@ -13060,6 +14612,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
                 subvalue?: string | undefined;
             }[];
+            leadingImage?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
         }[];
         op: "upsert_table_rows";
     }, {
@@ -13071,6 +14633,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 label: string;
                 href: string;
             }[] | undefined;
+            leadingImage?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             cells?: {
                 value: string;
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
@@ -13088,6 +14660,34 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             meta: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             imageLabel: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+            image: z.ZodOptional<z.ZodObject<{
+                src: z.ZodDefault<z.ZodNullable<z.ZodString>>;
+                query: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                alt: z.ZodString;
+                caption: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                borderRadius: z.ZodDefault<z.ZodEnum<["none", "sm", "md", "lg", "full"]>>;
+                border: z.ZodDefault<z.ZodEnum<["none", "subtle", "strong"]>>;
+                aspect: z.ZodDefault<z.ZodEnum<["square", "video", "portrait", "natural"]>>;
+                fit: z.ZodDefault<z.ZodEnum<["cover", "contain"]>>;
+            }, "strict", z.ZodTypeAny, {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            }, {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            }>>;
             price: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             chips: z.ZodDefault<z.ZodArray<z.ZodObject<{
                 label: z.ZodString;
@@ -13155,6 +14755,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: string | undefined;
             meta?: string | undefined;
             imageLabel?: string | undefined;
+            image?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
             price?: string | undefined;
             footer?: string | undefined;
         }, {
@@ -13172,6 +14782,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: unknown;
             meta?: unknown;
             imageLabel?: unknown;
+            image?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             price?: unknown;
             footer?: unknown;
         }>, "many">;
@@ -13191,6 +14811,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: string | undefined;
             meta?: string | undefined;
             imageLabel?: string | undefined;
+            image?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
             price?: string | undefined;
             footer?: string | undefined;
         }[];
@@ -13212,6 +14842,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: unknown;
             meta?: unknown;
             imageLabel?: unknown;
+            image?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             price?: unknown;
             footer?: unknown;
         }[];
@@ -13904,6 +15544,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
                 subvalue?: string | undefined;
             }[];
+            leadingImage?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
         }[];
         op: "upsert_table_rows";
     } | {
@@ -13922,6 +15572,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: string | undefined;
             meta?: string | undefined;
             imageLabel?: string | undefined;
+            image?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
             price?: string | undefined;
             footer?: string | undefined;
         }[];
@@ -14070,6 +15730,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 label: string;
                 href: string;
             }[] | undefined;
+            leadingImage?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             cells?: {
                 value: string;
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
@@ -14094,6 +15764,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: unknown;
             meta?: unknown;
             imageLabel?: unknown;
+            image?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             price?: unknown;
             footer?: unknown;
         }[];
@@ -14305,6 +15985,34 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
         rows: z.ZodArray<z.ZodObject<Omit<{
             id: z.ZodString;
             label: z.ZodString;
+            leadingImage: z.ZodOptional<z.ZodObject<{
+                src: z.ZodDefault<z.ZodNullable<z.ZodString>>;
+                query: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                alt: z.ZodString;
+                caption: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                borderRadius: z.ZodDefault<z.ZodEnum<["none", "sm", "md", "lg", "full"]>>;
+                border: z.ZodDefault<z.ZodEnum<["none", "subtle", "strong"]>>;
+                aspect: z.ZodDefault<z.ZodEnum<["square", "video", "portrait", "natural"]>>;
+                fit: z.ZodDefault<z.ZodEnum<["cover", "contain"]>>;
+            }, "strict", z.ZodTypeAny, {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            }, {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            }>>;
             cells: z.ZodDefault<z.ZodArray<z.ZodObject<{
                 value: z.ZodString;
                 subvalue: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
@@ -14373,6 +16081,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
                 subvalue?: string | undefined;
             }[];
+            leadingImage?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
         }, {
             label: string;
             id: string;
@@ -14380,6 +16098,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 label: string;
                 href: string;
             }[] | undefined;
+            leadingImage?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             cells?: {
                 value: string;
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
@@ -14402,6 +16130,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
                 subvalue?: string | undefined;
             }[];
+            leadingImage?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
         }[];
         op: "upsert_table_rows";
     }, {
@@ -14413,6 +16151,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 label: string;
                 href: string;
             }[] | undefined;
+            leadingImage?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             cells?: {
                 value: string;
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
@@ -14430,6 +16178,34 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             meta: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             imageLabel: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+            image: z.ZodOptional<z.ZodObject<{
+                src: z.ZodDefault<z.ZodNullable<z.ZodString>>;
+                query: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                alt: z.ZodString;
+                caption: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                borderRadius: z.ZodDefault<z.ZodEnum<["none", "sm", "md", "lg", "full"]>>;
+                border: z.ZodDefault<z.ZodEnum<["none", "subtle", "strong"]>>;
+                aspect: z.ZodDefault<z.ZodEnum<["square", "video", "portrait", "natural"]>>;
+                fit: z.ZodDefault<z.ZodEnum<["cover", "contain"]>>;
+            }, "strict", z.ZodTypeAny, {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            }, {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            }>>;
             price: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             chips: z.ZodDefault<z.ZodArray<z.ZodObject<{
                 label: z.ZodString;
@@ -14497,6 +16273,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: string | undefined;
             meta?: string | undefined;
             imageLabel?: string | undefined;
+            image?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
             price?: string | undefined;
             footer?: string | undefined;
         }, {
@@ -14514,6 +16300,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: unknown;
             meta?: unknown;
             imageLabel?: unknown;
+            image?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             price?: unknown;
             footer?: unknown;
         }>, "many">;
@@ -14533,6 +16329,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: string | undefined;
             meta?: string | undefined;
             imageLabel?: string | undefined;
+            image?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
             price?: string | undefined;
             footer?: string | undefined;
         }[];
@@ -14554,6 +16360,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: unknown;
             meta?: unknown;
             imageLabel?: unknown;
+            image?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             price?: unknown;
             footer?: unknown;
         }[];
@@ -15246,6 +17062,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
                 subvalue?: string | undefined;
             }[];
+            leadingImage?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
         }[];
         op: "upsert_table_rows";
     } | {
@@ -15264,6 +17090,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: string | undefined;
             meta?: string | undefined;
             imageLabel?: string | undefined;
+            image?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
             price?: string | undefined;
             footer?: string | undefined;
         }[];
@@ -15412,6 +17248,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 label: string;
                 href: string;
             }[] | undefined;
+            leadingImage?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             cells?: {
                 value: string;
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
@@ -15436,6 +17282,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: unknown;
             meta?: unknown;
             imageLabel?: unknown;
+            image?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             price?: unknown;
             footer?: unknown;
         }[];
@@ -15647,6 +17503,34 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
         rows: z.ZodArray<z.ZodObject<Omit<{
             id: z.ZodString;
             label: z.ZodString;
+            leadingImage: z.ZodOptional<z.ZodObject<{
+                src: z.ZodDefault<z.ZodNullable<z.ZodString>>;
+                query: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                alt: z.ZodString;
+                caption: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                borderRadius: z.ZodDefault<z.ZodEnum<["none", "sm", "md", "lg", "full"]>>;
+                border: z.ZodDefault<z.ZodEnum<["none", "subtle", "strong"]>>;
+                aspect: z.ZodDefault<z.ZodEnum<["square", "video", "portrait", "natural"]>>;
+                fit: z.ZodDefault<z.ZodEnum<["cover", "contain"]>>;
+            }, "strict", z.ZodTypeAny, {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            }, {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            }>>;
             cells: z.ZodDefault<z.ZodArray<z.ZodObject<{
                 value: z.ZodString;
                 subvalue: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
@@ -15715,6 +17599,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
                 subvalue?: string | undefined;
             }[];
+            leadingImage?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
         }, {
             label: string;
             id: string;
@@ -15722,6 +17616,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 label: string;
                 href: string;
             }[] | undefined;
+            leadingImage?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             cells?: {
                 value: string;
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
@@ -15744,6 +17648,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
                 subvalue?: string | undefined;
             }[];
+            leadingImage?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
         }[];
         op: "upsert_table_rows";
     }, {
@@ -15755,6 +17669,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 label: string;
                 href: string;
             }[] | undefined;
+            leadingImage?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             cells?: {
                 value: string;
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
@@ -15772,6 +17696,34 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             meta: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             imageLabel: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+            image: z.ZodOptional<z.ZodObject<{
+                src: z.ZodDefault<z.ZodNullable<z.ZodString>>;
+                query: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                alt: z.ZodString;
+                caption: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                borderRadius: z.ZodDefault<z.ZodEnum<["none", "sm", "md", "lg", "full"]>>;
+                border: z.ZodDefault<z.ZodEnum<["none", "subtle", "strong"]>>;
+                aspect: z.ZodDefault<z.ZodEnum<["square", "video", "portrait", "natural"]>>;
+                fit: z.ZodDefault<z.ZodEnum<["cover", "contain"]>>;
+            }, "strict", z.ZodTypeAny, {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            }, {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            }>>;
             price: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             chips: z.ZodDefault<z.ZodArray<z.ZodObject<{
                 label: z.ZodString;
@@ -15839,6 +17791,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: string | undefined;
             meta?: string | undefined;
             imageLabel?: string | undefined;
+            image?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
             price?: string | undefined;
             footer?: string | undefined;
         }, {
@@ -15856,6 +17818,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: unknown;
             meta?: unknown;
             imageLabel?: unknown;
+            image?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             price?: unknown;
             footer?: unknown;
         }>, "many">;
@@ -15875,6 +17847,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: string | undefined;
             meta?: string | undefined;
             imageLabel?: string | undefined;
+            image?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
             price?: string | undefined;
             footer?: string | undefined;
         }[];
@@ -15896,6 +17878,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: unknown;
             meta?: unknown;
             imageLabel?: unknown;
+            image?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             price?: unknown;
             footer?: unknown;
         }[];
@@ -16588,6 +18580,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
                 subvalue?: string | undefined;
             }[];
+            leadingImage?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
         }[];
         op: "upsert_table_rows";
     } | {
@@ -16606,6 +18608,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: string | undefined;
             meta?: string | undefined;
             imageLabel?: string | undefined;
+            image?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
             price?: string | undefined;
             footer?: string | undefined;
         }[];
@@ -16754,6 +18766,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 label: string;
                 href: string;
             }[] | undefined;
+            leadingImage?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             cells?: {
                 value: string;
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
@@ -16778,6 +18800,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: unknown;
             meta?: unknown;
             imageLabel?: unknown;
+            image?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             price?: unknown;
             footer?: unknown;
         }[];
@@ -16989,6 +19021,34 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
         rows: z.ZodArray<z.ZodObject<Omit<{
             id: z.ZodString;
             label: z.ZodString;
+            leadingImage: z.ZodOptional<z.ZodObject<{
+                src: z.ZodDefault<z.ZodNullable<z.ZodString>>;
+                query: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                alt: z.ZodString;
+                caption: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                borderRadius: z.ZodDefault<z.ZodEnum<["none", "sm", "md", "lg", "full"]>>;
+                border: z.ZodDefault<z.ZodEnum<["none", "subtle", "strong"]>>;
+                aspect: z.ZodDefault<z.ZodEnum<["square", "video", "portrait", "natural"]>>;
+                fit: z.ZodDefault<z.ZodEnum<["cover", "contain"]>>;
+            }, "strict", z.ZodTypeAny, {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            }, {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            }>>;
             cells: z.ZodDefault<z.ZodArray<z.ZodObject<{
                 value: z.ZodString;
                 subvalue: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
@@ -17057,6 +19117,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
                 subvalue?: string | undefined;
             }[];
+            leadingImage?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
         }, {
             label: string;
             id: string;
@@ -17064,6 +19134,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 label: string;
                 href: string;
             }[] | undefined;
+            leadingImage?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             cells?: {
                 value: string;
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
@@ -17086,6 +19166,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
                 subvalue?: string | undefined;
             }[];
+            leadingImage?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
         }[];
         op: "upsert_table_rows";
     }, {
@@ -17097,6 +19187,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 label: string;
                 href: string;
             }[] | undefined;
+            leadingImage?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             cells?: {
                 value: string;
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
@@ -17114,6 +19214,34 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             meta: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             imageLabel: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+            image: z.ZodOptional<z.ZodObject<{
+                src: z.ZodDefault<z.ZodNullable<z.ZodString>>;
+                query: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                alt: z.ZodString;
+                caption: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                borderRadius: z.ZodDefault<z.ZodEnum<["none", "sm", "md", "lg", "full"]>>;
+                border: z.ZodDefault<z.ZodEnum<["none", "subtle", "strong"]>>;
+                aspect: z.ZodDefault<z.ZodEnum<["square", "video", "portrait", "natural"]>>;
+                fit: z.ZodDefault<z.ZodEnum<["cover", "contain"]>>;
+            }, "strict", z.ZodTypeAny, {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            }, {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            }>>;
             price: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             chips: z.ZodDefault<z.ZodArray<z.ZodObject<{
                 label: z.ZodString;
@@ -17181,6 +19309,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: string | undefined;
             meta?: string | undefined;
             imageLabel?: string | undefined;
+            image?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
             price?: string | undefined;
             footer?: string | undefined;
         }, {
@@ -17198,6 +19336,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: unknown;
             meta?: unknown;
             imageLabel?: unknown;
+            image?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             price?: unknown;
             footer?: unknown;
         }>, "many">;
@@ -17217,6 +19365,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: string | undefined;
             meta?: string | undefined;
             imageLabel?: string | undefined;
+            image?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
             price?: string | undefined;
             footer?: string | undefined;
         }[];
@@ -17238,6 +19396,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: unknown;
             meta?: unknown;
             imageLabel?: unknown;
+            image?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             price?: unknown;
             footer?: unknown;
         }[];
@@ -17930,6 +20098,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
                 subvalue?: string | undefined;
             }[];
+            leadingImage?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
         }[];
         op: "upsert_table_rows";
     } | {
@@ -17948,6 +20126,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: string | undefined;
             meta?: string | undefined;
             imageLabel?: string | undefined;
+            image?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
             price?: string | undefined;
             footer?: string | undefined;
         }[];
@@ -18096,6 +20284,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 label: string;
                 href: string;
             }[] | undefined;
+            leadingImage?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             cells?: {
                 value: string;
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
@@ -18120,6 +20318,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: unknown;
             meta?: unknown;
             imageLabel?: unknown;
+            image?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             price?: unknown;
             footer?: unknown;
         }[];
@@ -18331,6 +20539,34 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
         rows: z.ZodArray<z.ZodObject<Omit<{
             id: z.ZodString;
             label: z.ZodString;
+            leadingImage: z.ZodOptional<z.ZodObject<{
+                src: z.ZodDefault<z.ZodNullable<z.ZodString>>;
+                query: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                alt: z.ZodString;
+                caption: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                borderRadius: z.ZodDefault<z.ZodEnum<["none", "sm", "md", "lg", "full"]>>;
+                border: z.ZodDefault<z.ZodEnum<["none", "subtle", "strong"]>>;
+                aspect: z.ZodDefault<z.ZodEnum<["square", "video", "portrait", "natural"]>>;
+                fit: z.ZodDefault<z.ZodEnum<["cover", "contain"]>>;
+            }, "strict", z.ZodTypeAny, {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            }, {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            }>>;
             cells: z.ZodDefault<z.ZodArray<z.ZodObject<{
                 value: z.ZodString;
                 subvalue: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
@@ -18399,6 +20635,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
                 subvalue?: string | undefined;
             }[];
+            leadingImage?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
         }, {
             label: string;
             id: string;
@@ -18406,6 +20652,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 label: string;
                 href: string;
             }[] | undefined;
+            leadingImage?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             cells?: {
                 value: string;
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
@@ -18428,6 +20684,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
                 subvalue?: string | undefined;
             }[];
+            leadingImage?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
         }[];
         op: "upsert_table_rows";
     }, {
@@ -18439,6 +20705,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 label: string;
                 href: string;
             }[] | undefined;
+            leadingImage?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             cells?: {
                 value: string;
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
@@ -18456,6 +20732,34 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             meta: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             imageLabel: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+            image: z.ZodOptional<z.ZodObject<{
+                src: z.ZodDefault<z.ZodNullable<z.ZodString>>;
+                query: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                alt: z.ZodString;
+                caption: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                borderRadius: z.ZodDefault<z.ZodEnum<["none", "sm", "md", "lg", "full"]>>;
+                border: z.ZodDefault<z.ZodEnum<["none", "subtle", "strong"]>>;
+                aspect: z.ZodDefault<z.ZodEnum<["square", "video", "portrait", "natural"]>>;
+                fit: z.ZodDefault<z.ZodEnum<["cover", "contain"]>>;
+            }, "strict", z.ZodTypeAny, {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            }, {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            }>>;
             price: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             chips: z.ZodDefault<z.ZodArray<z.ZodObject<{
                 label: z.ZodString;
@@ -18523,6 +20827,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: string | undefined;
             meta?: string | undefined;
             imageLabel?: string | undefined;
+            image?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
             price?: string | undefined;
             footer?: string | undefined;
         }, {
@@ -18540,6 +20854,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: unknown;
             meta?: unknown;
             imageLabel?: unknown;
+            image?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             price?: unknown;
             footer?: unknown;
         }>, "many">;
@@ -18559,6 +20883,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: string | undefined;
             meta?: string | undefined;
             imageLabel?: string | undefined;
+            image?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
             price?: string | undefined;
             footer?: string | undefined;
         }[];
@@ -18580,6 +20914,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: unknown;
             meta?: unknown;
             imageLabel?: unknown;
+            image?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             price?: unknown;
             footer?: unknown;
         }[];
@@ -19272,6 +21616,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
                 subvalue?: string | undefined;
             }[];
+            leadingImage?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
         }[];
         op: "upsert_table_rows";
     } | {
@@ -19290,6 +21644,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: string | undefined;
             meta?: string | undefined;
             imageLabel?: string | undefined;
+            image?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
             price?: string | undefined;
             footer?: string | undefined;
         }[];
@@ -19438,6 +21802,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 label: string;
                 href: string;
             }[] | undefined;
+            leadingImage?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             cells?: {
                 value: string;
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
@@ -19462,6 +21836,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: unknown;
             meta?: unknown;
             imageLabel?: unknown;
+            image?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             price?: unknown;
             footer?: unknown;
         }[];
@@ -19673,6 +22057,34 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
         rows: z.ZodArray<z.ZodObject<Omit<{
             id: z.ZodString;
             label: z.ZodString;
+            leadingImage: z.ZodOptional<z.ZodObject<{
+                src: z.ZodDefault<z.ZodNullable<z.ZodString>>;
+                query: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                alt: z.ZodString;
+                caption: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                borderRadius: z.ZodDefault<z.ZodEnum<["none", "sm", "md", "lg", "full"]>>;
+                border: z.ZodDefault<z.ZodEnum<["none", "subtle", "strong"]>>;
+                aspect: z.ZodDefault<z.ZodEnum<["square", "video", "portrait", "natural"]>>;
+                fit: z.ZodDefault<z.ZodEnum<["cover", "contain"]>>;
+            }, "strict", z.ZodTypeAny, {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            }, {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            }>>;
             cells: z.ZodDefault<z.ZodArray<z.ZodObject<{
                 value: z.ZodString;
                 subvalue: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
@@ -19741,6 +22153,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
                 subvalue?: string | undefined;
             }[];
+            leadingImage?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
         }, {
             label: string;
             id: string;
@@ -19748,6 +22170,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 label: string;
                 href: string;
             }[] | undefined;
+            leadingImage?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             cells?: {
                 value: string;
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
@@ -19770,6 +22202,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
                 subvalue?: string | undefined;
             }[];
+            leadingImage?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
         }[];
         op: "upsert_table_rows";
     }, {
@@ -19781,6 +22223,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 label: string;
                 href: string;
             }[] | undefined;
+            leadingImage?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             cells?: {
                 value: string;
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
@@ -19798,6 +22250,34 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             meta: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             imageLabel: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+            image: z.ZodOptional<z.ZodObject<{
+                src: z.ZodDefault<z.ZodNullable<z.ZodString>>;
+                query: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                alt: z.ZodString;
+                caption: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                borderRadius: z.ZodDefault<z.ZodEnum<["none", "sm", "md", "lg", "full"]>>;
+                border: z.ZodDefault<z.ZodEnum<["none", "subtle", "strong"]>>;
+                aspect: z.ZodDefault<z.ZodEnum<["square", "video", "portrait", "natural"]>>;
+                fit: z.ZodDefault<z.ZodEnum<["cover", "contain"]>>;
+            }, "strict", z.ZodTypeAny, {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            }, {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            }>>;
             price: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             chips: z.ZodDefault<z.ZodArray<z.ZodObject<{
                 label: z.ZodString;
@@ -19865,6 +22345,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: string | undefined;
             meta?: string | undefined;
             imageLabel?: string | undefined;
+            image?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
             price?: string | undefined;
             footer?: string | undefined;
         }, {
@@ -19882,6 +22372,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: unknown;
             meta?: unknown;
             imageLabel?: unknown;
+            image?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             price?: unknown;
             footer?: unknown;
         }>, "many">;
@@ -19901,6 +22401,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: string | undefined;
             meta?: string | undefined;
             imageLabel?: string | undefined;
+            image?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
             price?: string | undefined;
             footer?: string | undefined;
         }[];
@@ -19922,6 +22432,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: unknown;
             meta?: unknown;
             imageLabel?: unknown;
+            image?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             price?: unknown;
             footer?: unknown;
         }[];
@@ -20614,6 +23134,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
                 subvalue?: string | undefined;
             }[];
+            leadingImage?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
         }[];
         op: "upsert_table_rows";
     } | {
@@ -20632,6 +23162,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: string | undefined;
             meta?: string | undefined;
             imageLabel?: string | undefined;
+            image?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
             price?: string | undefined;
             footer?: string | undefined;
         }[];
@@ -20780,6 +23320,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 label: string;
                 href: string;
             }[] | undefined;
+            leadingImage?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             cells?: {
                 value: string;
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
@@ -20804,6 +23354,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: unknown;
             meta?: unknown;
             imageLabel?: unknown;
+            image?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             price?: unknown;
             footer?: unknown;
         }[];
@@ -21015,6 +23575,34 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
         rows: z.ZodArray<z.ZodObject<Omit<{
             id: z.ZodString;
             label: z.ZodString;
+            leadingImage: z.ZodOptional<z.ZodObject<{
+                src: z.ZodDefault<z.ZodNullable<z.ZodString>>;
+                query: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                alt: z.ZodString;
+                caption: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                borderRadius: z.ZodDefault<z.ZodEnum<["none", "sm", "md", "lg", "full"]>>;
+                border: z.ZodDefault<z.ZodEnum<["none", "subtle", "strong"]>>;
+                aspect: z.ZodDefault<z.ZodEnum<["square", "video", "portrait", "natural"]>>;
+                fit: z.ZodDefault<z.ZodEnum<["cover", "contain"]>>;
+            }, "strict", z.ZodTypeAny, {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            }, {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            }>>;
             cells: z.ZodDefault<z.ZodArray<z.ZodObject<{
                 value: z.ZodString;
                 subvalue: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
@@ -21083,6 +23671,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
                 subvalue?: string | undefined;
             }[];
+            leadingImage?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
         }, {
             label: string;
             id: string;
@@ -21090,6 +23688,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 label: string;
                 href: string;
             }[] | undefined;
+            leadingImage?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             cells?: {
                 value: string;
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
@@ -21112,6 +23720,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
                 subvalue?: string | undefined;
             }[];
+            leadingImage?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
         }[];
         op: "upsert_table_rows";
     }, {
@@ -21123,6 +23741,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 label: string;
                 href: string;
             }[] | undefined;
+            leadingImage?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             cells?: {
                 value: string;
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
@@ -21140,6 +23768,34 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             meta: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             imageLabel: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+            image: z.ZodOptional<z.ZodObject<{
+                src: z.ZodDefault<z.ZodNullable<z.ZodString>>;
+                query: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                alt: z.ZodString;
+                caption: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                borderRadius: z.ZodDefault<z.ZodEnum<["none", "sm", "md", "lg", "full"]>>;
+                border: z.ZodDefault<z.ZodEnum<["none", "subtle", "strong"]>>;
+                aspect: z.ZodDefault<z.ZodEnum<["square", "video", "portrait", "natural"]>>;
+                fit: z.ZodDefault<z.ZodEnum<["cover", "contain"]>>;
+            }, "strict", z.ZodTypeAny, {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            }, {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            }>>;
             price: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             chips: z.ZodDefault<z.ZodArray<z.ZodObject<{
                 label: z.ZodString;
@@ -21207,6 +23863,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: string | undefined;
             meta?: string | undefined;
             imageLabel?: string | undefined;
+            image?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
             price?: string | undefined;
             footer?: string | undefined;
         }, {
@@ -21224,6 +23890,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: unknown;
             meta?: unknown;
             imageLabel?: unknown;
+            image?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             price?: unknown;
             footer?: unknown;
         }>, "many">;
@@ -21243,6 +23919,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: string | undefined;
             meta?: string | undefined;
             imageLabel?: string | undefined;
+            image?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
             price?: string | undefined;
             footer?: string | undefined;
         }[];
@@ -21264,6 +23950,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: unknown;
             meta?: unknown;
             imageLabel?: unknown;
+            image?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             price?: unknown;
             footer?: unknown;
         }[];
@@ -21956,6 +24652,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
                 subvalue?: string | undefined;
             }[];
+            leadingImage?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
         }[];
         op: "upsert_table_rows";
     } | {
@@ -21974,6 +24680,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: string | undefined;
             meta?: string | undefined;
             imageLabel?: string | undefined;
+            image?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
             price?: string | undefined;
             footer?: string | undefined;
         }[];
@@ -22122,6 +24838,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 label: string;
                 href: string;
             }[] | undefined;
+            leadingImage?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             cells?: {
                 value: string;
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
@@ -22146,6 +24872,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: unknown;
             meta?: unknown;
             imageLabel?: unknown;
+            image?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             price?: unknown;
             footer?: unknown;
         }[];
@@ -22357,6 +25093,34 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
         rows: z.ZodArray<z.ZodObject<Omit<{
             id: z.ZodString;
             label: z.ZodString;
+            leadingImage: z.ZodOptional<z.ZodObject<{
+                src: z.ZodDefault<z.ZodNullable<z.ZodString>>;
+                query: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                alt: z.ZodString;
+                caption: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                borderRadius: z.ZodDefault<z.ZodEnum<["none", "sm", "md", "lg", "full"]>>;
+                border: z.ZodDefault<z.ZodEnum<["none", "subtle", "strong"]>>;
+                aspect: z.ZodDefault<z.ZodEnum<["square", "video", "portrait", "natural"]>>;
+                fit: z.ZodDefault<z.ZodEnum<["cover", "contain"]>>;
+            }, "strict", z.ZodTypeAny, {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            }, {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            }>>;
             cells: z.ZodDefault<z.ZodArray<z.ZodObject<{
                 value: z.ZodString;
                 subvalue: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
@@ -22425,6 +25189,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
                 subvalue?: string | undefined;
             }[];
+            leadingImage?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
         }, {
             label: string;
             id: string;
@@ -22432,6 +25206,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 label: string;
                 href: string;
             }[] | undefined;
+            leadingImage?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             cells?: {
                 value: string;
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
@@ -22454,6 +25238,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
                 subvalue?: string | undefined;
             }[];
+            leadingImage?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
         }[];
         op: "upsert_table_rows";
     }, {
@@ -22465,6 +25259,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 label: string;
                 href: string;
             }[] | undefined;
+            leadingImage?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             cells?: {
                 value: string;
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
@@ -22482,6 +25286,34 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             meta: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             imageLabel: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+            image: z.ZodOptional<z.ZodObject<{
+                src: z.ZodDefault<z.ZodNullable<z.ZodString>>;
+                query: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                alt: z.ZodString;
+                caption: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
+                borderRadius: z.ZodDefault<z.ZodEnum<["none", "sm", "md", "lg", "full"]>>;
+                border: z.ZodDefault<z.ZodEnum<["none", "subtle", "strong"]>>;
+                aspect: z.ZodDefault<z.ZodEnum<["square", "video", "portrait", "natural"]>>;
+                fit: z.ZodDefault<z.ZodEnum<["cover", "contain"]>>;
+            }, "strict", z.ZodTypeAny, {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            }, {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            }>>;
             price: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             chips: z.ZodDefault<z.ZodArray<z.ZodObject<{
                 label: z.ZodString;
@@ -22549,6 +25381,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: string | undefined;
             meta?: string | undefined;
             imageLabel?: string | undefined;
+            image?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
             price?: string | undefined;
             footer?: string | undefined;
         }, {
@@ -22566,6 +25408,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: unknown;
             meta?: unknown;
             imageLabel?: unknown;
+            image?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             price?: unknown;
             footer?: unknown;
         }>, "many">;
@@ -22585,6 +25437,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: string | undefined;
             meta?: string | undefined;
             imageLabel?: string | undefined;
+            image?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
             price?: string | undefined;
             footer?: string | undefined;
         }[];
@@ -22606,6 +25468,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: unknown;
             meta?: unknown;
             imageLabel?: unknown;
+            image?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             price?: unknown;
             footer?: unknown;
         }[];
@@ -23298,6 +26170,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
                 subvalue?: string | undefined;
             }[];
+            leadingImage?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
         }[];
         op: "upsert_table_rows";
     } | {
@@ -23316,6 +26198,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: string | undefined;
             meta?: string | undefined;
             imageLabel?: string | undefined;
+            image?: {
+                src: string | null;
+                alt: string;
+                borderRadius: "none" | "sm" | "md" | "lg" | "full";
+                border: "none" | "subtle" | "strong";
+                aspect: "square" | "video" | "portrait" | "natural";
+                fit: "cover" | "contain";
+                query?: string | undefined;
+                caption?: string | undefined;
+            } | undefined;
             price?: string | undefined;
             footer?: string | undefined;
         }[];
@@ -23464,6 +26356,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
                 label: string;
                 href: string;
             }[] | undefined;
+            leadingImage?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             cells?: {
                 value: string;
                 tone?: "neutral" | "accent" | "success" | "warning" | "danger" | undefined;
@@ -23488,6 +26390,16 @@ export declare const RecipeTemplateUpdateSchema: z.ZodDiscriminatedUnion<"templa
             subtitle?: unknown;
             meta?: unknown;
             imageLabel?: unknown;
+            image?: {
+                alt: string;
+                src?: string | null | undefined;
+                query?: unknown;
+                caption?: unknown;
+                borderRadius?: "none" | "sm" | "md" | "lg" | "full" | undefined;
+                border?: "none" | "subtle" | "strong" | undefined;
+                aspect?: "square" | "video" | "portrait" | "natural" | undefined;
+                fit?: "cover" | "contain" | undefined;
+            } | undefined;
             price?: unknown;
             footer?: unknown;
         }[];

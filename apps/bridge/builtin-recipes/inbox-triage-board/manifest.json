@@ -1,0 +1,11 @@
+{
+  "id": "inbox-triage-board",
+  "version": "1.0.0",
+  "name": "Inbox Triage Board",
+  "category": "communication",
+  "description": "Triage unread senders and apply safe inbox cleanup actions with stats and a grouped sender-by-sender view.",
+  "author": "Hermes",
+  "source": "builtin",
+  "enabled": true,
+  "protocolVersion": "1.0.0"
+}

@@ -1,0 +1,54 @@
+{
+  "purpose": "Give security reviewers a prioritized view of findings with enough evidence to decide on remediation or dismissal.",
+  "primaryUserGoal": "Triage security findings by severity and choose what to remediate first.",
+  "whenHermesShouldChoose": "User shares security scan results, asks to review CVEs, or wants to prioritize vulnerability fixes.",
+  "goodFor": [
+    "Triaging output from SAST/DAST/SCA scans",
+    "Reviewing dependabot or Snyk findings",
+    "Driving a security review meeting"
+  ],
+  "supports": [
+    "Severity stats (critical/high/medium/low counts)",
+    "Severity distribution pie chart",
+    "Grouped list of findings by severity with tone coding",
+    "Detail panel with CVE, affected versions, CVSS, recommendation"
+  ],
+  "supportedTabs": ["Overview"],
+  "idealDataShape": [
+    "5-20 findings, each with: title, severity, CVE/CWE, affected component, CVSS score, recommendation",
+    "Counts by severity for the stats block"
+  ],
+  "requiredSections": ["split"],
+  "optionalSections": ["stats", "pie-chart"],
+  "requiredActions": [],
+  "optionalActions": ["ignore-finding", "remediate-finding"],
+  "populationInstructions": {
+    "summary": "Lead with severity stats. Add a pie-chart showing severity distribution. The split section has a grouped-list of findings (grouped by severity, tone-coded) on the left and a detail-panel on the right for the selected finding with CVE, CVSS, affected versions, and recommendation.",
+    "steps": [
+      "Compute severity stats: critical count, high count, medium count, low count.",
+      "Build a pie-chart with one data entry per severity level, tone-coded.",
+      "Populate the grouped-list: groups are severity tiers, tone='danger' for critical, 'warning' for high, 'accent' for medium, 'neutral' for low.",
+      "Each finding item: title is the vulnerability description, meta is the affected component.",
+      "Initial detail-panel shows the highest-severity finding with fields for CVE, CVSS, affected versions, and recommendation.",
+      "Include chips for the CVE ID and the severity."
+    ],
+    "guardrails": [
+      "Never fabricate CVE IDs or CVSS scores.",
+      "Don't collapse medium+low into one group if there are more than 2 each.",
+      "Mark a finding 'ignored' only after operator confirmation."
+    ]
+  },
+  "updateRules": {
+    "patchPrefer": [
+      "Use upsert_groups to add newly-discovered findings",
+      "Use set_detail when user selects a different finding",
+      "Use set_status when remediation completes"
+    ],
+    "replaceTriggers": [
+      "User imports a fresh scan",
+      "Scope of the review changes (different repo/service)"
+    ],
+    "persistAcrossUpdates": ["header", "ignored findings"],
+    "stableRegions": ["header"]
+  }
+}

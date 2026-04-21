@@ -67,7 +67,10 @@ describe('ChatTranscript', () => {
       typingStatusLabel: 'Hermes is using the terminal…'
     });
 
-    expect(screen.getByText('Hermes is using the terminal…')).toBeInTheDocument();
+    // StatusTicker splits text into animated per-character spans; use the data-status-text attribute.
+    const getStatusText = () => document.querySelector('[data-status-text]')?.getAttribute('data-status-text') ?? null;
+
+    expect(getStatusText()).toBe('Hermes is using the terminal…');
     expect(screen.queryByText('Hermes is composing a reply…')).not.toBeInTheDocument();
 
     view.rerender(
@@ -85,8 +88,7 @@ describe('ChatTranscript', () => {
       </ChakraProvider>
     );
 
-    expect(screen.getByText('Hermes is using the local-search skill…')).toBeInTheDocument();
-    expect(screen.queryByText('Hermes is using the terminal…')).not.toBeInTheDocument();
+    expect(getStatusText()).toBe('Hermes is using the local-search skill…');
 
     view.rerender(
       <ChakraProvider value={defaultSystem}>
@@ -103,8 +105,7 @@ describe('ChatTranscript', () => {
       </ChakraProvider>
     );
 
-    expect(screen.getByText('Hermes is searching…')).toBeInTheDocument();
-    expect(screen.queryByText('Hermes is using the local-search skill…')).not.toBeInTheDocument();
+    expect(getStatusText()).toBe('Hermes is searching…');
 
     view.rerender(
       <ChakraProvider value={defaultSystem}>
@@ -121,8 +122,7 @@ describe('ChatTranscript', () => {
       </ChakraProvider>
     );
 
-    expect(screen.getByText('Hermes is updating the workspace…')).toBeInTheDocument();
-    expect(screen.queryByText('Hermes is searching…')).not.toBeInTheDocument();
+    expect(getStatusText()).toBe('Hermes is updating the workspace…');
   });
 
   it('does not rerender historical markdown when typing status updates', () => {
