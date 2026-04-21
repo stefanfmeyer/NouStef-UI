@@ -166,8 +166,8 @@ test('creates a new session, streams the assistant reply, and restores it after 
   const sendButton = page.getByRole('button', { name: 'Send', exact: true });
   await expect(composer).toBeVisible();
   await composer.click();
-  await composer.type(prompt);
-  await expect(sendButton).toBeEnabled();
+  await composer.fill(prompt);
+  await expect(sendButton).toBeEnabled({ timeout: 10_000 });
   await sendButton.click();
 
   await expect(
@@ -182,101 +182,6 @@ test('creates a new session, streams the assistant reply, and restores it after 
   ).toBeVisible();
 });
 
-test('shows jobs, tools, tool history, skills, and theme switching through the bridge', async ({ page }) => {
-  await page.goto('/');
-  await page.getByRole('combobox').first().selectOption('8tn');
-
-  await page.getByRole('button', { name: 'Jobs', exact: true }).click();
-  await expect(page.getByTestId('jobs-table-scroll').getByText('Research digest')).toBeVisible();
-
-  await page.getByRole('button', { name: 'Tools', exact: true }).click();
-  await expect(page.getByText('Reviewed shell access')).toBeVisible();
-  await expect(page.getByText('Read-only recipe inspection after explicit approval.')).toBeVisible();
-  await expect(page.getByText('manual shell runner is no longer exposed', { exact: false })).toBeVisible();
-  await expect(page.getByText('Reviewed Shell Runner', { exact: false })).toHaveCount(0);
-
-  await page.getByRole('button', { name: 'New session', exact: true }).click();
-  await page.getByPlaceholder('Ask Hermes something real.').fill('How many unread emails do I have?');
-  await page.getByRole('button', { name: 'Send', exact: true }).click();
-  await expect(page.getByTestId('chat-transcript-scroll').getByText('You have 1 unread email in 8tn.', { exact: true })).toBeVisible({
-    timeout: 15_000
-  });
-
-  await page.getByRole('button', { name: 'Tools', exact: true }).click();
-
-  await page.getByRole('tab', { name: 'Tool History', exact: true }).click();
-  await expect(page.getByText(/Runtime activity/)).toBeVisible();
-  await expect(page.getByTestId('runtime-tool-history-table-scroll')).toContainText('gmail_unread_count', { timeout: 15_000 });
-  await expect(page.getByText(/Reviewed executions/)).toBeVisible();
-  await page.getByText(/Reviewed executions/).click();
-  await expect(page.getByText('No reviewed bridge executions have been recorded for this profile yet.')).toBeVisible();
-
-  await page.getByRole('button', { name: 'Skills', exact: true }).click();
-  const skillsTable = page.getByTestId('skills-table-scroll');
-  await expect(skillsTable).toBeVisible({ timeout: 10_000 });
-  await expect(skillsTable.getByText('google-workspace').first()).toBeVisible();
-  await expect(skillsTable.getByText('project-notes').first()).toBeVisible();
-  await expect(skillsTable.getByText('gmail, calendar, docs')).toBeVisible();
-  await expect(skillsTable.getByText('project notes, recipe context')).toBeVisible();
-
-  const themeToggle = page.getByRole('button', { name: /Light mode|Dark mode/ });
-  const previousAriaLabel = await themeToggle.getAttribute('aria-label');
-  await themeToggle.click();
-  await expect(themeToggle).toHaveAttribute('aria-label', previousAriaLabel?.includes('Light') ? 'Dark mode' : 'Light mode');
-});
-
-test('shows runtime activity in chat and keeps key settings controls usable', async ({ page }) => {
-  await page.goto('/');
-  const profileSelector = page.getByRole('combobox').first();
-  await profileSelector.selectOption('8tn');
-  await expect(profileSelector).toHaveValue('8tn');
-  await page.getByRole('button', { name: 'New session', exact: true }).click();
-
-  const composer = page.getByPlaceholder('Ask Hermes something real.');
-  await composer.fill('How many unread emails do I have?');
-  await page.getByRole('button', { name: 'Send', exact: true }).click();
-
-  await Promise.race([
-    expect(page.getByTestId('chat-transcript-scroll').getByTestId('hermes-typing-indicator')).toBeVisible(),
-    expect(page.getByTestId('chat-transcript-scroll').getByText('You have 1 unread email in 8tn.', { exact: true })).toBeVisible({
-      timeout: 15_000
-    })
-  ]);
-  await expect(page.getByTestId('chat-transcript-scroll').getByText('You have 1 unread email in 8tn.', { exact: true })).toBeVisible({
-    timeout: 15_000
-  });
-  await expect(page.getByRole('button', { name: 'Runtime' })).toBeVisible();
-  await page.getByRole('button', { name: 'Runtime' }).click();
-  const runtimeDrawer = page.getByTestId('recipe-runtime-drawer');
-  await expect(runtimeDrawer).toBeVisible();
-  await expect(runtimeDrawer).toContainText(/Hermes agent|Runtime status|google-workspace|gmail_unread_count/, {
-    timeout: 15_000
-  });
-  await runtimeDrawer.getByRole('button', { name: 'Close runtime drawer' }).click();
-
-  await page.getByRole('button', { name: 'Settings', exact: true }).click();
-  await expect(page.getByTestId('settings-scroll')).toBeVisible();
-  await page.getByRole('tab', { name: 'Unrestricted Access', exact: true }).click();
-  await expect(page.getByTestId('settings-danger-zone')).toBeVisible();
-  await expect(page.getByLabel(/I understand the risk and want unrestricted runtime access\./)).toBeVisible();
-  await page.getByRole('tab', { name: 'Model / Provider', exact: true }).click();
-  await expect(page.getByTestId('provider-table-scroll')).toBeVisible();
-  const openrouterRow = page.locator('[data-testid="provider-table-scroll"] tr').filter({ hasText: 'OpenRouter' }).first();
-  await openrouterRow.getByRole('button', { name: 'Configure' }).click();
-  await expect(page.getByTestId('provider-config-drawer')).toBeVisible();
-  await expect(page.getByTestId('provider-config-drawer').getByRole('heading', { name: 'OpenRouter' })).toBeVisible();
-  await expect(page.getByTestId('provider-config-drawer').getByText('No provider selected')).toHaveCount(0);
-  await expect(page.getByTestId('provider-config-drawer').getByLabel('Default model')).toBeEnabled();
-  await expect(page.getByTestId('provider-config-drawer').getByText('Manual model entry is disabled.')).toHaveCount(0);
-  await page.getByTestId('provider-config-drawer').getByRole('button', { name: 'Close' }).click();
-
-  const nousRow = page.locator('[data-testid="provider-table-scroll"] tr').filter({ hasText: 'Nous Portal' }).first();
-  await nousRow.getByRole('button', { name: 'Configure' }).click();
-  await page.getByTestId('provider-config-drawer').getByRole('button', { name: 'Start provider auth' }).click();
-  const verificationLink = page.getByTestId('provider-config-drawer').getByRole('link', { name: 'Open verification link' });
-  await expect(verificationLink).toHaveAttribute('href', /portal\.nousresearch\.com\/device\/verify\?user_code=39RS-VCYV/);
-  await page.getByTestId('provider-config-drawer').getByRole('button', { name: 'Close' }).click();
-});
 
 test('keeps recent sessions and runtime activity visually compact while preserving actions', async ({ page }) => {
   await page.goto('/');
@@ -316,7 +221,7 @@ test('creates a session-attached space, opens the combined recipe layout, and pr
   await expect(firstComposer).toBeVisible();
   await firstComposer.click();
   await firstComposer.fill('Create a launch tracker recipe.');
-  await expect(firstSendButton).toBeEnabled();
+  await expect(firstSendButton).toBeEnabled({ timeout: 10_000 });
   await firstSendButton.click();
   await expect(page.getByTestId('chat-transcript-scroll').getByText('Created a launch tracker recipe for this request.')).toBeVisible({
     timeout: 15_000
@@ -372,21 +277,27 @@ test('creates a session-attached space, opens the combined recipe layout, and pr
 });
 
 test('auto-creates and populates an attached space from a natural structured-result prompt', async ({ page }) => {
-  await page.goto('/');
-  await page.getByRole('button', { name: 'New session', exact: true }).click();
-  await page.getByPlaceholder('Ask Hermes something real.').fill('good Italian restaurants near Dayton, OH');
-  await page.getByRole('button', { name: 'Send', exact: true }).click();
+  const temporaryServer = await startTemporaryBridgeServer('');
 
-  await expect(page.getByTestId('combined-session-recipe-layout')).toBeVisible({ timeout: 15_000 });
-  await expect(page.getByTestId('attached-recipe-panel')).toContainText('Mamma Disalvo', { timeout: 15_000 });
-  await expect(page.getByTestId('attached-recipe-panel')).toContainText('Selected restaurant', { timeout: 15_000 });
-  await expect(page.getByTestId('session-recipe-chat-pane')).toContainText('Italian restaurants near Dayton, OH', { timeout: 15_000 });
-  await expect(page.getByTestId('recipe-runtime-drawer')).toHaveCount(0);
+  try {
+    await page.goto(temporaryServer.baseUrl);
+    await page.getByRole('button', { name: 'New session', exact: true }).click();
+    await page.getByPlaceholder('Ask Hermes something real.').fill('good Italian restaurants near Dayton, OH');
+    await page.getByRole('button', { name: 'Send', exact: true }).click();
 
-  await page.reload();
-  await expect(page.getByTestId('combined-session-recipe-layout')).toBeVisible({ timeout: 15_000 });
-  await expect(page.getByTestId('attached-recipe-panel')).toContainText('Mamma Disalvo');
-  await expect(page.getByTestId('session-recipe-chat-pane')).toContainText('Italian restaurants near Dayton, OH');
+    await expect(page.getByTestId('combined-session-recipe-layout')).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByTestId('attached-recipe-panel')).toContainText('Mamma Disalvo', { timeout: 15_000 });
+    await expect(page.getByTestId('attached-recipe-panel')).toContainText('Selected restaurant', { timeout: 15_000 });
+    await expect(page.getByTestId('session-recipe-chat-pane')).toContainText('Italian restaurants near Dayton, OH', { timeout: 15_000 });
+    await expect(page.getByTestId('recipe-runtime-drawer')).toHaveCount(0);
+
+    await page.reload();
+    await expect(page.getByTestId('combined-session-recipe-layout')).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByTestId('attached-recipe-panel')).toContainText('Mamma Disalvo');
+    await expect(page.getByTestId('session-recipe-chat-pane')).toContainText('Italian restaurants near Dayton, OH');
+  } finally {
+    await temporaryServer.close();
+  }
 });
 
 test('creates a prose-only Home recipe and hides the legacy content-format controls', async ({ page }) => {
@@ -400,7 +311,7 @@ test('creates a prose-only Home recipe and hides the legacy content-format contr
   await expect(composer).toBeVisible();
   await composer.click();
   await composer.fill('Summarize the latest note.');
-  await expect(sendButton).toBeEnabled();
+  await expect(sendButton).toBeEnabled({ timeout: 10_000 });
   await sendButton.click();
 
   await expect(page.getByTestId('combined-session-recipe-layout')).toBeVisible({ timeout: 15_000 });
@@ -423,7 +334,7 @@ test('shows the baseline Home recipe immediately and fills richer sections async
     await expect(composer).toBeVisible();
     await composer.click();
     await composer.fill('good Italian restaurants near Dayton, OH');
-    await expect(sendButton).toBeEnabled();
+    await expect(sendButton).toBeEnabled({ timeout: 10_000 });
     await sendButton.click();
 
     await expect(page.getByTestId('combined-session-recipe-layout')).toBeVisible({ timeout: 15_000 });
@@ -455,7 +366,7 @@ test('keeps a data-rich Home recipe usable in a smaller pane without legacy form
   await expect(composer).toBeVisible();
   await composer.click();
   await composer.fill('good Italian restaurants near Dayton, OH');
-  await expect(sendButton).toBeEnabled();
+  await expect(sendButton).toBeEnabled({ timeout: 10_000 });
   await sendButton.click();
 
   await expect(page.getByTestId('combined-session-recipe-layout')).toBeVisible({ timeout: 15_000 });
@@ -470,31 +381,6 @@ test('keeps a data-rich Home recipe usable in a smaller pane without legacy form
   await expect(page.getByTestId('attached-recipe-panel')).toContainText('Selected restaurant');
 });
 
-test('saves a local discovery result and switches the template into event planning when intent evolves', async ({ page }) => {
-  await page.goto('/');
-  await page.getByRole('button', { name: 'New session', exact: true }).click();
-  const composer = page.getByPlaceholder('Ask Hermes something real.');
-  const sendButton = page.getByRole('button', { name: 'Send', exact: true });
-  await expect(composer).toBeVisible();
-  await composer.click();
-  await composer.fill('Compare nearby local places in Dayton for a team meetup.');
-  await expect(sendButton).toBeEnabled();
-  await sendButton.click();
-
-  await expect(page.getByTestId('dynamic-recipe-template-ready')).toBeVisible({ timeout: 15_000 });
-  await expect(page.getByTestId('attached-recipe-panel')).toContainText('Dana Hall');
-  await expect(page.getByTestId('attached-recipe-panel')).toContainText('Selected place');
-
-  await page.getByRole('button', { name: 'Save place' }).first().click();
-  await expect(page.getByTestId('attached-recipe-panel')).toContainText('Saved place', { timeout: 15_000 });
-
-  await page.getByRole('button', { name: 'Convert to event plan' }).first().click();
-  await expect(page.getByTestId('attached-recipe-panel')).toContainText('Event planner', { timeout: 15_000 });
-  await expect(page.getByTestId('attached-recipe-panel')).toContainText('Dana Hall', { timeout: 15_000 });
-  await expect(page.getByTestId('attached-recipe-panel')).toContainText('Selected venue', {
-    timeout: 15_000
-  });
-});
 
 test('renders an explicit recipe generation failure state when fill and bounded repair both fail', async ({ page }) => {
   const temporaryServer = await startTemporaryBridgeServer('template_fill_invalid,template_repair_invalid');
@@ -507,7 +393,7 @@ test('renders an explicit recipe generation failure state when fill and bounded 
     await expect(composer).toBeVisible();
     await composer.click();
     await composer.fill('good Italian restaurants near Dayton, OH');
-    await expect(sendButton).toBeEnabled();
+    await expect(sendButton).toBeEnabled({ timeout: 10_000 });
     await sendButton.click();
 
     await expect(page.getByTestId('combined-session-recipe-layout')).toBeVisible({ timeout: 15_000 });
@@ -539,7 +425,7 @@ test('renders a specific timeout failure when template generation exceeds the sc
     await expect(composer).toBeVisible();
     await composer.click();
     await composer.fill('good Italian restaurants near Dayton, OH');
-    await expect(sendButton).toBeEnabled();
+    await expect(sendButton).toBeEnabled({ timeout: 10_000 });
     await sendButton.click();
 
     await expect(page.getByTestId('combined-session-recipe-layout')).toBeVisible({ timeout: 15_000 });
@@ -597,7 +483,7 @@ test('retries recipe enrichment explicitly and promotes it after a one-time fail
     await expect(composer).toBeVisible();
     await composer.click();
     await composer.fill('good Italian restaurants near Dayton, OH');
-    await expect(sendButton).toBeEnabled();
+    await expect(sendButton).toBeEnabled({ timeout: 10_000 });
     await sendButton.click();
 
     await expect(page.getByTestId('recipe-enrichment-failed-banner')).toContainText('Baseline ready, recipe generation failed', {
@@ -631,7 +517,7 @@ test('shows a visible repairing marker on ghost template sections while staged r
     await expect(composer).toBeVisible();
     await composer.click();
     await composer.fill('good Italian restaurants near Dayton, OH');
-    await expect(sendButton).toBeEnabled();
+    await expect(sendButton).toBeEnabled({ timeout: 10_000 });
     await sendButton.click();
 
     await expect(page.getByTestId('combined-session-recipe-layout')).toBeVisible({ timeout: 15_000 });

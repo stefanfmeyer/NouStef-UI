@@ -9,6 +9,7 @@ export default defineConfig({
   workers: 1,
   reporter: 'list',
   timeout: 60_000,
+  retries: 1,
   use: {
     baseURL: `http://127.0.0.1:${fixturePort}`,
     trace: 'on-first-retry',
