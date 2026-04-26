@@ -1,4 +1,4 @@
-import { Box, Button, Flex, HStack, Text, VStack } from '@chakra-ui/react';
+import { Box, Button, Flex, Text, VStack } from '@chakra-ui/react';
 import type { Session } from '@hermes-recipes/protocol';
 import { SessionActionMenu } from './SessionActionMenu';
 
