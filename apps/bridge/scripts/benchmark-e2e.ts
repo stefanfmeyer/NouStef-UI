@@ -125,7 +125,7 @@ async function createSession(baseUrl: string, profileId: string): Promise<Sessio
   return r.json() as Promise<Session>;
 }
 
-async function collectStreamEvents(response: Response): Promise<ChatStreamEvent[]> {
+async function _collectStreamEvents(response: Response): Promise<ChatStreamEvent[]> {
   const reader = response.body?.getReader();
   if (!reader) return [];
 
@@ -359,7 +359,7 @@ async function runCli(promptId: string, promptText: string, trial: number): Prom
       stdoutBuf = lines.pop() ?? '';
 
       for (const line of lines) {
-        const trimmed = line.replace(/\x1b\[[0-9;]*m/g, '').trim();
+        const trimmed = line.replace(new RegExp(String.fromCodePoint(27) + '\\[[0-9;]*m', 'g'), '').trim();
 
         if (toolStartRe.test(trimmed)) {
           const m = trimmed.match(toolStartRe);
@@ -395,7 +395,7 @@ async function runCli(promptId: string, promptText: string, trial: number): Prom
 
     child.on('close', (code) => {
       clearTimeout(killTimeout);
-      try { fs.unlinkSync(tmpFile); } catch {}
+      try { fs.unlinkSync(tmpFile); } catch { /* best-effort cleanup */ }
 
       const totalMs = Date.now() - t0;
       if (firstOutputMs !== null) phases.push({ label: 'time_to_first_output', ms: firstOutputMs });

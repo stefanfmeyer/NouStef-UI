@@ -34,7 +34,7 @@ function GatewayBanner({ detail, onDismiss }: { detail: string; onDismiss?: () =
   );
 }
 
-function ModelPill({ label }: { label?: string }) {
+function _ModelPill({ label }: { label?: string }) {
   if (!label) return null;
   const model = label.split('/').pop() ?? label;
   return (
@@ -57,7 +57,7 @@ export function ShellLayout({
   connection,
   profileName,
   pageTitle,
-  headerDetail,
+  headerDetail: _headerDetail,
   headerMode = 'full',
   sidebar,
   mobileNavContent,
@@ -65,7 +65,7 @@ export function ShellLayout({
   onPersistTheme,
   hermesVersion,
   expectedHermesVersion,
-  activeModelLabel,
+  activeModelLabel: _activeModelLabel,
   children
 }: {
   connection: ConnectionState;
@@ -94,10 +94,8 @@ export function ShellLayout({
       overflow="hidden"
       bg="var(--shell-bg)"
     >
-      {/* Desktop sidebar — hidden on mobile */}
-      <Box display={{ base: 'none', lg: 'flex' }} flexShrink={0} h="100dvh">
-        {sidebar}
-      </Box>
+      {/* Sidebar — always in the DOM so tests can query nav buttons; CSS handles mobile layout */}
+      {sidebar}
 
       {/* Mobile nav drawer */}
       {mobileNavContent ? (

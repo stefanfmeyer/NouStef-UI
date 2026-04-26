@@ -13581,7 +13581,11 @@ Emit one corrected TSX module now.`;
             !isRetryBuild &&
             activeRecipe != null &&
             activeRecipe.renderMode !== 'dynamic_v1' &&
-            requestMode === 'chat';
+            requestMode === 'chat' &&
+            // Only auto-retry when intent clearly indicates structured output — not for
+            // simple conversational responses or generic prose where legacy_content_v1 is correct.
+            structuredRecipeIntent !== null &&
+            structuredRecipeIntent.label !== 'recipe request';
 
           if (shouldAutoRetry && activeRecipe) {
             const queuedAppletBuild = await this.queueRecipeAppletBuild({

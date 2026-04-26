@@ -1,4 +1,4 @@
-import { Box, Flex, HStack, Table, Tabs, Text, VStack } from '@chakra-ui/react';
+import { Box, Flex, Table, Tabs, Text, VStack } from '@chakra-ui/react';
 import type { ToolHistoryResponse, ToolsResponse, ToolsTab } from '@hermes-recipes/protocol';
 import { StatusPill } from '../atoms/StatusPill';
 import { EmptyStateCard } from '../molecules/EmptyStateCard';

@@ -1,4 +1,4 @@
-import { Box, Button, CloseButton, Drawer, Grid, HStack, Portal, ScrollArea, Tabs, VStack } from '@chakra-ui/react';
+import { Box, CloseButton, Drawer, Grid, HStack, Portal, ScrollArea, Tabs, VStack } from '@chakra-ui/react';
 import { useEffect, useMemo, useState } from 'react';
 import { RecipeTemplateDetailDrawer } from '../../features/recipe-templates/template-detail-drawer';
 import { RecipeTemplateGallery } from '../../features/recipe-templates/template-gallery';
@@ -93,6 +93,7 @@ export function RecipesPage({ activeProfileId: _activeProfileId }: { activeProfi
                 activeCategory={category}
                 selectedTemplateId={selectedTemplate.id}
                 onCategoryChange={setCategory}
+                omitPreviews
                 onSelectTemplate={(templateId) => setSelectedTemplateId(templateId as RecipeTemplateId)}
                 onInspectTemplate={(templateId) => {
                   setSelectedTemplateId(templateId as RecipeTemplateId);
@@ -123,6 +124,8 @@ export function RecipesPage({ activeProfileId: _activeProfileId }: { activeProfi
                     activeCategory={category}
                     selectedTemplateId={selectedTemplate.id}
                     onCategoryChange={setCategory}
+                    omitTestIds
+                    omitPreviews
                     onSelectTemplate={(templateId) => {
                       setSelectedTemplateId(templateId as RecipeTemplateId);
                       setMobilePreviewOpen(true);

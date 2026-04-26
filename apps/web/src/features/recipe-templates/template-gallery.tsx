@@ -44,10 +44,14 @@ export function RecipeTemplateGallery({
   selectedTemplateId,
   onCategoryChange,
   onSelectTemplate,
-  onInspectTemplate
+  onInspectTemplate,
+  omitTestIds = false,
+  omitPreviews = false
 }: {
   templates: RecipeTemplateDefinition[];
   activeCategory: RecipeTemplateGalleryCategory;
+  omitTestIds?: boolean;
+  omitPreviews?: boolean;
   selectedTemplateId: string;
   onCategoryChange: (category: RecipeTemplateGalleryCategory) => void;
   onSelectTemplate: (templateId: string) => void;
@@ -56,7 +60,7 @@ export function RecipeTemplateGallery({
   const allButtonStyles = resolveTemplateGalleryFilterButtonStyles(activeCategory === 'all');
 
   return (
-    <VStack align="stretch" gap="3" data-testid="spaces-template-gallery">
+    <VStack align="stretch" gap="3" data-testid={omitTestIds ? undefined : 'spaces-template-gallery'}>
       <TemplateSurface>
         <VStack align="stretch" gap="4">
           <Flex justify="space-between" align="end" gap="4" wrap="wrap">
@@ -123,7 +127,7 @@ export function RecipeTemplateGallery({
           return (
             <Box
               key={template.id}
-              data-testid={`spaces-template-card-${template.id}`}
+              data-testid={omitTestIds ? undefined : `spaces-template-card-${template.id}`}
               cursor="pointer"
               onClick={() => onSelectTemplate(template.id)}
               _hover={{ bg: 'var(--surface-2)', transform: 'translateY(-1px)', transition: 'all 150ms ease', boxShadow: 'var(--shadow-sm)' }}
@@ -132,7 +136,7 @@ export function RecipeTemplateGallery({
             >
               <TemplateSurface bg={selected ? 'rgba(37, 99, 235, 0.06)' : 'var(--surface-1)'} padding="3">
                 <HStack align="start" gap="3">
-                  <MiniaturePreview template={template} />
+                  {!omitPreviews ? <MiniaturePreview template={template} /> : null}
                   <VStack align="stretch" gap="2" flex="1" minW={0}>
                     <VStack align="start" gap="1" minW={0}>
                       <Text fontSize="10px" fontWeight="600" letterSpacing="0" textTransform="uppercase" color="var(--text-muted)">

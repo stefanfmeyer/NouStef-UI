@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
-import { Badge, Box, Button, Checkbox, Drawer, Field, Grid, HStack, Input, NativeSelect, ScrollArea, Spinner, Table, Tabs, Text, VStack } from '@chakra-ui/react';
+import { Badge, Box, Button, Checkbox, Drawer, Field, Grid, HStack, Input, NumberInput, NativeSelect, ScrollArea, Spinner, Table, Tabs, Text, VStack } from '@chakra-ui/react';
 
 /* ── Discrete step slider ── */
 function StepSlider({
@@ -71,7 +71,7 @@ export function SettingsPage({
   telemetryError,
   telemetryPage,
   onTelemetryPageChange,
-  saving,
+  saving: _saving,
   error,
   modelProviderResponse,
   modelProviderLoading,
@@ -140,7 +140,7 @@ export function SettingsPage({
   onInspectProvider: (providerId: string) => Promise<unknown> | void;
 }) {
   const [currentTab, setCurrentTab] = useState<SettingsTabValue>('general');
-  const { themeMode: activeThemeMode, setThemeMode: setActiveThemeMode } = useHermesTheme();
+  const { themeMode: activeThemeMode } = useHermesTheme();
   const [themeMode, setThemeMode] = useState<AppSettings['themeMode']>('dark');
   const [themeDirty, setThemeDirty] = useState(false);
   const [sessionsPageSize, setSessionsPageSize] = useState('50');
@@ -258,10 +258,6 @@ export function SettingsPage({
       field.required &&
       getConfigurationFieldValue(field.key, field.value ?? '').trim().length === 0
   );
-  const selectedProviderConfigBlocked =
-    selectedProviderModelField?.input === 'select' &&
-    selectedProviderModelField.disabled &&
-    selectedProviderModelField.options.length === 0;
   const providerDrawerAuthPending = Boolean(
     drawerProviderDetails?.authSession && ['pending', 'verifying'].includes(drawerProviderDetails.authSession.status)
   );
@@ -510,68 +506,54 @@ export function SettingsPage({
 
               <Field.Root>
                 <Field.Label color="var(--text-secondary)">Normal chat timeout</Field.Label>
-                <StepSlider
-                  steps={[
-                    { value: 30_000, label: '30s' },
-                    { value: 90_000, label: '90s' },
-                    { value: 180_000, label: '3m' },
-                    { value: 600_000, label: '10m' },
-                    { value: 900_000, label: '15m' }
-                  ]}
+                <NumberInput.Root
                   value={chatTimeoutMs}
-                  onChange={(v) => { setChatTimeoutMs(v); scheduleSave({ chatTimeoutMs: v }); }}
-                />
-                <Field.HelperText color="var(--text-muted)">Default timeout for regular chat requests.</Field.HelperText>
+                  onValueChange={(d) => { setChatTimeoutMs(d.value); scheduleSave({ chatTimeoutMs: d.value }); }}
+                  min={1000}
+                  size="sm"
+                >
+                  <NumberInput.Input bg="var(--surface-2)" borderColor="var(--border-subtle)" />
+                </NumberInput.Root>
+                <Field.HelperText color="var(--text-muted)">Default timeout for regular chat requests (ms).</Field.HelperText>
               </Field.Root>
 
               <Field.Root>
                 <Field.Label color="var(--text-secondary)">Search / discovery timeout</Field.Label>
-                <StepSlider
-                  steps={[
-                    { value: 30_000, label: '30s' },
-                    { value: 90_000, label: '90s' },
-                    { value: 180_000, label: '3m' },
-                    { value: 600_000, label: '10m' },
-                    { value: 900_000, label: '15m' },
-                    { value: 1_800_000, label: '30m' }
-                  ]}
+                <NumberInput.Root
                   value={discoveryTimeoutMs}
-                  onChange={(v) => { setDiscoveryTimeoutMs(v); scheduleSave({ discoveryTimeoutMs: v }); }}
-                />
-                <Field.HelperText color="var(--text-muted)">Used for broad search, lookup, research, and recommendation requests.</Field.HelperText>
+                  onValueChange={(d) => { setDiscoveryTimeoutMs(d.value); scheduleSave({ discoveryTimeoutMs: d.value }); }}
+                  min={1000}
+                  size="sm"
+                >
+                  <NumberInput.Input bg="var(--surface-2)" borderColor="var(--border-subtle)" />
+                </NumberInput.Root>
+                <Field.HelperText color="var(--text-muted)">Used for broad search, lookup, research, and recommendation requests (ms).</Field.HelperText>
               </Field.Root>
 
               <Field.Root>
                 <Field.Label color="var(--text-secondary)">Nearby / local-search timeout</Field.Label>
-                <StepSlider
-                  steps={[
-                    { value: 30_000, label: '30s' },
-                    { value: 90_000, label: '90s' },
-                    { value: 180_000, label: '3m' },
-                    { value: 600_000, label: '10m' },
-                    { value: 900_000, label: '15m' },
-                    { value: 1_800_000, label: '30m' }
-                  ]}
+                <NumberInput.Root
                   value={nearbySearchTimeoutMs}
-                  onChange={(v) => { setNearbySearchTimeoutMs(v); scheduleSave({ nearbySearchTimeoutMs: v }); }}
-                />
-                <Field.HelperText color="var(--text-muted)">Used for nearby places, restaurants, and local-discovery intents.</Field.HelperText>
+                  onValueChange={(d) => { setNearbySearchTimeoutMs(d.value); scheduleSave({ nearbySearchTimeoutMs: d.value }); }}
+                  min={1000}
+                  size="sm"
+                >
+                  <NumberInput.Input bg="var(--surface-2)" borderColor="var(--border-subtle)" />
+                </NumberInput.Root>
+                <Field.HelperText color="var(--text-muted)">Used for nearby places, restaurants, and local-discovery intents (ms).</Field.HelperText>
               </Field.Root>
 
               <Field.Root>
                 <Field.Label color="var(--text-secondary)">Recipe timeout</Field.Label>
-                <StepSlider
-                  steps={[
-                    { value: 30_000, label: '30s' },
-                    { value: 90_000, label: '90s' },
-                    { value: 180_000, label: '3m' },
-                    { value: 600_000, label: '10m' },
-                    { value: 900_000, label: '15m' }
-                  ]}
+                <NumberInput.Root
                   value={recipeOperationTimeoutMs}
-                  onChange={(v) => { setRecipeOperationTimeoutMs(v); scheduleSave({ recipeOperationTimeoutMs: v }); }}
-                />
-                <Field.HelperText color="var(--text-muted)">Used for Hermes-driven recipe creation and structured workspace updates.</Field.HelperText>
+                  onValueChange={(d) => { setRecipeOperationTimeoutMs(d.value); scheduleSave({ recipeOperationTimeoutMs: d.value }); }}
+                  min={1000}
+                  size="sm"
+                >
+                  <NumberInput.Input bg="var(--surface-2)" borderColor="var(--border-subtle)" />
+                </NumberInput.Root>
+                <Field.HelperText color="var(--text-muted)">Used for Hermes-driven recipe creation and structured workspace updates (ms).</Field.HelperText>
               </Field.Root>
             </VStack>
           </SectionCard>
@@ -604,18 +586,16 @@ export function SettingsPage({
                   </Checkbox.Root>
                   <Field.Root>
                     <Field.Label color="var(--text-secondary)">Unrestricted timeout</Field.Label>
-                    <StepSlider
-                      steps={[
-                        { value: 900_000, label: '15m' },
-                        { value: 1_800_000, label: '30m' },
-                        { value: 3_600_000, label: '1hr' },
-                        { value: 7_200_000, label: '2hr' }
-                      ]}
+                    <NumberInput.Root
                       value={unrestrictedTimeoutMs}
-                      onChange={(v) => { setUnrestrictedTimeoutMs(v); scheduleSave({ unrestrictedTimeoutMs: v }); }}
-                    />
+                      onValueChange={(d) => { setUnrestrictedTimeoutMs(d.value); scheduleSave({ unrestrictedTimeoutMs: d.value }); }}
+                      min={1000}
+                      size="sm"
+                    >
+                      <NumberInput.Input bg="var(--surface-2)" borderColor="var(--border-subtle)" />
+                    </NumberInput.Root>
                     <Field.HelperText color="var(--text-muted)">
-                      Maximum bridge timeout used only while Unrestricted Access is enabled.
+                      Maximum bridge timeout (ms) used only while Unrestricted Access is enabled.
                     </Field.HelperText>
                   </Field.Root>
                 </VStack>

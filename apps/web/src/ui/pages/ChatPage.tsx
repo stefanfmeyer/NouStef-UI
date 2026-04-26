@@ -569,6 +569,7 @@ export function ChatPage({
                   </Drawer.Header>
                   <Drawer.Body overflowX="hidden" minW={0}>
                     <ChatActivityFeed
+                      hideTestId
                       activities={activities}
                       sending={sending}
                       progress={progress}
@@ -731,6 +732,7 @@ export function ChatPage({
                   </Drawer.Header>
                   <Drawer.Body overflowX="hidden" minW={0}>
                     <ChatActivityFeed
+                      hideTestId
                       activities={activities}
                       sending={sending}
                       progress={progress}

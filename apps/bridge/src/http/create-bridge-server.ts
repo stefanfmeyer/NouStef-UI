@@ -10,7 +10,6 @@ import {
   CreateRecipeRequestSchema,
   TestModelConfigRequestSchema,
   CreateSessionRequestSchema,
-  DeleteProfileRequestSchema,
   DeleteRecipeRequestSchema,
   DeleteSessionRequestSchema,
   DeleteSkillRequestSchema,
