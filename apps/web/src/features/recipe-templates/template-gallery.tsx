@@ -57,70 +57,59 @@ export function RecipeTemplateGallery({
   onSelectTemplate: (templateId: string) => void;
   onInspectTemplate: (templateId: string) => void;
 }) {
-  const allButtonStyles = resolveTemplateGalleryFilterButtonStyles(activeCategory === 'all');
+  const _allButtonStyles = resolveTemplateGalleryFilterButtonStyles(activeCategory === 'all');
 
   return (
-    <VStack align="stretch" gap="3" data-testid={omitTestIds ? undefined : 'spaces-template-gallery'}>
-      <TemplateSurface>
-        <VStack align="stretch" gap="4">
-          <Flex justify="space-between" align="end" gap="4" wrap="wrap">
-            <VStack align="start" gap="1">
-              <Text fontSize="lg" fontWeight="750" color="var(--text-primary)">
-                Recipe Book
-              </Text>
-              <Text color="var(--text-secondary)">
-                Curated templates for structured AI workspaces.
-              </Text>
-            </VStack>
-            <Text fontSize="sm" color="var(--text-muted)">
-              {templates.length} templates
-            </Text>
-          </Flex>
+    <VStack align="stretch" gap="4" data-testid={omitTestIds ? undefined : 'spaces-template-gallery'}>
+      {/* Filter chips — single horizontal scrollable row, no wrapping */}
+      <Box
+        overflowX="auto"
+        css={{ scrollbarWidth: 'none', '&::-webkit-scrollbar': { display: 'none' } }}
+        flexShrink={0}
+      >
+        <HStack gap="1.5" flexWrap="nowrap" pb="1">
+          <Button
+            size="xs"
+            rounded="var(--radius-pill)"
+            h="6"
+            px="3"
+            fontSize="11px"
+            fontWeight="500"
+            bg={activeCategory === 'all' ? 'var(--surface-active)' : 'transparent'}
+            border="1px solid var(--border-subtle)"
+            color={activeCategory === 'all' ? 'var(--text-primary)' : 'var(--text-muted)'}
+            _hover={{ bg: 'var(--surface-hover)', color: 'var(--text-primary)' }}
+            onClick={() => onCategoryChange('all')}
+            flexShrink={0}
+          >
+            All
+          </Button>
+          {RECIPE_TEMPLATE_CATEGORIES.map((category) => {
+            const isActive = activeCategory === category.id;
+            return (
+              <Button
+                key={category.id}
+                size="xs"
+                rounded="var(--radius-pill)"
+                h="6"
+                px="3"
+                fontSize="11px"
+                fontWeight="500"
+                bg={isActive ? 'var(--surface-active)' : 'transparent'}
+                border="1px solid var(--border-subtle)"
+                color={isActive ? 'var(--text-primary)' : 'var(--text-muted)'}
+                _hover={{ bg: 'var(--surface-hover)', color: 'var(--text-primary)' }}
+                onClick={() => onCategoryChange(category.id)}
+                flexShrink={0}
+              >
+                {category.label}
+              </Button>
+            );
+          })}
+        </HStack>
+      </Box>
 
-          <Flex gap="1.5" wrap="wrap">
-            <Button
-              size="xs"
-              rounded="999px"
-              h="6"
-              px="3"
-              fontSize="xs"
-              bg={allButtonStyles.bg}
-              border="1px solid var(--border-subtle)"
-              color={allButtonStyles.color}
-              _dark={{
-                color: allButtonStyles.darkColor
-              }}
-              onClick={() => onCategoryChange('all')}
-            >
-              All
-            </Button>
-            {RECIPE_TEMPLATE_CATEGORIES.map((category) => {
-              const buttonStyles = resolveTemplateGalleryFilterButtonStyles(activeCategory === category.id);
-              return (
-                <Button
-                  key={category.id}
-                  size="xs"
-                  rounded="999px"
-                  h="6"
-                  px="3"
-                  fontSize="xs"
-                  bg={buttonStyles.bg}
-                  border="1px solid var(--border-subtle)"
-                  color={buttonStyles.color}
-                  _dark={{
-                    color: buttonStyles.darkColor
-                  }}
-                  onClick={() => onCategoryChange(category.id)}
-                >
-                  {category.label}
-                </Button>
-              );
-            })}
-          </Flex>
-        </VStack>
-      </TemplateSurface>
-
-      <SimpleGrid columns={{ base: 1, xl: 2 }} gap="3" alignItems="stretch">
+      <SimpleGrid columns={{ base: 1, md: 2, xl: 3 }} gap="5" alignItems="stretch">
         {templates.map((template) => {
           const selected = template.id === selectedTemplateId;
 

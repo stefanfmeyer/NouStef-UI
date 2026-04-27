@@ -1,55 +1,16 @@
-import { Box, Flex, HStack, Table, Text, VStack } from '@chakra-ui/react';
-import { Button } from '@chakra-ui/react';
+import { Box, Button, Flex, HStack, Table, Text, VStack } from '@chakra-ui/react';
 import type { JobsResponse } from '@hermes-recipes/protocol';
-import { StatusPill } from '../atoms/StatusPill';
-import { EmptyStateCard } from '../molecules/EmptyStateCard';
 import { ErrorBanner } from '../molecules/ErrorBanner';
 
-function JobsIcon() {
-  return (
-    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
-      <circle cx="16" cy="16" r="11" stroke="var(--text-muted)" strokeWidth="1.5" />
-      <path d="M16 11v6l4 3" stroke="var(--text-muted)" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  );
+function formatNextRun(s: string) {
+  return s;
 }
 
-function formatDate(dateString: string) {
-  return new Date(dateString).toLocaleString(undefined, {
-    month: 'short',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: '2-digit'
-  });
-}
-
-function JobCard({ job }: { job: JobsResponse['items'][number] }) {
-  return (
-    <Box
-      rounded="8px"
-      border="1px solid var(--border-subtle)"
-      bg="var(--surface-elevated)"
-      px="4"
-      py="3"
-      boxShadow="var(--shadow-xs)"
-    >
-      <VStack align="stretch" gap="2">
-        <VStack align="start" gap="0.5">
-          <Text fontSize="sm" fontWeight="650" color="var(--text-primary)">{job.label}</Text>
-          {job.description ? (
-            <Text fontSize="xs" color="var(--text-secondary)" lineHeight="1.5">{job.description}</Text>
-          ) : null}
-        </VStack>
-        <Flex gap="2" wrap="wrap" align="center">
-          <StatusPill label={job.status} />
-          <span className="skill-chip" style={{ fontFamily: 'ui-monospace, monospace', fontSize: '11px' }}>{job.schedule}</span>
-        </Flex>
-        {job.nextRun ? (
-          <Text fontSize="xs" color="var(--text-muted)">Next: {job.nextRun}</Text>
-        ) : null}
-      </VStack>
-    </Box>
-  );
+function StatusDot({ status }: { status: string }) {
+  const isOk = ['completed', 'healthy', 'enabled', 'connected', 'started'].includes(status.toLowerCase());
+  const isWarn = ['pending', 'paused', 'degraded', 'warning'].includes(status.toLowerCase());
+  const cls = isOk ? 'status-dot status-dot--connected' : isWarn ? 'status-dot status-dot--reconnecting' : 'status-dot status-dot--disconnected';
+  return <span className={cls} style={{ marginRight: 6 }} />;
 }
 
 export function JobsPage({
@@ -64,41 +25,19 @@ export function JobsPage({
   onRefresh: () => void;
 }) {
   return (
-    <VStack align="stretch" h="100%" minH={0} gap="4">
-      {/* Status bar */}
-      <HStack
-        justify="space-between"
-        rounded="8px"
-        border="1px solid var(--border-subtle)"
-        bg="var(--surface-elevated)"
-        px="4"
-        py="3.5"
-        boxShadow="var(--shadow-xs)"
-        wrap="wrap"
-        gap="3"
-      >
-        <HStack gap="2.5" align="center">
-          {response ? (
-            <>
-              <StatusPill label={response.freshness.status} />
-              {response.freshness.lastSuccessfulAt ? (
-                <Text fontSize="xs" color="var(--text-secondary)">
-                  Last synced {formatDate(response.freshness.lastSuccessfulAt)}
-                </Text>
-              ) : (
-                <Text fontSize="xs" color="var(--text-muted)">
-                  Never synced
-                </Text>
-              )}
-            </>
-          ) : (
-            <Text fontSize="xs" color="var(--text-muted)">Checking job schedule…</Text>
-          )}
-        </HStack>
+    <div className="page-content">
+      {/* Page actions row — minimal, right-aligned */}
+      <HStack justify="flex-end" mb="4" flexShrink={0}>
         <Button
-          variant="outline"
+          variant="ghost"
           size="sm"
-          rounded="8px"
+          h="8"
+          px="3"
+          rounded="var(--radius-control)"
+          fontSize="13px"
+          fontWeight="400"
+          color="var(--text-muted)"
+          _hover={{ bg: 'var(--surface-hover)', color: 'var(--text-primary)' }}
           onClick={onRefresh}
           loading={loading}
         >
@@ -106,80 +45,91 @@ export function JobsPage({
         </Button>
       </HStack>
 
-      {error ? <ErrorBanner title="Jobs refresh failed" detail={error} /> : null}
+      {error ? <Box mb="3" flexShrink={0}><ErrorBanner title="Jobs refresh failed" detail={error} /></Box> : null}
       {response?.freshness.lastError ? (
-        <ErrorBanner title="Latest Hermes jobs error" detail={response.freshness.lastError} />
+        <Box mb="3" flexShrink={0}><ErrorBanner title="Latest Hermes jobs error" detail={response.freshness.lastError} /></Box>
       ) : null}
 
-      {!response ? (
-        <Box flex="1" minH={0} rounded="8px" border="1px solid var(--border-subtle)" bg="var(--surface-elevated)" overflow="hidden" boxShadow="var(--shadow-sm)" p="4">
-          <EmptyStateCard title="Loading jobs" detail="Reading Hermes cron state for the selected profile." />
-        </Box>
-      ) : response.items.length === 0 ? (
-        <Box flex="1" minH={0} rounded="8px" border="1px solid var(--border-subtle)" bg="var(--surface-elevated)" overflow="hidden" boxShadow="var(--shadow-sm)" p="4">
-          <EmptyStateCard
-            icon={<JobsIcon />}
-            title="No scheduled jobs"
-            detail="Hermes reported no cron jobs for the selected profile. Create a new session and ask Hermes to schedule a task."
-          />
-        </Box>
-      ) : (
-        <>
-          {/* Desktop table */}
-          <Box flex="1" minH={0} rounded="8px" border="1px solid var(--border-subtle)" bg="var(--surface-elevated)" overflow="hidden" boxShadow="var(--shadow-sm)" display={{ base: 'none', md: 'block' }}>
-            <Table.ScrollArea data-testid="jobs-table-scroll" h="100%">
-              <Table.Root size="sm" variant="outline">
-                <Table.Header>
-                  <Table.Row>
-                    <Table.ColumnHeader>Job</Table.ColumnHeader>
-                    <Table.ColumnHeader>Schedule</Table.ColumnHeader>
-                    <Table.ColumnHeader>Status</Table.ColumnHeader>
-                    <Table.ColumnHeader>Next run</Table.ColumnHeader>
-                  </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                  {response.items.map((job) => (
-                    <Table.Row key={job.id}>
-                      <Table.Cell>
-                        <Text fontSize="sm" fontWeight="650" color="var(--text-primary)">
-                          {job.label}
-                        </Text>
-                        {job.description ? (
-                          <Text fontSize="xs" color="var(--text-secondary)" mt="0.5" lineHeight="1.5">
-                            {job.description}
-                          </Text>
-                        ) : null}
-                      </Table.Cell>
-                      <Table.Cell>
-                        <Text
-                          fontSize="xs"
-                          color="var(--text-secondary)"
-                          fontFamily="ui-monospace, monospace"
-                        >
-                          {job.schedule}
-                        </Text>
-                      </Table.Cell>
-                      <Table.Cell>
-                        <StatusPill label={job.status} />
-                      </Table.Cell>
-                      <Table.Cell>
-                        <Text fontSize="xs" color="var(--text-secondary)">{job.nextRun}</Text>
-                      </Table.Cell>
+      {/* Content */}
+      <Box flex="1" minH={0} overflow="hidden" rounded="var(--radius-card)" border="1px solid var(--border-subtle)">
+        {!response || response.items.length === 0 ? (
+          <Flex align="center" justify="center" h="100%" minH="240px">
+            <VStack gap="2" textAlign="center">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <circle cx="12" cy="12" r="8.5" stroke="var(--text-muted)" strokeWidth="1.5" />
+                <path d="M12 8v5l3 2.5" stroke="var(--text-muted)" strokeWidth="1.5" strokeLinecap="round" />
+              </svg>
+              <Text fontSize="15px" fontWeight="500" color="var(--text-secondary)">
+                {loading ? 'Loading jobs…' : 'No scheduled jobs'}
+              </Text>
+              <Text fontSize="13px" color="var(--text-muted)">
+                {loading ? '' : 'Ask Hermes to schedule a task in a chat session.'}
+              </Text>
+            </VStack>
+          </Flex>
+        ) : (
+          <>
+            {/* Desktop table */}
+            <Box h="100%" display={{ base: 'none', md: 'block' }}>
+              <Table.ScrollArea data-testid="jobs-table-scroll" h="100%">
+                <Table.Root size="sm" variant="outline">
+                  <Table.Header>
+                    <Table.Row>
+                      <Table.ColumnHeader>Job</Table.ColumnHeader>
+                      <Table.ColumnHeader>Schedule</Table.ColumnHeader>
+                      <Table.ColumnHeader>Status</Table.ColumnHeader>
+                      <Table.ColumnHeader>Next run</Table.ColumnHeader>
                     </Table.Row>
-                  ))}
-                </Table.Body>
-              </Table.Root>
-            </Table.ScrollArea>
-          </Box>
+                  </Table.Header>
+                  <Table.Body>
+                    {response.items.map((job) => (
+                      <Table.Row key={job.id} h="var(--row-height)">
+                        <Table.Cell>
+                          <Text fontSize="14px" fontWeight="500" color="var(--text-primary)">{job.label}</Text>
+                          {job.description ? (
+                            <Text fontSize="12px" color="var(--text-muted)" mt="0.5" lineClamp={1}>{job.description}</Text>
+                          ) : null}
+                        </Table.Cell>
+                        <Table.Cell>
+                          <Text fontSize="12px" color="var(--text-secondary)" fontFamily="ui-monospace, monospace">
+                            {job.schedule}
+                          </Text>
+                        </Table.Cell>
+                        <Table.Cell>
+                          <HStack gap="1.5" align="center">
+                            <StatusDot status={job.status} />
+                            <Text fontSize="13px" color="var(--text-secondary)">{job.status}</Text>
+                          </HStack>
+                        </Table.Cell>
+                        <Table.Cell>
+                          <Text fontSize="12px" color="var(--text-muted)">{formatNextRun(job.nextRun ?? '—')}</Text>
+                        </Table.Cell>
+                      </Table.Row>
+                    ))}
+                  </Table.Body>
+                </Table.Root>
+              </Table.ScrollArea>
+            </Box>
 
-          {/* Mobile cards */}
-          <VStack align="stretch" gap="3" display={{ base: 'flex', md: 'none' }}>
-            {response.items.map((job) => (
-              <JobCard key={job.id} job={job} />
-            ))}
-          </VStack>
-        </>
-      )}
-    </VStack>
+            {/* Mobile list */}
+            <VStack align="stretch" gap="0" display={{ base: 'flex', md: 'none' }} p="3">
+              {response.items.map((job) => (
+                <Box key={job.id} py="3" borderBottom="1px solid var(--border-subtle)" _last={{ borderBottom: 'none' }}>
+                  <HStack justify="space-between" mb="1">
+                    <Text fontSize="14px" fontWeight="500" color="var(--text-primary)">{job.label}</Text>
+                    <HStack gap="1.5">
+                      <StatusDot status={job.status} />
+                      <Text fontSize="12px" color="var(--text-secondary)">{job.status}</Text>
+                    </HStack>
+                  </HStack>
+                  <Text fontSize="12px" color="var(--text-muted)" fontFamily="ui-monospace, monospace">{job.schedule}</Text>
+                  {job.nextRun ? <Text fontSize="11px" color="var(--text-muted)" mt="0.5">Next: {job.nextRun}</Text> : null}
+                </Box>
+              ))}
+            </VStack>
+          </>
+        )}
+      </Box>
+    </div>
   );
 }

@@ -172,8 +172,16 @@ export function App() {
             onDeleteProfile={(id) => controller.handleDeleteProfile(id)}
           />
         }
+        modelSelectorSlot={
+          <ModelSelector
+            modelProviderResponse={controller.modelProviderResponse}
+            activeModelId={controller.runtimeConfigGate.modelId}
+          />
+        }
+        sidebarCollapsed={controller.sidebarCollapsed}
+        onToggleSidebar={() => void controller.handleSidebarCollapsedChange(!controller.sidebarCollapsed)}
         tabBar={
-          controller.openTabs.length > 0 ? (
+          controller.page === 'chat' && controller.openTabs.length > 0 ? (
             <TabBar
               tabs={controller.openTabs}
               activeTabId={controller.activeSessionId}
@@ -181,12 +189,6 @@ export function App() {
               onCloseTab={(sessionId) => controller.closeTab(sessionId)}
               onNewTab={() => void controller.handleCreateSession()}
               onReorderTabs={(reordered) => controller.reorderTabs(reordered)}
-              rightContent={
-                <ModelSelector
-                  modelProviderResponse={controller.modelProviderResponse}
-                  activeModelId={controller.runtimeConfigGate.modelId}
-                />
-              }
             />
           ) : undefined
         }
@@ -429,19 +431,12 @@ function RuntimeConfigBlockedState({
 
 function pageTitle(page: string) {
   switch (page) {
-    case 'sessions':
-      return 'All sessions';
-    case 'recipes':
-      return 'Recipes';
-    case 'jobs':
-      return 'Jobs';
-    case 'tools':
-      return 'Tools';
-    case 'skills':
-      return 'Skills';
-    case 'settings':
-      return 'Settings';
-    default:
-      return 'Chat';
+    case 'sessions': return 'Sessions';
+    case 'recipes': return 'Recipes';
+    case 'jobs': return 'Jobs';
+    case 'tools': return 'Tools';
+    case 'skills': return 'Skills';
+    case 'settings': return 'Settings';
+    default: return 'Chat';
   }
 }

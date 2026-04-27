@@ -2,15 +2,23 @@ import { Box, Button, Flex, Text, VStack } from '@chakra-ui/react';
 import type { Session } from '@hermes-recipes/protocol';
 import { SessionActionMenu } from './SessionActionMenu';
 
-function formatSessionMeta(session: Session) {
-  const messageLabel = `${session.messageCount} ${session.messageCount === 1 ? 'message' : 'messages'}`;
-  const updatedLabel = new Date(session.lastUpdatedAt).toLocaleString(undefined, {
-    month: 'short',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: '2-digit'
-  });
-  return `${messageLabel} · ${updatedLabel}`;
+function formatRelativeTime(dateString: string): string {
+  const diffMs = Date.now() - new Date(dateString).getTime();
+  const mins = Math.floor(diffMs / 60000);
+  const hours = Math.floor(diffMs / 3600000);
+  const days = Math.floor(diffMs / 86400000);
+  if (mins < 1) return 'just now';
+  if (mins < 60) return `${mins}m ago`;
+  if (hours < 24) return `${hours}h ago`;
+  if (days < 7) return `${days}d ago`;
+  return new Date(dateString).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+}
+
+function sessionMeta(session: Session): string {
+  if (session.messageCount === 0) return 'Draft';
+  const count = session.messageCount === 1 ? '1 message' : `${session.messageCount} messages`;
+  const time = formatRelativeTime(session.lastUpdatedAt);
+  return `${count} · ${time}`;
 }
 
 export function SessionRow({
@@ -34,11 +42,10 @@ export function SessionRow({
       width="100%"
       maxW="100%"
       minW={0}
-      rounded="8px"
+      rounded="var(--radius-control)"
       bg={active ? 'var(--surface-selected)' : 'transparent'}
       overflow="hidden"
-      transition="background-color 140ms ease"
-      position="relative"
+      transition="background-color var(--transition-fast)"
       _hover={{ bg: active ? 'var(--surface-selected)' : 'var(--surface-hover)' }}
     >
       <Flex align="center" gap="1" px="2" py="1.5" minW={0} maxW="100%" overflow="hidden">
@@ -60,7 +67,7 @@ export function SessionRow({
           _hover={{ bg: 'transparent' }}
           onClick={onClick}
         >
-          <VStack align="start" gap="0.5" width="100%" minW={0} overflow="hidden">
+          <VStack align="start" gap="0" width="100%" minW={0} overflow="hidden">
             <Text
               data-testid="recent-session-title"
               width="100%"
@@ -68,10 +75,10 @@ export function SessionRow({
               overflow="hidden"
               textOverflow="ellipsis"
               whiteSpace="nowrap"
-              fontSize="sm"
-              fontWeight="600"
+              fontSize="13px"
+              fontWeight="500"
               color={active ? 'var(--text-primary)' : 'var(--text-secondary)'}
-              lineHeight="1.3"
+              lineHeight="1.35"
             >
               {session.title}
             </Text>
@@ -82,11 +89,11 @@ export function SessionRow({
               overflow="hidden"
               textOverflow="ellipsis"
               whiteSpace="nowrap"
-              fontSize="xs"
+              fontSize="11px"
               color="var(--text-muted)"
-              lineHeight="1"
+              lineHeight="1.3"
             >
-              {formatSessionMeta(session)}
+              {sessionMeta(session)}
             </Text>
           </VStack>
         </Button>
