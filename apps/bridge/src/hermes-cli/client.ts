@@ -433,6 +433,13 @@ function createDefaultHermesCliRunner(cliPath: string): HermesCliRunner {
               return;
             }
 
+            // ENOENT = binary does not exist — reject so callers detect "not installed"
+            // rather than silently receiving an empty successful result.
+            if ((error as ExecFileException)?.code === 'ENOENT') {
+              reject(error);
+              return;
+            }
+
             resolve({
               stdout: typeof stdout === 'string' ? stdout : '',
               stderr: typeof stderr === 'string' ? stderr : '',
@@ -3346,21 +3353,40 @@ export class HermesCli {
       supportsDisconnect: false,
       supportsModelDiscovery: false,
       models: [],
-      configurationFields: [],
+      // value must be undefined (not '') — OptionalTextSchema requires min(1) or undefined
+      configurationFields: meta.supportsApiKey ? [
+        {
+          key: 'apiKey' as const,
+          label: 'API Key',
+          input: 'text' as const,
+          required: true,
+          secret: true,
+          disabled: false,
+          placeholder: meta.keyUrl ? `Get your key at ${meta.keyUrl}` : `Paste your ${meta.displayName} API key`,
+          value: undefined,
+          options: []
+        }
+      ] : [],
       setupSteps: []
     }));
 
+    // Build setup steps for each provider using the shared builder
+    for (const provider of providers) {
+      provider.setupSteps = this.buildDumpSetupSteps(provider);
+    }
+
+    const defaultProvider = 'openrouter';
     return {
-      config: { profileId, provider: 'openrouter', defaultModel: 'unknown', maxTurns: 150, lastSyncedAt: now },
+      config: { profileId, provider: defaultProvider, defaultModel: 'unknown', maxTurns: 150, lastSyncedAt: now },
       providers,
       runtimeReadiness: {
         ready: false,
         code: 'runtime_state_unavailable',
-        message: 'Hermes is not installed. Enter your API key below — it will be saved and used once Hermes is set up.',
+        message: 'Hermes is not installed. Enter your API key — it will be saved and used once Hermes is set up.',
         providerId: null,
         modelId: null
       },
-      inspectedProviderId: 'openrouter',
+      inspectedProviderId: defaultProvider,
       discoveredAt: now
     };
   }
@@ -3375,8 +3401,10 @@ export class HermesCli {
     try {
       dumpResultOrNull = await this.run(['dump'], env, signal);
     } catch (error) {
-      // If hermes binary is not found, return empty state so the Settings page can still show
-      if (error instanceof Error && (error.message.includes('ENOENT') || error.message.includes('not found') || error.message.includes('Cannot find'))) {
+      // ENOENT (binary not found) or similar — Hermes not installed.
+      const msg = error instanceof Error ? error.message : '';
+      const errCode = (error as { code?: string })?.code;
+      if (msg.includes('ENOENT') || msg.includes('not found') || msg.includes('Cannot find') || errCode === 'ENOENT') {
         return this.buildNotInstalledProviderState(profile.id);
       }
       throw error;
@@ -3465,6 +3493,35 @@ export class HermesCli {
             ]
           }
         ];
+      }
+
+      // Add an API key input field for any provider that needs credentials but has none.
+      // This is what renders the password input in the Settings drawer.
+      // NOTE: value must be undefined, not '' — OptionalTextSchema enforces min(1) or undefined.
+      for (const provider of providers) {
+        if (
+          provider.supportsApiKey &&
+          (provider.state === 'needs_api_key' || provider.state === 'unconfigured') &&
+          !provider.configurationFields.some((f) => f.key === 'apiKey')
+        ) {
+          const meta = HERMES_PROVIDER_REGISTRY[provider.id];
+          provider.configurationFields = [
+            {
+              key: 'apiKey' as const,
+              label: 'API Key',
+              input: 'text' as const,
+              required: true,
+              secret: true,
+              disabled: false,
+              placeholder: meta?.keyUrl
+                ? `Get your key at ${meta.keyUrl}`
+                : `Paste your ${provider.displayName} API key`,
+              value: undefined,
+              options: []
+            },
+            ...provider.configurationFields
+          ];
+        }
       }
 
       // Generate setup steps for all providers
