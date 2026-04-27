@@ -85,7 +85,7 @@ export function ChatPage({
   onUpdateRecipe,
   onApplyRecipeEntryAction,
   onSwitchTemplate,
-  activeModelLabel
+  activeModelLabel: _activeModelLabel
 }: {
   sessionPayload: SessionMessagesResponse | null;
   loading: boolean;
@@ -283,6 +283,15 @@ export function ChatPage({
 
   return (
     <Flex direction="column" h="100%" minH={0}>
+      {/* Session summary — single muted line, only when summary exists */}
+      {!attachedRecipe && activeSession?.summary ? (
+        <Box px={{ base: '3', lg: '5' }} pt="1.5" pb="0" flexShrink={0}>
+          <Text fontSize="xs" color="var(--text-muted)" lineClamp={1} opacity={0.7}>
+            {activeSession.summary}
+          </Text>
+        </Box>
+      ) : null}
+
       {/* Minimal chat actions — only rendered for standalone (no recipe) sessions */}
       {!attachedRecipe && activeSession ? (
         <HStack px={{ base: '3', lg: '5' }} pt="1.5" pb="0" justify="flex-end" align="center" flexShrink={0} gap="1">

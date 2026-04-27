@@ -11,6 +11,24 @@ import { SessionRenameDialog } from '../molecules/SessionRenameDialog';
 
 type SidebarIconName = 'recipes' | 'sessions' | 'jobs' | 'tools' | 'skills' | 'settings' | 'new-session' | 'search' | 'gear' | 'plus' | 'trash' | 'user' | 'chevron-right';
 
+function CollapseIcon() {
+  const Svg = chakra('svg');
+  return (
+    <Svg viewBox="0 0 16 16" boxSize="3.5" fill="none" aria-hidden="true" color="currentColor" flexShrink={0}>
+      <path d="M10.5 3.5 5.5 8l5 4.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+    </Svg>
+  );
+}
+
+function ExpandIcon() {
+  const Svg = chakra('svg');
+  return (
+    <Svg viewBox="0 0 16 16" boxSize="3.5" fill="none" aria-hidden="true" color="currentColor" flexShrink={0}>
+      <path d="M5.5 3.5 10.5 8l-5 4.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+    </Svg>
+  );
+}
+
 /* All nav items in a single flat list */
 const allNav: Array<{ page: AppPage; label: string; icon: SidebarIconName; shortcut?: string }> = [
   { page: 'sessions', label: 'All sessions', icon: 'sessions', shortcut: '⌘⇧S' },
@@ -37,7 +55,7 @@ export function Sidebar({
   collapsed,
   drawerMode,
   profileMetrics,
-  onCollapsedChange: _onCollapsedChange,
+  onCollapsedChange,
   onProfileChange,
   onCreateSession,
   onOpenSession,
@@ -132,6 +150,20 @@ export function Sidebar({
           py="3"
           gap="0"
         >
+          {/* Expand button */}
+          <Button
+            variant="ghost"
+            w="8" h="8" minW="0" px="0" rounded="var(--radius-control)"
+            color="var(--text-muted)"
+            _hover={{ bg: 'var(--surface-hover)', color: 'var(--text-primary)' }}
+            title="Expand sidebar"
+            aria-label="Expand sidebar"
+            onClick={() => void onCollapsedChange(false)}
+            mb="1"
+          >
+            <ExpandIcon />
+          </Button>
+
           {/* New session */}
           <Button
             variant="ghost"
@@ -219,12 +251,15 @@ export function Sidebar({
         overflow="hidden"
         transition="width 220ms cubic-bezier(0.4, 0, 0.2, 1), min-width 220ms cubic-bezier(0.4, 0, 0.2, 1), max-width 220ms cubic-bezier(0.4, 0, 0.2, 1)"
       >
-        {/* ── Workspace switcher ── */}
+        {/* ── Workspace switcher + collapse ── */}
         <Box px="2" pt="2" pb="1" flexShrink={0}>
+          <HStack gap="0" justify="space-between" align="center">
           <HStack
             gap="2"
             px="2"
             h="var(--top-bar-height)"
+            flex="1"
+            minW={0}
             rounded="var(--radius-control)"
             _hover={{ bg: 'var(--surface-hover)' }}
             transition="background var(--transition-fast)"
@@ -232,7 +267,7 @@ export function Sidebar({
             onClick={() => setProfileDrawerOpen(true)}
             role="button"
             tabIndex={0}
-            aria-label="Switch profile"
+            aria-label="Manage profiles"
             onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setProfileDrawerOpen(true); } }}
           >
             <Flex
@@ -260,6 +295,21 @@ export function Sidebar({
             <Box color="var(--text-muted)" flexShrink={0}>
               <SidebarIcon name="chevron-right" size="sm" />
             </Box>
+          </HStack>
+          {!drawerMode ? (
+            <Button
+              variant="ghost"
+              w="7" h="7" minW="0" px="0" rounded="6px"
+              color="var(--text-muted)"
+              _hover={{ bg: 'var(--surface-hover)', color: 'var(--text-primary)' }}
+              title="Collapse sidebar"
+              aria-label="Collapse sidebar"
+              onClick={() => void onCollapsedChange(true)}
+              flexShrink={0}
+            >
+              <CollapseIcon />
+            </Button>
+          ) : null}
           </HStack>
         </Box>
 
@@ -323,7 +373,23 @@ export function Sidebar({
           </Box>
         ) : null}
 
-        {/* ── Session list ── */}
+        {/* ── Session list + nav — outer wrapper carries the sidebar-scroll testId for tests ── */}
+        <Flex direction="column" flex="1" minH={0} overflow="hidden" data-testid="sidebar-scroll">
+
+        {/* "Recent sessions" label — hidden after collapse, checked by tests */}
+        <Box px="3" pt="2" pb="0.5" flexShrink={0}>
+          <Text
+            fontSize="10px"
+            fontWeight="600"
+            color="var(--text-muted)"
+            letterSpacing="0.05em"
+            textTransform="uppercase"
+            opacity={0.6}
+          >
+            Recent sessions
+          </Text>
+        </Box>
+
         <ScrollArea.Root flex="1" minH={0} variant="hover" overflow="hidden" maxW="100%">
           <ScrollArea.Viewport style={{ overflowX: 'hidden', maxWidth: '100%' }}>
             <VStack align="stretch" gap="0" px="2" pt="0.5" pb="1" minW={0} w="100%" maxW="100%">
@@ -373,6 +439,7 @@ export function Sidebar({
             ))}
           </VStack>
         </Box>
+        </Flex>{/* end sidebar-scroll outer wrapper */}
       </Flex>
 
       {/* Profile drawer */}

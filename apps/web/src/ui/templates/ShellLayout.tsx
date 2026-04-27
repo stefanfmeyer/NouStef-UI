@@ -60,17 +60,6 @@ function ConnectionIndicator({ status }: { status: string }) {
   return <StatusPill label={status} />;
 }
 
-function CollapseChevron({ collapsed }: { collapsed: boolean }) {
-  const Svg = chakra('svg');
-  return (
-    <Svg viewBox="0 0 16 16" boxSize="3.5" fill="none" aria-hidden="true" color="currentColor" flexShrink={0}>
-      {collapsed
-        ? <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-        : <path d="M10 4L6 8l4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-      }
-    </Svg>
-  );
-}
 
 function HamburgerIcon() {
   const Svg = chakra('svg');
@@ -95,8 +84,8 @@ export function ShellLayout({
   expectedHermesVersion,
   modelSelectorSlot,
   activeModelLabel: _activeModelLabel,
-  sidebarCollapsed = false,
-  onToggleSidebar,
+  sidebarCollapsed: _sidebarCollapsed = false,
+  onToggleSidebar: _onToggleSidebar,
   children
 }: {
   connection: ConnectionState;
@@ -203,23 +192,7 @@ export function ShellLayout({
 
             {/* LEFT: collapse toggle (desktop) / hamburger (mobile) + logo + page title */}
             <HStack gap="0" minW={0} flex="1" align="center">
-              {/* Desktop: sidebar collapse toggle */}
-              {onToggleSidebar ? (
-                <Button
-                  display={{ base: 'none', lg: 'flex' }}
-                  variant="ghost"
-                  w="7" h="7" minW="0" px="0" rounded="6px"
-                  color="var(--text-muted)"
-                  _hover={{ bg: 'var(--surface-hover)', color: 'var(--text-primary)' }}
-                  aria-label={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-                  title={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-                  onClick={onToggleSidebar}
-                  mr="1"
-                  flexShrink={0}
-                >
-                  <CollapseChevron collapsed={sidebarCollapsed} />
-                </Button>
-              ) : null}
+              {/* Spacer — sidebar collapse lives inside the Sidebar component */}
 
               {/* Mobile: hamburger */}
               {mobileNavContent ? (
@@ -240,14 +213,22 @@ export function ShellLayout({
 
               {/* Chef hat logo */}
               <span
-                aria-hidden="true"
-                style={{ fontSize: '18px', lineHeight: 1, flexShrink: 0, marginRight: '10px' }}
+                data-testid="hermes-home-brand"
+                style={{ fontSize: '18px', lineHeight: 1, flexShrink: 0, marginRight: '10px', display: 'inline-flex', alignItems: 'center' }}
               >
-                🧑‍🍳
+                <span aria-hidden="true">🧑‍🍳</span>
               </span>
 
-              {/* Page title */}
-              <PageHeader pageName={pageTitle} />
+              {/* Page title — compact mode shows brand name (used in combined recipe layout) */}
+              {_headerMode === 'compact' ? (
+                <Box flex="1" minW={0}>
+                  <Text fontSize="13px" fontWeight="600" color="var(--text-primary)" letterSpacing="-0.01em">
+                    The Kitchen
+                  </Text>
+                </Box>
+              ) : (
+                <PageHeader pageName={pageTitle} />
+              )}
             </HStack>
 
             {/* RIGHT: model selector + dividers + status dot + theme toggle */}

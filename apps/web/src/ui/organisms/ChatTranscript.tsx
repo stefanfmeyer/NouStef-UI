@@ -15,8 +15,8 @@ export const ChatTranscript = memo(function ChatTranscript({
   messages,
   assistantDraft,
   loading,
-  emptyTitle,
-  emptyDetail,
+  emptyTitle: _emptyTitle,
+  emptyDetail: _emptyDetail,
   showTypingIndicator,
   typingStatusLabel,
   typingActivityKind,
@@ -83,7 +83,7 @@ export const ChatTranscript = memo(function ChatTranscript({
                 Start a new session
               </p>
               <p className="chat-empty__copy" style={{ margin: '0 0 16px' }}>
-                Type below or pick a session from the sidebar.
+                Choose a recent session or start a new one.
               </p>
               <div className="chat-empty__chips">
                 <span className="chat-empty__chip">What should we cook?</span>

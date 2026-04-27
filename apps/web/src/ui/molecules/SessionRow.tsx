@@ -16,7 +16,9 @@ function formatRelativeTime(dateString: string): string {
 
 function sessionMeta(session: Session): string {
   if (session.messageCount === 0) return 'Draft';
-  return formatRelativeTime(session.lastUpdatedAt);
+  const count = session.messageCount === 1 ? '1 message' : `${session.messageCount} messages`;
+  const time = formatRelativeTime(session.lastUpdatedAt);
+  return `${count} · ${time}`;
 }
 
 export function SessionRow({

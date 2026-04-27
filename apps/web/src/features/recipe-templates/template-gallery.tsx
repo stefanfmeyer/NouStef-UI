@@ -57,7 +57,7 @@ export function RecipeTemplateGallery({
   onSelectTemplate: (templateId: string) => void;
   onInspectTemplate: (templateId: string) => void;
 }) {
-  const allButtonStyles = resolveTemplateGalleryFilterButtonStyles(activeCategory === 'all');
+  const _allButtonStyles = resolveTemplateGalleryFilterButtonStyles(activeCategory === 'all');
 
   return (
     <VStack align="stretch" gap="4" data-testid={omitTestIds ? undefined : 'spaces-template-gallery'}>

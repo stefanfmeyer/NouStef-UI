@@ -2,6 +2,7 @@ import { Box, CloseButton, Drawer, Grid, HStack, Portal, ScrollArea, Tabs, VStac
 import { useEffect, useMemo, useState } from 'react';
 import { RecipeTemplateDetailDrawer } from '../../features/recipe-templates/template-detail-drawer';
 import { RecipeTemplateGallery } from '../../features/recipe-templates/template-gallery';
+import { RecipeTemplatePreview } from '../../features/recipe-templates/template-preview';
 import { getRecipeTemplateById, RECIPE_TEMPLATE_REGISTRY } from '../../features/recipe-templates/template-registry';
 import { IngredientGallery } from '../../features/recipe-templates/ingredient-gallery';
 import { IngredientPreview } from '../../features/recipe-templates/ingredient-preview';
@@ -73,15 +74,24 @@ export function RecipesPage({ activeProfileId: _activeProfileId }: { activeProfi
       </Box>
 
       {activeTab === 'book' && (
-        <ScrollArea.Root flex="1" minH={0} variant="hover">
-          <ScrollArea.Viewport>
-            <Box px={{ base: '3', lg: '4' }} pb="6" pt="1">
+        <>
+          {/* Desktop: two-column layout — gallery left, preview right (no border box) */}
+          <Grid
+            templateColumns={{ base: '1fr', xl: 'minmax(0, 1.3fr) minmax(320px, 0.9fr)' }}
+            gap="5"
+            flex="1"
+            minH={0}
+            overflow="hidden"
+            display={{ base: 'none', xl: 'grid' }}
+            px={{ base: '3', lg: '4' }}
+            pb="4"
+          >
+            <Box minH={0} overflowY="auto" pr="1">
               <RecipeTemplateGallery
                 templates={visibleTemplates}
                 activeCategory={category}
                 selectedTemplateId={selectedTemplate.id}
                 onCategoryChange={setCategory}
-                omitTestIds={false}
                 onSelectTemplate={(templateId) => setSelectedTemplateId(templateId as RecipeTemplateId)}
                 onInspectTemplate={(templateId) => {
                   setSelectedTemplateId(templateId as RecipeTemplateId);
@@ -89,9 +99,44 @@ export function RecipesPage({ activeProfileId: _activeProfileId }: { activeProfi
                 }}
               />
             </Box>
-          </ScrollArea.Viewport>
-          <ScrollArea.Scrollbar />
-        </ScrollArea.Root>
+            {/* Inspector panel — kept in DOM for test coverage; no border/bg box */}
+            <Box minH={0} overflowY="auto" pl="1" pt="3" data-testid="spaces-template-inspector">
+              <RecipeTemplatePreview preview={selectedTemplate.preview} />
+            </Box>
+          </Grid>
+
+          {/* Mobile: gallery only, tap card to open detail drawer */}
+          <Box
+            display={{ base: 'flex', xl: 'none' }}
+            flex="1"
+            minH={0}
+            flexDirection="column"
+            overflow="hidden"
+          >
+            <ScrollArea.Root flex="1" minH={0} variant="hover">
+              <ScrollArea.Viewport>
+                <Box px="3" pb="6" pt="1">
+                  <RecipeTemplateGallery
+                    templates={visibleTemplates}
+                    activeCategory={category}
+                    selectedTemplateId={selectedTemplate.id}
+                    onCategoryChange={setCategory}
+                    omitTestIds
+                    onSelectTemplate={(templateId) => {
+                      setSelectedTemplateId(templateId as RecipeTemplateId);
+                      setDrawerOpen(true);
+                    }}
+                    onInspectTemplate={(templateId) => {
+                      setSelectedTemplateId(templateId as RecipeTemplateId);
+                      setDrawerOpen(true);
+                    }}
+                  />
+                </Box>
+              </ScrollArea.Viewport>
+              <ScrollArea.Scrollbar />
+            </ScrollArea.Root>
+          </Box>
+        </>
       )}
 
       {activeTab === 'ingredients' && (

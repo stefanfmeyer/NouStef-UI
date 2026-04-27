@@ -196,7 +196,7 @@ export function SessionsPage({
             >
               <Text fontSize="11px" color="var(--text-muted)">
                 {response.total} sessions for {response.profileId}
-                {response.hiddenSyntheticCount > 0 ? ` · ${response.hiddenSyntheticCount} synthetic hidden` : ''}
+                {response.hiddenSyntheticCount > 0 ? ` · ${response.hiddenSyntheticCount} synthetic sessions hidden` : ''}
               </Text>
               <HStack gap="1">
                 <Button
@@ -214,7 +214,7 @@ export function SessionsPage({
                   ← Prev
                 </Button>
                 <Text fontSize="12px" color="var(--text-muted)" px="1">
-                  {response.page}
+                  Page {response.page}
                 </Text>
                 <Button
                   variant="ghost"
@@ -228,7 +228,7 @@ export function SessionsPage({
                   onClick={() => onPageChange(response.page + 1)}
                   disabled={response.page * response.pageSize >= response.total}
                 >
-                  Next →
+                  Next
                 </Button>
               </HStack>
             </HStack>
