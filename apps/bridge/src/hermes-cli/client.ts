@@ -3478,25 +3478,15 @@ export class HermesCli {
         });
         child.stdout.setEncoding('utf-8');
         child.stderr.setEncoding('utf-8');
-        child.stdout.on('data', (chunk: string) => {
-          for (const line of chunk.split('\n')) {
-            if (!line.trim()) continue;
-            onOutput(line);
-            // Warn when git clone starts — it can take 2-5 minutes on slow connections
-            if (line.includes("Cloning into")) {
-              onOutput("  (cloning repository — this may take 2–5 minutes, please wait…)");
-            }
+        const handleLine = (line: string) => {
+          if (!line.trim()) return;
+          onOutput(line);
+          if (line.includes('Cloning into')) {
+            onOutput('  (cloning repository — this may take 2–5 minutes, please wait…)');
           }
-        });
-        child.stderr.on('data', (chunk: string) => {
-          for (const line of chunk.split('\n')) {
-            if (!line.trim()) continue;
-            onOutput(line);
-            if (line.includes("Cloning into")) {
-              onOutput("  (cloning repository — this may take 2–5 minutes, please wait…)");
-            }
-          }
-        });
+        };
+        child.stdout.on('data', (chunk: string) => { for (const l of chunk.split('\n')) handleLine(l); });
+        child.stderr.on('data', (chunk: string) => { for (const l of chunk.split('\n')) handleLine(l); });
         child.on('close', (code) => {
           if (code === 0) resolve();
           else reject(new Error(`${label} exited with code ${code}`));
@@ -3505,12 +3495,56 @@ export class HermesCli {
       });
     };
 
+    // Run the install script but kill it the moment the interactive setup wizard
+    // starts — by that point git clone + venv + pip install are all done.
+    // We handle provider configuration ourselves through the app's Settings page.
+    const runInstallUntilWizard = (): Promise<void> => {
+      onOutput('\n→ Installing Hermes…');
+      return new Promise((resolve, reject) => {
+        const child = spawn('/bin/bash', ['-c',
+          'curl -fsSL https://hermes-agent.nousresearch.com/install.sh | CI=1 HERMES_SKIP_SETUP=1 bash'
+        ], { stdio: ['ignore', 'pipe', 'pipe'], env: installEnv });
+
+        child.stdout.setEncoding('utf-8');
+        child.stderr.setEncoding('utf-8');
+
+        let resolved = false;
+        const finish = (err?: Error) => {
+          if (resolved) return;
+          resolved = true;
+          if (err) reject(err); else resolve();
+        };
+
+        const handleLine = (line: string) => {
+          if (!line.trim()) return;
+          // Kill and resolve successfully when the interactive wizard begins —
+          // everything we need is already installed at this point.
+          if (line.toLowerCase().includes('setup wizard') || line.toLowerCase().includes('starting setup')) {
+            onOutput('  (setup wizard detected — skipping, configure providers in Settings)');
+            child.kill('SIGTERM');
+            finish();
+            return;
+          }
+          onOutput(line);
+          if (line.includes('Cloning into')) {
+            onOutput('  (cloning repository — this may take 2–5 minutes, please wait…)');
+          }
+        };
+
+        child.stdout.on('data', (chunk: string) => { for (const l of chunk.split('\n')) handleLine(l); });
+        child.stderr.on('data', (chunk: string) => { for (const l of chunk.split('\n')) handleLine(l); });
+        child.on('close', (code) => {
+          // SIGTERM gives code null/-1; normal exit 0 = success; anything else = error
+          if (code === 0 || code === null || code === -1) finish();
+          else finish(new Error(`Install script exited with code ${code}`));
+        });
+        child.on('error', (err) => finish(err));
+      });
+    };
+
     return (async () => {
-      // Step 1: Download and run the install script (non-interactive)
-      await runStep(
-        'Installing Hermes…',
-        'curl -fsSL https://hermes-agent.nousresearch.com/install.sh | CI=1 HERMES_SKIP_SETUP=1 bash'
-      );
+      // Step 1: Install Hermes, killing the process when the wizard starts
+      await runInstallUntilWizard();
 
       // Step 2: Pin to the exact version this bridge expects
       const hermesAgentDir = path.join(os.homedir(), '.hermes', 'hermes-agent');
