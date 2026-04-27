@@ -317,6 +317,7 @@ export function App() {
             response={controller.skillsResponse}
             loading={controller.skillsLoading}
             error={controller.skillsError}
+            activeProfileId={controller.activeProfileId}
             onRefresh={() => void controller.handleSkillsRefresh()}
             onDeleteSkill={(skill) => void controller.handleDeleteSkill(skill)}
           />
