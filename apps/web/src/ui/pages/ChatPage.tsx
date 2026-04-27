@@ -283,46 +283,31 @@ export function ChatPage({
 
   return (
     <Flex direction="column" h="100%" minH={0}>
-      {/* Session subtitle + actions — minimal, inline, no box */}
-      {!attachedRecipe ? (
-        <HStack px={{ base: '4', lg: '6' }} pt="2" pb="1" justify="space-between" align="center" flexShrink={0} gap="3">
-          <HStack gap="2" minW={0} overflow="hidden">
-            <Text fontSize="xs" color="var(--text-muted)" minW={0} lineClamp={1} opacity={0.7}>
-              {activeSession?.summary ?? 'Choose a recent session or start a new one.'}
-            </Text>
-            {activeModelLabel ? (
-              <Text fontSize="10px" color="var(--text-muted)" flexShrink={0} opacity={0.6}
-                bg="var(--surface-2)" border="1px solid var(--border-subtle)" rounded="4px" px="1.5" py="0" lineHeight="1.7">
-                {activeModelLabel.split('/').pop()}
-              </Text>
-            ) : null}
-          </HStack>
-          <HStack gap="1" flexShrink={0}>
-            <Button
-              type="button"
-              size="xs"
-              variant="ghost"
-              rounded="7px"
-              px="2"
-              h="6"
-              color={runtimePanelOpen ? 'var(--accent)' : 'var(--text-muted)'}
-              bg={runtimePanelOpen ? 'var(--accent-soft)' : 'transparent'}
-              _hover={{ bg: runtimePanelOpen ? 'var(--accent-soft)' : 'var(--surface-hover)', color: 'var(--text-primary)' }}
-              fontSize="xs"
-              fontWeight="450"
-              onClick={() => setRuntimePanelOpen((v) => !v)}
-              aria-label="Toggle runtime activity panel"
-            >
-              Activity
-            </Button>
-            {activeSession ? (
-              <SessionActionMenu
-                label={`Chat actions for ${activeSession.title}`}
-                onRename={() => { setActionError(null); setRenameOpen(true); }}
-                onDelete={() => { setActionError(null); setDeleteOpen(true); }}
-              />
-            ) : null}
-          </HStack>
+      {/* Minimal chat actions — only rendered for standalone (no recipe) sessions */}
+      {!attachedRecipe && activeSession ? (
+        <HStack px={{ base: '3', lg: '5' }} pt="1.5" pb="0" justify="flex-end" align="center" flexShrink={0} gap="1">
+          <Button
+            type="button"
+            size="xs"
+            variant="ghost"
+            rounded="6px"
+            px="2"
+            h="6"
+            color={runtimePanelOpen ? 'var(--text-primary)' : 'var(--text-muted)'}
+            bg={runtimePanelOpen ? 'var(--surface-active)' : 'transparent'}
+            _hover={{ bg: 'var(--surface-hover)', color: 'var(--text-primary)' }}
+            fontSize="xs"
+            fontWeight="400"
+            onClick={() => setRuntimePanelOpen((v) => !v)}
+            aria-label="Toggle runtime activity panel"
+          >
+            Activity
+          </Button>
+          <SessionActionMenu
+            label={`Chat actions for ${activeSession.title}`}
+            onRename={() => { setActionError(null); setRenameOpen(true); }}
+            onDelete={() => { setActionError(null); setDeleteOpen(true); }}
+          />
         </HStack>
       ) : null}
 
@@ -690,17 +675,33 @@ export function ChatPage({
                 />
               </Box>
 
-              {/* Composer — anchored at bottom, centered, open canvas */}
+              {/* Composer — flush to bottom, centered, gradient fade above */}
               <Box
                 flexShrink={0}
-                px={{ base: '3', md: '4', lg: '6' }}
-                pt="3"
-                pb={{ base: '4', lg: '5' }}
-                maxW={runtimePanelOpen ? undefined : '800px'}
-                mx={runtimePanelOpen ? undefined : 'auto'}
+                position="relative"
                 w="100%"
+                maxW={runtimePanelOpen ? undefined : '760px'}
+                mx={runtimePanelOpen ? undefined : 'auto'}
               >
-                <ChatComposer onSend={onSend} sending={sending} disabled={loading} />
+                <Box
+                  position="absolute"
+                  top="-32px"
+                  left={0}
+                  right={0}
+                  h="32px"
+                  pointerEvents="none"
+                  background="linear-gradient(to bottom, transparent, var(--shell-bg))"
+                  zIndex={0}
+                />
+                <Box
+                  px={{ base: '3', md: '4' }}
+                  pt="0"
+                  pb={{ base: '4', lg: '5' }}
+                  position="relative"
+                  zIndex={1}
+                >
+                  <ChatComposer onSend={onSend} sending={sending} disabled={loading} />
+                </Box>
               </Box>
             </Flex>
 

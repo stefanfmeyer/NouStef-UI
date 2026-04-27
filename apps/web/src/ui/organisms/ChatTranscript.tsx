@@ -78,10 +78,19 @@ export const ChatTranscript = memo(function ChatTranscript({
               <Text color="var(--text-secondary)">Reading the active Hermes transcript from local persistence and the CLI bridge.</Text>
             </TranscriptBubble>
           ) : visibleMessages.length === 0 && !showTypingIndicator ? (
-            <TranscriptBubble messageRole="system">
-              <Text fontWeight="700">{emptyTitle}</Text>
-              <Text color="var(--text-secondary)">{emptyDetail}</Text>
-            </TranscriptBubble>
+            <div className="chat-empty">
+              <p style={{ fontSize: '16px', fontWeight: 500, color: 'var(--text-secondary)', margin: '0 0 6px', lineHeight: 1.4 }}>
+                Start a new session
+              </p>
+              <p className="chat-empty__copy" style={{ margin: '0 0 16px' }}>
+                Type below or pick a session from the sidebar.
+              </p>
+              <div className="chat-empty__chips">
+                <span className="chat-empty__chip">What should we cook?</span>
+                <span className="chat-empty__chip">Show recent sessions</span>
+                <span className="chat-empty__chip">Walk me through a recipe</span>
+              </div>
+            </div>
           ) : (
             <>
               {visibleMessages.map((message) => (
