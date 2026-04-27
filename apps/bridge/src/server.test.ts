@@ -433,8 +433,8 @@ describe.sequential('bridge server', () => {
       )
     ).toBe(true);
     expect(updated.config.defaultModel).toBe('anthropic/claude-3.7-sonnet');
-    // In v0.9.0, provider is not changed via config set model — only the model changes
-    expect(updated.config.provider).toBe('openrouter');
+    // provider is updated via config set model.provider when included in the request
+    expect(updated.config.provider).toBe('anthropic');
     // connectProvider in v0.9.0 delegates to discovery — returns provider state
     expect(connected.config).toBeTruthy();
     expect(connected.providers.length).toBeGreaterThan(0);

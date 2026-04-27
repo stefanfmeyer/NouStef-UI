@@ -1428,7 +1428,7 @@ Quarterly planning review                           9m ago                      
     expect(anthropic?.ready).toBe(true);
   });
 
-  it('uses login and dump for provider auth begin and poll', async () => {
+  it('uses login --provider and dump for OAuth provider auth begin and poll', async () => {
     const calls: string[] = [];
     let dumpCallCount = 0;
     const dumpOutput = 'model: openai/gpt-5.4\nprovider: openrouter\n';
@@ -1438,7 +1438,7 @@ Quarterly planning review                           9m ago                      
         const command = args.join(' ');
         calls.push(command);
 
-        if (command === 'login') {
+        if (command.startsWith('login')) {
           return { stdout: '', stderr: '', exitCode: 0 };
         }
 
@@ -1462,11 +1462,33 @@ Quarterly planning review                           9m ago                      
 
     expect(beginState.runtimeReadiness.ready).toBe(true);
     expect(pollState.runtimeReadiness.ready).toBe(true);
-    expect(calls).toContain('login');
+    // beginProviderAuth should pass --provider nous, not just 'login'
+    expect(calls).toContain('login --provider nous');
     expect(dumpCallCount).toBe(2); // once for begin, once for poll
   });
 
-  it('uses config set and dump for runtime model updates', async () => {
+  it('passes correct --provider flag for openai-codex OAuth auth', async () => {
+    const calls: string[] = [];
+    const runner: HermesCliRunner = {
+      async run(args) {
+        const command = args.join(' ');
+        calls.push(command);
+        if (command.startsWith('login') || command === 'dump') {
+          return { stdout: command === 'dump' ? 'model: openai/gpt-5.4\nprovider: openrouter\n' : '', stderr: '', exitCode: 0 };
+        }
+        throw new Error(`Unexpected command: ${command}`);
+      },
+      async stream() { return { stdout: '', stderr: '', exitCode: 0 }; }
+    };
+
+    const cli = new HermesCli({ runner, workingDirectory: process.cwd() });
+    const profile = { id: 'jbarton', name: 'jbarton', description: 'real profile', path: '/tmp/jbarton', isActive: true };
+
+    await cli.beginProviderAuth(profile, 'openai-codex');
+    expect(calls).toContain('login --provider openai-codex');
+  });
+
+  it('uses config set model.default (not model) and applies all fields', async () => {
     const calls: string[] = [];
     const runner: HermesCliRunner = {
       async run(args) {
@@ -1500,7 +1522,39 @@ Quarterly planning review                           9m ago                      
     );
 
     expect(config).toMatchObject({ provider: 'openrouter', defaultModel: 'openai/gpt-5.4-mini' });
-    expect(calls).toContain('config set model openai/gpt-5.4-mini');
+    // Must use model.default (dict key) not model (scalar) to preserve sibling keys
+    expect(calls).toContain('config set model.default openai/gpt-5.4-mini');
+    expect(calls).toContain('config set model.provider openrouter');
+    expect(calls).toContain('config set model.base_url https://openrouter.ai/api/v1');
+    expect(calls).toContain('config set model.api_mode responses');
+    expect(calls).toContain('config set agent.max_turns 42');
+    expect(calls).toContain('config set agent.reasoning_effort high');
+    // Must NOT use 'config set model ...' (scalar form) which would clobber provider/base_url
+    expect(calls.every((c) => c !== 'config set model openai/gpt-5.4-mini')).toBe(true);
+  });
+
+  it('treats model: (not set) from dump as unknown', async () => {
+    const runner: HermesCliRunner = {
+      async run(args) {
+        if (args.join(' ') === 'dump') {
+          return {
+            stdout: 'model: (not set)\nprovider: openrouter\n',
+            stderr: '',
+            exitCode: 0
+          };
+        }
+        throw new Error(`Unexpected command: ${args.join(' ')}`);
+      },
+      async stream() { return { stdout: '', stderr: '', exitCode: 0 }; }
+    };
+
+    const cli = new HermesCli({ runner, workingDirectory: process.cwd(), now: () => '2026-04-10T18:00:00.000Z' });
+    const response = await cli.discoverRuntimeProviderState(
+      { id: 'jbarton', name: 'jbarton', description: 'real profile', path: '/tmp/jbarton', isActive: true },
+      'openrouter'
+    );
+
+    expect(response.config.defaultModel).toBe('unknown');
   });
 
   it('connectProvider delegates to dump-based discovery', async () => {
