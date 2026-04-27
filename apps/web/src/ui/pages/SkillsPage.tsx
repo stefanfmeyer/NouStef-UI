@@ -48,9 +48,9 @@ function SkillsIcon() {
 
 export function SkillsPage({
   response,
-  loading,
+  loading: _loading,
   error,
-  onRefresh,
+  onRefresh: _onRefresh,
   onDeleteSkill
 }: {
   response: SkillsResponse | null;
@@ -80,37 +80,6 @@ export function SkillsPage({
 
   return (
     <VStack align="stretch" h="100%" minH={0} gap="4">
-      {/* Header bar */}
-      <HStack
-        justify="space-between"
-        wrap="wrap"
-        gap="3"
-        rounded="8px"
-        border="1px solid var(--border-subtle)"
-        bg="var(--surface-elevated)"
-        px="4"
-        py="3.5"
-        boxShadow="var(--shadow-xs)"
-      >
-        <Box>
-          <Text fontSize="sm" fontWeight="650" color="var(--text-primary)">
-            Runtime skills
-          </Text>
-          <Text fontSize="xs" color="var(--text-secondary)" mt="0.5">
-            Skills available to the active Hermes profile.
-          </Text>
-        </Box>
-        <Button
-          variant="outline"
-          size="sm"
-          rounded="8px"
-          onClick={onRefresh}
-          loading={loading}
-        >
-          Refresh
-        </Button>
-      </HStack>
-
       {error ? <ErrorBanner title="Skills refresh failed" detail={error} /> : null}
       {actionError ? <ErrorBanner title="Skill update failed" detail={actionError} /> : null}
 
@@ -134,7 +103,6 @@ export function SkillsPage({
                 <Table.Row>
                   <Table.ColumnHeader>Name</Table.ColumnHeader>
                   <Table.ColumnHeader>Category</Table.ColumnHeader>
-                  <Table.ColumnHeader>Source</Table.ColumnHeader>
                   <Table.ColumnHeader>Trust</Table.ColumnHeader>
                   <Table.ColumnHeader textAlign="center">Actions</Table.ColumnHeader>
                 </Table.Row>
@@ -199,9 +167,6 @@ export function SkillsPage({
                       </Table.Cell>
                       <Table.Cell>
                         <CategoryBadge value={skill.category} />
-                      </Table.Cell>
-                      <Table.Cell>
-                        <Text fontSize="xs" color="var(--text-secondary)">{skill.source}</Text>
                       </Table.Cell>
                       <Table.Cell>
                         <TrustBadge value={skill.trust} />
