@@ -621,7 +621,9 @@ function parseProfileList(output: string): HermesCliProfileRecord[] {
       const trimmed = line.trimStart();
       const marker = trimmed.startsWith('◆') ? '◆' : '';
       const withoutMarker = marker ? trimmed.slice(1).trimStart() : trimmed;
-      const [profileId, model = '', gateway = '', alias = ''] = splitCliCells(withoutMarker);
+      const [profileId, rawModel = '', gateway = '', alias = ''] = splitCliCells(withoutMarker);
+      // '—' is what Hermes prints when no model is configured on a fresh install
+      const model = rawModel === '—' ? '' : rawModel;
 
       return profileId
         ? [
@@ -2541,6 +2543,48 @@ export interface HermesCliOptions {
   now?: () => string;
 }
 
+function resolveRuntimeReadiness(
+  config: RuntimeModelConfig,
+  providers: RuntimeProviderOption[]
+): RuntimeReadiness {
+  const hasModel = config.defaultModel !== 'unknown';
+  const hasConnectedProvider = providers.some((p) => p.ready);
+  const autoProvider = config.provider === '(auto)';
+
+  if (!hasModel) {
+    // No model is configured at all — user must run setup.
+    const noKeys = providers.length > 0 && providers.every((p) => !p.ready);
+    return {
+      ready: false,
+      code: noKeys ? 'config_error' as const : 'model_missing' as const,
+      message: noKeys
+        ? 'No model or provider credentials are configured. Open Settings to add an API key and select a model.'
+        : 'No model is selected. Open Settings to pick a model for the active provider.',
+      providerId: autoProvider ? null : config.provider,
+      modelId: null
+    };
+  }
+
+  if (!hasConnectedProvider && !autoProvider) {
+    // A model is set but its provider has no credentials.
+    return {
+      ready: false,
+      code: 'provider_auth_required',
+      message: `${config.provider} needs credentials. Open Settings to add an API key.`,
+      providerId: config.provider,
+      modelId: config.defaultModel
+    };
+  }
+
+  return {
+    ready: true,
+    code: 'ready',
+    message: `${config.provider} / ${config.defaultModel}`,
+    providerId: config.provider,
+    modelId: config.defaultModel
+  };
+}
+
 export class HermesCli {
   private readonly runner: HermesCliRunner;
   private readonly cliPath: string;
@@ -3170,10 +3214,10 @@ export class HermesCli {
       description: provider.ready
         ? `Using the configured model on ${name}.`
         : meta?.exampleModel
-          ? `Set the default model. Example: hermes config set model ${meta.exampleModel}`
-          : `Set the default model with: hermes config set model <provider>/<model>`,
+          ? `Set the default model. Example: hermes config set model.default ${meta.exampleModel}`
+          : `Set the default model with: hermes config set model.default <provider>/<model>`,
       status: provider.ready ? 'completed' : connected ? 'action_required' : 'blocked',
-      command: provider.ready ? undefined : `hermes config set model ${meta?.exampleModel ?? `${id}/<model>`}`,
+      command: provider.ready ? undefined : `hermes config set model.default ${meta?.exampleModel ?? `${id}/<model>`}`,
       metadata: {}
     });
 
@@ -3192,21 +3236,23 @@ export class HermesCli {
     return steps;
   }
 
-  private parseDumpConfig(dumpOutput: string, profileId: string, now: string): RuntimeModelConfig & { baseUrl?: string; apiMode?: string; reasoningEffort?: string; toolUseEnforcement?: string } {
+  private parseDumpConfig(dumpOutput: string, profileId: string, now: string): RuntimeModelConfig & {baseUrl?: string; apiMode?: string; reasoningEffort?: string; toolUseEnforcement?: string} {
     const modelMatch = dumpOutput.match(/^model:\s+(.+)$/m);
     const providerMatch = dumpOutput.match(/^provider:\s+(.+)$/m);
 
-    const model = modelMatch?.[1]?.trim() ?? 'unknown';
+    const rawModel = modelMatch?.[1]?.trim() ?? 'unknown';
+    // '(not set)' appears when the model dict has no 'default' key — treat as unknown.
+    const model = rawModel === '(not set)' ? 'unknown' : rawModel;
     const provider = providerMatch?.[1]?.trim() ?? 'unknown';
 
-    // Try to read the config YAML for extra fields (base_url, api_mode, max_turns, etc.)
     let baseUrl: string | undefined;
     let apiMode: string | undefined;
-    let maxTurns = 150;
+    // Default to 90, the Hermes CLI default. Overridden below if config_overrides says otherwise.
+    let maxTurns = 90;
     let reasoningEffort: string | undefined;
     let toolUseEnforcement: string | undefined;
 
-    // Parse config_overrides section from dump for max_turns, reasoning_effort, etc.
+    // Parse config_overrides section from dump for settings that differ from Hermes defaults.
     const overridesMatch = dumpOutput.match(/^config_overrides:\n((?: {2}.+\n)*)/m);
     if (overridesMatch?.[1]) {
       const lines = overridesMatch[1].split('\n').filter(Boolean);
@@ -3214,9 +3260,41 @@ export class HermesCli {
         const kv = line.match(/^\s+(\S+):\s+(.+)$/);
         if (!kv) continue;
         const [, key, value] = kv;
-        if (key === 'agent.max_turns') maxTurns = parseInt(value!, 10) || 150;
+        if (key === 'agent.max_turns') maxTurns = parseInt(value!, 10) || 90;
         if (key === 'agent.reasoning_effort') reasoningEffort = value!.trim();
         if (key === 'agent.tool_use_enforcement') toolUseEnforcement = value!.trim();
+        if (key === 'model.base_url') baseUrl = value!.trim();
+        if (key === 'model.api_mode') apiMode = value!.trim();
+      }
+    }
+
+    // Fall back to reading config.yaml for base_url and api_mode when not in config_overrides.
+    // This covers the common case where they're set in the main config block.
+    if ((!baseUrl || !apiMode) && profileId) {
+      try {
+        // Resolve the profile's config path. For the default profile, path IS the hermes home.
+        const candidatePaths: string[] = [];
+        const hermesHome = path.join(os.homedir(), '.hermes');
+        // Check profile-specific path first, then default home
+        const profilePath = path.join(hermesHome, 'profiles', profileId);
+        candidatePaths.push(path.join(profilePath, 'config.yaml'));
+        candidatePaths.push(path.join(hermesHome, 'config.yaml'));
+        for (const configPath of candidatePaths) {
+          if (fs.existsSync(configPath)) {
+            const configYaml = fs.readFileSync(configPath, 'utf8');
+            if (!baseUrl) {
+              const m = configYaml.match(/^\s+base_url:\s+(.+)$/m);
+              if (m?.[1]?.trim()) baseUrl = m[1].trim();
+            }
+            if (!apiMode) {
+              const m = configYaml.match(/^\s+api_mode:\s+(.+)$/m);
+              if (m?.[1]?.trim()) apiMode = m[1].trim();
+            }
+            break;
+          }
+        }
+      } catch {
+        // Config read is best-effort
       }
     }
 
@@ -3256,26 +3334,6 @@ export class HermesCli {
       }
 
       const providers = this.parseDumpProviders(dumpOutput, profile.id, config.provider, now);
-
-      // Try to read config.yaml for base_url and api_mode before building fields
-      if (profile.path) {
-        try {
-          const configPath = path.join(profile.path, 'config.yaml');
-          if (fs.existsSync(configPath)) {
-            const configYaml = fs.readFileSync(configPath, 'utf8');
-            const baseUrlMatch = configYaml.match(/^\s+base_url:\s+(.+)$/m);
-            const apiModeMatch = configYaml.match(/^\s+api_mode:\s+(.+)$/m);
-            if (baseUrlMatch?.[1]?.trim()) {
-              (config as Record<string, unknown>).baseUrl = baseUrlMatch[1].trim();
-            }
-            if (apiModeMatch?.[1]?.trim()) {
-              (config as Record<string, unknown>).apiMode = apiModeMatch[1].trim();
-            }
-          }
-        } catch {
-          // Config read is best-effort
-        }
-      }
 
       // Populate the active provider with model data and configuration fields
       const activeProviderEntry = providers.find((p) => p.id === config.provider);
@@ -3353,13 +3411,7 @@ export class HermesCli {
       return {
         config,
         providers,
-        runtimeReadiness: {
-          ready: true,
-          code: 'ready' as const,
-          message: `${config.provider} / ${config.defaultModel}`,
-          providerId: config.provider,
-          modelId: config.defaultModel
-        },
+        runtimeReadiness: resolveRuntimeReadiness(config, providers),
         inspectedProviderId: config.provider,
         discoveredAt: now
       } satisfies RuntimeProviderDiscoveryResult;
@@ -3382,19 +3434,42 @@ export class HermesCli {
   ) {
     const env = buildProfileEnvironment(profile);
 
-    // Use 'hermes config set' for model/provider changes
+    // Apply each field via 'hermes config set'. Always set provider and model.default together
+    // so the yaml stays in dict form and neither key clobbers the other.
+    if (input.provider) {
+      await this.run(['config', 'set', 'model.provider', input.provider], env, signal);
+    }
     if (input.defaultModel) {
-      await this.run(['config', 'set', 'model', input.defaultModel], env, signal);
+      // Use 'model.default' (dict key) not 'model' (scalar) — setting the scalar form
+      // overwrites any sibling keys (provider, base_url, api_mode) already in the config.
+      await this.run(['config', 'set', 'model.default', input.defaultModel], env, signal);
+    }
+    if (input.baseUrl !== undefined) {
+      await this.run(['config', 'set', 'model.base_url', input.baseUrl], env, signal);
+    }
+    if (input.apiMode !== undefined) {
+      await this.run(['config', 'set', 'model.api_mode', input.apiMode], env, signal);
+    }
+    if (input.maxTurns !== undefined) {
+      await this.run(['config', 'set', 'agent.max_turns', String(input.maxTurns)], env, signal);
+    }
+    if (input.reasoningEffort !== undefined) {
+      await this.run(['config', 'set', 'agent.reasoning_effort', input.reasoningEffort], env, signal);
     }
 
     return this.getRuntimeModelConfig(profile);
   }
 
   async beginProviderAuth(profile: Profile, providerId: string, signal?: AbortSignal) {
-    // v0.9.0+: use 'hermes login' for provider auth
     const env = buildProfileEnvironment(profile);
+    // hermes login only supports OAuth providers (nous, openai-codex). Pass --provider so we
+    // don't default to nous when the user is authenticating a different OAuth provider.
+    const OAUTH_PROVIDERS = new Set(['nous', 'openai-codex']);
+    const loginArgs = OAUTH_PROVIDERS.has(providerId)
+      ? ['login', '--provider', providerId]
+      : ['login'];
     try {
-      await this.run(['login'], env, signal);
+      await this.run(loginArgs, env, signal);
     } catch {
       // Login is interactive — may fail in headless mode
     }
@@ -3406,7 +3481,31 @@ export class HermesCli {
   }
 
   async connectProvider(profile: Profile, input: ConnectProviderRequest, signal?: AbortSignal) {
-    // v0.9.0+: API keys are set via hermes config or .env
+    const env = buildProfileEnvironment(profile);
+
+    // Write the API key to the profile's .env file via 'hermes config set <ENV_VAR> <key>'.
+    // The caller may supply a specific env var name via input.label; fall back to the
+    // registry's primary env var for the provider.
+    if (input.apiKey) {
+      const meta = HERMES_PROVIDER_REGISTRY[input.provider];
+      const envVarName = (input.label && /^[A-Z][A-Z0-9_]*$/.test(input.label))
+        ? input.label
+        : meta?.envVar;
+      if (envVarName) {
+        await this.run(['config', 'set', envVarName, input.apiKey], env, signal);
+      }
+    }
+
+    // If baseUrl or apiMode are provided, persist them via model config
+    if (input.baseUrl || input.apiMode) {
+      if (input.baseUrl) {
+        await this.run(['config', 'set', 'model.base_url', input.baseUrl], env, signal);
+      }
+      if (input.apiMode) {
+        await this.run(['config', 'set', 'model.api_mode', input.apiMode], env, signal);
+      }
+    }
+
     return this.discoverRuntimeProviderState(profile, input.provider, signal);
   }
 
