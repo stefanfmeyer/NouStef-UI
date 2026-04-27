@@ -38,7 +38,7 @@ export function RecipeTemplateDetailDrawer({
   const category = RECIPE_TEMPLATE_CATEGORIES.find((item) => item.id === template.category);
 
   return (
-    <Drawer.Root lazyMount unmountOnExit open={open} onOpenChange={(event) => onOpenChange(event.open)} size={{ base: 'full', xl: 'xl' }}>
+    <Drawer.Root lazyMount unmountOnExit open={open} onOpenChange={(event) => onOpenChange(event.open)} size={{ base: 'full', md: 'lg', xl: 'xl' }}>
       <Drawer.Backdrop backdropFilter="auto" backdropBlur="sm" bg="blackAlpha.500" />
         <Drawer.Positioner>
           <Drawer.Content bg="var(--surface-elevated)" borderLeft="1px solid var(--border-subtle)" data-testid="recipe-template-detail-drawer">
@@ -57,7 +57,7 @@ export function RecipeTemplateDetailDrawer({
           </Drawer.Header>
           <Drawer.Body>
             <Tabs.Root
-              defaultValue="info"
+              defaultValue="preview"
               variant="plain"
               css={{
                 '--tabs-indicator-bg': 'var(--surface-1)',
@@ -65,14 +65,16 @@ export function RecipeTemplateDetailDrawer({
                 '--tabs-trigger-radius': '8px'
               }}
             >
-              <Tabs.List rounded="8px" bg="var(--surface-2)" border="1px solid var(--border-subtle)" p="1" mb="4" flexShrink={0}>
-                <Tabs.Trigger value="info">Info</Tabs.Trigger>
-                <Tabs.Trigger value="preview">Preview</Tabs.Trigger>
-                <Tabs.Trigger value="instructions">Instructions</Tabs.Trigger>
-                <Tabs.Trigger value="update">Update Behavior</Tabs.Trigger>
-                <Tabs.Trigger value="contract">UI Contract</Tabs.Trigger>
-                <Tabs.Indicator />
-              </Tabs.List>
+              <Box overflowX="auto" mb="4" flexShrink={0} css={{ scrollbarWidth: 'none', '&::-webkit-scrollbar': { display: 'none' } }}>
+                <Tabs.List rounded="8px" bg="var(--surface-2)" border="1px solid var(--border-subtle)" p="1" minW="max-content">
+                  <Tabs.Trigger value="preview" fontSize="xs" px="3">Preview</Tabs.Trigger>
+                  <Tabs.Trigger value="info" fontSize="xs" px="3">Info</Tabs.Trigger>
+                  <Tabs.Trigger value="instructions" fontSize="xs" px="3">Instructions</Tabs.Trigger>
+                  <Tabs.Trigger value="update" fontSize="xs" px="3">Update Behavior</Tabs.Trigger>
+                  <Tabs.Trigger value="contract" fontSize="xs" px="3">UI Contract</Tabs.Trigger>
+                  <Tabs.Indicator />
+                </Tabs.List>
+              </Box>
 
               <Tabs.Content value="info">
                 <VStack align="stretch" gap="4">

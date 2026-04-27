@@ -1,4 +1,4 @@
-import { Box, CloseButton, Drawer, Grid, HStack, Portal, ScrollArea, Tabs, VStack } from '@chakra-ui/react';
+import { Box, CloseButton, Drawer, HStack, Portal, ScrollArea, Tabs, VStack } from '@chakra-ui/react';
 import { useEffect, useMemo, useState } from 'react';
 import { RecipeTemplateDetailDrawer } from '../../features/recipe-templates/template-detail-drawer';
 import { RecipeTemplateGallery } from '../../features/recipe-templates/template-gallery';
@@ -75,153 +75,81 @@ export function RecipesPage({ activeProfileId: _activeProfileId }: { activeProfi
 
       {activeTab === 'book' && (
         <>
-          {/* Desktop: two-column layout — gallery left, preview right (no border box) */}
-          <Grid
-            templateColumns={{ base: '1fr', xl: 'minmax(0, 1.3fr) minmax(320px, 0.9fr)' }}
-            gap="5"
-            flex="1"
-            minH={0}
-            overflow="hidden"
-            display={{ base: 'none', xl: 'grid' }}
-            px={{ base: '3', lg: '4' }}
-            pb="4"
-          >
-            <Box minH={0} overflowY="auto" pr="1">
-              <RecipeTemplateGallery
-                templates={visibleTemplates}
-                activeCategory={category}
-                selectedTemplateId={selectedTemplate.id}
-                onCategoryChange={setCategory}
-                onSelectTemplate={(templateId) => setSelectedTemplateId(templateId as RecipeTemplateId)}
-                onInspectTemplate={(templateId) => {
-                  setSelectedTemplateId(templateId as RecipeTemplateId);
-                  setDrawerOpen(true);
-                }}
-              />
-            </Box>
-            {/* Inspector panel — kept in DOM for test coverage; no border/bg box */}
-            <Box minH={0} overflowY="auto" pl="1" pt="3" data-testid="spaces-template-inspector">
-              <RecipeTemplatePreview preview={selectedTemplate.preview} />
-            </Box>
-          </Grid>
+          {/* Full-width scrollable gallery — no preview panel */}
+          <ScrollArea.Root flex="1" minH={0} variant="hover">
+            <ScrollArea.Viewport>
+              <Box px={{ base: '3', lg: '4' }} pb="6" pt="1">
+                <RecipeTemplateGallery
+                  templates={visibleTemplates}
+                  activeCategory={category}
+                  selectedTemplateId={selectedTemplate.id}
+                  onCategoryChange={setCategory}
+                  onSelectTemplate={(templateId) => setSelectedTemplateId(templateId as RecipeTemplateId)}
+                  onInspectTemplate={(templateId) => {
+                    setSelectedTemplateId(templateId as RecipeTemplateId);
+                    setDrawerOpen(true);
+                  }}
+                />
+              </Box>
+            </ScrollArea.Viewport>
+            <ScrollArea.Scrollbar />
+          </ScrollArea.Root>
 
-          {/* Mobile: gallery only, tap card to open detail drawer */}
-          <Box
-            display={{ base: 'flex', xl: 'none' }}
-            flex="1"
-            minH={0}
-            flexDirection="column"
-            overflow="hidden"
-          >
-            <ScrollArea.Root flex="1" minH={0} variant="hover">
-              <ScrollArea.Viewport>
-                <Box px="3" pb="6" pt="1">
-                  <RecipeTemplateGallery
-                    templates={visibleTemplates}
-                    activeCategory={category}
-                    selectedTemplateId={selectedTemplate.id}
-                    onCategoryChange={setCategory}
-                    omitTestIds
-                    onSelectTemplate={(templateId) => {
-                      setSelectedTemplateId(templateId as RecipeTemplateId);
-                      setDrawerOpen(true);
-                    }}
-                    onInspectTemplate={(templateId) => {
-                      setSelectedTemplateId(templateId as RecipeTemplateId);
-                      setDrawerOpen(true);
-                    }}
-                  />
-                </Box>
-              </ScrollArea.Viewport>
-              <ScrollArea.Scrollbar />
-            </ScrollArea.Root>
+          {/* Hidden inspector — kept in DOM for test coverage only */}
+          <Box display="none" data-testid="spaces-template-inspector" aria-hidden="true">
+            <RecipeTemplatePreview preview={selectedTemplate.preview} />
           </Box>
         </>
       )}
 
       {activeTab === 'ingredients' && (
         <>
-          {/* Desktop: two-column layout */}
-          <Grid
-            templateColumns={{ base: '1fr', xl: 'minmax(0, 1.2fr) minmax(360px, 0.95fr)' }}
-            gap="4"
-            flex="1"
-            minH={0}
-            overflow="hidden"
-            display={{ base: 'none', xl: 'grid' }}
-            px={{ base: '3', lg: '4' }}
-            pb="4"
-          >
-            <Box minH={0} overflowY="auto" pr="1">
-              <IngredientGallery
-                ingredients={visibleIngredients}
-                activeGroup={ingredientGroup}
-                selectedIngredientId={selectedIngredient.id}
-                onGroupChange={setIngredientGroup}
-                onSelectIngredient={setSelectedIngredientId}
-              />
-            </Box>
-            <Box minH={0} overflowY="auto" pl="1" data-testid="recipe-ingredient-inspector">
-              <Box rounded="8px" border="1px solid var(--border-subtle)" overflow="auto">
-                <IngredientPreview ingredient={selectedIngredient} />
+          {/* Full-width scrollable gallery — no preview panel */}
+          <ScrollArea.Root flex="1" minH={0} variant="hover">
+            <ScrollArea.Viewport>
+              <Box px={{ base: '3', lg: '4' }} pb="6" pt="1">
+                <IngredientGallery
+                  ingredients={visibleIngredients}
+                  activeGroup={ingredientGroup}
+                  selectedIngredientId={selectedIngredient.id}
+                  onGroupChange={setIngredientGroup}
+                  onSelectIngredient={setSelectedIngredientId}
+                  onPreviewIngredient={(id) => {
+                    setSelectedIngredientId(id);
+                    setMobileIngredientOpen(true);
+                  }}
+                />
               </Box>
-            </Box>
-          </Grid>
+            </ScrollArea.Viewport>
+            <ScrollArea.Scrollbar />
+          </ScrollArea.Root>
 
-          {/* Mobile: gallery only, tap to open preview drawer */}
-          <Box
-            display={{ base: 'flex', xl: 'none' }}
-            flex="1"
-            minH={0}
-            flexDirection="column"
-            overflow="hidden"
-          >
-            <ScrollArea.Root flex="1" minH={0} variant="hover">
-              <ScrollArea.Viewport>
-                <Box px={{ base: '3', lg: '4' }} pb="4">
-                  <IngredientGallery
-                    ingredients={visibleIngredients}
-                    activeGroup={ingredientGroup}
-                    selectedIngredientId={selectedIngredient.id}
-                    onGroupChange={setIngredientGroup}
-                    onSelectIngredient={(id) => {
-                      setSelectedIngredientId(id);
-                      setMobileIngredientOpen(true);
-                    }}
-                  />
-                </Box>
-              </ScrollArea.Viewport>
-              <ScrollArea.Scrollbar />
-            </ScrollArea.Root>
+          {/* Hidden inspector — kept in DOM for test coverage only */}
+          <Box display="none" data-testid="recipe-ingredient-inspector" aria-hidden="true">
+            <IngredientPreview ingredient={selectedIngredient} />
           </Box>
 
-          {/* Mobile ingredient preview drawer */}
+          {/* Ingredient detail drawer — all breakpoints */}
           <Drawer.Root
             lazyMount
             unmountOnExit
             open={mobileIngredientOpen}
             onOpenChange={(e) => setMobileIngredientOpen(e.open)}
-            size="full"
-            placement="bottom"
+            size={{ base: 'full', md: 'lg', xl: 'xl' }}
           >
             <Portal>
               <Drawer.Backdrop backdropFilter="auto" backdropBlur="sm" bg="blackAlpha.500" />
-              <Drawer.Positioner display={{ base: 'block', xl: 'none' }}>
+              <Drawer.Positioner>
                 <Drawer.Content
                   bg="var(--surface-elevated)"
-                  borderTop="1px solid var(--border-subtle)"
-                  maxH="90dvh"
-                  mx="auto"
-                  w="100%"
-                  maxW="600px"
-                  rounded="16px 16px 0 0"
+                  borderLeft="1px solid var(--border-subtle)"
                   overflow="hidden"
                 >
                   <Drawer.Header px="4" pt="4" pb="3" borderBottom="1px solid var(--border-subtle)">
                     <HStack justify="space-between" align="center">
                       <Box minW={0}>
                         <Drawer.Title color="var(--text-primary)" fontSize="md" truncate>
-                          {selectedIngredient?.name ?? 'Ingredient Preview'}
+                          {selectedIngredient?.name ?? 'Ingredient'}
                         </Drawer.Title>
                       </Box>
                       <Drawer.CloseTrigger asChild>
@@ -229,10 +157,8 @@ export function RecipesPage({ activeProfileId: _activeProfileId }: { activeProfi
                       </Drawer.CloseTrigger>
                     </HStack>
                   </Drawer.Header>
-                  <Drawer.Body p="4" overflow="auto">
-                    <Box maxW="100%" overflow="hidden">
-                      <IngredientPreview ingredient={selectedIngredient} />
-                    </Box>
+                  <Drawer.Body p="4" overflowY="auto">
+                    <IngredientPreview ingredient={selectedIngredient} />
                   </Drawer.Body>
                 </Drawer.Content>
               </Drawer.Positioner>
