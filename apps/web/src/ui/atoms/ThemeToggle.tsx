@@ -34,16 +34,15 @@ export function ThemeToggle({
     <Button
       aria-label={label}
       title={label}
-      variant="outline"
-      borderColor="var(--border-subtle)"
-      bg="var(--surface-2)"
-      color="var(--text-primary)"
+      variant="ghost"
+      color="var(--text-muted)"
       size="sm"
-      rounded="8px"
+      rounded="6px"
+      w="7"
+      h="7"
       minW={0}
-      px="2"
-      boxShadow="var(--shadow-xs)"
-      _hover={{ bg: 'var(--surface-hover)', borderColor: 'var(--border-strong)' }}
+      px="0"
+      _hover={{ bg: 'var(--surface-hover)', color: 'var(--text-primary)' }}
       onClick={async () => {
         if (togglingRef.current) return;
         togglingRef.current = true;

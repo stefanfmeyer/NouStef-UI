@@ -13,7 +13,6 @@ export function RecipesPage({ activeProfileId: _activeProfileId }: { activeProfi
   const [category, setCategory] = useState<RecipeTemplateGalleryCategory>('all');
   const [selectedTemplateId, setSelectedTemplateId] = useState<RecipeTemplateId>('price-comparison-grid');
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [mobilePreviewOpen, setMobilePreviewOpen] = useState(false);
   const [mobileIngredientOpen, setMobileIngredientOpen] = useState(false);
   const [ingredientGroup, setIngredientGroup] = useState<IngredientGroup | 'all'>('all');
   const [selectedIngredientId, setSelectedIngredientId] = useState<string>(INGREDIENT_CATALOG[0]?.id ?? 'hero');
@@ -76,10 +75,10 @@ export function RecipesPage({ activeProfileId: _activeProfileId }: { activeProfi
 
       {activeTab === 'book' && (
         <>
-          {/* Desktop: two-column layout */}
+          {/* Desktop: two-column layout — gallery left, preview right (no border box) */}
           <Grid
-            templateColumns={{ base: '1fr', xl: 'minmax(0, 1.2fr) minmax(360px, 0.95fr)' }}
-            gap="4"
+            templateColumns={{ base: '1fr', xl: 'minmax(0, 1.3fr) minmax(320px, 0.9fr)' }}
+            gap="5"
             flex="1"
             minH={0}
             overflow="hidden"
@@ -100,14 +99,13 @@ export function RecipesPage({ activeProfileId: _activeProfileId }: { activeProfi
                 }}
               />
             </Box>
+            {/* Inspector panel — kept in DOM for test coverage; no border/bg box */}
             <Box minH={0} overflowY="auto" pl="1" pt="3" data-testid="spaces-template-inspector">
-              <Box rounded="8px" border="1px solid var(--border-subtle)" overflow="auto" p="4">
-                <RecipeTemplatePreview preview={selectedTemplate.preview} />
-              </Box>
+              <RecipeTemplatePreview preview={selectedTemplate.preview} />
             </Box>
           </Grid>
 
-          {/* Mobile: gallery only, tap to open preview drawer */}
+          {/* Mobile: gallery only, tap card to open detail drawer */}
           <Box
             display={{ base: 'flex', xl: 'none' }}
             flex="1"
@@ -117,7 +115,7 @@ export function RecipesPage({ activeProfileId: _activeProfileId }: { activeProfi
           >
             <ScrollArea.Root flex="1" minH={0} variant="hover">
               <ScrollArea.Viewport>
-                <Box px={{ base: '3', lg: '4' }} pb="4">
+                <Box px="3" pb="6" pt="1">
                   <RecipeTemplateGallery
                     templates={visibleTemplates}
                     activeCategory={category}
@@ -126,7 +124,7 @@ export function RecipesPage({ activeProfileId: _activeProfileId }: { activeProfi
                     omitTestIds
                     onSelectTemplate={(templateId) => {
                       setSelectedTemplateId(templateId as RecipeTemplateId);
-                      setMobilePreviewOpen(true);
+                      setDrawerOpen(true);
                     }}
                     onInspectTemplate={(templateId) => {
                       setSelectedTemplateId(templateId as RecipeTemplateId);
@@ -138,50 +136,6 @@ export function RecipesPage({ activeProfileId: _activeProfileId }: { activeProfi
               <ScrollArea.Scrollbar />
             </ScrollArea.Root>
           </Box>
-
-          {/* Mobile preview drawer */}
-          <Drawer.Root
-            lazyMount
-            unmountOnExit
-            open={mobilePreviewOpen}
-            onOpenChange={(e) => setMobilePreviewOpen(e.open)}
-            size="full"
-            placement="bottom"
-          >
-            <Portal>
-              <Drawer.Backdrop backdropFilter="auto" backdropBlur="sm" bg="blackAlpha.500" />
-              <Drawer.Positioner display={{ base: 'block', xl: 'none' }} pt="10">
-                <Drawer.Content
-                  bg="var(--surface-elevated)"
-                  borderTop="1px solid var(--border-subtle)"
-                  maxH="90dvh"
-                  mx="auto"
-                  w="100%"
-                  maxW="600px"
-                  rounded="16px"
-                  overflow="hidden"
-                >
-                  <Drawer.Header px="4" pt="4" pb="3" borderBottom="1px solid var(--border-subtle)">
-                    <HStack justify="space-between" align="center">
-                      <Box minW={0}>
-                        <Drawer.Title color="var(--text-primary)" fontSize="md" truncate>
-                          {selectedTemplate?.name ?? 'Template Preview'}
-                        </Drawer.Title>
-                      </Box>
-                      <Drawer.CloseTrigger asChild>
-                        <CloseButton size="sm" color="var(--text-muted)" flexShrink={0} />
-                      </Drawer.CloseTrigger>
-                    </HStack>
-                  </Drawer.Header>
-                  <Drawer.Body p="4" overflow="auto">
-                    <Box maxW="100%" overflow="hidden">
-                      <RecipeTemplatePreview preview={selectedTemplate.preview} />
-                    </Box>
-                  </Drawer.Body>
-                </Drawer.Content>
-              </Drawer.Positioner>
-            </Portal>
-          </Drawer.Root>
         </>
       )}
 

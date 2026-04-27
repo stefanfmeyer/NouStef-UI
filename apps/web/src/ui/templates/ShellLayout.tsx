@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Alert, Box, Button, CloseButton, Drawer, Flex, HStack, Portal, Text, chakra } from '@chakra-ui/react';
-import { BrandLockup } from '../atoms/BrandLockup';
 import type { ConnectionState } from '@hermes-recipes/protocol';
 import type { ReactNode } from 'react';
 import { ThemeToggle } from '../atoms/ThemeToggle';
@@ -34,15 +33,33 @@ function GatewayBanner({ detail, onDismiss }: { detail: string; onDismiss?: () =
   );
 }
 
-function _ModelPill({ label }: { label?: string }) {
-  if (!label) return null;
-  const model = label.split('/').pop() ?? label;
-  return (
-    <Text fontSize="11px" color="var(--text-muted)" fontWeight="400" letterSpacing="0">
-      {model}
-    </Text>
-  );
+/* Minimal connection indicator — dot only when connected, full pill when not */
+function ConnectionIndicator({ status }: { status: string }) {
+  const isConnected = status === 'connected' || status === 'healthy';
+  const isReconnecting = status === 'degraded' || status === 'paused';
+  if (isConnected) {
+    return (
+      <Box
+        as="span"
+        className="status-dot status-dot--connected"
+        title="Connected"
+        aria-label="Connected"
+      />
+    );
+  }
+  if (isReconnecting) {
+    return (
+      <Box
+        as="span"
+        className="status-dot status-dot--reconnecting"
+        title={status}
+        aria-label={status}
+      />
+    );
+  }
+  return <StatusPill label={status} />;
 }
+
 
 function HamburgerIcon() {
   const Svg = chakra('svg');
@@ -55,17 +72,20 @@ function HamburgerIcon() {
 
 export function ShellLayout({
   connection,
-  profileName,
+  profileName: _profileName,
   pageTitle,
   headerDetail: _headerDetail,
-  headerMode = 'full',
+  headerMode: _headerMode,
   sidebar,
   mobileNavContent,
   tabBar,
   onPersistTheme,
   hermesVersion,
   expectedHermesVersion,
+  modelSelectorSlot,
   activeModelLabel: _activeModelLabel,
+  sidebarCollapsed: _sidebarCollapsed = false,
+  onToggleSidebar: _onToggleSidebar,
   children
 }: {
   connection: ConnectionState;
@@ -79,7 +99,10 @@ export function ShellLayout({
   onPersistTheme: (themeMode: 'dark' | 'light') => Promise<void> | void;
   hermesVersion?: string | null;
   expectedHermesVersion?: string | null;
+  modelSelectorSlot?: ReactNode;
   activeModelLabel?: string | null;
+  sidebarCollapsed?: boolean;
+  onToggleSidebar?: () => void;
   children: ReactNode;
 }) {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
@@ -94,8 +117,7 @@ export function ShellLayout({
       overflow="hidden"
       bg="var(--shell-bg)"
     >
-      {/* Desktop sidebar — hidden on mobile by collapsing to zero height (NOT display:none so tests
-          can still query nav buttons via getByRole without needing hidden:true) */}
+      {/* Desktop sidebar */}
       <Box
         h={{ base: 0, lg: '100dvh' }}
         minH={0}
@@ -133,14 +155,9 @@ export function ShellLayout({
                   <HStack justify="space-between" align="center">
                     <HStack gap="2" minW={0}>
                       <span aria-hidden="true" style={{ fontSize: '16px', lineHeight: 1, flexShrink: 0 }}>🧑‍🍳</span>
-                      <Box minW={0}>
-                        <Text fontSize="xs" fontWeight="700" letterSpacing="-0.01em" color="var(--text-primary)" lineHeight="1.15" truncate>
-                          The Kitchen
-                        </Text>
-                        <Text fontSize="10px" color="var(--text-muted)" lineHeight="1.3" fontWeight="400">
-                          Local Hermes workspace
-                        </Text>
-                      </Box>
+                      <Text fontSize="xs" fontWeight="600" letterSpacing="-0.01em" color="var(--text-primary)" lineHeight="1.15" truncate>
+                        The Kitchen
+                      </Text>
                     </HStack>
                     <Drawer.CloseTrigger asChild>
                       <CloseButton size="sm" color="var(--text-muted)" flexShrink={0} />
@@ -164,46 +181,70 @@ export function ShellLayout({
         bg="var(--shell-bg)"
         overflow="hidden"
       >
-        {/* Top bar — minimal chrome */}
-        <Box px={{ base: '3', lg: '5' }} py="1" flexShrink={0}>
-          <HStack justify="space-between" align="center" gap="3" data-testid="shell-toolbar">
-            {/* Mobile hamburger */}
-            {mobileNavContent ? (
-              <Button
-                display={{ base: 'flex', lg: 'none' }}
-                variant="ghost"
-                size="sm"
-                rounded="8px"
-                px="1.5"
-                h="8"
-                minW={0}
-                color="var(--text-muted)"
-                _hover={{ bg: 'var(--surface-hover)', color: 'var(--text-primary)' }}
-                aria-label="Open navigation"
-                title="Open navigation"
-                onClick={() => setMobileNavOpen(true)}
-                flexShrink={0}
+        {/* ── Top bar ── */}
+        <Box
+          flexShrink={0}
+          h="var(--top-bar-height)"
+          px="3"
+          borderBottom="1px solid var(--divider)"
+        >
+          <HStack h="100%" justify="space-between" align="center" gap="2" data-testid="shell-toolbar">
+
+            {/* LEFT: collapse toggle (desktop) / hamburger (mobile) + logo + page title */}
+            <HStack gap="0" minW={0} flex="1" align="center">
+              {/* Spacer — sidebar collapse lives inside the Sidebar component */}
+
+              {/* Mobile: hamburger */}
+              {mobileNavContent ? (
+                <Button
+                  display={{ base: 'flex', lg: 'none' }}
+                  variant="ghost"
+                  w="7" h="7" minW="0" px="0" rounded="6px"
+                  color="var(--text-muted)"
+                  _hover={{ bg: 'var(--surface-hover)', color: 'var(--text-primary)' }}
+                  aria-label="Open navigation"
+                  onClick={() => setMobileNavOpen(true)}
+                  mr="1"
+                  flexShrink={0}
+                >
+                  <HamburgerIcon />
+                </Button>
+              ) : null}
+
+              {/* Chef hat logo */}
+              <span
+                data-testid="hermes-home-brand"
+                style={{ fontSize: '18px', lineHeight: 1, flexShrink: 0, marginRight: '10px', display: 'inline-flex', alignItems: 'center' }}
               >
-                <HamburgerIcon />
-              </Button>
-            ) : null}
+                <span aria-hidden="true">🧑‍🍳</span>
+              </span>
 
-            {headerMode === 'full' ? (
-              <PageHeader profileName={profileName} pageName={pageTitle} />
-            ) : (
-              <Box flex="1" minW={0}>
-                <BrandLockup compact />
-              </Box>
-            )}
+              {/* Page title — compact mode shows brand name (used in combined recipe layout) */}
+              {_headerMode === 'compact' ? (
+                <Box flex="1" minW={0}>
+                  <Text fontSize="13px" fontWeight="600" color="var(--text-primary)" letterSpacing="-0.01em">
+                    The Kitchen
+                  </Text>
+                </Box>
+              ) : (
+                <PageHeader pageName={pageTitle} />
+              )}
+            </HStack>
 
-            <HStack gap="2" flexShrink={0} align="center">
-              <StatusPill label={connection.status} />
+            {/* RIGHT: model selector + dividers + status dot + theme toggle */}
+            <HStack gap="0" flexShrink={0} align="center">
+              {modelSelectorSlot ? (
+                <>
+                  {modelSelectorSlot}
+                  <span className="top-bar-divider" style={{ margin: '0 8px' }} />
+                </>
+              ) : null}
+              <ConnectionIndicator status={connection.status} />
+              <span className="top-bar-divider" style={{ margin: '0 8px' }} />
               <ThemeToggle onPersist={onPersistTheme} />
             </HStack>
           </HStack>
         </Box>
-
-        <Box h="1px" bg="var(--border-subtle)" opacity={0.6} flexShrink={0} />
 
         {gatewayDown ? (
           <GatewayBanner detail={`${connection.detail}${connection.usingCachedData ? ' Showing cached data.' : ''}`} />
@@ -227,14 +268,8 @@ export function ShellLayout({
 
         {tabBar ?? null}
 
-        {/* Main content — generous and open */}
-        <Box
-          flex="1"
-          minH={0}
-          overflow="hidden"
-          display="flex"
-          flexDirection="column"
-        >
+        {/* Main content */}
+        <Box flex="1" minH={0} overflow="hidden" display="flex" flexDirection="column">
           {children}
         </Box>
       </Flex>

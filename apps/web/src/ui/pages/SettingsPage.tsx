@@ -36,7 +36,7 @@ function StepSlider({
             key={s.value}
             fontSize="10px"
             fontWeight={i === idx ? '600' : '400'}
-            color={i === idx ? 'var(--accent)' : 'var(--text-muted)'}
+            color={i === idx ? 'var(--text-primary)' : 'var(--text-muted)'}
           >
             {s.label}
           </Text>
@@ -447,22 +447,40 @@ export function SettingsPage({
       minH={0}
       display="flex"
       flexDirection="column"
-      variant="plain"
+      variant="line"
       lazyMount
       px={{ base: '4', lg: '6' }}
-      css={{
-        '--tabs-indicator-bg': 'var(--surface-1)',
-        '--tabs-indicator-shadow': 'var(--shadow-xs)',
-        '--tabs-trigger-radius': '8px'
-      }}
     >
-      <Box overflowX="auto" pt="4" pb="1">
-        <Tabs.List rounded="8px" bg="var(--surface-2)" border="1px solid var(--border-subtle)" p="1" minW="max-content">
-          <Tabs.Trigger value="general" fontSize="xs" px="3">Settings</Tabs.Trigger>
-          <Tabs.Trigger value="model" fontSize="xs" px="3">Models</Tabs.Trigger>
-          <Tabs.Trigger value="access_audit" fontSize="xs" px="3">Access</Tabs.Trigger>
-          <Tabs.Trigger value="telemetry" fontSize="xs" px="3">Audit</Tabs.Trigger>
-          <Tabs.Indicator />
+      <Box borderBottom="1px solid var(--divider)" flexShrink={0}>
+        <Tabs.List gap="0" px="0">
+          <Tabs.Trigger
+            value="general" fontSize="13px" px="4" h="44px"
+            color="var(--text-muted)" fontWeight="400"
+            _selected={{ color: 'var(--text-primary)', fontWeight: '500', borderBottomColor: 'var(--accent)' }}
+          >
+            Settings
+          </Tabs.Trigger>
+          <Tabs.Trigger
+            value="model" fontSize="13px" px="4" h="44px"
+            color="var(--text-muted)" fontWeight="400"
+            _selected={{ color: 'var(--text-primary)', fontWeight: '500', borderBottomColor: 'var(--accent)' }}
+          >
+            Models
+          </Tabs.Trigger>
+          <Tabs.Trigger
+            value="access_audit" fontSize="13px" px="4" h="44px"
+            color="var(--text-muted)" fontWeight="400"
+            _selected={{ color: 'var(--text-primary)', fontWeight: '500', borderBottomColor: 'var(--accent)' }}
+          >
+            Access
+          </Tabs.Trigger>
+          <Tabs.Trigger
+            value="telemetry" fontSize="13px" px="4" h="44px"
+            color="var(--text-muted)" fontWeight="400"
+            _selected={{ color: 'var(--text-primary)', fontWeight: '500', borderBottomColor: 'var(--accent)' }}
+          >
+            Audit
+          </Tabs.Trigger>
         </Tabs.List>
       </Box>
 
@@ -880,28 +898,35 @@ export function SettingsPage({
                               ) : null}
                             </Table.Cell>
                             <Table.Cell>
-                              <Badge
-                                colorPalette={
+                              <HStack gap="1.5" align="center">
+                                <span className={
                                   item.status === 'connected'
-                                    ? 'green'
-                                    : item.status === 'error'
-                                      ? 'red'
-                                      : item.status === 'missing'
-                                        ? 'yellow'
-                                        : item.disabled
-                                          ? 'gray'
-                                          : 'gray'
-                                }
-                              >
-                                {item.status}
-                              </Badge>
+                                    ? 'status-dot status-dot--connected'
+                                    : item.status === 'missing'
+                                      ? 'status-dot status-dot--reconnecting'
+                                      : 'status-dot status-dot--disconnected'
+                                } />
+                                <Text fontSize="12px" color="var(--text-secondary)">{item.status}</Text>
+                              </HStack>
                             </Table.Cell>
                             <Table.Cell color="var(--text-secondary)">{item.authKind}</Table.Cell>
                             <Table.Cell color="var(--text-secondary)">
                               {item.maskedCredential ?? item.credentialLabel ?? (item.status === 'connected' ? 'Connected' : '—')}
                             </Table.Cell>
                             <Table.Cell textAlign="end">
-                              <Button variant="ghost" size="sm" onClick={() => openProviderDrawer(item.id)}>
+                              <Button
+                                variant="ghost"
+                                size="xs"
+                                h="6"
+                                px="2"
+                                rounded="5px"
+                                fontSize="12px"
+                                fontWeight="400"
+                                color="var(--text-muted)"
+                                className="table-row-actions"
+                                _hover={{ color: 'var(--text-primary)', bg: 'var(--surface-hover)' }}
+                                onClick={() => openProviderDrawer(item.id)}
+                              >
                                 Configure
                               </Button>
                             </Table.Cell>
@@ -1406,14 +1431,14 @@ function SectionCard({
   children: ReactNode;
 }) {
   return (
-    <Box rounded="8px" border="1px solid var(--border-subtle)" bg="var(--surface-elevated)" px="5" py="5" overflow="hidden" boxShadow="var(--shadow-sm)">
+    <Box py="4">
       <VStack align="stretch" gap="4">
         <HStack justify="space-between" align="start" wrap="wrap" gap="3">
           <Box>
-            <Text fontWeight="750" color="var(--text-primary)">
+            <Text fontSize="14px" fontWeight="600" color="var(--text-primary)" letterSpacing="-0.005em">
               {title}
             </Text>
-            <Text color="var(--text-secondary)">{description}</Text>
+            <Text fontSize="13px" color="var(--text-muted)" mt="0.5">{description}</Text>
           </Box>
           {action ?? null}
         </HStack>
