@@ -42,13 +42,15 @@ export function IngredientGallery({
   activeGroup,
   selectedIngredientId,
   onGroupChange,
-  onSelectIngredient
+  onSelectIngredient,
+  onPreviewIngredient
 }: {
   ingredients: Ingredient[];
   activeGroup: IngredientGroup | 'all';
   selectedIngredientId: string;
   onGroupChange: (group: IngredientGroup | 'all') => void;
   onSelectIngredient: (ingredientId: string) => void;
+  onPreviewIngredient?: (ingredientId: string) => void;
 }) {
   return (
     <VStack align="stretch" gap="3" data-testid="recipe-ingredient-gallery">
@@ -63,32 +65,39 @@ export function IngredientGallery({
             </Text>
           </VStack>
 
-          <Flex gap="1.5" wrap="wrap">
-            {INGREDIENT_GROUPS.map((group) => {
-              const buttonStyles = resolveTemplateGalleryFilterButtonStyles(activeGroup === group.id);
-              return (
-                <Button
-                  key={group.id}
-                  size="xs"
-                  rounded="999px"
-                  h="6"
-                  px="3"
-                  fontSize="xs"
-                  bg={buttonStyles.bg}
-                  border="1px solid var(--border-subtle)"
-                  color={buttonStyles.color}
-                  _dark={{ color: buttonStyles.darkColor }}
-                  onClick={() => onGroupChange(group.id)}
-                >
-                  {group.label}
-                </Button>
-              );
-            })}
-          </Flex>
+          <Box
+            overflowX="auto"
+            css={{ scrollbarWidth: 'none', '&::-webkit-scrollbar': { display: 'none' } }}
+          >
+            <HStack gap="1.5" flexWrap="nowrap" pb="1">
+              {INGREDIENT_GROUPS.map((group) => {
+                const isActive = activeGroup === group.id;
+                return (
+                  <Button
+                    key={group.id}
+                    size="xs"
+                    rounded="var(--radius-pill)"
+                    h="6"
+                    px="3"
+                    fontSize="11px"
+                    fontWeight="500"
+                    bg={isActive ? 'var(--surface-active)' : 'transparent'}
+                    border="1px solid var(--border-subtle)"
+                    color={isActive ? 'var(--text-primary)' : 'var(--text-muted)'}
+                    _hover={{ bg: 'var(--surface-hover)', color: 'var(--text-primary)' }}
+                    onClick={() => onGroupChange(group.id)}
+                    flexShrink={0}
+                  >
+                    {group.label}
+                  </Button>
+                );
+              })}
+            </HStack>
+          </Box>
         </VStack>
       </TemplateSurface>
 
-      <SimpleGrid columns={{ base: 1, xl: 2 }} gap="3" alignItems="stretch">
+      <SimpleGrid columns={{ base: 1, md: 2, xl: 3 }} gap="5" alignItems="stretch">
         {ingredients.map((ingredient) => {
           const selected = ingredient.id === selectedIngredientId;
 
@@ -120,6 +129,25 @@ export function IngredientGallery({
                     <Text fontSize="xs" color="var(--text-secondary)" lineClamp={3}>
                       {ingredient.summary}
                     </Text>
+                    {onPreviewIngredient ? (
+                      <Flex justify="flex-end" w="100%">
+                        <Button
+                          size="xs"
+                          rounded="6px"
+                          variant="ghost"
+                          fontSize="xs"
+                          color="var(--text-muted)"
+                          h="6"
+                          px="2"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onPreviewIngredient(ingredient.id);
+                          }}
+                        >
+                          Preview
+                        </Button>
+                      </Flex>
+                    ) : null}
                   </VStack>
                 </HStack>
               </TemplateSurface>
