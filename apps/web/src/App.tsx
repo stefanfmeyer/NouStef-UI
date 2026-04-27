@@ -208,6 +208,8 @@ export function App() {
             loading={controller.sessionLoading}
             error={controller.sessionError}
             onSend={controller.handleSendMessage}
+            uploadQueue={controller.fileUploadQueue}
+            onAddFiles={controller.handleAddFiles}
             sending={controller.chatSending}
             progress={controller.chatProgress}
             activities={controller.chatActivities}

@@ -48,7 +48,8 @@ function SpinnerIcon() {
     </Svg>
   );
 }
-import type { ChatActivity, ChatMessage, RuntimeRequest, SessionMessagesResponse, Recipe, UpdateRecipeRequest } from '@hermes-recipes/protocol';
+import type { ChatActivity, ChatMessage, FileRef, RuntimeRequest, SessionMessagesResponse, Recipe, UpdateRecipeRequest } from '@hermes-recipes/protocol';
+import type { FileUploadQueue } from '../../hooks/use-file-upload-queue';
 import { ErrorBanner } from '../molecules/ErrorBanner';
 import { ConfirmDialog } from '../molecules/ConfirmDialog';
 import { SessionActionMenu } from '../molecules/SessionActionMenu';
@@ -63,6 +64,8 @@ export function ChatPage({
   loading,
   error,
   onSend,
+  uploadQueue,
+  onAddFiles,
   sending,
   progress,
   activities,
@@ -90,7 +93,9 @@ export function ChatPage({
   sessionPayload: SessionMessagesResponse | null;
   loading: boolean;
   error: string | null;
-  onSend: (content: string) => boolean | Promise<boolean>;
+  onSend: (content: string, attachments?: FileRef[]) => boolean | Promise<boolean>;
+  uploadQueue: FileUploadQueue;
+  onAddFiles: (files: File[]) => void;
   sending: boolean;
   progress: string | null;
   activities: ChatActivity[];
@@ -550,7 +555,7 @@ export function ChatPage({
                   />
                 </Box>
 
-                <ChatComposer onSend={onSend} sending={sending} disabled={loading} />
+                <ChatComposer onSend={onSend} uploadQueue={uploadQueue} onAddFiles={onAddFiles} sending={sending} disabled={loading} />
               </Flex>
             )}
           </Grid>
@@ -707,7 +712,7 @@ export function ChatPage({
                   position="relative"
                   zIndex={1}
                 >
-                  <ChatComposer onSend={onSend} sending={sending} disabled={loading} />
+                  <ChatComposer onSend={onSend} uploadQueue={uploadQueue} onAddFiles={onAddFiles} sending={sending} disabled={loading} />
                 </Box>
               </Box>
             </Flex>
