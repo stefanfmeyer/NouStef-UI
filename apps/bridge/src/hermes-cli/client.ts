@@ -3454,30 +3454,90 @@ export class HermesCli {
   }
 
   streamInstall(onOutput: (line: string) => void): Promise<void> {
-    return new Promise((resolve, reject) => {
-      const shell = process.platform === 'win32' ? 'cmd' : '/bin/bash';
-      const args = process.platform === 'win32'
-        ? ['/c', 'curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash']
-        : ['-c', 'curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash'];
-      const child = spawn(shell, args, { stdio: ['ignore', 'pipe', 'pipe'] });
-      child.stdout.setEncoding('utf-8');
-      child.stderr.setEncoding('utf-8');
-      child.stdout.on('data', (chunk: string) => {
-        for (const line of chunk.split('\n')) {
-          if (line.trim()) onOutput(line);
+    // CI=1 and HERMES_SKIP_SETUP=1 suppress the interactive setup wizard.
+    // We configure providers via the app's Settings page after install.
+    const installEnv = {
+      ...process.env,
+      CI: '1',
+      HERMES_SKIP_SETUP: '1',
+      HERMES_NO_WIZARD: '1',
+      DEBIAN_FRONTEND: 'noninteractive',
+    };
+
+    const runStep = (label: string, cmd: string): Promise<void> => {
+      onOutput(`\n→ ${label}`);
+      return new Promise((resolve, reject) => {
+        const child = spawn('/bin/bash', ['-c', cmd], {
+          stdio: ['ignore', 'pipe', 'pipe'],
+          env: installEnv,
+        });
+        child.stdout.setEncoding('utf-8');
+        child.stderr.setEncoding('utf-8');
+        child.stdout.on('data', (chunk: string) => {
+          for (const line of chunk.split('\n')) { if (line.trim()) onOutput(line); }
+        });
+        child.stderr.on('data', (chunk: string) => {
+          for (const line of chunk.split('\n')) { if (line.trim()) onOutput(line); }
+        });
+        child.on('close', (code) => {
+          if (code === 0) resolve();
+          else reject(new Error(`${label} exited with code ${code}`));
+        });
+        child.on('error', reject);
+      });
+    };
+
+    return (async () => {
+      // Step 1: Download and run the install script (non-interactive)
+      await runStep(
+        'Installing Hermes…',
+        'curl -fsSL https://hermes-agent.nousresearch.com/install.sh | CI=1 HERMES_SKIP_SETUP=1 bash'
+      );
+
+      // Step 2: Pin to the exact version this bridge expects
+      const hermesAgentDir = path.join(os.homedir(), '.hermes', 'hermes-agent');
+      if (fs.existsSync(path.join(hermesAgentDir, '.git'))) {
+        onOutput(`\n→ Pinning to Hermes v${HERMES_EXPECTED_VERSION}…`);
+
+        // Find the commit for the expected version from the git log
+        const findCommit = await new Promise<string | null>((resolve) => {
+          const git = spawn('/bin/bash', [
+            '-c',
+            `cd "${hermesAgentDir}" && git fetch --tags -q 2>/dev/null; ` +
+            `git log --oneline --all | grep -im1 "${HERMES_EXPECTED_VERSION}" | awk '{print $1}'`
+          ], { stdio: ['ignore', 'pipe', 'ignore'], env: installEnv });
+          let out = '';
+          git.stdout.setEncoding('utf-8');
+          git.stdout.on('data', (c: string) => { out += c; });
+          git.on('close', () => resolve(out.trim() || null));
+          git.on('error', () => resolve(null));
+        });
+
+        if (findCommit) {
+          await runStep(
+            `Checking out commit ${findCommit}…`,
+            `cd "${hermesAgentDir}" && git checkout ${findCommit} -q`
+          ).catch(() => {
+            onOutput(`  (version pin failed — continuing with installed version)`);
+          });
+
+          // Re-install the pinned version's Python package
+          const pythonPath = path.join(hermesAgentDir, 'venv', 'bin', 'python');
+          if (fs.existsSync(pythonPath)) {
+            await runStep(
+              'Rebuilding Python environment for pinned version…',
+              `cd "${hermesAgentDir}" && "${pythonPath}" -m pip install -e . -q 2>&1`
+            ).catch(() => {
+              onOutput(`  (pip install step failed — continuing)`);
+            });
+          }
+        } else {
+          onOutput(`  (could not find commit for v${HERMES_EXPECTED_VERSION} — using installed version)`);
         }
-      });
-      child.stderr.on('data', (chunk: string) => {
-        for (const line of chunk.split('\n')) {
-          if (line.trim()) onOutput(line);
-        }
-      });
-      child.on('close', (code) => {
-        if (code === 0) resolve();
-        else reject(new Error(`Install exited with code ${code}`));
-      });
-      child.on('error', reject);
-    });
+      }
+
+      onOutput(`\n✓ Hermes v${HERMES_EXPECTED_VERSION} ready`);
+    })();
   }
 
   async getRuntimeModelConfig(profile: Profile) {
