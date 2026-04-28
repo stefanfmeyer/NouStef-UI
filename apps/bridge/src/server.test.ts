@@ -2071,7 +2071,12 @@ Keep summaries short and searchable for the active profile.
     const telemetry = await fetch(
       `${server.baseUrl}/api/telemetry?profileId=${encodeURIComponent(profileId)}&sessionId=${encodeURIComponent(session.id)}&limit=20`
     ).then((result) => readJson<TelemetryResponse>(result));
-    const progressEvent = events.find((event) => event.type === 'progress');
+    // The CLI emits a transient "Initializing the Hermes runtime." progress event before the
+    // search-specific message in some runs (CI is sensitive to event timing). Find the
+    // search-status message specifically rather than the first progress event.
+    const progressEvent = events.find(
+      (event) => event.type === 'progress' && event.message === 'Hermes is searching…'
+    );
     const completeEvent = events.find((event) => event.type === 'complete');
 
     expect(progressEvent?.type).toBe('progress');
