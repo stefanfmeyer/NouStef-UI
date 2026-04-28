@@ -103,13 +103,19 @@ export function MessageRow({ messageId, jobId, text, isStreaming }: Props) {
   const alreadyAnimated = typeof sessionStorage !== 'undefined'
     && sessionStorage.getItem(sessionKey) === '1';
 
+  // Mark as seen immediately on first mount — don't wait for the animation to complete.
+  // If the user navigates away mid-animation and comes back, it renders instantly.
+  useEffect(() => {
+    if (!alreadyAnimated) {
+      try { sessionStorage.setItem(sessionKey, '1'); } catch { /* ignore */ }
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   const { displayText, isComplete } = useMessageTypewriter(
     text,
     isStreaming ?? false,
     !alreadyAnimated,
-    () => {
-      try { sessionStorage.setItem(sessionKey, '1'); } catch { /* ignore */ }
-    },
+    () => { /* sessionStorage already written above */ },
   );
 
   return (
