@@ -164,6 +164,12 @@ export class JobManager {
     const adapter = ADAPTERS[job.agent];
     if (!adapter) throw new Error(`No adapter for agent: ${job.agent}`);
 
+    // Ensure the working directory exists — it may have been deleted since project creation
+    const workDir = job.worktreePath ?? project.repoPath;
+    if (!fs.existsSync(workDir)) {
+      fs.mkdirSync(workDir, { recursive: true });
+    }
+
     const jobWithResume = resumeSessionId
       ? { ...job, resumeSessionId }
       : job;
