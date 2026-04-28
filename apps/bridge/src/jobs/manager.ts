@@ -78,17 +78,19 @@ export class JobManager {
 
   // ── Projects ────────────────────────────────────────────────────────────
 
-  createProject(name: string, repoPath: string): CodingProject {
+  createProject(name: string, repoPath: string, defaultApprovalMode: CodingJob['approvalMode'] = 'auto_safe'): CodingProject {
     const abs = path.resolve(repoPath);
-    // Create the directory if it doesn't exist (new projects)
     if (!fs.existsSync(abs)) fs.mkdirSync(abs, { recursive: true });
     const now = Date.now();
-    return this.store.createProject({ id: randomUUID(), name, repoPath: abs, createdAt: now, updatedAt: now });
+    return this.store.createProject({ id: randomUUID(), name, repoPath: abs, createdAt: now, updatedAt: now, defaultApprovalMode });
   }
 
   getProject(id: string) { return this.store.getProject(id); }
   listProjects() { return this.store.listProjects(); }
   deleteProject(id: string) { this.store.deleteProject(id); }
+  updateProjectApprovalMode(id: string, mode: CodingJob['approvalMode']) {
+    this.store.updateProjectApprovalMode(id, mode);
+  }
 
   // ── Jobs ─────────────────────────────────────────────────────────────────
 
@@ -161,6 +163,12 @@ export class JobManager {
   private startJob(job: CodingJob, project: CodingProject, resumeSessionId?: string) {
     const adapter = ADAPTERS[job.agent];
     if (!adapter) throw new Error(`No adapter for agent: ${job.agent}`);
+
+    // Ensure the working directory exists — it may have been deleted since project creation
+    const workDir = job.worktreePath ?? project.repoPath;
+    if (!fs.existsSync(workDir)) {
+      fs.mkdirSync(workDir, { recursive: true });
+    }
 
     const jobWithResume = resumeSessionId
       ? { ...job, resumeSessionId }
