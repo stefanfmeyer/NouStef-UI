@@ -6,6 +6,8 @@ import type { ChildProcess } from 'node:child_process';
 import type { AgentAdapter, CodingJob, JobEvent, PendingApproval } from './types';
 import { attachClaudeCodeParser } from './agents/claude-code';
 
+const SHELL_APPROVAL_RE = /This .{0,60}command.{0,60}requires? approval|requires? your? approval|must be approved before|The following parts? requires? approval|contains multiple operations/i;
+
 const IDLE_THRESHOLD_MS = 20_000;         // wait 20s before first idle event (cold starts take 15-30s)
 const IDLE_EMIT_INTERVAL_MS = 30_000;     // emit maybe_idle at most once per 30s
 const STUCK_THRESHOLD_MS = 180_000;       // 3 min before "stuck" warning — cold starts are slow
@@ -42,6 +44,8 @@ export class JobRunner {
   private stuckCheckTimer: ReturnType<typeof setTimeout> | null = null;
   private pendingApprovalId: string | null = null;
   private stdinClosed = false;
+  // Shell approval detected from a blocked tool_result — surfaced after the turn ends
+  private pendingShellApproval: { command: string; category: string } | null = null;
 
   constructor(
     private readonly job: CodingJob,
@@ -237,6 +241,44 @@ export class JobRunner {
       if (this.outputLineBuffer.length > 50) {
         this.outputLineBuffer = this.outputLineBuffer.slice(-50);
       }
+    }
+
+    // Detect shell approval blocks from tool_results
+    if (event.type === 'job.tool_result') {
+      const te = event as Extract<JobEvent, { type: 'job.tool_result' }>;
+      if (te.isError && this.pendingApprovalId === null && SHELL_APPROVAL_RE.test(te.content)) {
+        // Find the original tool call to get the command
+        const toolCallEvt = this.outputLineBuffer.join('\n'); // not ideal but command is in content too
+        const cmdMatch = te.content.match(/(?:run|execute|command)[:\s]+(.+?)(?:\n|$)/i)
+          ?? te.content.match(/:\s*(.+?)(?:\n|$)/i);
+        const command = cmdMatch?.[1]?.trim() ?? te.content.slice(0, 120);
+        const category = /\b(pip|npm|pnpm|yarn|brew|apt)\s+install\b/i.test(command) ? 'install'
+          : /\b(rm\s+-rf?|del\s+\/|truncate|drop\s+table)\b/i.test(command) ? 'delete'
+          : 'shell';
+        this.pendingShellApproval = { command, category };
+      }
+    }
+
+    // After a turn with a blocked shell command: surface the approval card
+    // AFTER onTurnComplete sets awaiting_user, then override with awaiting_approval
+    if (event.type === 'job.agent_result' && this.pendingShellApproval !== null) {
+      const { command, category } = this.pendingShellApproval;
+      this.pendingShellApproval = null;
+      // Let onTurnComplete run first (sets awaiting_user + broadcasts job.awaiting_user)
+      this.callbacks.onEvent(event);
+      // Now override: set awaiting_approval so the user's click goes through
+      const approvalId = `shell-${Date.now()}`;
+      this.pendingApprovalId = approvalId;
+      const approval: PendingApproval = {
+        approvalId,
+        message: `Claude wants to run:\n${command}`,
+        options: ['Approve once', 'Approve all in this job', 'Deny'],
+        defaultOption: 0,
+        category: category as import('./types').ApprovalCategory,
+      };
+      this.callbacks.onNeedsApproval(approvalId, approval);
+      this.emit({ type: 'job.needs_approval', jobId: this.job.id, approvalId, message: approval.message, options: approval.options, defaultOption: 0, category: approval.category, ts: Date.now() });
+      return; // already called onEvent above
     }
 
     // Emit file_changed for Write/Edit tool calls
