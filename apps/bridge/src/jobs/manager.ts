@@ -430,6 +430,33 @@ export class JobManager {
       return true;
     }
 
+    // Stuck-detection approvals need special handling — writing stdin would corrupt the stream.
+    if (approvalId.startsWith('stuck-')) {
+      const optionIdx = parseInt(response, 10);
+
+      if (optionIdx === 1) {
+        // "Cancel job"
+        runner.cancel();
+        this.activeRunners.delete(jobId);
+        this.store.updateJobStatus(jobId, 'cancelled', { completedAt: Date.now() });
+      } else if (!isNaN(optionIdx) && optionIdx >= 2) {
+        // "Type custom input" — treat as a user turn so Claude Code gets it via JSON protocol
+        runner.respond(approvalId, response); // clears pendingApprovalId without stdin write for stuck-
+        this.store.updateJobStatus(jobId, 'running', { approvalPending: undefined });
+        await this.sendTurn(jobId, response);
+      } else {
+        // Option 0: "Continue waiting" — just dismiss the dialog and return to awaiting_user.
+        // Do NOT write to stdin; the agent is already idle waiting for user input.
+        runner.respond(approvalId, response); // clears pendingApprovalId only
+        this.store.updateJobStatus(jobId, 'awaiting_user', { approvalPending: undefined });
+      }
+
+      const event: JobEvent = { type: 'job.approval_resolved', jobId, approvalId, response, ts: Date.now() };
+      this.store.insertEvent(jobId, event);
+      this.broadcast(jobId, event);
+      return true;
+    }
+
     const written = runner.respond(approvalId, response);
     if (!written) return false;
 

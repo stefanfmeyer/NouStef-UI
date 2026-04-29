@@ -53,6 +53,9 @@ export class JobRunner {
   private pendingShellApproval: { command: string; category: string } | null = null;
   // Last bash command seen, so we can show the real command in the approval message
   private lastBashCommand = '';
+  // True after job.agent_result fires, cleared when a new user turn is sent.
+  // While awaiting the user the agent is intentionally idle — don't fire stuck detection.
+  private isAwaitingUser = false;
 
   constructor(
     private readonly job: CodingJob,
@@ -154,6 +157,7 @@ export class JobRunner {
    */
   sendTurn(text: string, _turnId: string): boolean {
     if (this.stdinClosed || this.isExited()) return false;
+    this.isAwaitingUser = false; // agent now has work to do again
     return this.sendUserMessage(text);
   }
 
@@ -323,6 +327,11 @@ export class JobRunner {
       }
     }
 
+    // When a turn completes, the agent is now intentionally idle waiting for user input.
+    if (event.type === 'job.agent_result') {
+      this.isAwaitingUser = true;
+    }
+
     this.callbacks.onEvent(event);
   }
 
@@ -349,10 +358,17 @@ export class JobRunner {
       const idleMs = Date.now() - this.lastOutputAt;
       if (idleMs < HEARTBEAT_WARNING_IDLE_MS || !this.child?.pid || this.isExited()) return;
       if (this.pendingApprovalId !== null) return;
+      // Agent completed a turn and is waiting for the user — this is intentional idle, not a stuck state.
+      if (this.isAwaitingUser) return;
 
       const hasInFlightTools = this.inFlightToolCalls.size > 0;
       const toolsJustCleared = (Date.now() - this.lastInFlightClearedAt) < 60_000;
-      const hasOutputHistory = this.outputLineBuffer.filter(l => l.trim()).length > 0;
+      // Exclude [event:system] JSON lines from the stuck message — they are internal
+      // protocol frames, not meaningful "last output" for a human to read.
+      const meaningfulLines = this.outputLineBuffer.filter(
+        l => l.trim() && !l.trimStart().startsWith('[event:')
+      );
+      const hasOutputHistory = meaningfulLines.length > 0;
 
       // If tools are in-flight or were recently running, the agent is actively working — no alert.
       if (hasInFlightTools || toolsJustCleared) return;
@@ -361,7 +377,7 @@ export class JobRunner {
       if (hasOutputHistory) {
         const stuckApprovalId = `stuck-${this.lastOutputAt}`;
         this.pendingApprovalId = stuckApprovalId;
-        const lastLine = this.outputLineBuffer.filter(l => l.trim()).at(-1) ?? '';
+        const lastLine = meaningfulLines.at(-1) ?? '';
         const approval: PendingApproval = {
           approvalId: stuckApprovalId,
           message: `Agent appears stuck. Last output was: ${lastLine}`,
