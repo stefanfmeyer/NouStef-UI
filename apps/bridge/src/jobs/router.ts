@@ -263,6 +263,14 @@ export async function handleCodingRequest(
         return true;
       }
 
+      // POST /api/jobs/:id/archive — archive a job (hidden from list, data kept)
+      if (method === 'POST' && sub === 'archive') {
+        const updated = manager.archiveJob(jobId);
+        if (!updated) { sendJson(response, 404, { error: { code: 'NOT_FOUND', message: 'Job not found' } }, allowOrigin); return true; }
+        sendJson(response, 200, { job: updated }, allowOrigin);
+        return true;
+      }
+
       // POST /api/jobs/:id/respond — Phase 2
       if (method === 'POST' && sub === 'respond') {
         const body = await readJsonBody(request) as { response?: string; remember?: boolean; approvalId?: string };

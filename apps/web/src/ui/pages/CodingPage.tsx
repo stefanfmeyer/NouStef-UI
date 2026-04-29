@@ -573,7 +573,7 @@ function ProjectsView({
 
 // ── Project detail view ─────────────────────────────────────────────────────
 
-function JobRow({ job, onSelect, focused }: { job: CodingJob; onSelect: () => void; focused: boolean }) {
+function JobRow({ job, onSelect, focused, onCancel, onArchive }: { job: CodingJob; onSelect: () => void; focused: boolean; onCancel?: () => void; onArchive?: () => void; }) {
   const isAwaiting = job.status === 'awaiting_user';
   const isRunning = job.status === 'running';
   const isApprovalPending = job.status === 'awaiting_approval';
@@ -676,90 +676,32 @@ function JobRow({ job, onSelect, focused }: { job: CodingJob; onSelect: () => vo
             <StatusPill status={job.status} />
           </HStack>
           <RelativeTime ts={lastActivity} />
+          {onCancel && isRunning && (
+            <Button
+              size="xs" h="5" px="2" fontSize="10px"
+              variant="ghost"
+              color="var(--status-danger)"
+              _hover={{ bg: 'rgba(220,50,50,0.12)', color: 'var(--status-danger)' }}
+              rounded="var(--radius-pill)"
+              onClick={(e) => { e.stopPropagation(); onCancel(); }}
+            >
+              Kill
+            </Button>
+          )}
+          {onArchive && isTerminal && (
+            <Button
+              size="xs" h="5" px="2" fontSize="10px"
+              variant="ghost"
+              color="var(--text-muted)"
+              _hover={{ color: 'var(--text-secondary)', bg: 'var(--surface-hover)' }}
+              rounded="var(--radius-pill)"
+              onClick={(e) => { e.stopPropagation(); onArchive(); }}
+            >
+              Archive
+            </Button>
+          )}
         </VStack>
       </HStack>
-    </Box>
-  );
-}
-
-// Inline single-line composer rendered under each expanded repo on the All Jobs
-// page. Lets the user start a new job without navigating into the project view.
-// Uses the project's defaultApprovalMode + the agent's first model. For deeper
-// configuration (unrestricted access, etc.), the full NewJobView is still
-// available via the project detail view.
-function InlineNewJobComposer({
-  project,
-  agentReady,
-  onCreated,
-}: {
-  project: CodingProject;
-  agentReady: boolean;
-  onCreated: (projectId: string, jobId: string) => void;
-}) {
-  const [prompt, setPrompt] = useState('');
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  async function handleSubmit() {
-    const text = prompt.trim();
-    if (!text || submitting || !agentReady) return;
-    setSubmitting(true);
-    setError(null);
-    try {
-      const job = await api.createJob({
-        projectId: project.id,
-        prompt: text,
-        agent: 'claude-code',
-        approvalMode: project.defaultApprovalMode ?? 'auto_safe',
-        model: AGENT_MODELS['claude-code']?.[0]?.value,
-        reasoningEffort: 'medium',
-      });
-      setPrompt('');
-      onCreated(project.id, job.id);
-    } catch (err) {
-      setError((err as Error).message);
-    } finally {
-      setSubmitting(false);
-    }
-  }
-
-  return (
-    <Box
-      mt="1"
-      p="2"
-      rounded="var(--radius-control)"
-      border="1px dashed var(--border-subtle)"
-      bg="var(--surface-1)"
-      // Stop expansion-toggle clicks bubbling from inputs/buttons inside.
-      onClick={e => e.stopPropagation()}
-    >
-      <HStack gap="2" align="center">
-        <Input
-          placeholder={agentReady ? `New job in ${project.name}…` : 'Connect Claude Code in Integrations to start a job'}
-          value={prompt}
-          onChange={e => setPrompt(e.currentTarget.value)}
-          onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); void handleSubmit(); } }}
-          size="sm" h="8"
-          bg="var(--surface-2)"
-          border="1px solid var(--border-subtle)"
-          rounded="var(--radius-control)"
-          flex="1"
-          fontSize="12px"
-          disabled={!agentReady || submitting}
-        />
-        <Button
-          size="sm" h="8" px="3"
-          bg="var(--accent)" color="var(--accent-contrast)"
-          _hover={{ bg: 'var(--accent-strong)' }}
-          rounded="var(--radius-control)"
-          loading={submitting}
-          disabled={!agentReady || !prompt.trim()}
-          onClick={() => void handleSubmit()}
-        >
-          Start
-        </Button>
-      </HStack>
-      {error && <Text fontSize="11px" color="var(--status-danger)" mt="1">{error}</Text>}
     </Box>
   );
 }
@@ -771,8 +713,7 @@ function AllJobsView({
   onSelectJob: (projectId: string, jobId: string) => void;
 }) {
   const { integrations } = useCodingIntegrations();
-  const claudeIntg = integrations.find(i => i.id === 'claude-code');
-  const agentReady = claudeIntg?.installed === 1 && claudeIntg.authStatus === 'ok';
+  const [newJobProject, setNewJobProject] = useState<CodingProject | null>(null);
   const [projects, setProjects] = useState<CodingProject[]>([]);
   const [jobsByProject, setJobsByProject] = useState<Record<string, CodingJob[]>>({});
   const [loading, setLoading] = useState(true);
@@ -820,6 +761,17 @@ function AllJobsView({
     const id = setInterval(() => { void load(); }, 5000);
     return () => clearInterval(id);
   }, [jobsByProject, load]);
+
+  if (newJobProject) {
+    return (
+      <NewJobView
+        project={newJobProject}
+        integrations={integrations}
+        onCancel={() => setNewJobProject(null)}
+        onCreated={(job) => { setNewJobProject(null); onSelectJob(newJobProject.id, job.id); }}
+      />
+    );
+  }
 
   if (loading) {
     return (
@@ -930,11 +882,22 @@ function AllJobsView({
                   <Text fontSize="11px" color="var(--text-muted)">
                     {jobs.length} {jobs.length === 1 ? 'job' : 'jobs'}
                   </Text>
+                  <Button
+                    size="xs" h="5" w="5" p="0"
+                    variant="ghost"
+                    color="var(--text-muted)"
+                    _hover={{ color: 'var(--accent)', bg: 'var(--surface-hover)' }}
+                    rounded="var(--radius-pill)"
+                    title="New job"
+                    onClick={(e) => { e.stopPropagation(); setNewJobProject(project); }}
+                    aria-label="New job"
+                  >
+                    +
+                  </Button>
                 </HStack>
               </HStack>
 
-              {/* Jobs list + inline composer to start a new job in this repo
-                  without navigating into the project detail view. */}
+              {/* Jobs list */}
               {isOpen && (
                 <VStack align="stretch" gap="1.5" pl="5" pb="2">
                   {jobs.length === 0 ? (
@@ -946,14 +909,11 @@ function AllJobsView({
                         job={j}
                         focused={false}
                         onSelect={() => onSelectJob(project.id, j.id)}
+                        onCancel={async () => { await api.cancelJob(j.id); void load(); }}
+                        onArchive={async () => { await api.archiveJob(j.id); void load(); }}
                       />
                     ))
                   )}
-                  <InlineNewJobComposer
-                    project={project}
-                    agentReady={agentReady}
-                    onCreated={onSelectJob}
-                  />
                 </VStack>
               )}
             </Box>
@@ -1090,6 +1050,8 @@ function ProjectDetailView({
               job={j}
               focused={focusedIdx === idx}
               onSelect={() => onSelectJob(j.id)}
+              onCancel={async () => { await api.cancelJob(j.id); load(); }}
+              onArchive={async () => { await api.archiveJob(j.id); setJobs(prev => prev.filter(x => x.id !== j.id)); }}
             />
           ))}
         </VStack>

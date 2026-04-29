@@ -515,6 +515,14 @@ export class JobManager {
     return this.store.getJob(jobId);
   }
 
+  archiveJob(jobId: string): CodingJob | null {
+    const job = this.store.getJob(jobId);
+    if (!job) return null;
+    this.store.archiveJob(jobId, Date.now());
+    console.warn(`[coding] job ${jobId} archived`);
+    return this.store.getJob(jobId);
+  }
+
   getJob(id: string) { return this.store.getJob(id); }
   listJobs(opts?: { projectId?: string; status?: string }) { return this.store.listJobs(opts); }
   getRecentEvents(jobId: string) { return this.store.getRecentEvents(jobId); }

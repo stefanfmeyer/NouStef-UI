@@ -95,6 +95,7 @@ export class CodingStore {
     try { db.exec('ALTER TABLE coding_jobs ADD COLUMN title TEXT'); } catch { /* ok */ }
     try { db.exec('ALTER TABLE coding_jobs ADD COLUMN viewed_at INTEGER'); } catch { /* ok */ }
     try { db.exec('ALTER TABLE coding_integrations ADD COLUMN enabled INTEGER NOT NULL DEFAULT 1'); } catch { /* ok */ }
+    try { db.exec('ALTER TABLE coding_jobs ADD COLUMN archived_at INTEGER'); } catch { /* ok */ }
     // Index for type-filtered event queries (batchGetJobFileStats, etc.)
     try { db.exec('CREATE INDEX IF NOT EXISTS idx_coding_job_events_type ON coding_job_events(job_id, type)'); } catch { /* ok */ }
   }
@@ -178,6 +179,10 @@ export class CodingStore {
     this.db.prepare('UPDATE coding_jobs SET viewed_at = ? WHERE id = ? AND viewed_at IS NULL').run(ts, jobId);
   }
 
+  archiveJob(jobId: string, ts: number): void {
+    this.db.prepare('UPDATE coding_jobs SET archived_at = ? WHERE id = ?').run(ts, jobId);
+  }
+
   updateJobSessionId(jobId: string, sessionId: string) {
     this.db.prepare('UPDATE coding_jobs SET session_id = ? WHERE id = ?').run(sessionId, jobId);
   }
@@ -197,11 +202,12 @@ export class CodingStore {
     return row ? this.rowToJob(row) : null;
   }
 
-  listJobs(opts?: { projectId?: string; status?: string }): CodingJob[] {
+  listJobs(opts?: { projectId?: string; status?: string; includeArchived?: boolean }): CodingJob[] {
     let sql = 'SELECT * FROM coding_jobs WHERE 1=1';
     const params: unknown[] = [];
     if (opts?.projectId) { sql += ' AND project_id = ?'; params.push(opts.projectId); }
     if (opts?.status) { sql += ' AND status = ?'; params.push(opts.status); }
+    if (!opts?.includeArchived) { sql += ' AND archived_at IS NULL'; }
     sql += ' ORDER BY COALESCE(last_turn_at, created_at) DESC';
     const rows = this.db.prepare(sql).all(...(params as SQLInputValue[])) as Record<string, unknown>[];
     return rows.map((r) => this.rowToJob(r));
@@ -240,6 +246,7 @@ export class CodingStore {
       startedAt: row.started_at as number | undefined,
       completedAt: row.completed_at as number | undefined,
       viewedAt: (row.viewed_at as number | undefined) ?? undefined,
+      archivedAt: (row.archived_at as number | undefined) ?? undefined,
       exitCode: row.exit_code as number | undefined,
       error: row.error as string | undefined,
       approvalPending: row.approval_pending ? JSON.parse(row.approval_pending as string) as PendingApproval : undefined,

@@ -57,6 +57,7 @@ export interface CodingJob {
   startedAt?: number;
   completedAt?: number;
   viewedAt?: number;         // First time the user opened this job's detail view
+  archivedAt?: number;       // Set when user archives the job; hidden from default list views
   exitCode?: number;
   error?: string;
   approvalPending?: PendingApproval;
