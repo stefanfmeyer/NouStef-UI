@@ -93,6 +93,7 @@ export class JobManager {
   getProject(id: string) { return this.store.getProject(id); }
   listProjects() { return this.store.listProjects(); }
   deleteProject(id: string) { this.store.deleteProject(id); }
+  countProjectJobs(projectId: string) { return this.store.countProjectJobs(projectId); }
   updateProjectApprovalMode(id: string, mode: CodingJob['approvalMode']) {
     this.store.updateProjectApprovalMode(id, mode);
   }
@@ -537,7 +538,7 @@ export class JobManager {
   }
 
   getJob(id: string) { return this.store.getJob(id); }
-  listJobs(opts?: { projectId?: string; status?: string }) { return this.store.listJobs(opts); }
+  listJobs(opts?: { projectId?: string; status?: string; includeArchived?: boolean }) { return this.store.listJobs(opts); }
   getRecentEvents(jobId: string) { return this.store.getRecentEvents(jobId); }
   getAllEvents(jobId: string) { return this.store.getAllEvents(jobId); }
   getEventsSince(jobId: string, sinceId: number) { return this.store.getEventsSince(jobId, sinceId); }

@@ -3,9 +3,9 @@ import type { JobEvent } from '../../../lib/coding-api';
 
 type CostEvent = Extract<JobEvent, { type: 'job.cost_update' }>;
 
-interface Props { latestCost: CostEvent | null; startedAt?: number; }
+interface Props { latestCost: CostEvent | null; startedAt?: number; completedAt?: number; }
 
-function MetaTag({ label, title }: { label: string; title?: string }) {
+export function MetaTag({ label, title }: { label: string; title?: string }) {
   return (
     <Box
       as="span"
@@ -18,13 +18,14 @@ function MetaTag({ label, title }: { label: string; title?: string }) {
       color="var(--text-muted)"
       title={title}
       lineHeight="1.4"
+      flexShrink={0}
     >
       {label}
     </Box>
   );
 }
 
-export function CostBadge({ latestCost, startedAt }: Props) {
+export function CostBadge({ latestCost, startedAt, completedAt }: Props) {
   if (!latestCost) return null;
   const cost = latestCost as unknown as {
     cumulative: { tokensIn: number; tokensOut: number; estimatedCostUsd: number };
@@ -34,7 +35,7 @@ export function CostBadge({ latestCost, startedAt }: Props) {
   const cacheRead = (latestCost as unknown as { cacheReadTokens?: number }).cacheReadTokens ?? 0;
   const tokens = cumulative.tokensIn + cumulative.tokensOut;
   const usd = cumulative.estimatedCostUsd;
-  const elapsed = startedAt ? Math.floor((Date.now() - startedAt) / 1000) : 0;
+  const elapsed = startedAt ? Math.floor(((completedAt ?? Date.now()) - startedAt) / 1000) : 0;
   const mins = Math.floor(elapsed / 60);
   const secs = elapsed % 60;
   const timeStr = mins > 0 ? `${mins}m ${secs}s` : `${secs}s`;

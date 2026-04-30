@@ -77,6 +77,12 @@ export async function handleCodingRequest(
       }
       return true;
     }
+    if (parts.length === 4 && parts[3] === 'job-count' && method === 'GET') {
+      const projectId = parts[2]!;
+      const count = manager.countProjectJobs(projectId);
+      sendJson(response, 200, { count }, allowOrigin);
+      return true;
+    }
     if (parts.length === 3) {
       const projectId = parts[2];
       if (method === 'GET') {
@@ -114,7 +120,8 @@ export async function handleCodingRequest(
     // GET /api/jobs
     if (method === 'GET' && parts.length === 2) {
       const qs = new URL(url, 'http://localhost').searchParams;
-      const jobs = manager.listJobs({ projectId: qs.get('projectId') ?? undefined, status: qs.get('status') ?? undefined });
+      const includeArchived = qs.get('includeArchived') === '1';
+      const jobs = manager.listJobs({ projectId: qs.get('projectId') ?? undefined, status: qs.get('status') ?? undefined, includeArchived });
       const jobIds = jobs.map(j => j.id);
       const statsMap = manager.batchGetJobFileStats(jobIds);
       const costMap = manager.batchGetJobCostStats(jobIds);

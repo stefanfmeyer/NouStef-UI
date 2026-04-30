@@ -76,6 +76,11 @@ export async function createProject(name: string, repoPath: string, defaultAppro
 export async function deleteProject(id: string) {
   await codingFetch(`/api/projects/${id}`, { method: 'DELETE' });
 }
+export async function countProjectJobs(projectId: string): Promise<number> {
+  const r = await codingFetch(`/api/projects/${projectId}/job-count`);
+  const d = await r.json() as { count: number };
+  return d.count;
+}
 export async function updateProjectApprovalMode(id: string, mode: ApprovalMode): Promise<void> {
   await codingFetch(`/api/projects/${id}`, { method: 'PATCH', body: JSON.stringify({ defaultApprovalMode: mode }) });
 }
@@ -83,10 +88,11 @@ export async function getProject(id: string): Promise<{ project: CodingProject; 
   const r = await codingFetch(`/api/projects/${id}`);
   return r.json() as Promise<{ project: CodingProject; jobs: CodingJob[] }>;
 }
-export async function listJobs(opts?: { projectId?: string; status?: string }): Promise<CodingJob[]> {
+export async function listJobs(opts?: { projectId?: string; status?: string; includeArchived?: boolean }): Promise<CodingJob[]> {
   const qs = new URLSearchParams();
   if (opts?.projectId) qs.set('projectId', opts.projectId);
   if (opts?.status) qs.set('status', opts.status);
+  if (opts?.includeArchived) qs.set('includeArchived', '1');
   const r = await codingFetch(`/api/jobs?${qs.toString()}`);
   const d = await r.json() as { jobs: CodingJob[] };
   return d.jobs;

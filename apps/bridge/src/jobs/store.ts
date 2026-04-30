@@ -127,7 +127,22 @@ export class CodingStore {
   }
 
   deleteProject(id: string) {
-    this.db.prepare('DELETE FROM coding_projects WHERE id = ?').run(id);
+    this.db.exec('BEGIN');
+    try {
+      this.db.prepare('DELETE FROM coding_job_events WHERE job_id IN (SELECT id FROM coding_jobs WHERE project_id = ?)').run(id);
+      this.db.prepare('DELETE FROM coding_job_turns WHERE job_id IN (SELECT id FROM coding_jobs WHERE project_id = ?)').run(id);
+      this.db.prepare('DELETE FROM coding_jobs WHERE project_id = ?').run(id);
+      this.db.prepare('DELETE FROM coding_projects WHERE id = ?').run(id);
+      this.db.exec('COMMIT');
+    } catch (err) {
+      this.db.exec('ROLLBACK');
+      throw err;
+    }
+  }
+
+  countProjectJobs(projectId: string): number {
+    const row = this.db.prepare('SELECT COUNT(*) as cnt FROM coding_jobs WHERE project_id = ?').get(projectId) as { cnt: number };
+    return row.cnt;
   }
 
   private rowToProject(row: Record<string, unknown>): CodingProject {

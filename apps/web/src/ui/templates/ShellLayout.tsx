@@ -279,7 +279,7 @@ export function ShellLayout({
                 <span aria-hidden="true">🧑‍🍳</span>
               </span>
 
-              {/* Page title — compact mode shows brand name (used in combined recipe layout) */}
+              {/* Page title — compact mode and mobile always show brand name */}
               {_headerMode === 'compact' ? (
                 <Box flex="1" minW={0}>
                   <Text fontSize="13px" fontWeight="600" color="var(--text-primary)" letterSpacing="-0.01em">
@@ -287,7 +287,16 @@ export function ShellLayout({
                   </Text>
                 </Box>
               ) : (
-                <PageHeader pageName={pageTitle} />
+                <>
+                  <Box flex="1" minW={0} display={{ base: 'flex', lg: 'none' }} alignItems="center">
+                    <Text fontSize="13px" fontWeight="600" color="var(--text-primary)" letterSpacing="-0.01em" truncate>
+                      The Kitchen
+                    </Text>
+                  </Box>
+                  <Box flex="1" minW={0} display={{ base: 'none', lg: 'flex' }}>
+                    <PageHeader pageName={pageTitle} />
+                  </Box>
+                </>
               )}
             </HStack>
 
