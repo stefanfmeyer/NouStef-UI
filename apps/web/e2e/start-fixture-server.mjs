@@ -5,8 +5,8 @@
  *
  * Invoked by playwright.config.ts webServer.command.
  *
- * Uses tsx to run the bridge TypeScript source directly so no compiled dist
- * is required — avoids the moduleResolution:Bundler + Node ESM extension issue.
+ * Runs the bridge TypeScript source via node --import tsx/esm so no compiled
+ * dist is needed and no tsx binary path resolution is required.
  */
 
 import path from 'node:path';
@@ -19,9 +19,7 @@ const repoRoot = path.resolve(__dirname, '../../..');
 
 const port = Number.parseInt(process.env.PLAYWRIGHT_BRIDGE_PORT ?? '40178', 10);
 const webDistDir = path.resolve(repoRoot, 'apps/web/dist');
-// Run TypeScript source directly via tsx — no dist needed
 const bridgeSourceEntry = path.resolve(repoRoot, 'apps/bridge/src/server.ts');
-const tsxBin = path.resolve(repoRoot, 'node_modules/.bin/tsx');
 const fixtureCli = path.resolve(repoRoot, 'apps/bridge/test/fixtures/hermes-cli-fixture.mjs');
 const fixtureDir = path.resolve(repoRoot, 'tmp/playwright-fixture');
 const fixtureHome = path.resolve(fixtureDir, 'fixture-home');
@@ -43,9 +41,14 @@ process.stdout.write(`[fixture-server] Starting bridge on port ${port}\n`);
 process.stdout.write(`[fixture-server] Static dir: ${webDistDir}\n`);
 process.stdout.write(`[fixture-server] Fixture home: ${fixtureHome}\n`);
 
+// Use node --import tsx/esm to run the bridge TypeScript source directly.
+// This avoids needing the tsx binary on PATH and works anywhere tsx is installed
+// as a package (the loader is resolved via the Node module resolution algorithm).
 const bridge = spawn(
-  tsxBin,
+  process.execPath,
   [
+    '--experimental-sqlite',
+    '--import', 'tsx/esm',
     bridgeSourceEntry,
     '--port', String(port),
     '--static-dir', webDistDir,
@@ -57,7 +60,6 @@ const bridge = spawn(
     stdio: 'inherit',
     env: {
       ...process.env,
-      NODE_OPTIONS: '--experimental-sqlite',
       HERMES_FIXTURE_HOME: fixtureHome,
     },
   }
@@ -68,12 +70,11 @@ bridge.on('error', (err) => {
   process.exit(1);
 });
 
-// Keep this process alive until the bridge exits; forward the exit code
-await new Promise((resolve) => {
+// Keep alive until the bridge exits; forward its exit code
+await new Promise((_resolve) => {
   bridge.on('close', (code) => {
     process.exit(code ?? 0);
   });
-  // Handle SIGTERM/SIGINT so Playwright can cleanly shut down the server
   process.on('SIGTERM', () => bridge.kill('SIGTERM'));
   process.on('SIGINT', () => bridge.kill('SIGINT'));
 });
