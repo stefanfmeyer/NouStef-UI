@@ -8,6 +8,16 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ModelProviderResponse, RuntimeProviderOption } from '@hermes-recipes/protocol';
 import { ProviderModelSelector } from './ModelSelector';
 
+// Mock useBreakpointValue to simulate a desktop (lg+) viewport so the inline
+// provider/model selectors render (not the mobile robot-icon drawer).
+vi.mock('@chakra-ui/react', async (importOriginal) => {
+  const actual = await importOriginal() as Record<string, unknown>;
+  return {
+    ...actual,
+    useBreakpointValue: (values: Record<string, unknown>) => values['lg'] ?? values['base']
+  };
+});
+
 // Mock the live-discovery hook so each test controls what models are returned
 const mockUseProviderModels = vi.fn();
 vi.mock('../../hooks/use-provider-models', () => ({

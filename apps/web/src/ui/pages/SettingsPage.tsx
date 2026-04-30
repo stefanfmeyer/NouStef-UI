@@ -401,9 +401,9 @@ export function SettingsPage({
             <Tabs.Trigger
               key={v}
               value={v}
-              fontSize="13px"
-              px="4"
-              h="44px"
+              fontSize={{ base: '12px', md: '13px' }}
+              px={{ base: '2.5', md: '4' }}
+              h={{ base: '36px', md: '44px' }}
               color="var(--text-muted)"
               fontWeight="400"
               borderBottom="2px solid transparent"

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
-  Box, Button, CloseButton, Drawer, Flex, HStack, Input, NativeSelect, Spinner, Tabs, Text, Textarea, VStack,
+  Box, Button, CloseButton, Drawer, Field, Flex, HStack, Input, NativeSelect, Spinner, Tabs, Text, Textarea, VStack,
   useBreakpointValue
 } from '@chakra-ui/react';
 import * as api from '../../lib/coding-api';
@@ -10,7 +10,8 @@ import * as mainApi from '../../lib/api';
 import type { ModelProviderResponse } from '@hermes-recipes/protocol';
 import { JobConversation } from './coding/JobConversation';
 import { JobComposer } from './coding/JobComposer';
-import { CostBadge } from './coding/CostBadge';
+import { CostBadge, MetaTag } from './coding/CostBadge';
+import { ConfirmDialog } from '../molecules/ConfirmDialog';
 import { MessageRow } from './coding/events/MessageRow';
 import { FilePanel } from './coding/FilePanel';
 import { IntegrationsTab } from './coding/IntegrationsTab';
@@ -311,36 +312,42 @@ function ClonePanel({ onDone, onCancel }: { onDone: (path: string, name: string)
 
   return (
     <>
-      <VStack align="stretch" gap="3">
-        <Input
-          placeholder="https://github.com/owner/repo.git"
-          value={repoUrl}
-          onChange={e => setRepoUrl(e.currentTarget.value)}
-          onKeyDown={e => { if (e.key === 'Enter' && repoUrl.trim()) setShowTerminal(true); }}
-          size="sm" bg="var(--surface-3)" border="1px solid var(--border-subtle)"
-          rounded="var(--radius-control)"
-        />
-        <HStack gap="2">
+      <VStack align="stretch" gap="4">
+        <Field.Root>
+          <Field.Label color="var(--text-secondary)" fontSize="12px" mb="1">Repository</Field.Label>
           <Input
-            placeholder={`~/Code/${inferName(repoUrl) || 'repo'}`}
-            value={targetDir}
-            onChange={e => setTargetDir(e.currentTarget.value)}
+            placeholder="https://github.com/owner/repo or git@github.com:owner/repo.git"
+            value={repoUrl}
+            onChange={e => setRepoUrl(e.currentTarget.value)}
+            onKeyDown={e => { if (e.key === 'Enter' && repoUrl.trim()) setShowTerminal(true); }}
             size="sm" bg="var(--surface-3)" border="1px solid var(--border-subtle)"
-            rounded="var(--radius-control)" flex="1"
-          />
-          <Button
-            size="sm" h="8" px="3" flexShrink={0} variant="outline"
-            color="var(--text-secondary)" borderColor="var(--border-subtle)"
-            _hover={{ bg: 'var(--surface-hover)', color: 'var(--text-primary)' }}
             rounded="var(--radius-control)"
-            onClick={async () => {
-              const p = await api.pickDirectory();
-              if (p) setTargetDir(p + '/' + inferName(repoUrl));
-            }}
-          >
-            Browse…
-          </Button>
-        </HStack>
+          />
+        </Field.Root>
+        <Field.Root>
+          <Field.Label color="var(--text-secondary)" fontSize="12px" mb="1">Local destination</Field.Label>
+          <HStack gap="2">
+            <Input
+              placeholder={`~/Code/${inferName(repoUrl) || 'repo'}`}
+              value={targetDir}
+              onChange={e => setTargetDir(e.currentTarget.value)}
+              size="sm" bg="var(--surface-3)" border="1px solid var(--border-subtle)"
+              rounded="var(--radius-control)" flex="1"
+            />
+            <Button
+              size="sm" h="8" px="3" flexShrink={0} variant="outline"
+              color="var(--text-secondary)" borderColor="var(--border-subtle)"
+              _hover={{ bg: 'var(--surface-hover)', color: 'var(--text-primary)' }}
+              rounded="var(--radius-control)"
+              onClick={async () => {
+                const p = await api.pickDirectory();
+                if (p) setTargetDir(p + '/' + inferName(repoUrl));
+              }}
+            >
+              Browse…
+            </Button>
+          </HStack>
+        </Field.Root>
         <HStack gap="2" justify="flex-end">
           <Button variant="ghost" size="sm" h="8" px="3" onClick={onCancel} color="var(--text-muted)">Cancel</Button>
           <Button
@@ -387,6 +394,10 @@ function ProjectsView({
   const [addError, setAddError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [menuOpenId, setMenuOpenId] = useState<string | null>(null);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+  const [confirmDeleteName, setConfirmDeleteName] = useState('');
+  const [confirmJobCount, setConfirmJobCount] = useState<number | null>(null);
 
   async function handleAdd() {
     if (!name.trim() || !repoPath.trim()) return;
@@ -403,15 +414,34 @@ function ProjectsView({
     }
   }
 
-  async function handleDelete(id: string, e: React.MouseEvent) {
+  async function openDeleteConfirm(p: CodingProject, e: React.MouseEvent) {
     e.stopPropagation();
-    setDeletingId(id);
+    setMenuOpenId(null);
+    setConfirmDeleteId(p.id);
+    setConfirmDeleteName(p.name);
+    setConfirmJobCount(null);
+    const count = await api.countProjectJobs(p.id);
+    setConfirmJobCount(count);
+  }
+
+  async function handleDeleteConfirmed() {
+    if (!confirmDeleteId) return;
+    setDeletingId(confirmDeleteId);
     try {
-      await api.deleteProject(id);
+      await api.deleteProject(confirmDeleteId);
+      setConfirmDeleteId(null);
       onRefresh();
     } catch { /* ignore */ }
     finally { setDeletingId(null); }
   }
+
+  // Close the 3-dot menu when clicking outside
+  React.useEffect(() => {
+    if (!menuOpenId) return;
+    const close = () => setMenuOpenId(null);
+    document.addEventListener('click', close);
+    return () => document.removeEventListener('click', close);
+  }, [menuOpenId]);
 
   const drawerOpen = panel !== 'none';
   const drawerTitle = panel === 'clone' ? 'Clone GitHub repository' : 'Add project';
@@ -481,36 +511,31 @@ function ProjectsView({
                     size="sm" bg="var(--surface-3)" border="1px solid var(--border-subtle)"
                     rounded="var(--radius-control)"
                   />
-                  <HStack gap="2">
-                    <Input
-                      placeholder="/absolute/path/to/repo"
-                      value={repoPath}
-                      onChange={e => setRepoPath(e.currentTarget.value)}
-                      size="sm" bg="var(--surface-3)" border="1px solid var(--border-subtle)"
-                      rounded="var(--radius-control)"
-                      flex="1"
-                    />
-                    <Button
-                      size="sm" h="8" px="3" flexShrink={0}
-                      variant="outline"
-                      color="var(--text-secondary)"
-                      borderColor="var(--border-subtle)"
-                      _hover={{ bg: 'var(--surface-hover)', color: 'var(--text-primary)' }}
-                      rounded="var(--radius-control)"
-                      onClick={async () => {
-                        const picked = await api.pickDirectory();
-                        if (picked) setRepoPath(picked);
-                      }}
-                    >
-                      Browse…
-                    </Button>
-                  </HStack>
+                  <Button
+                    size="sm" h="8" px="3"
+                    variant="outline"
+                    color={repoPath ? 'var(--text-primary)' : 'var(--text-secondary)'}
+                    borderColor={repoPath ? 'var(--border-moderate)' : 'var(--border-subtle)'}
+                    _hover={{ bg: 'var(--surface-hover)', color: 'var(--text-primary)' }}
+                    rounded="var(--radius-control)"
+                    justifyContent="flex-start"
+                    fontFamily={repoPath ? 'ui-monospace, monospace' : undefined}
+                    fontSize="12px"
+                    truncate
+                    onClick={async () => {
+                      const picked = await api.pickDirectory();
+                      if (picked) setRepoPath(picked);
+                    }}
+                  >
+                    {repoPath || 'Browse for folder…'}
+                  </Button>
                   {addError && <Text fontSize="12px" color="var(--status-danger)">{addError}</Text>}
                   <Button
                     size="sm" bg="var(--accent)" color="var(--accent-contrast)"
                     _hover={{ bg: 'var(--accent-strong)' }}
                     rounded="var(--radius-control)"
                     loading={submitting}
+                    disabled={!name.trim() || !repoPath.trim()}
                     onClick={() => void handleAdd()}
                   >
                     Add project
@@ -553,23 +578,60 @@ function ProjectsView({
                 </VStack>
                 <HStack gap="2" flexShrink={0}>
                   <RelativeTime ts={p.updatedAt} />
-                  <Button
-                    size="xs" h="6" px="2" variant="ghost"
-                    color="var(--status-danger)" opacity={0.6}
-                    _hover={{ opacity: 1, bg: 'var(--surface-danger)' }}
-                    rounded="var(--radius-control)"
-                    loading={deletingId === p.id}
-                    onClick={e => void handleDelete(p.id, e)}
-                    title="Delete project"
-                  >
-                    ✕
-                  </Button>
+                  <Box position="relative">
+                    <Button
+                      size="xs" h="6" px="2" variant="ghost"
+                      color="var(--text-muted)"
+                      _hover={{ bg: 'var(--surface-hover)', color: 'var(--text-primary)' }}
+                      rounded="var(--radius-control)"
+                      title="Project options"
+                      aria-label="Project options"
+                      onClick={e => { e.stopPropagation(); setMenuOpenId(menuOpenId === p.id ? null : p.id); }}
+                    >
+                      ⋮
+                    </Button>
+                    {menuOpenId === p.id && (
+                      <Box
+                        position="absolute" right="0" top="100%" mt="1" zIndex="10"
+                        bg="var(--surface-elevated)" border="1px solid var(--border-subtle)"
+                        rounded="var(--radius-card)" boxShadow="var(--shadow-md)" minW="120px"
+                        onClick={e => e.stopPropagation()}
+                      >
+                        <Button
+                          w="100%" justifyContent="flex-start" variant="ghost" size="sm"
+                          color="var(--status-danger)"
+                          _hover={{ bg: 'var(--surface-danger)', color: 'var(--status-danger)' }}
+                          rounded="0"
+                          onClick={e => void openDeleteConfirm(p, e)}
+                        >
+                          Delete
+                        </Button>
+                      </Box>
+                    )}
+                  </Box>
                 </HStack>
               </HStack>
             </Box>
           ))}
         </VStack>
       )}
+
+      <ConfirmDialog
+        open={confirmDeleteId !== null}
+        onOpenChange={open => { if (!open) { setConfirmDeleteId(null); setMenuOpenId(null); } }}
+        title={`Delete "${confirmDeleteName}"?`}
+        description={
+          confirmJobCount === null
+            ? 'Loading job count…'
+            : confirmJobCount === 0
+              ? 'This will permanently delete this project. It has no jobs.'
+              : `This will permanently delete this project and all ${confirmJobCount} job${confirmJobCount !== 1 ? 's' : ''} (including archived ones). This cannot be undone.`
+        }
+        confirmLabel="Delete"
+        confirmColorPalette="red"
+        loading={deletingId !== null}
+        onConfirm={handleDeleteConfirmed}
+      />
     </VStack>
   );
 }
@@ -629,21 +691,20 @@ function JobRow({ job, onSelect, focused, onCancel, onArchive, liveActivity }: {
 
   const lastActivity = job.lastTurnAt ?? job.createdAt;
 
-  // Subtitle meta pieces
-  const meta: string[] = [];
-  if (job.turnCount > 1) meta.push(`${job.turnCount} turns`);
-  if (job.filesChangedCount) meta.push(`${job.filesChangedCount} file${job.filesChangedCount !== 1 ? 's' : ''}`);
+  // Subtitle tag pieces
+  let runtimeTag: string | null = null;
   if (job.startedAt && job.completedAt) {
     const secs = Math.round((job.completedAt - job.startedAt) / 1000);
-    meta.push(secs >= 60 ? `${Math.floor(secs / 60)}m ${secs % 60}s` : `${secs}s`);
+    runtimeTag = secs >= 60 ? `${Math.floor(secs / 60)}m ${secs % 60}s` : `${secs}s`;
   }
+  let tokensTag: string | null = null;
+  if (job.totalTokens != null && job.totalTokens > 0) {
+    tokensTag = job.totalTokens >= 1000 ? `${(job.totalTokens / 1000).toFixed(0)}k tok` : `${job.totalTokens} tok`;
+  }
+  let costTag: string | null = null;
   if (job.estimatedCostUsd != null && job.estimatedCostUsd > 0) {
     const usd = job.estimatedCostUsd;
-    const costStr = usd < 0.001 ? `<$0.001` : `~$${usd.toFixed(usd < 0.01 ? 4 : usd < 1 ? 2 : 2)}`;
-    const tokStr = job.totalTokens != null && job.totalTokens > 0
-      ? ` · ${job.totalTokens >= 1000 ? `${(job.totalTokens / 1000).toFixed(0)}k` : job.totalTokens} tok`
-      : '';
-    meta.push(`${costStr}${tokStr}`);
+    costTag = usd < 0.001 ? `<$0.001` : `~$${usd.toFixed(usd < 0.01 ? 4 : 2)}`;
   }
 
   const mostRecent = job.turnCount > 1 ? job.mostRecentTurnText : null;
@@ -694,18 +755,20 @@ function JobRow({ job, onSelect, focused, onCancel, onArchive, liveActivity }: {
             {job.title ?? job.prompt}
           </Text>
 
-          {/* Subtitle row — most recent turn + metadata */}
+          {/* Subtitle row — most recent turn + metadata tags */}
           <HStack gap="1" flexWrap="wrap">
             {mostRecent && (
               <Text fontSize="11px" color="var(--text-muted)" truncate maxW="220px">
                 &quot;{mostRecent.length > 60 ? mostRecent.slice(0, 60) + '…' : mostRecent}&quot;
               </Text>
             )}
-            {meta.length > 0 && (
-              <Text fontSize="11px" color="var(--text-muted)">
-                {mostRecent ? '· ' : ''}{meta.join(' · ')}
-              </Text>
+            {job.turnCount > 1 && <MetaTag label={`${job.turnCount} turns`} />}
+            {!!job.filesChangedCount && job.filesChangedCount > 0 && (
+              <MetaTag label={`${job.filesChangedCount} file${job.filesChangedCount !== 1 ? 's' : ''}`} />
             )}
+            {runtimeTag && <MetaTag label={runtimeTag} />}
+            {tokensTag && <MetaTag label={tokensTag} />}
+            {costTag && <MetaTag label={costTag} />}
           </HStack>
 
           {/* Live activity preview — only shown while running */}
@@ -1949,6 +2012,7 @@ function JobView({
               <CostBadge
                 latestCost={latestCost as Extract<JobEvent, { type: 'job.cost_update' }> | null}
                 startedAt={job?.startedAt}
+                completedAt={job?.completedAt}
               />
               {job && <StatusPill status={job.status} />}
               {job?.approvalMode === 'auto_all' && (
@@ -2060,6 +2124,7 @@ function JobView({
             <CostBadge
               latestCost={latestCost as Extract<JobEvent, { type: 'job.cost_update' }> | null}
               startedAt={job.startedAt}
+              completedAt={job.completedAt}
             />
             {job.approvalMode === 'auto_all' && (
               <Text fontSize="11px" color="var(--status-warning)" fontWeight="500">⚠ unrestricted</Text>
