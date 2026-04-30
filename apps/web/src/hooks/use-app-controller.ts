@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { startTransition, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type {
   AuditEventsResponse,
   AppPage,
@@ -1344,8 +1344,12 @@ export function useAppController() {
 
       try {
         const response = await getModelProviders(profileId, nextInspectedProviderId ?? undefined);
-        setModelProviderResponse(response);
-        setInspectedProviderId(response.inspectedProviderId);
+        // startTransition defers the response update so it doesn't interleave with
+        // pending microtasks (e.g. findByText resolution) in React 19 test environments.
+        startTransition(() => {
+          setModelProviderResponse(response);
+          setInspectedProviderId(response.inspectedProviderId);
+        });
         return response;
       } catch (error) {
         const message = getErrorMessage(error, 'Failed to load model and provider settings.');

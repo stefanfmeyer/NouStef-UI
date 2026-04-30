@@ -201,6 +201,7 @@ export function App() {
 
   const subtitle = controller.activeProfile ? controller.activeProfile.description : 'No real Hermes profile is selected.';
   const showRuntimeConfigBlocker =
+    controller.activeProfileId !== null &&
     controller.page !== 'recipes' &&
     controller.page !== 'settings' &&
     controller.runtimeConfigGate.status !== 'ready' &&
