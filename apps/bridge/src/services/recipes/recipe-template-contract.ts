@@ -1800,13 +1800,17 @@ export function assembleRecipeTemplateFill(input: {
     return baseFill;
   }
 
+  // zod v4: actions.data is typed as a union but the switch narrows baseFill, not actions.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const ad = actions.data as any;
+
   switch (baseFill.templateId) {
     case 'price-comparison-grid':
       return RecipeTemplateFillSchema.parse({
         ...baseFill,
         data: {
           ...baseFill.data,
-          rows: mergeRowLinks(baseFill.data.rows, actions.data.rows)
+          rows: mergeRowLinks(baseFill.data.rows, ad.rows)
         }
       });
     case 'shopping-shortlist':
@@ -1815,7 +1819,7 @@ export function assembleRecipeTemplateFill(input: {
         ...baseFill,
         data: {
           ...baseFill.data,
-          cards: mergeCardLinks(baseFill.data.cards, actions.data.cards)
+          cards: mergeCardLinks(baseFill.data.cards, ad.cards)
         }
       });
     case 'inbox-triage-board':
@@ -1823,8 +1827,8 @@ export function assembleRecipeTemplateFill(input: {
         ...baseFill,
         data: {
           ...baseFill.data,
-          groups: mergeGroupLinks(baseFill.data.groups, actions.data.groups),
-          detail: mergeDetailLinks(baseFill.data.detail, actions.data.detail)
+          groups: mergeGroupLinks(baseFill.data.groups, ad.groups),
+          detail: mergeDetailLinks(baseFill.data.detail, ad.detail)
         }
       });
     case 'restaurant-finder':
@@ -1833,13 +1837,13 @@ export function assembleRecipeTemplateFill(input: {
         ...baseFill,
         data: {
           ...baseFill.data,
-          groups: mergeGroupLinks(baseFill.data.groups, actions.data.groups),
-          detail: mergeDetailLinks(baseFill.data.detail, actions.data.detail)
+          groups: mergeGroupLinks(baseFill.data.groups, ad.groups),
+          detail: mergeDetailLinks(baseFill.data.detail, ad.detail)
         }
       });
     case 'flight-comparison': {
       const flightBaseData = baseFill.data as Extract<RecipeTemplateFill, { templateId: 'flight-comparison' }>['data'];
-      const flightActionData = actions.data as Extract<RecipeTemplateActions, { templateId: 'flight-comparison' }>['data'];
+      const flightActionData = ad as Extract<RecipeTemplateActions, { templateId: 'flight-comparison' }>['data'];
       type FlightFillLeg = Extract<RecipeTemplateFill, { templateId: 'flight-comparison' }>['data']['legs'][number];
       type FlightActionLeg = Extract<RecipeTemplateActions, { templateId: 'flight-comparison' }>['data']['legs'][number];
       return RecipeTemplateFillSchema.parse({
@@ -1861,9 +1865,9 @@ export function assembleRecipeTemplateFill(input: {
         ...baseFill,
         data: {
           ...baseFill.data,
-          itineraryItems: mergeTimelineLinks(baseFill.data.itineraryItems, actions.data.itineraryItems),
-          bookingCards: mergeCardLinks(baseFill.data.bookingCards, actions.data.bookingCards),
-          links: actions.data.links
+          itineraryItems: mergeTimelineLinks(baseFill.data.itineraryItems, ad.itineraryItems),
+          bookingCards: mergeCardLinks(baseFill.data.bookingCards, ad.bookingCards),
+          links: ad.links
         }
       });
     case 'research-notebook':
@@ -1871,9 +1875,9 @@ export function assembleRecipeTemplateFill(input: {
         ...baseFill,
         data: {
           ...baseFill.data,
-          sources: mergeGroupLinks(baseFill.data.sources, actions.data.sources),
-          extractedPoints: mergeGroupLinks(baseFill.data.extractedPoints, actions.data.extractedPoints),
-          followUps: mergeGroupLinks(baseFill.data.followUps, actions.data.followUps)
+          sources: mergeGroupLinks(baseFill.data.sources, ad.sources),
+          extractedPoints: mergeGroupLinks(baseFill.data.extractedPoints, ad.extractedPoints),
+          followUps: mergeGroupLinks(baseFill.data.followUps, ad.followUps)
         }
       });
     case 'security-review-board':
@@ -1881,8 +1885,8 @@ export function assembleRecipeTemplateFill(input: {
         ...baseFill,
         data: {
           ...baseFill.data,
-          groups: mergeGroupLinks(baseFill.data.groups, actions.data.groups),
-          detail: mergeDetailLinks(baseFill.data.detail, actions.data.detail)
+          groups: mergeGroupLinks(baseFill.data.groups, ad.groups),
+          detail: mergeDetailLinks(baseFill.data.detail, ad.detail)
         }
       });
     case 'vendor-evaluation-matrix':
@@ -1890,7 +1894,7 @@ export function assembleRecipeTemplateFill(input: {
         ...baseFill,
         data: {
           ...baseFill.data,
-          rows: mergeRowLinks(baseFill.data.rows, actions.data.rows)
+          rows: mergeRowLinks(baseFill.data.rows, ad.rows)
         }
       });
     case 'job-search-pipeline':
@@ -1898,7 +1902,7 @@ export function assembleRecipeTemplateFill(input: {
         ...baseFill,
         data: {
           ...baseFill.data,
-          cards: mergeCardLinks(baseFill.data.cards, actions.data.cards)
+          cards: mergeCardLinks(baseFill.data.cards, ad.cards)
         }
       });
     case 'event-planner':
@@ -1906,9 +1910,9 @@ export function assembleRecipeTemplateFill(input: {
         ...baseFill,
         data: {
           ...baseFill.data,
-          venueCards: mergeCardLinks(baseFill.data.venueCards, actions.data.venueCards),
-          guestGroups: mergeGroupLinks(baseFill.data.guestGroups, actions.data.guestGroups),
-          itineraryItems: mergeTimelineLinks(baseFill.data.itineraryItems, actions.data.itineraryItems)
+          venueCards: mergeCardLinks(baseFill.data.venueCards, ad.venueCards),
+          guestGroups: mergeGroupLinks(baseFill.data.guestGroups, ad.guestGroups),
+          itineraryItems: mergeTimelineLinks(baseFill.data.itineraryItems, ad.itineraryItems)
         }
       });
     default:

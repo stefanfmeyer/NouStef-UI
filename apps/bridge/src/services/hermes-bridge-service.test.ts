@@ -2680,7 +2680,7 @@ ${JSON.stringify(envelope)}`,
       'text_repair'
     ]);
     expect(activeBuild?.failureCategory).toBe('template_text_repair_failed');
-    expect(activeBuild?.errorDetail).toContain('Array must contain at least 1 element(s)');
+    expect(activeBuild?.errorDetail).toMatch(/Too small|Array must contain at least/);
     expect(activeBuild?.userFacingMessage).toContain('text/content repair pass');
     expect(attachedRecipe?.dynamic?.recipeTemplate).toMatchObject({
       templateId: 'vendor-evaluation-matrix',
@@ -2699,7 +2699,7 @@ ${JSON.stringify(envelope)}`,
       rawAttemptLogs.some(
         (detail) =>
           detail.stage === 'template_text_generation' &&
-          String(detail.errorDetail ?? '').includes('Array must contain at least 1 element(s)')
+          /Too small|Array must contain at least/.test(String(detail.errorDetail ?? ''))
       )
     ).toBe(true);
     expect(generationSummaryLog?.attemptsByStage).toMatchObject({
@@ -2711,7 +2711,7 @@ ${JSON.stringify(envelope)}`,
       telemetry.some(
         (event) =>
           event.code === 'RECIPE_TEMPLATE_TEXT_REPAIR_FAILED' &&
-          String(event.detail ?? '').includes('Array must contain at least 1 element(s)')
+          /Too small|Array must contain at least/.test(String(event.detail ?? ''))
       )
     ).toBe(true);
 
