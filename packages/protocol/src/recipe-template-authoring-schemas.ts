@@ -369,9 +369,9 @@ const StepByStepInstructionsActionsDataSchema = z
   })
   .strict();
 
-const createTemplateFillSchema = <TemplateId extends z.infer<typeof RecipeTemplateIdSchema>>(
+const createTemplateFillSchema = <TemplateId extends z.infer<typeof RecipeTemplateIdSchema>, DataSchema extends z.ZodTypeAny>(
   templateId: TemplateId,
-  dataSchema: z.ZodTypeAny
+  dataSchema: DataSchema
 ) =>
   RecipeTemplateFillBaseSchema.extend({
     templateId: z.literal(templateId),
@@ -408,9 +408,9 @@ const RecipeTemplateHydrationBaseSchema = z
   })
   .strict();
 
-const createTemplateHydrationSchema = <TemplateId extends z.infer<typeof RecipeTemplateIdSchema>>(
+const createTemplateHydrationSchema = <TemplateId extends z.infer<typeof RecipeTemplateIdSchema>, DataSchema extends z.ZodTypeAny>(
   templateId: TemplateId,
-  dataSchema: z.ZodTypeAny
+  dataSchema: DataSchema
 ) =>
   RecipeTemplateHydrationBaseSchema.extend({
     templateId: z.literal(templateId),
@@ -447,9 +447,9 @@ const RecipeTemplateTextBaseSchema = z
   })
   .strict();
 
-const createTemplateTextSchema = <TemplateId extends z.infer<typeof RecipeTemplateIdSchema>>(
+const createTemplateTextSchema = <TemplateId extends z.infer<typeof RecipeTemplateIdSchema>, DataSchema extends z.ZodTypeAny>(
   templateId: TemplateId,
-  dataSchema: z.ZodTypeAny
+  dataSchema: DataSchema
 ) =>
   RecipeTemplateTextBaseSchema.extend({
     templateId: z.literal(templateId),
@@ -623,9 +623,9 @@ const RecipeTemplateActionsBaseSchema = z
   })
   .strict();
 
-const createTemplateActionsSchema = <TemplateId extends z.infer<typeof RecipeTemplateIdSchema>>(
+const createTemplateActionsSchema = <TemplateId extends z.infer<typeof RecipeTemplateIdSchema>, DataSchema extends z.ZodTypeAny>(
   templateId: TemplateId,
-  dataSchema: z.ZodTypeAny
+  dataSchema: DataSchema
 ) =>
   RecipeTemplateActionsBaseSchema.extend({
     templateId: z.literal(templateId),
