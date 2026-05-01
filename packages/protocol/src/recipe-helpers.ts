@@ -125,8 +125,8 @@ function slugifyColumnId(label: string, fallback: string) {
 
 function stripMarkdownFormatting(value: string) {
   return value
-    .replace(/!\[([^\]]*)\]\(([^)]+)\)/gu, '$1')
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/gu, '$1')
+    .replace(/!\[([^\]\n]*)\]\(([^)\n]+)\)/gu, '$1')
+    .replace(/\[([^\]\n]+)\]\(([^)\n]+)\)/gu, '$1')
     .replace(/[*_`>#]+/gu, ' ')
     .replace(/\s+/gu, ' ')
     .trim();
@@ -262,7 +262,7 @@ function normalizeImage(input: unknown): RecipeImage | undefined {
 }
 
 function parseMarkdownImage(value: string) {
-  const match = value.match(/!\[([^\]]*)\]\(([^)]+)\)/u);
+  const match = value.match(/!\[([^\]\n]*)\]\(([^)\n]+)\)/u);
   if (!match?.[2]) {
     return undefined;
   }

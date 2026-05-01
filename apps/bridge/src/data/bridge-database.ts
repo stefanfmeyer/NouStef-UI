@@ -246,7 +246,8 @@ function formatSessionTitleToken(token: string) {
 function generateSessionTitle(candidate: string, fallbackTitle: string) {
   const normalized = candidate
     .replace(/\s+/gu, ' ')
-    .replace(/^[`"'“”]+|[`"'“”]+$/gu, '')
+    .replace(/^[`”'””]+/u, '')
+    .replace(/[`”'””]+$/u, '')
     .trim();
 
   if (!normalized) {
