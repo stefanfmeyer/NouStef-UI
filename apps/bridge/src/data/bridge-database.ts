@@ -243,11 +243,18 @@ function formatSessionTitleToken(token: string) {
   return `${token.slice(0, 1).toUpperCase()}${token.slice(1).toLowerCase()}`;
 }
 
+const SURROUNDING_QUOTE_CHARS = new Set(['`', '"', "'", '\u201C', '\u201D']);
+
+function trimSurroundingQuotes(s: string) {
+  let start = 0;
+  let end = s.length;
+  while (start < end && SURROUNDING_QUOTE_CHARS.has(s[start]!)) start++;
+  while (end > start && SURROUNDING_QUOTE_CHARS.has(s[end - 1]!)) end--;
+  return s.slice(start, end);
+}
+
 function generateSessionTitle(candidate: string, fallbackTitle: string) {
-  const normalized = candidate
-    .replace(/\s+/gu, ' ')
-    .replace(/^[`"'“”]+|[`"'“”]+$/gu, '')
-    .trim();
+  const normalized = trimSurroundingQuotes(candidate.replace(/\s+/gu, ' ')).trim();
 
   if (!normalized) {
     return fallbackTitle;

@@ -13,6 +13,8 @@ jobs:
   lint:
     name: Lint
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     timeout-minutes: 5
     steps:
       - name: Checkout
@@ -40,6 +42,8 @@ jobs:
   typecheck:
     name: Type check
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     timeout-minutes: 5
     steps:
       - name: Checkout
@@ -67,6 +71,8 @@ jobs:
   unit-tests:
     name: Unit tests
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     timeout-minutes: 10
     steps:
       - name: Checkout
@@ -97,6 +103,8 @@ jobs:
   build-web:
     name: Build web (a11y)
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     timeout-minutes: 10
     steps:
       - name: Checkout
@@ -132,6 +140,8 @@ jobs:
     name: A11y — desktop (WCAG 2.2 AA)
     needs: build-web
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     timeout-minutes: 15
     steps:
       - name: Checkout
@@ -181,6 +191,8 @@ jobs:
     name: A11y — mobile (WCAG 2.2 AA)
     needs: build-web
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     timeout-minutes: 15
     steps:
       - name: Checkout
@@ -230,6 +242,8 @@ jobs:
     name: A11y — dark theme (WCAG 2.2 AA)
     needs: build-web
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     timeout-minutes: 15
     steps:
       - name: Checkout
@@ -278,6 +292,8 @@ jobs:
   security:
     name: Security check
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     timeout-minutes: 5
     steps:
       - name: Checkout

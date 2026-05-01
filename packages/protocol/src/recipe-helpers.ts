@@ -124,9 +124,26 @@ function slugifyColumnId(label: string, fallback: string) {
 }
 
 function stripMarkdownFormatting(value: string) {
-  return value
-    .replace(/!\[([^\]]*)\]\(([^)]+)\)/gu, '$1')
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/gu, '$1')
+  let text = '';
+  let i = 0;
+  while (i < value.length) {
+    const isImage = value[i] === '!' && value[i + 1] === '[';
+    const isLink = !isImage && value[i] === '[';
+    if (isImage || isLink) {
+      const bracketOpen = isImage ? i + 1 : i;
+      const bracketClose = value.indexOf(']', bracketOpen + 1);
+      if (bracketClose !== -1 && value[bracketClose + 1] === '(') {
+        const parenClose = value.indexOf(')', bracketClose + 2);
+        if (parenClose !== -1) {
+          text += value.slice(bracketOpen + 1, bracketClose);
+          i = parenClose + 1;
+          continue;
+        }
+      }
+    }
+    text += value[i++];
+  }
+  return text
     .replace(/[*_`>#]+/gu, ' ')
     .replace(/\s+/gu, ' ')
     .trim();
@@ -262,14 +279,16 @@ function normalizeImage(input: unknown): RecipeImage | undefined {
 }
 
 function parseMarkdownImage(value: string) {
-  const match = value.match(/!\[([^\]]*)\]\(([^)]+)\)/u);
-  if (!match?.[2]) {
-    return undefined;
-  }
-
+  if (!value.startsWith('![')) return undefined;
+  const closeBracket = value.indexOf(']', 2);
+  if (closeBracket === -1 || value[closeBracket + 1] !== '(') return undefined;
+  const closeParen = value.indexOf(')', closeBracket + 2);
+  if (closeParen === -1) return undefined;
+  const url = value.slice(closeBracket + 2, closeParen);
+  if (!url) return undefined;
   return normalizeImage({
-    url: match[2],
-    alt: match[1]?.trim() || undefined
+    url,
+    alt: value.slice(2, closeBracket).trim() || undefined
   });
 }
 

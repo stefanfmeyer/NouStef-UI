@@ -169,7 +169,7 @@ function isDateLikeValue(value: string) {
     return false;
   }
 
-  if (/^\d{4}-\d{2}-\d{2}(?:[tT ][\d:.+-Zz]+)?$/u.test(trimmed)) {
+  if (/^\d{4}-\d{2}-\d{2}(?:[tT ][\d:.+\-Zz]+)?$/u.test(trimmed)) {
     return true;
   }
 
