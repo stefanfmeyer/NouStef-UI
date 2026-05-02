@@ -1,10 +1,16 @@
-# The Kitchen
+<div align="center">
+  <img src="docs/banner.svg" alt="The Kitchen — local-first browser frontend for Hermes Agent" width="100%"/>
+</div>
+
+<div align="center">
 
 [![CI](https://github.com/jozef-barton/the-kitchen/actions/workflows/ci.yml/badge.svg)](https://github.com/jozef-barton/the-kitchen/actions/workflows/ci.yml)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![Node](https://img.shields.io/badge/node-%3E%3D22.11-brightgreen)](https://nodejs.org)
 [![pnpm](https://img.shields.io/badge/pnpm-%3E%3D10-orange)](https://pnpm.io)
 [![Hermes CLI](https://img.shields.io/badge/hermes--cli-0.12.x-brightgreen)](https://hermes-agent.nousresearch.com/)
+
+</div>
 
 A local-first browser frontend for [Hermes Agent](https://hermes-agent.nousresearch.com/) — streaming chat, structured recipe workspaces, provider settings, and a recipe template gallery.
 
