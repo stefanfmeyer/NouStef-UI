@@ -110,10 +110,18 @@ export function evaluateLocalOriginPolicy(
   }
 
   if (!allowedPorts.has(normalizePortFromOrigin(origin))) {
-    return {
-      allowed: false,
-      message: `The Hermes bridge rejected origin ${origin.origin}. Only trusted local ports are allowed.`
-    };
+    // For same-hostname Tailscale requests, trust the socket's actual port.
+    // Tailscale terminates TLS so the origin's port (443) differs from the real server port.
+    const originMatchesHost = origin.hostname === parsedHost.hostname;
+    const effectiveOriginPort = originMatchesHost && normalizePortFromOrigin(origin) === '443'
+      ? String(request.socket.localPort)
+      : normalizePortFromOrigin(origin);
+    if (!allowedPorts.has(effectiveOriginPort)) {
+      return {
+        allowed: false,
+        message: `The Hermes bridge rejected origin ${origin.origin}. Only trusted local ports are allowed.`
+      };
+    }
   }
 
   return {
