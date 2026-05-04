@@ -42,7 +42,7 @@ export function HermesSetupPage({ onComplete }: { onComplete: () => void }) {
             Set up Hermes
           </Text>
           <Text fontSize="14px" color="var(--text-secondary)" lineHeight="1.6">
-            Hermes is the AI engine that powers The Kitchen. Install it once and configure your provider to get started.
+            Hermes is the AI engine that powers NouStef UI. Install it once and configure your provider to get started.
           </Text>
         </VStack>
 

@@ -1,4 +1,4 @@
-import type { ChatActivity, ChatMessage } from '@hermes-recipes/protocol';
+import type { ChatActivity, ChatMessage } from '@noustef-ui/protocol';
 
 const recipeFenceOpenPattern = /```hermes-ui-recipes[^\n]*\n?/giu;
 

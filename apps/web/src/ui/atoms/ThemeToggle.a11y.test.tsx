@@ -7,7 +7,7 @@ afterEach(cleanup);
 import { ThemeToggle } from './ThemeToggle';
 import { expectNoA11yViolations } from '../../test/axe';
 
-vi.mock('@hermes-recipes/ui', () => ({
+vi.mock('@noustef-ui/ui', () => ({
   useHermesTheme: () => ({
     themeMode: 'dark',
     setThemeMode: vi.fn(),

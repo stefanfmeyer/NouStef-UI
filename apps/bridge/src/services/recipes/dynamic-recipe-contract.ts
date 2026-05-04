@@ -6,7 +6,7 @@ import {
   RecipeNormalizedDataSchema,
   RecipeRawDataSchema,
   RecipeStatusSchema
-} from '@hermes-recipes/protocol';
+} from '@noustef-ui/protocol';
 import {
   extractRecoverableJsonObject,
   type StructuredJsonRecoveryDiagnostics

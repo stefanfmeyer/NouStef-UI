@@ -2,7 +2,7 @@ import { execFile } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { promisify } from 'node:util';
-import type { ToolExecution, ToolExecutionPrepareRequest } from '@hermes-recipes/protocol';
+import type { ToolExecution, ToolExecutionPrepareRequest } from '@noustef-ui/protocol';
 
 const execFileAsync = promisify(execFile);
 const OUTPUT_LIMIT = 12_000;

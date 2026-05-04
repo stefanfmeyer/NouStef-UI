@@ -1,7 +1,7 @@
 // @vitest-environment node
 
 import { describe, expect, it } from 'vitest';
-import type { RecipeModel } from '@hermes-recipes/protocol';
+import type { RecipeModel } from '@noustef-ui/protocol';
 import { normalizeRecipeDsl } from './recipe-dsl-normalizer';
 
 function createBaseModel(): RecipeModel {

@@ -24,7 +24,7 @@ import type {
   RecipeEntity,
   RecipeModel,
   RecipeSection
-} from '@hermes-recipes/protocol';
+} from '@noustef-ui/protocol';
 import { useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
 import ReactMarkdown from 'react-markdown';

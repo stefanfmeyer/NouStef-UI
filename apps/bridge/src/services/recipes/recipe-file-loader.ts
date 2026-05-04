@@ -1,8 +1,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
-import { RecipeManifestSchema } from '@hermes-recipes/protocol';
-import type { RecipeManifest } from '@hermes-recipes/protocol';
+import { RecipeManifestSchema } from '@noustef-ui/protocol';
+import type { RecipeManifest } from '@noustef-ui/protocol';
 
 export interface LoadedRecipeFile {
   manifest: RecipeManifest;

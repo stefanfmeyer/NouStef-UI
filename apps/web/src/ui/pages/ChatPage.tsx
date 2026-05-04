@@ -48,7 +48,7 @@ function SpinnerIcon() {
     </Svg>
   );
 }
-import type { ChatActivity, ChatMessage, FileRef, RuntimeRequest, SessionMessagesResponse, Recipe, UpdateRecipeRequest } from '@hermes-recipes/protocol';
+import type { ChatActivity, ChatMessage, FileRef, RuntimeRequest, SessionMessagesResponse, Recipe, UpdateRecipeRequest } from '@noustef-ui/protocol';
 import type { FileUploadQueue } from '../../hooks/use-file-upload-queue';
 import { ErrorBanner } from '../molecules/ErrorBanner';
 import { ConfirmDialog } from '../molecules/ConfirmDialog';

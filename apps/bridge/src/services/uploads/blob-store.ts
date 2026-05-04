@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import type { UploadedFileKind } from '@hermes-recipes/protocol';
+import type { UploadedFileKind } from '@noustef-ui/protocol';
 
 const KIND_BY_MIME: Record<string, UploadedFileKind> = {
   'image/jpeg': 'image',

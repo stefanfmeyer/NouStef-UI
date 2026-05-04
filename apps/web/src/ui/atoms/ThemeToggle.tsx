@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { Button, chakra } from '@chakra-ui/react';
-import { useHermesTheme } from '@hermes-recipes/ui';
+import { useHermesTheme } from '@noustef-ui/ui';
 
 function SunIcon() {
   const Svg = chakra('svg');

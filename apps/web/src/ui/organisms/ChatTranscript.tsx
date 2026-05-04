@@ -1,7 +1,7 @@
 import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import type { ReactNode, MouseEvent as ReactMouseEvent, KeyboardEvent as ReactKeyboardEvent } from 'react';
 import { Box, Button, Code, HStack, ScrollArea, Text, VStack, chakra } from '@chakra-ui/react';
-import type { ChatActivity, ChatMessage } from '@hermes-recipes/protocol';
+import type { ChatActivity, ChatMessage } from '@noustef-ui/protocol';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { HermesAvatar } from '../atoms/HermesAvatar';

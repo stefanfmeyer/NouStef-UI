@@ -46,7 +46,7 @@ import type {
   RecipePipelineState,
   UploadedFile,
   UploadedFileKind
-} from '@hermes-recipes/protocol';
+} from '@noustef-ui/protocol';
 import {
   AppSettingsSchema,
   AuditEventSchema,
@@ -87,14 +87,14 @@ import {
   RecipeModelSchema,
   RecipePatchSchema,
   RecipePipelineStateSchema
-} from '@hermes-recipes/protocol';
+} from '@noustef-ui/protocol';
 import {
   getRecipeContentTab,
   getRecipeContentViewData,
   normalizeLegacyRecipeTabs,
   normalizeRecipeTabs,
   normalizeRecipeUiState
-} from '@hermes-recipes/protocol';
+} from '@noustef-ui/protocol';
 import { bridgeReviewedShellToolId, reviewedShellCommandAllowlist } from '../reviewed-tools';
 import { normalizeMessageForPersistence, normalizePersistedSessionMessages } from '../transcript-runtime';
 import { classifySessionVisibility } from './session-filter-rules';

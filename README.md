@@ -1,10 +1,10 @@
 <div align="center">
-  <img src="docs/banner.svg" alt="The Kitchen — local-first browser frontend for Hermes Agent" width="100%"/>
+  <img src="docs/banner.svg" alt="NouStef UI — local-first browser frontend for Hermes Agent" width="100%"/>
 </div>
 
 <div align="center">
 
-[![CI](https://github.com/jozef-barton/the-kitchen/actions/workflows/ci.yml/badge.svg)](https://github.com/jozef-barton/the-kitchen/actions/workflows/ci.yml)
+[![CI](https://github.com/stefanfmeyer/NouStef-UI/actions/workflows/ci.yml/badge.svg)](https://github.com/stefanfmeyer/NouStef-UI/actions/workflows/ci.yml)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![Node](https://img.shields.io/badge/node-%3E%3D22.11-brightgreen)](https://nodejs.org)
 [![pnpm](https://img.shields.io/badge/pnpm-%3E%3D10-orange)](https://pnpm.io)
@@ -35,7 +35,7 @@ streaming chat, structured recipe workspaces, provider settings, and a recipe te
 | **pnpm ≥ 10** | `npm install -g pnpm` |
 | **Hermes CLI 0.12.x** | `curl -fsSL https://hermes-agent.nousresearch.com/install.sh \| bash` then `hermes setup` |
 
-> Clone to a path with **no spaces** — e.g. `~/dev/the-kitchen/`. Spaces in the path cause subprocess errors.
+> Clone to a path with **no spaces** — e.g. `~/dev/NouStef-UI/`. Spaces in the path cause subprocess errors.
 
 <br>
 
@@ -58,7 +58,7 @@ pnpm build && pnpm start  # production bundle, manual
 ## Surfaces
 
 <div align="center">
-  <img src="docs/features.svg" alt="The Kitchen feature surfaces" width="100%"/>
+  <img src="docs/features.svg" alt="NouStef UI feature surfaces" width="100%"/>
 </div>
 
 All persistence is local SQLite. The bridge binds to `127.0.0.1` only and accepts same-origin requests.

@@ -11,7 +11,7 @@ import {
   VStack,
   chakra
 } from '@chakra-ui/react';
-import type { ModelProviderResponse, RuntimeProviderOption, RuntimeProviderSetupStep } from '@hermes-recipes/protocol';
+import type { ModelProviderResponse, RuntimeProviderOption, RuntimeProviderSetupStep } from '@noustef-ui/protocol';
 import { ProviderLogo } from '../atoms/ProviderLogo';
 import { ErrorBanner } from '../molecules/ErrorBanner';
 import { getProviderStepCompletions, setProviderStepCompletion } from '../../lib/api';

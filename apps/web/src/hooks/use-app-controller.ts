@@ -24,8 +24,8 @@ import type {
   UiState,
   UpdateRecipeRequest,
   UpdateRuntimeModelConfigRequest
-} from '@hermes-recipes/protocol';
-import { RECIPE_REFRESH_USER_MESSAGE } from '@hermes-recipes/protocol';
+} from '@noustef-ui/protocol';
+import { RECIPE_REFRESH_USER_MESSAGE } from '@noustef-ui/protocol';
 import {
   applyRecipeEntryAction,
   getAuditEvents,

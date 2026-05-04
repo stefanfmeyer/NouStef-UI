@@ -4,15 +4,15 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import type { ChatStreamEvent } from '@hermes-recipes/protocol';
+import type { ChatStreamEvent } from '@noustef-ui/protocol';
 import {
   getRecipeContentEntries,
   getRecipeContentTab,
   normalizeRecipeTabs,
   RECIPE_REFRESH_USER_MESSAGE,
   RecipeTemplateFillSchema
-} from '@hermes-recipes/protocol';
-import type { Session, Recipe } from '@hermes-recipes/protocol';
+} from '@noustef-ui/protocol';
+import type { Session, Recipe } from '@noustef-ui/protocol';
 import type { HermesCli } from '../hermes-cli/client';
 import { BridgeDatabase } from '../database';
 import { buildRecipeAppletBaseArtifacts } from './recipes/home-recipe-compiler';

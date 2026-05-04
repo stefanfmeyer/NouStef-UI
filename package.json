@@ -1,5 +1,5 @@
 {
-  "name": "hermes-recipes",
+  "name": "@noustef-ui/hermes-recipes",
   "version": "0.2.0",
   "private": true,
   "packageManager": "pnpm@10.6.1",
@@ -9,13 +9,13 @@
   },
   "scripts": {
     "build": "turbo run build",
-    "dev": "concurrently -k -n bridge,web -c cyan,magenta \"pnpm --filter @hermes-recipes/bridge dev\" \"pnpm --filter @hermes-recipes/web dev\"",
-    "start": "pnpm --filter @hermes-recipes/bridge start -- --static-dir ../web/dist",
+    "dev": "concurrently -k -n bridge,web -c cyan,magenta \"pnpm --filter @noustef-ui/bridge dev\" \"pnpm --filter @noustef-ui/web dev\"",
+    "start": "pnpm --filter @noustef-ui/bridge start -- --static-dir ../web/dist",
     "kitchen": "node scripts/kitchen.mjs",
     "lint": "eslint . --max-warnings=0",
     "typecheck": "turbo run typecheck",
     "test": "NODE_OPTIONS=--experimental-sqlite vitest run --config vitest.unit.config.ts",
-    "test:live:home": "pnpm --filter @hermes-recipes/bridge test:live:home",
+    "test:live:home": "pnpm --filter @noustef-ui/bridge test:live:home",
     "security": "node scripts/security-check.mjs",
     "ci:full": "pnpm lint && pnpm typecheck && pnpm test && pnpm security"
   },

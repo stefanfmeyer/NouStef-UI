@@ -1,5 +1,4 @@
 
-
-> @hermes-recipes/protocol@0.2.0 build /Users/jozefbarton/dev/the-kitchen/packages/protocol
+> @noustef-ui/protocol@0.2.0 build /Users/openstef/Developer/the-kitchen/packages/protocol
 > tsc -p tsconfig.json
 

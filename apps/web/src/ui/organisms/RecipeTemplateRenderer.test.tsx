@@ -2,8 +2,8 @@
 
 import '@testing-library/jest-dom/vitest';
 import { ChakraProvider, defaultSystem } from '@chakra-ui/react';
-import type { Recipe } from '@hermes-recipes/protocol';
-import { RecipeTemplateFillSchema } from '@hermes-recipes/protocol';
+import type { Recipe } from '@noustef-ui/protocol';
+import { RecipeTemplateFillSchema } from '@noustef-ui/protocol';
 import { cleanup, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import {

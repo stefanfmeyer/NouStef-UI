@@ -2,11 +2,11 @@ import type {
   RecipeAppletManifest,
   RecipeAppletPlan,
   RecipeAppletSourceArtifact
-} from '@hermes-recipes/protocol';
+} from '@noustef-ui/protocol';
 import {
   RecipeAppletPlanSchema,
   RecipeAppletSourceArtifactSchema
-} from '@hermes-recipes/protocol';
+} from '@noustef-ui/protocol';
 
 export interface RecipeAppletSourceExtractionResult {
   artifact: RecipeAppletSourceArtifact | null;

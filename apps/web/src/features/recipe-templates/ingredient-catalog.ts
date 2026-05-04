@@ -1,4 +1,4 @@
-import type { RecipeTemplateSection } from '@hermes-recipes/protocol';
+import type { RecipeTemplateSection } from '@noustef-ui/protocol';
 
 export type IngredientGroup = 'framing' | 'data' | 'detail' | 'composition' | 'media' | 'charts';
 

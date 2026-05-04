@@ -1,5 +1,5 @@
 import { Box, Text, VStack } from '@chakra-ui/react';
-import type { Recipe, RecipeTemplateState } from '@hermes-recipes/protocol';
+import type { Recipe, RecipeTemplateState } from '@noustef-ui/protocol';
 import { RecipeTemplateRenderer } from '../../ui/organisms/RecipeTemplateRenderer';
 import type { Ingredient } from './ingredient-catalog';
 

@@ -1,5 +1,5 @@
-import type { RecipeTemplateId as ProtocolRecipeTemplateId } from '@hermes-recipes/protocol';
-export { RECIPE_TEMPLATE_IDS } from '@hermes-recipes/protocol';
+import type { RecipeTemplateId as ProtocolRecipeTemplateId } from '@noustef-ui/protocol';
+export { RECIPE_TEMPLATE_IDS } from '@noustef-ui/protocol';
 
 export type RecipeTemplateId = ProtocolRecipeTemplateId;
 

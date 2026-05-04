@@ -16,7 +16,7 @@ import {
   normalizeRecipeTabs,
   type RecipeActionSpec,
   type RecipeArtifactPayload
-} from '@hermes-recipes/protocol';
+} from '@noustef-ui/protocol';
 import { BridgeDatabase } from './database';
 
 const cleanupPaths: string[] = [];

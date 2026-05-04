@@ -22,8 +22,8 @@ import type {
   RecipeNormalizedItem,
   RecipeUiFieldBinding,
   RecipeUiNode
-} from '@hermes-recipes/protocol';
-import { getRecipeContentTab } from '@hermes-recipes/protocol';
+} from '@noustef-ui/protocol';
+import { getRecipeContentTab } from '@noustef-ui/protocol';
 import type React from 'react';
 import { useMemo, useState } from 'react';
 import type { ReactNode } from 'react';

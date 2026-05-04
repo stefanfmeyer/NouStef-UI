@@ -1,5 +1,5 @@
 {
-  "name": "@hermes-recipes/web",
+  "name": "@noustef-ui/web",
   "version": "0.2.0",
   "private": true,
   "type": "module",
@@ -12,8 +12,8 @@
   "dependencies": {
     "@chakra-ui/react": "^3.28.0",
     "@emotion/react": "^11.14.0",
-    "@hermes-recipes/protocol": "workspace:*",
-    "@hermes-recipes/ui": "workspace:*",
+    "@noustef-ui/protocol": "workspace:*",
+    "@noustef-ui/ui": "workspace:*",
     "next-themes": "^0.4.4",
     "qrcode.react": "^4.2.0",
     "react": "^19.2.5",

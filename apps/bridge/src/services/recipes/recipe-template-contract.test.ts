@@ -1,7 +1,7 @@
 // @vitest-environment node
 
 import { describe, expect, it } from 'vitest';
-import { RecipeTemplateFillSchema } from '@hermes-recipes/protocol';
+import { RecipeTemplateFillSchema } from '@noustef-ui/protocol';
 import {
   compileRecipeTemplatePreviewState,
   compileRecipeTemplateState,

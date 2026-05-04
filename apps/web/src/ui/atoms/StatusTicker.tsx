@@ -1,6 +1,6 @@
 import { memo, useEffect, useState } from 'react';
 import { Box, HStack, Text } from '@chakra-ui/react';
-import type { ChatActivity } from '@hermes-recipes/protocol';
+import type { ChatActivity } from '@noustef-ui/protocol';
 
 function kindIcon(kind: ChatActivity['kind']): string {
   switch (kind) {

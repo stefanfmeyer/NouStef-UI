@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Box, Button, Grid, HStack, Input, Text, VStack } from '@chakra-ui/react';
-import type { RuntimeProviderOption } from '@hermes-recipes/protocol';
+import type { RuntimeProviderOption } from '@noustef-ui/protocol';
 import { ProviderLogo } from '../atoms/ProviderLogo';
 import { isProviderSupported } from '../../lib/provider-models';
 

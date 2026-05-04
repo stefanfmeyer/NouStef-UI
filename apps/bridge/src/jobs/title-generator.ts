@@ -1,4 +1,4 @@
-import type { Profile } from '@hermes-recipes/protocol';
+import type { Profile } from '@noustef-ui/protocol';
 import type { HermesCli } from '../hermes-cli/client';
 
 const TITLE_TIMEOUT_MS = 25_000;

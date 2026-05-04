@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Box, Button, HStack, Menu, Portal, Table, Tabs, Text, Tooltip, VStack, chakra } from '@chakra-ui/react';
-import type { Skill, SkillsResponse } from '@hermes-recipes/protocol';
+import type { Skill, SkillsResponse } from '@noustef-ui/protocol';
 import { ConfirmDialog } from '../molecules/ConfirmDialog';
 import { EmptyStateCard } from '../molecules/EmptyStateCard';
 import { ErrorBanner } from '../molecules/ErrorBanner';

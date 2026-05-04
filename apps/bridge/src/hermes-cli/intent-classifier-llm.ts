@@ -5,7 +5,7 @@
  * Returns null on any error so callers degrade gracefully.
  */
 
-import type { RecipeContentFormat } from '@hermes-recipes/protocol';
+import type { RecipeContentFormat } from '@noustef-ui/protocol';
 import type { StructuredRecipeIntent } from './client';
 
 // ---------------------------------------------------------------------------

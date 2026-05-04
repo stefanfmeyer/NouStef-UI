@@ -1,4 +1,4 @@
-# Contributing to The Kitchen
+# Contributing to NouStef UI
 
 Thanks for your interest in contributing. This document covers how to get the project running locally, the workflow we use, and the expectations for pull requests.
 

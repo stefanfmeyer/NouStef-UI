@@ -9,8 +9,8 @@ import type {
   RecipeNormalizedData,
   RecipeSummary,
   RecipeModel
-} from '@hermes-recipes/protocol';
-import { RecipeAppletManifestSchema } from '@hermes-recipes/protocol';
+} from '@noustef-ui/protocol';
+import { RecipeAppletManifestSchema } from '@noustef-ui/protocol';
 import type { RecipeAppletStaticValidationResult } from './recipe-applet-static-validation';
 
 export interface RecipeAppletManifestSynthesisInput {

@@ -1,5 +1,5 @@
 blank_issues_enabled: false
 contact_links:
   - name: Security vulnerability
-    url: https://github.com/jozef-barton/the-kitchen/security/advisories/new
+    url: https://github.com/stefanfmeyer/NouStef-UI/security/advisories/new
     about: Report a security issue privately — do not use a public issue.

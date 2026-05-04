@@ -17,12 +17,12 @@
   RecipePatch,
   RecipeSection,
   RecipeView
-} from '@hermes-recipes/protocol';
+} from '@noustef-ui/protocol';
 import {
   LegacyRecipeDslSchema,
   RecipeAuthoringDslSchema,
   RecipeModelSchema
-} from '@hermes-recipes/protocol';
+} from '@noustef-ui/protocol';
 import { synthesizeRecipeModelPatch } from './recipe-model';
 
 export interface NormalizeRecipeDslInput {

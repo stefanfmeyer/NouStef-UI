@@ -1,5 +1,5 @@
 import { Box, Flex, HStack, Table, Tabs, Text, VStack } from '@chakra-ui/react';
-import type { ToolHistoryResponse, ToolsResponse, ToolsTab } from '@hermes-recipes/protocol';
+import type { ToolHistoryResponse, ToolsResponse, ToolsTab } from '@noustef-ui/protocol';
 import { ErrorBanner } from '../molecules/ErrorBanner';
 import { ToolHistoryPage } from './ToolHistoryPage';
 

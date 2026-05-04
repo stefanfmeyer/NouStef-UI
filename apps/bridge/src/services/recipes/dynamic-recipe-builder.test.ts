@@ -1,7 +1,7 @@
 // @vitest-environment node
 
 import { describe, expect, it } from 'vitest';
-import type { RecipeActionSpec, RecipeRawData } from '@hermes-recipes/protocol';
+import type { RecipeActionSpec, RecipeRawData } from '@noustef-ui/protocol';
 import { extractHermesRecipeDataEnvelope } from './dynamic-recipe-contract';
 import { buildDynamicRecipeArtifacts, deriveNormalizedDataFromRawData, runRecipeTestHarness } from './home-recipe-compiler';
 

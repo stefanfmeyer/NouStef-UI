@@ -17,8 +17,8 @@ import type {
   RecipeCellValue,
   RecipeLink,
   UpdateRecipeRequest
-} from '@hermes-recipes/protocol';
-import { getRecipeContentTab, getRecipeContentViewData } from '@hermes-recipes/protocol';
+} from '@noustef-ui/protocol';
+import { getRecipeContentTab, getRecipeContentViewData } from '@noustef-ui/protocol';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { safeMarkdownUrlTransform } from '../../lib/markdown-url-transform';

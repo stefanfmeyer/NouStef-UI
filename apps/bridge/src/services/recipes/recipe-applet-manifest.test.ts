@@ -1,7 +1,7 @@
 // @vitest-environment node
 
 import { describe, expect, it } from 'vitest';
-import type { RecipeActionSpec, RecipeNormalizedData } from '@hermes-recipes/protocol';
+import type { RecipeActionSpec, RecipeNormalizedData } from '@noustef-ui/protocol';
 import { analyzeRecipeAppletModule } from './recipe-applet-static-validation';
 import { synthesizeRecipeAppletManifest } from './recipe-applet-manifest';
 import { buildRecipeModel } from './recipe-model';

@@ -1,5 +1,5 @@
 import { Field, NativeSelect } from '@chakra-ui/react';
-import type { Profile } from '@hermes-recipes/protocol';
+import type { Profile } from '@noustef-ui/protocol';
 
 export function ProfileSelector({
   profiles,

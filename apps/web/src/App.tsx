@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import type { AppPage } from '@hermes-recipes/protocol';
+import type { AppPage } from '@noustef-ui/protocol';
 import { testModelConfig } from './lib/api';
 import { Box, Button, Center, HStack, Spinner, Text, VStack } from '@chakra-ui/react';
 import { useAppController } from './hooks/use-app-controller';

@@ -1,5 +1,5 @@
 {
-  "name": "@hermes-recipes/bridge",
+  "name": "@noustef-ui/bridge",
   "version": "0.2.0",
   "private": true,
   "type": "module",
@@ -12,7 +12,7 @@
     "test:live:home": "tsx scripts/live-home-workspace-validation.ts"
   },
   "dependencies": {
-    "@hermes-recipes/protocol": "workspace:*",
+    "@noustef-ui/protocol": "workspace:*",
     "busboy": "^1.6.0",
     "exceljs": "^4.4.0",
     "mammoth": "^1.12.0",

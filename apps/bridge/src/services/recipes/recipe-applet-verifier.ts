@@ -12,7 +12,7 @@ import type {
   RecipeAppletTestSourceArtifact,
   RecipeAppletVerification,
   RecipeNormalizedData
-} from '@hermes-recipes/protocol';
+} from '@noustef-ui/protocol';
 import { RecipeAppletRenderTreeSchema } from '../../../../../packages/protocol/src/schemas';
 import { collectRecipeAppletActionIds, collectRecipeAppletNodeKinds, validateRecipeAppletSmallPane } from './recipe-applet-render-tree';
 import { validateRecipeAppletModule } from './recipe-applet-static-validation';

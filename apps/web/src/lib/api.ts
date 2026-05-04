@@ -25,9 +25,9 @@ import type {
   ToolExecutionPrepareRequest,
   UiState,
   UpdateRuntimeModelConfigRequest
-} from '@hermes-recipes/protocol';
+} from '@noustef-ui/protocol';
 export type { FileRef, UploadedFile };
-import type { GetSoulMdResponse, UpdateSoulMdResponse } from '@hermes-recipes/protocol';
+import type { GetSoulMdResponse, UpdateSoulMdResponse } from '@noustef-ui/protocol';
 export type { GetSoulMdResponse, UpdateSoulMdResponse };
 import {
   AuditEventsResponseSchema,
@@ -61,7 +61,7 @@ import {
   UiStateSchema,
   GetSoulMdResponseSchema,
   UpdateSoulMdResponseSchema
-} from '@hermes-recipes/protocol';
+} from '@noustef-ui/protocol';
 
 interface ApiErrorShape {
   error?: {

@@ -2,7 +2,7 @@
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { cleanup, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { HermesUiProvider } from '@hermes-recipes/ui';
+import { HermesUiProvider } from '@noustef-ui/ui';
 import { RECIPE_TEMPLATE_REGISTRY } from '../../features/recipe-templates/template-registry';
 import { resolveTemplateGalleryFilterButtonStyles } from '../../features/recipe-templates/template-style-helpers';
 import { RecipesPage } from './RecipesPage';

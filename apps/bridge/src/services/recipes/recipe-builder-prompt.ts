@@ -19,7 +19,7 @@ export const RECIPE_BRIDGE_HANDLERS = [
 export function buildRecipeBuilderSystemPrompt(currentRecipe: Record<string, unknown> | null): string {
   const existingTemplateIds = Object.keys(WORKRECIPE_TEMPLATE_RUNTIME_REGISTRY);
 
-  return `You are a recipe definition builder for The Kitchen — a Hermes Agent frontend.
+  return `You are a recipe definition builder for NouStef UI — a Hermes Agent frontend.
 
 A recipe is a structured workspace template stored as FOUR JSON files:
 

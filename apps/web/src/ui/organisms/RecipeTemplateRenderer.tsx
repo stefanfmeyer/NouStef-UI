@@ -9,7 +9,7 @@ import type {
   RecipeTemplateField,
   RecipeTemplateSection,
   RecipeTemplateState
-} from '@hermes-recipes/protocol';
+} from '@noustef-ui/protocol';
 import { useCallback, useMemo, useState } from 'react';
 import type { Components } from 'react-markdown';
 import type { ReactNode } from 'react';

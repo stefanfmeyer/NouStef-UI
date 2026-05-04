@@ -1,5 +1,5 @@
 import { Badge, Box, Button, Flex, HStack, Table, Tabs, Text, VStack } from '@chakra-ui/react';
-import type { RuntimeActivityHistoryEntry, ToolHistoryResponse } from '@hermes-recipes/protocol';
+import type { RuntimeActivityHistoryEntry, ToolHistoryResponse } from '@noustef-ui/protocol';
 import { StatusPill } from '../atoms/StatusPill';
 import { EmptyStateCard } from '../molecules/EmptyStateCard';
 import { ErrorBanner } from '../molecules/ErrorBanner';

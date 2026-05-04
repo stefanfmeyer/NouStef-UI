@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { flushSync } from 'react-dom';
 import { Box, Button, Flex, HStack, Input, Table, Text, VStack } from '@chakra-ui/react';
-import type { Session, SessionsResponse } from '@hermes-recipes/protocol';
+import type { Session, SessionsResponse } from '@noustef-ui/protocol';
 import { RecipeTypeBadge } from '../atoms/RecipeTypeBadge';
 import { ErrorBanner } from '../molecules/ErrorBanner';
 import { ConfirmDialog } from '../molecules/ConfirmDialog';

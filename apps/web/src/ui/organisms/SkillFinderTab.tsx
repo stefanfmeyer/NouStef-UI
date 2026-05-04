@@ -13,7 +13,7 @@ import {
   Text,
   VStack
 } from '@chakra-ui/react';
-import type { SkillSearchResult } from '@hermes-recipes/protocol';
+import type { SkillSearchResult } from '@noustef-ui/protocol';
 import { searchSkillsHub, installSkillFromHub } from '../../lib/api';
 
 const PAGE_SIZE = 12;

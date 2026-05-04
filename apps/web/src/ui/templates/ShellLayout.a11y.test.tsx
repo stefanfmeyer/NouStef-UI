@@ -7,14 +7,14 @@ afterEach(cleanup);
 import { ShellLayout } from './ShellLayout';
 import { expectNoA11yViolations } from '../../test/axe';
 
-vi.mock('@hermes-recipes/ui', () => ({
+vi.mock('@noustef-ui/ui', () => ({
   useHermesTheme: () => ({ themeMode: 'light', setThemeMode: vi.fn() }),
 }));
 vi.mock('next-themes', () => ({
   useTheme: () => ({ theme: 'light', resolvedTheme: 'light', setTheme: vi.fn() }),
 }));
 
-import type { ConnectionState } from '@hermes-recipes/protocol';
+import type { ConnectionState } from '@noustef-ui/protocol';
 
 const connection: ConnectionState = {
   status: 'connected',

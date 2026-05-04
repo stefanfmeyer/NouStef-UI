@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Alert, Box, Button, CloseButton, Drawer, Flex, HStack, Portal, Text, chakra } from '@chakra-ui/react';
-import type { ConnectionState } from '@hermes-recipes/protocol';
+import type { ConnectionState } from '@noustef-ui/protocol';
 import type { ReactNode } from 'react';
 import { ThemeToggle } from '../atoms/ThemeToggle';
 import { StatusPill } from '../atoms/StatusPill';
@@ -213,9 +213,9 @@ export function ShellLayout({
                 >
                   <HStack justify="space-between" align="center">
                     <HStack gap="2" minW={0}>
-                      <span aria-hidden="true" style={{ fontSize: '16px', lineHeight: 1, flexShrink: 0 }}>🧑‍🍳</span>
+                      <span aria-hidden="true" style={{ fontSize: '16px', lineHeight: 1, flexShrink: 0 }}>🤖</span>
                       <Text fontSize="xs" fontWeight="600" letterSpacing="-0.01em" color="var(--text-primary)" lineHeight="1.15" truncate>
-                        The Kitchen
+                        NouStef UI
                       </Text>
                     </HStack>
                     <Drawer.CloseTrigger asChild>
@@ -271,26 +271,26 @@ export function ShellLayout({
                 </Button>
               ) : null}
 
-              {/* Chef hat logo */}
+              {/* NouStef UI logo */}
               <span
                 data-testid="hermes-home-brand"
                 style={{ fontSize: '18px', lineHeight: 1, flexShrink: 0, marginRight: '10px', display: 'inline-flex', alignItems: 'center' }}
               >
-                <span aria-hidden="true">🧑‍🍳</span>
+                <span aria-hidden="true">🤖</span>
               </span>
 
               {/* Page title — compact mode and mobile always show brand name */}
               {_headerMode === 'compact' ? (
                 <Box flex="1" minW={0}>
                   <Text fontSize="13px" fontWeight="600" color="var(--text-primary)" letterSpacing="-0.01em">
-                    The Kitchen
+                    NouStef UI
                   </Text>
                 </Box>
               ) : (
                 <>
                   <Box flex="1" minW={0} display={{ base: 'flex', lg: 'none' }} alignItems="center">
                     <Text fontSize="13px" fontWeight="600" color="var(--text-primary)" letterSpacing="-0.01em" truncate>
-                      The Kitchen
+                      NouStef UI
                     </Text>
                   </Box>
                   <Box flex="1" minW={0} display={{ base: 'none', lg: 'flex' }}>

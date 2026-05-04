@@ -1,5 +1,5 @@
 import { Box, Text } from '@chakra-ui/react';
-import type { Session } from '@hermes-recipes/protocol';
+import type { Session } from '@noustef-ui/protocol';
 
 function recipeTypePresentation(recipeType: Session['recipeType']) {
   if (recipeType === 'home') {

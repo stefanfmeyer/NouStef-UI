@@ -17,11 +17,11 @@ import type {
   RecipeSection,
   RecipeDslTab,
   RecipeView
-} from '@hermes-recipes/protocol';
+} from '@noustef-ui/protocol';
 import {
   RecipeModelSchema,
   RecipePatchSchema
-} from '@hermes-recipes/protocol';
+} from '@noustef-ui/protocol';
 
 export interface BuildRecipeModelInput {
   recipe: Pick<Recipe, 'id' | 'title' | 'description' | 'status' | 'metadata'>;

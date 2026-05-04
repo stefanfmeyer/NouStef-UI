@@ -2,7 +2,7 @@ import type {
   RecipeAppletCapability,
   RecipeAppletManifest,
   RecipeAppletTestSourceArtifact
-} from '@hermes-recipes/protocol';
+} from '@noustef-ui/protocol';
 
 function escapeTemplateLiteral(value: string) {
   return value.replace(/\\/gu, '\\\\').replace(/`/gu, '\\`').replace(/\$\{/gu, '\\${');

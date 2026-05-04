@@ -7,7 +7,7 @@ export function BrandLockup({
 }) {
   return (
     <HStack align="center" gap={compact ? '2' : '2.5'} minW={0} data-testid="hermes-home-brand">
-      <span aria-hidden="true" style={{ fontSize: compact ? '18px' : '22px', lineHeight: 1, flexShrink: 0 }}>🧑‍🍳</span>
+      <span aria-hidden="true" style={{ fontSize: compact ? '18px' : '22px', lineHeight: 1, flexShrink: 0 }}>🤖</span>
       <VStack align="start" gap="0" minW={0}>
         <Text
           fontSize={compact ? 'sm' : 'md'}
@@ -16,7 +16,7 @@ export function BrandLockup({
           color="var(--text-primary)"
           lineHeight="1.15"
         >
-          The Kitchen
+          NouStef UI
         </Text>
         {!compact ? (
           <Text fontSize="xs" color="var(--text-muted)" lineHeight="1.35" fontWeight="400">

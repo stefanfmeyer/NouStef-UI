@@ -1,4 +1,4 @@
-import type { Session } from '@hermes-recipes/protocol';
+import type { Session } from '@noustef-ui/protocol';
 
 export interface SessionVisibilityDecision {
   hidden: boolean;

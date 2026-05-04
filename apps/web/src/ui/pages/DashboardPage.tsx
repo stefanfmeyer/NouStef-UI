@@ -13,7 +13,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts';
-import type { AppPage, DashboardResponse, JobsResponse } from '@hermes-recipes/protocol';
+import type { AppPage, DashboardResponse, JobsResponse } from '@noustef-ui/protocol';
 import { getDashboard } from '../../lib/api';
 import { listJobs, type CodingJob } from '../../lib/coding-api';
 

@@ -7,7 +7,7 @@ import type {
   RecipeFallbackState,
   RecipeNormalizedData,
   RecipeSummary
-} from '@hermes-recipes/protocol';
+} from '@noustef-ui/protocol';
 import { applyRecipePatchOperations, buildRecipeModel } from './recipe-model';
 
 function createHomeMetadata() {

@@ -83,7 +83,7 @@ export function RemoteAccessPage() {
             Remote Access
           </Text>
           <Text fontSize="14px" color="var(--text-secondary)" lineHeight="1.6">
-            Open The Kitchen on your phone over your Tailscale network.
+            Open NouStef UI on your phone over your Tailscale network.
           </Text>
         </VStack>
 

@@ -30,7 +30,7 @@ import type {
   RecipeUiSpecV2,
   RecipeUiTimelineNode,
   RecipeUserPromptArtifact
-} from '@hermes-recipes/protocol';
+} from '@noustef-ui/protocol';
 import {
   RecipeActionSpecSchema,
   RecipeAnalysisSchema,
@@ -44,7 +44,7 @@ import {
   RecipeTestSpecSchema,
   RecipeUiSpecSchema,
   RecipeUserPromptArtifactSchema
-} from '@hermes-recipes/protocol';
+} from '@noustef-ui/protocol';
 import type { HermesRecipeDataEnvelope } from './dynamic-recipe-contract';
 import { buildRecipeModel } from './recipe-model';
 

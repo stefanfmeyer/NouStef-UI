@@ -98,7 +98,7 @@ import type {
   RecipePipelineState,
   HermesCliRuntimeReadiness,
   FileRef
-} from '@hermes-recipes/protocol';
+} from '@noustef-ui/protocol';
 import {
   AuditEventsResponseSchema,
   ApiErrorSchema,
@@ -157,7 +157,7 @@ import {
   UpdateRuntimeModelConfigRequestSchema,
   UpdateSettingsRequestSchema,
   UpdateUiStateRequestSchema
-} from '@hermes-recipes/protocol';
+} from '@noustef-ui/protocol';
 import {
   getRecipeContentFormat,
   getRecipeContentEntries,
@@ -166,7 +166,7 @@ import {
   replaceRecipeContentEntries,
   removeRecipeContentEntries,
   normalizeRecipeUiState
-} from '@hermes-recipes/protocol';
+} from '@noustef-ui/protocol';
 import type { BridgeDatabase } from '../data/bridge-database';
 import {
   HERMES_EXPECTED_VERSION,

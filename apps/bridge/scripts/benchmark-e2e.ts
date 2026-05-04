@@ -1,6 +1,6 @@
 #!/usr/bin/env tsx
 /**
- * E2E benchmark: The Kitchen (bridge HTTP) vs TUI (direct hermes CLI)
+ * E2E benchmark: NouStef UI (bridge HTTP) vs TUI (direct hermes CLI)
  *
  * Runs 3 prompts × 3 trials each through both paths simultaneously.
  * Measures timing phases and tool-call counts for each run.
@@ -14,7 +14,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
 import type { AddressInfo } from 'node:net';
-import type { BootstrapResponse, Session, ChatStreamEvent } from '@hermes-recipes/protocol';
+import type { BootstrapResponse, Session, ChatStreamEvent } from '@noustef-ui/protocol';
 import { createBridgeServer } from '../src/server';
 
 const MAX_TURNS = 15;

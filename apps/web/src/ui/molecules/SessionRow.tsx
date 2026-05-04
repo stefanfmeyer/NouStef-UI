@@ -1,5 +1,5 @@
 import { Box, Button, Flex, Text, VStack } from '@chakra-ui/react';
-import type { Session } from '@hermes-recipes/protocol';
+import type { Session } from '@noustef-ui/protocol';
 import { SessionActionMenu } from './SessionActionMenu';
 
 function formatRelativeTime(dateString: string): string {

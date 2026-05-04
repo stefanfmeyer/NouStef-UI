@@ -2,9 +2,9 @@
 
 ## Reporting a vulnerability
 
-If you believe you have found a security vulnerability in The Kitchen, please **do not open a public GitHub issue**. Instead, report it privately:
+If you believe you have found a security vulnerability in NouStef UI, please **do not open a public GitHub issue**. Instead, report it privately:
 
-- Open a [GitHub private security advisory](https://github.com/jozef-barton/the-kitchen/security/advisories/new), or
+- Open a [GitHub private security advisory](https://github.com/stefanfmeyer/NouStef-UI/security/advisories/new), or
 - Email the maintainer at the address listed on the repository owner's GitHub profile.
 
 Include as much of the following as you can:
@@ -18,7 +18,7 @@ We aim to acknowledge reports within **3 business days** and to provide a remedi
 
 ## Scope
 
-The Kitchen is a local-first application. The security-relevant components are:
+NouStef UI is a local-first application. The security-relevant components are:
 
 - `apps/bridge` — a Node HTTP server that binds to `127.0.0.1` only, talks to the local Hermes CLI, and stores data in a local SQLite database.
 - `apps/web` — a Vite/React frontend that communicates with the bridge over same-origin HTTP.
@@ -38,7 +38,7 @@ Out of scope:
 
 ## Supported versions
 
-The Kitchen is pre-1.0. Only `main` receives security updates. Once the project reaches 1.0, this section will list a supported-version matrix.
+NouStef UI is pre-1.0. Only `main` receives security updates. Once the project reaches 1.0, this section will list a supported-version matrix.
 
 ## Hardening notes for users
 

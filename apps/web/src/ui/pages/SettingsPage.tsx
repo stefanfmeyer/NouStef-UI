@@ -53,14 +53,14 @@ function StepSlider({
 }
 
 
-import { useHermesTheme } from '@hermes-recipes/ui';
+import { useHermesTheme } from '@noustef-ui/ui';
 import type {
   AccessAuditSummary,
   AppSettings,
   AuditEventsResponse,
   ModelProviderResponse,
   TelemetryResponse
-} from '@hermes-recipes/protocol';
+} from '@noustef-ui/protocol';
 import { EmptyStateCard } from '../molecules/EmptyStateCard';
 import { ErrorBanner } from '../molecules/ErrorBanner';
 

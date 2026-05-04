@@ -18,16 +18,16 @@ import type {
   ToolHistoryResponse,
   ToolsResponse,
   UiState
-} from '@hermes-recipes/protocol';
-import { normalizeRecipeTabs } from '@hermes-recipes/protocol';
+} from '@noustef-ui/protocol';
+import { normalizeRecipeTabs } from '@noustef-ui/protocol';
 import type { PropsWithChildren } from 'react';
-import { HermesUiProvider } from '@hermes-recipes/ui';
+import { HermesUiProvider } from '@noustef-ui/ui';
 import { App } from './App';
 import { toaster } from './ui/toaster-store';
 
 const setThemeModeMock = vi.fn();
 
-vi.mock('@hermes-recipes/ui', async () => {
+vi.mock('@noustef-ui/ui', async () => {
   const { ChakraProvider, defaultSystem } = await import('@chakra-ui/react');
   const { MemoryRouter } = await import('react-router-dom');
 
@@ -2036,7 +2036,7 @@ describe('App', () => {
     expect(screen.getByTestId('session-recipe-chat-pane')).toBeInTheDocument();
     expect(screen.queryByTestId('page-header')).not.toBeInTheDocument();
     expect(screen.getByTestId('shell-toolbar')).toBeInTheDocument();
-    expect(within(screen.getByTestId('shell-toolbar')).getByText('The Kitchen')).toBeInTheDocument();
+    expect(within(screen.getByTestId('shell-toolbar')).getByText('NouStef UI')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Switch to (light|dark) mode/ })).toBeInTheDocument();
     expect(screen.queryByText('Choose a recent session or start a new one.')).not.toBeInTheDocument();
     expect(screen.queryByTestId('recipe-runtime-drawer')).not.toBeInTheDocument();

@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { RecipeTemplateStateSchema } from '@hermes-recipes/protocol';
+import { RecipeTemplateStateSchema } from '@noustef-ui/protocol';
 import {
   getRecipeTemplateRuntimeDefinition,
   listAvailableRecipeTemplateDefinitions,

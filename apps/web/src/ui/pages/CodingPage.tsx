@@ -7,7 +7,7 @@ import {
 import * as api from '../../lib/coding-api';
 import type { CodingProject, CodingJob, JobEvent, JobFileSummaryEntry, ApprovalMode } from '../../lib/coding-api';
 import * as mainApi from '../../lib/api';
-import type { ModelProviderResponse } from '@hermes-recipes/protocol';
+import type { ModelProviderResponse } from '@noustef-ui/protocol';
 import { JobConversation } from './coding/JobConversation';
 import { JobComposer } from './coding/JobComposer';
 import { CostBadge, MetaTag } from './coding/CostBadge';

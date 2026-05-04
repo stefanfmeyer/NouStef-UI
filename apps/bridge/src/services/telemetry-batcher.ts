@@ -1,4 +1,4 @@
-import type { TelemetryEvent } from '@hermes-recipes/protocol';
+import type { TelemetryEvent } from '@noustef-ui/protocol';
 
 export class TelemetryBatcher {
   private readonly buffer: TelemetryEvent[] = [];

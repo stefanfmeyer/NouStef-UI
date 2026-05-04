@@ -1,7 +1,7 @@
 // @vitest-environment node
 
 import { describe, expect, it } from 'vitest';
-import { RECIPE_REFRESH_USER_MESSAGE } from '@hermes-recipes/protocol';
+import { RECIPE_REFRESH_USER_MESSAGE } from '@noustef-ui/protocol';
 import type { HermesCliRunner } from './client';
 import { classifyStructuredRecipeIntent, HermesCli, resolveHermesChatTimeoutMs } from './client';
 

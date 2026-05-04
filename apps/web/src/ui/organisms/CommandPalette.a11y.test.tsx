@@ -6,7 +6,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 afterEach(cleanup);
 import { CommandPalette } from './CommandPalette';
 import { expectNoA11yViolations } from '../../test/axe';
-import type { Session } from '@hermes-recipes/protocol';
+import type { Session } from '@noustef-ui/protocol';
 
 const sessions: Session[] = [
   {

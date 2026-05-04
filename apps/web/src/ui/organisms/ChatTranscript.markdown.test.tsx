@@ -1,6 +1,6 @@
 import { ChakraProvider, defaultSystem } from '@chakra-ui/react';
 import { render, screen, within } from '@testing-library/react';
-import type { ChatMessage } from '@hermes-recipes/protocol';
+import type { ChatMessage } from '@noustef-ui/protocol';
 import { describe, expect, it } from 'vitest';
 import { ChatTranscript } from './ChatTranscript';
 

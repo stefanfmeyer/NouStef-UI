@@ -8,7 +8,7 @@ import type {
   RecipeNormalizedData,
   RecipeSummary,
   RecipeModel
-} from '@hermes-recipes/protocol';
+} from '@noustef-ui/protocol';
 
 export interface RecipeAppletRenderContext {
   recipe: Pick<Recipe, 'id' | 'title' | 'description' | 'status' | 'metadata'>;

@@ -1,5 +1,5 @@
 import fs from 'node:fs';
-import type { UploadedFileKind } from '@hermes-recipes/protocol';
+import type { UploadedFileKind } from '@noustef-ui/protocol';
 
 const MAX_PARSED_CHARS = 40_000;
 

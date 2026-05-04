@@ -24,7 +24,7 @@ import type {
   RecipeTemplateUpdate,
   RecipeTemplateUpdateOperation,
   RecipeTemplateViewPhase
-} from '@hermes-recipes/protocol';
+} from '@noustef-ui/protocol';
 import {
   RecipeActionSpecSchema,
   RecipeTemplateActionsSchema,
@@ -42,7 +42,7 @@ import {
   RecipeTemplateStateSchema,
   RecipeTemplateTextSchema,
   RecipeTemplateUpdateSchema
-} from '@hermes-recipes/protocol';
+} from '@noustef-ui/protocol';
 import {
   getRecipeTemplateRuntimeDefinition,
   WORKRECIPE_TEMPLATE_RUNTIME_REGISTRY,

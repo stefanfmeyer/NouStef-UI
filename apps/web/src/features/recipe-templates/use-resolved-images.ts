@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import type { RecipeTemplateImage, RecipeTemplateSection, RecipeTemplateState } from '@hermes-recipes/protocol';
+import type { RecipeTemplateImage, RecipeTemplateSection, RecipeTemplateState } from '@noustef-ui/protocol';
 import { resolveImages } from '../../lib/api';
 
 // Walks a template state (recursively through split/tabs) and collects every image query that is still missing a src.

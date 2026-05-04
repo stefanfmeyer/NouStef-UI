@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from 'react';
-import type { AppPage, Session } from '@hermes-recipes/protocol';
+import type { AppPage, Session } from '@noustef-ui/protocol';
 
 type CommandItem = {
   id: string;

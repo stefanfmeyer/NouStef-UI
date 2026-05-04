@@ -20,8 +20,8 @@ import type {
   Recipe,
   Skill,
   Tool
-} from '@hermes-recipes/protocol';
-import { HermesCliActionResultSchema, RECIPE_REFRESH_USER_MESSAGE } from '@hermes-recipes/protocol';
+} from '@noustef-ui/protocol';
+import { HermesCliActionResultSchema, RECIPE_REFRESH_USER_MESSAGE } from '@noustef-ui/protocol';
 export type { RecipeMutationIntent };
 import {
   classifyImportedMessageKind,

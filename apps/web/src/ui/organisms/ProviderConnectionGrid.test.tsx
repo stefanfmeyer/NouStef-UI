@@ -5,7 +5,7 @@ import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ChakraProvider, defaultSystem } from '@chakra-ui/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import type { RuntimeProviderOption } from '@hermes-recipes/protocol';
+import type { RuntimeProviderOption } from '@noustef-ui/protocol';
 import { ProviderConnectionGrid } from './ProviderConnectionGrid';
 
 afterEach(() => {

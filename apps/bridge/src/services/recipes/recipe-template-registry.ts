@@ -6,7 +6,7 @@ import type {
   RecipeTemplateId,
   RecipeTemplateSection,
   RecipeTemplateUpdateOperation
-} from '@hermes-recipes/protocol';
+} from '@noustef-ui/protocol';
 
 interface RecipeTemplateSlotDefinition {
   id: string;

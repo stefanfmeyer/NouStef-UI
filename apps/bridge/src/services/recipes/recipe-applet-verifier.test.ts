@@ -7,7 +7,7 @@ import type {
   RecipeAppletManifest,
   RecipeAppletSourceArtifact,
   RecipeNormalizedData
-} from '@hermes-recipes/protocol';
+} from '@noustef-ui/protocol';
 import { buildRecipeAppletGeneratedTests } from './recipe-applet-generated-tests';
 import type { RecipeAppletRenderContext } from './recipe-applet-types';
 import { verifyRecipeApplet } from './recipe-applet-verifier';

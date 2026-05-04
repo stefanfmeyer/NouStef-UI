@@ -1,7 +1,7 @@
 import type {
   RecipeAppletNode,
   RecipeAppletRenderTree
-} from '@hermes-recipes/protocol';
+} from '@noustef-ui/protocol';
 
 export function visitRecipeAppletNodes(nodes: RecipeAppletNode[], visitor: (node: RecipeAppletNode) => void) {
   for (const node of nodes) {

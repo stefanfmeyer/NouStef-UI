@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { Box, Flex, HStack, ScrollArea, Text, VStack } from '@chakra-ui/react';
-import type { ChatActivity, RuntimeRequest } from '@hermes-recipes/protocol';
+import type { ChatActivity, RuntimeRequest } from '@noustef-ui/protocol';
 import { TypingDots } from '../atoms/TypingDots';
 import { StatusTicker } from '../atoms/StatusTicker';
 import { ActivityCard } from '../molecules/ActivityCard';

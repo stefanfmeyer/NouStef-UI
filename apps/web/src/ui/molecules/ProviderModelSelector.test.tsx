@@ -5,7 +5,7 @@ import { cleanup, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ChakraProvider, defaultSystem } from '@chakra-ui/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { ModelProviderResponse, RuntimeProviderOption } from '@hermes-recipes/protocol';
+import type { ModelProviderResponse, RuntimeProviderOption } from '@noustef-ui/protocol';
 import { ProviderModelSelector } from './ModelSelector';
 
 // Mock useBreakpointValue to simulate a desktop (lg+) viewport so the inline

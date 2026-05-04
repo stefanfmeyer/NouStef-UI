@@ -11,8 +11,8 @@ import type {
   SessionMessagesResponse,
   Recipe,
   TelemetryResponse
-} from '@hermes-recipes/protocol';
-import { getRecipeContentTab, getRecipeContentViewData, RecipeTemplateFillSchema } from '@hermes-recipes/protocol';
+} from '@noustef-ui/protocol';
+import { getRecipeContentTab, getRecipeContentViewData, RecipeTemplateFillSchema } from '@noustef-ui/protocol';
 import { createBridgeServer } from '../src/server';
 import { validateRecipeTemplateSemanticCompleteness } from '../src/services/recipes/recipe-template-contract';
 

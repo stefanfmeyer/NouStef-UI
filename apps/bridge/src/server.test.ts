@@ -25,8 +25,8 @@ import type {
   ToolExecution,
   ToolHistoryResponse,
   ToolsResponse
-} from '@hermes-recipes/protocol';
-import { getRecipeContentEntries, getRecipeContentFormat as getAttachedRecipeContentFormat, getRecipeContentTab, getRecipeContentViewData } from '@hermes-recipes/protocol';
+} from '@noustef-ui/protocol';
+import { getRecipeContentEntries, getRecipeContentFormat as getAttachedRecipeContentFormat, getRecipeContentTab, getRecipeContentViewData } from '@noustef-ui/protocol';
 import { createBridgeServer } from './server';
 
 const moduleDirectory = path.dirname(fileURLToPath(import.meta.url));
@@ -2282,7 +2282,7 @@ Keep summaries short and searchable for the active profile.
     expect(html).toContain("const serverTheme = 'light';");
     expect(html).not.toContain('__HERMES_THEME_MODE__');
     expect(html).toContain('rel="icon"');
-    expect(html).toContain('<title>The Kitchen</title>');
+    expect(html).toContain('<title>NouStef UI</title>');
 
     await server.close();
   });

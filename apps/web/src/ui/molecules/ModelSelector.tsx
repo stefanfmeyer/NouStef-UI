@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { Box, Button, CloseButton, Drawer, Field, HStack, NativeSelect, Portal, Spinner, Text, VStack, chakra, useBreakpointValue } from '@chakra-ui/react';
-import type { ModelProviderResponse } from '@hermes-recipes/protocol';
+import type { ModelProviderResponse } from '@noustef-ui/protocol';
 import { getProviderModelOptions, isProviderSupported } from '../../lib/provider-models';
 import { useProviderModels } from '../../hooks/use-provider-models';
 import { testModelConfig } from '../../lib/api';

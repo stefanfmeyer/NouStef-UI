@@ -1,5 +1,5 @@
 import { Box, Button, Flex, HStack, Table, Text, VStack, chakra } from '@chakra-ui/react';
-import type { JobsResponse } from '@hermes-recipes/protocol';
+import type { JobsResponse } from '@noustef-ui/protocol';
 import { ErrorBanner } from '../molecules/ErrorBanner';
 
 function formatNextRun(s: string) {

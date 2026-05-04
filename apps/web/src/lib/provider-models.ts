@@ -1,4 +1,4 @@
-import type { RuntimeProviderOption } from '@hermes-recipes/protocol';
+import type { RuntimeProviderOption } from '@noustef-ui/protocol';
 
 export type StaticModelOption = { value: string; label: string };
 

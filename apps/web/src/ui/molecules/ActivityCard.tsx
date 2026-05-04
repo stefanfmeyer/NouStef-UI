@@ -1,5 +1,5 @@
 import { Box, Code, HStack, Text, VStack } from '@chakra-ui/react';
-import type { ChatActivity } from '@hermes-recipes/protocol';
+import type { ChatActivity } from '@noustef-ui/protocol';
 
 function formatTimestamp(value: string) {
   const parsed = Date.parse(value);

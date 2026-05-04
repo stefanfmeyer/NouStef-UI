@@ -1,6 +1,6 @@
 import { ChakraProvider, defaultSystem } from '@chakra-ui/react';
 import { cleanup, render, screen } from '@testing-library/react';
-import type { ChatMessage } from '@hermes-recipes/protocol';
+import type { ChatMessage } from '@noustef-ui/protocol';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 const markdownRenderCounts = new Map<string, number>();

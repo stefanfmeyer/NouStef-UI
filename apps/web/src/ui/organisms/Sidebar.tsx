@@ -3,7 +3,7 @@ import { flushSync } from 'react-dom';
 import {
   Box, Button, Drawer, Flex, HStack, Input, Portal, ScrollArea, Spinner, Text, VStack, chakra
 } from '@chakra-ui/react';
-import type { AppPage, Profile, Session } from '@hermes-recipes/protocol';
+import type { AppPage, Profile, Session } from '@noustef-ui/protocol';
 import { ConfirmDialog } from '../molecules/ConfirmDialog';
 import { ErrorBanner } from '../molecules/ErrorBanner';
 import { SessionRow } from '../molecules/SessionRow';

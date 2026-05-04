@@ -1,7 +1,7 @@
 import http from 'node:http';
 import path from 'node:path';
 import type { ServerResponse } from 'node:http';
-import type { UploadedFile } from '@hermes-recipes/protocol';
+import type { UploadedFile } from '@noustef-ui/protocol';
 import {
   ApplyRecipeEntryActionRequestSchema,
   BeginProviderAuthRequestSchema,
@@ -29,7 +29,7 @@ import {
   UpdateSettingsRequestSchema,
   UpdateUiStateRequestSchema,
   RecipeManifestSchema
-} from '@hermes-recipes/protocol';
+} from '@noustef-ui/protocol';
 import { createUnsplashSourceResolver, resolveImagesInParallel } from '../services/images/image-resolver';
 import { refreshDiskRecipeRegistry } from '../services/recipes/recipe-template-registry';
 

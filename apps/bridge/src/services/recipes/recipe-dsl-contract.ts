@@ -1,5 +1,5 @@
-import type { RecipeAuthoringDsl, RecipeDsl } from '@hermes-recipes/protocol';
-import { RecipeDslSchema } from '@hermes-recipes/protocol';
+import type { RecipeAuthoringDsl, RecipeDsl } from '@noustef-ui/protocol';
+import { RecipeDslSchema } from '@noustef-ui/protocol';
 import { extractBalancedJsonValue } from './dynamic-recipe-contract';
 
 export const WORKRECIPE_DSL_TOP_LEVEL_KEYS = [

@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import { randomUUID } from 'node:crypto';
-import type { AppSettings, ChatMessage, Job, JobsFreshness, Profile, Session, ToolExecution, UiState } from '@hermes-recipes/protocol';
+import type { AppSettings, ChatMessage, Job, JobsFreshness, Profile, Session, ToolExecution, UiState } from '@noustef-ui/protocol';
 import { bridgeReviewedShellToolId } from './reviewed-tools';
 import type { BridgeDatabase } from './database';
 
