@@ -7,7 +7,7 @@
     "dev": "NODE_OPTIONS=--experimental-sqlite tsx src/server.ts --port 8787",
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "start": "NODE_OPTIONS=--experimental-sqlite tsx src/server.ts",
+    "start": "NODE_OPTIONS=--experimental-sqlite tsx src/server.ts --host 0.0.0.0",
     "start:fixture": "NODE_OPTIONS=--experimental-sqlite tsx src/server.ts --fixture",
     "test:live:home": "tsx scripts/live-home-workspace-validation.ts"
   },
